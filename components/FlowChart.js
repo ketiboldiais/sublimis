@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 
 const Graphviz = dynamic(() => import("graphviz-react"), { ssr: false });
 
-const FlowChart = ({
+export const FlowChart = ({
 	data,
 	height = 150,
 	width = 150,
@@ -39,5 +39,3 @@ const FlowChart = ({
 		</figure>
 	);
 };
-
-export default FlowChart;

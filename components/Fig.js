@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import styles from "../styles/Fig.module.css";
 
-const Fig = ({
+export const Fig = ({
 	link,
 	caption = "Figure",
 	width = 30,
@@ -29,5 +29,3 @@ const Fig = ({
 		</figure>
 	);
 };
-
-export default Fig;

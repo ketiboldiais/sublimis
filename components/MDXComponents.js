@@ -1,7 +1,8 @@
 import Image from "next/image";
 import ImgStyles from "../styles/image.module.css";
-import PageTitle from "./PageTitle";
-import FlowChart from "./FlowChart";
+import Link from "next/link";
+import { PageTitle } from "./PageTitle";
+import { FlowChart } from "./FlowChart";
 import { BinaryTree } from "./illus/components/BinaryTree/BinaryTree";
 import { HTree } from "@enfig/HTree/HTree";
 import { Matrix } from "@enfig/Matrix/Matrix";
@@ -17,8 +18,7 @@ import { Stack } from "@enfig/Stack/Stack";
 import { Queue } from "@enfig/Queue/Queue";
 import { Tree } from "@enfig/Tree/Tree";
 import { Plane } from "@enfig/Plane/Plane";
-import Link from "next/link";
-import Fig from "./Fig";
+import { Fig } from "./Fig";
 import { Plot } from "./illus/components/Plot/Plot";
 
 import Header from "./Header";
