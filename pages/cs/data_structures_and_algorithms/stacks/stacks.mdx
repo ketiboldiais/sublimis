@@ -1,0 +1,2136 @@
+# The Stack
+
+The following materials pertain to the **stack data structure**. Unlike the
+other data structures we've seen, the stack is modeled after a _behavioral
+principle_—a defining trait in how the data structure acts, which dictates
+what the data structure looks like and how the data structure operates. For
+the stack, this behavioral principle is **Last-in-first-out (LIFO)**.
+
+The principle is simple. Suppose we have a large box to place plates in. If
+we place one plate, we have the following:
+
+<Stack data={[0]} />
+
+If we place another plate into the box, the new plate would lie on top of
+the previously-placed plate:
+
+<Stack data={[0, 0]} />
+
+And if we place another:
+
+<Stack data={[0, 0, 0]} />
+
+and another:
+
+<Stack data={[0, 0, 0, 0]} />
+
+Notice how the plates are in a _stack_. If we simply reached in to take a
+plate out of the stack (i.e, without rummaging), we would take the plate at
+the very top:
+
+<Stack data={[0, 0, { val: 0, focus: true }]} />
+
+Looking at the plate we took off the stack, this is the _last_ plate we
+placed. This is the principle of LIFO—the _last_ that goes in is the
+_first_ that goes out. A important terms associated with stacks:
+
+1. When we place an object ${x}$ on the stack, we are **pushing** ${x}$ on
+   the stack.
+
+2. When we take an object ${x}$ off the stack, we are **popping** ${x}$ off
+   the stack.
+
+Why push and pop? It's not entirely clear. One theory is that the terms
+trace their origins to
+[spring-loaded dispensers](https://patents.google.com/patent/US2426995A/en])
+at an MIT cafeteria in the 1950s. On these dispensers, the uppermost plate
+hid all of the plates below it (this is another key feature of stacks). To
+insert plates into these dispensers, the operator would have to _push_ the
+plates in, past some hooks. These hooks held the stack down, countering the
+compressed spring's force. When a guest took a plate off the stack, the
+spring's force would cause the plate directly below the taken plate to
+_pop_ into view.
+
+Now that we have a general idea for what the stack is, let's talk about a
+bit of notation. Suppose we had the following stack:
+
+<Stack data={[8, 3, 1]} />
+
+Symbolically, the stack above is written as:
+
+$$
+	\begin{aligned} t \rarr &(F_3 \mid 7) \\ &(F_2 \mid 1) \\ &(F_1 \mid 3) \\ &(F_0 \mid 8) \end{aligned}
+$$
+
+The variable ${F}$ indicates a **frame**—an element of the stack—and the
+variable ${t}$ is a pointer to the **topmost frame** (in the diagram, the
+frame colored green). In these materials, we also refer to the topmost
+frame as the **T-frame**, and all others as simply _frames_. Each frame has
+a subscripted index ${i,}$ and a data value stored in it—the number to the
+right of the vertical bar. We employ this notation to maintain flexibility
+between different implementations of the stack data structure.
+
+The stack can be implemented in two ways:
+
+1. Through a _static array_, or
+2. through a _linked list_.
+
+We now consider each implementation in turn.
+
+## Static Stacks
+
+A **static stack** is a stack with a fixed capacity—the maximum number of
+frames the stack can hold. Because there's an upper bound on the number of
+frames, the stack cannot hold frames beyond its given capacity. Static
+stacks are described as static because they are implemented with _static
+arrays_. Where the static array has a fixed _size_, the static stack has a
+fixed **capacity**. And where the array has a variable _length_, the static
+stack has a variable **height**.
+
+For example, suppose we wanted to implement a new, empty stack of
+capacity 4. Such a stack can be interpreted as:
+
+<Stack data={[0, 0, 0, 0]} />
+
+But when implemented as an array:
+
+<Sequence data={[0, 0, 0, 0]} />
+
+Question: How do the array's indices relate to the stack? The indices
+provide a helpful way for keeping track of the topmost frame. In these
+materials, we interpret the array qua stack as follows:
+
+<Stack data={[0, 0, 0, 0]} isIndexed={true} />
+
+<Sequence data={[0, 0, 0, 0]} />
+
+Here, we have a stack of _capacity_ 4 and a _height_ of 0. Given the empty
+array, when we insert a new element into the array by writing
+`array[0] = 2`, we are _pushing_ a new frame onto the stack:
+
+<Stack data={[2, 0, 0, 0]} isIndexed={true} />
+
+<Sequence data={[2, 0, 0, 0]} />
+
+The stack's capacity is still 4 but now its height is 1. Pushing another
+frame on the stack, say `F(9)` we write `array[1] = 9`:
+
+<Stack data={[2, 9, 0, 0]} isIndexed={true} />
+
+<Sequence data={[2, 9, 0, 0]} />
+
+Now the height is 2, but the capacity is still 4. Writing `array[2] = 1`,
+we push yet another frame:
+
+<Stack data={[2, 9, 1, 0]} isIndexed={true} />
+
+<Sequence data={[2, 9, 1, 0]} />
+
+The capacity is still 4, but the height is now 3. Once we push another
+frame on the stack, say `array[3] = 8`, we have:
+
+<Stack data={[2, 9, 1, 8]} isIndexed={true} />
+
+<Sequence data={[2, 9, 1, 8]} />
+
+At this point, we say that the stack is **full**—the stack's height equals
+its capacity, and we can push no further frames.
+
+Examining the diagrams above, we see that pushing a frame onto the stack is
+done by inserting elements into the array from left to right. In other
+words, from 0 to ${S-1,}$ where ${S}$ is the size of the array. This means
+that the right-most element in the array is equivalent to the topmost frame
+in the stack:
+
+<Stack data={[2, 9, 1, { val: 8, focus: true }]} isIndexed={true} />
+
+<Sequence data={[2, 9, 1, { val: 8, focus: true }]} />
+
+Because of how important the topmost frame is, we want to always have a
+pointer `top` pointing at this frame:
+
+<Stack
+	data={[2, 9, 1, { val: 8, focus: true, ant: "top" }]}
+	isIndexed={true}
+/>
+
+<Sequence data={[2, 9, 1, { val: 8, focus: true }]} />
+
+Putting all of this together, we want the following properties for the
+static stack, just to start:
+
+1. A `capacity` property, which is an `int` value corresponding to the
+   maximum number of frames the stack can hold.
+
+2. A `height` property, which is an `int` value corresponding to the number
+   of frames the stack currently holds.
+
+3. A `top` property, which is a pointer to the topmost frame.
+
+4. A `spaceRemaining` property, which returns the number of available
+   frames, an `int` value.
+
+5. An `S` property, which is a pointer to the array implementing the stack.
+
+In C, we can implement the above with a `struct`:
+
+```c
+struct Stack {
+	int capacity;
+	int height;
+	int top;
+	int spaceRemaining;
+	int* S;
+};
+```
+
+Notice that the property `top` has the type `int` rather than `int*`. This
+is not a typo. We will see momentarily why we should have `top` be of type
+`int`.
+
+## Constructor
+
+Following the `struct` implementation above, the first step is to write a
+constructor for the static stack. In C, we can write the constructor as
+follows:
+
+```c
+struct Stack* newStack(int maxSize) {
+	struct Stack* stack = malloc(sizeof(struct Stack));
+	(*stack).capacity = maxSize;
+	(*stack).height = 0;
+	(*stack).top = -1;
+	(*stack).spaceRemaining = maxSize;
+	(*stack).S = malloc(sizeof(int)*maxSize);
+	return stack;
+}
+```
+
+All of the code put together:
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Stack {
+	int capacity;
+	int height;
+	int top;
+	int space;
+	int* S;
+};
+
+struct Stack* newStack(int maxSize) {
+	struct Stack* stack = malloc(sizeof(struct Stack));
+	(*stack).capacity = maxSize;
+	(*stack).top = -1;
+	(*stack).height = 0;
+	(*stack).space = maxSize;
+	(*stack).S = malloc(sizeof(int) * maxSize);
+	return stack;
+};
+```
+
+## Pushing
+
+The first fundamental operation to all stacks is **pushing**. The
+implementation is straightforward. In pseudocode:
+
+```rust
+fn push(Stack* stack; int data) -> void:
+	stack->top += 1;
+	stack->S[stack->top] = data;
+	stack->height += 1;
+	stack->spaceRemaining -= 1;
+```
+
+In the implementation above, we're working a record that provides:
+
+```rust
+struct Stack:
+	int capacity;
+	int height;
+	int top;
+	int* S;
+	constructor Stack(int maxSize) -> Stack*:
+		Stack* stack = malloc(sizeof(stack));
+		stack.capacity = maxSize;
+		stack.height = 0;
+		stack.top = -1;
+		stack.S = malloc(sizeof(int) * maxSize);
+		return stack;
+```
+
+Following the code above, the `push()` function takes two arguments—the
+address of some `Stack` instance, and an `int` value, the data to be
+stored. Say we called `push(myStack, 4)`. This results in:
+
+```rust
+Stack* stack = myStack;
+int data = 4;
+```
+
+On Line 2 of `push()`, we increment the instance's `top` property.
+Previously, `top = -1`. Incrementing, we get `top = 0`. With `top = 0`, we
+can now use it as an index. When we write:
+
+```rust
+stack->S[stack->top] = data;
+```
+
+We are actually writing:
+
+```rust
+stack->S[0] = 4;
+```
+
+This is why refer to `top` as a pointer, even though it's an `int` value.
+The expression `S[0]` is simply a pointer to the first element in the `S`
+array; `S[1]` to the second element; `S[2]` to the third, and so on.
+
+Finally, the last step we performed is incrementing `height`. This
+maintains the number of frames currently in the stack.
+
+The function above, however, is not implemented well. Why? Because it does
+not include a guard against pushing onto the stack beyond its limit, the
+`capacity`. Accordingly, we need a **capacity guard**.
+
+## Capacity Guard
+
+With static stacks, we must always be using a **capacity guard**—a
+procedure that determines whether the stack's capacity has been reached.
+We'll implement this procedure as a function called <var>isFull()</var >,
+which returns `true` if the stack's capacity has been reached, and `false`
+otherwise. The procedure is straightforward:
+
+```rust
+isFull(struct Stack* stack) -> bool :
+	return (stack->capacity) == (stack->height);
+```
+
+Alternatively, we could implement the guard using the `spaceRemaining`
+property:
+
+```rust
+isFull(struct Stack* stack) -> bool :
+	return (stack->spaceRemaining) == 0;
+```
+
+In the procedure above, we determine if a static stack is full by testing
+if it's `capacity` equals its `height`. To illustrate why this works,
+suppose we instantiated a new static stack called `myStack`, of capacity
+`3`. The stack and its properties:
+
+Initially:
+
+```rust
+capacity = 3
+height = 0;
+spaceRemaining = 3;
+```
+
+<Stack data={[0, 0, 0]} />
+
+Using our previous push function, when we call `push(myStack, 3)`, we get:
+
+```rust
+capacity = 3
+height = 1;
+spaceRemaining = 2;
+```
+
+<Stack data={[3, 0, 0]} />
+
+Notice that in doing so, the `height` is now `1`. If we push another by
+calling `push(myStack, 7)`, we get:
+
+```rust
+capacity = 3
+height = 2;
+spaceRemaining = 1;
+```
+
+<Stack data={[3, 7, 0]} />
+
+Now we have `height = 2`. Then when we call `push(myStack, 5)`:
+
+```rust
+capacity = 3
+height = 3;
+spaceRemaining = 0;
+```
+
+<Stack data={[3, 7, 5]} />
+
+Notice that `height` is now `3`, which is equal to the `capacity`. Thus,
+when we call `isFull(myStack)` at this point, we will get back `true`—the
+stack is at capacity. Before this point, `isFull(myStack)` returns false.
+
+Now that we have a function that can determine if a given stack is full, we
+can revise our `push()` function:
+
+```rust
+fn push(Stack* stack; int data) -> void:
+	if (isFull(stack)):
+		print "Stack overflow";
+	else:
+		stack->top += 1;
+		stack->S[stack->top] = data;
+		stack->height += 1;
+```
+
+Above, we included the capacity guard `isFull(stack)`. If the stack is
+full, then we print the message `"Stack overflow"`. This prevents us from
+pushing any further frames onto the stack. Otherwise, we can proceed with
+pushing. See below for a language-specific implementation.
+
+Time Complexity. The time complexity examining the procedure above, we see
+that it consists entirely of basic steps. This tells us that the time
+complexity of pushing an element on the stack is ${O(1)}$—constant time.
+
+Here is a capacity guard implementation in C:
+
+```c
+bool isFull(struct Stack* stack) {
+	return (*stack).spaceRemaining == 0;
+};
+```
+
+And here is a push implementation:
+
+```c
+void push(struct Stack* stack, int data) {
+	if (isFull(stack)) {
+		printf("Stack overflow\n");
+	} else {
+		(*stack).top++;
+		(*stack).S[(*stack).top] = data;
+		(*stack).height++;
+	}
+}
+```
+
+And just to confirm that this works:
+
+```c
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+
+struct Stack {
+	int capacity;
+	int height;
+	int top;
+	int spaceRemaining;
+	int* S;
+};
+
+struct Stack* newStack(int maxSize) {
+	struct Stack* stack = malloc(sizeof(struct Stack));
+	(*stack).capacity = maxSize;
+	(*stack).height = 0;
+	(*stack).top = -1;
+	(*stack).spaceRemaining = maxSize;
+	(*stack).S = malloc(sizeof(int) * maxSize);
+	return stack;
+}
+
+bool isFull(struct Stack* stack) {
+	return (*stack).capacity == (*stack).height;
+};
+
+void push(struct Stack* stack, int data) {
+	if (isFull(stack)) {
+		printf("Stack overflow\n");
+	} else {
+		(*stack).top++;
+		(*stack).S[(*stack).top] = data;
+		(*stack).height++;
+		(*stack).spaceRemaining--;
+	}
+}
+
+int main() {
+	int stackSize = 3;
+	struct Stack* stack = newStack(stackSize);
+	push(stack, 8);
+	push(stack, 3);
+	push(stack, 6);
+	for (int i = stackSize-1; i >= 0; i--) {
+		printf("%d\n", (*stack).S[i]);
+		printf("---\n");
+	};
+	push(stack, 7); // should print "Stack overflow"
+	return 0;
+}
+```
+
+```bash
+6
+---
+3
+---
+8
+---
+Stack overflow
+```
+
+## Popping
+
+Alongside `push()`, we also need a function that implements
+_popping_—taking the topmost element off the stack. Unsurprisingly, we'll
+call this function <var>pop()</var>. It returns nothing, and takes as an
+argument the address of some stack. The procedure is straightforward:
+
+1. Decrement `top`.
+2. Decrement `height`.
+
+That's it. From a C perspective, notice we aren't performing any operation
+like `free()` or `delete`. This is because we <em>cannot</em> free or
+delete parts of an array. In C, we can only `free()` the pointer we get
+back from `malloc()`, which is a pointer to the first element in the array.
+Thus, to pop a frame off the stack, the core operations are decrementing
+`top` and `height`. In pseudocode:
+
+```rust
+fn pop(Stack* stack) -> void;
+	stack->top -= 1;
+	stack->height -= 1;
+```
+
+As we saw with `push()`, this function is incomplete. Without more, we
+would be able to call this function on an empty stack. And we do not want
+that—it makes no sense to remove something that isn't there. Accordingly,
+we need an _empty guard_.
+
+## Empty Guard
+
+The **empty guard** is a procedure that determines if a given stack is
+empty. The question then, is, when is a stack empty? When its `height` is
+`0`. Needless to say, the implementation is short:
+
+```rust
+fn isEmpty(struct Stack* stack) -> bool:
+	return (stack->height) == 0;
+```
+
+To see that this works, suppose we had a stack `aStack` of size `3`,
+initialized:
+
+```rust
+capacity = 3
+height = 3;
+top = 2;
+```
+
+<Stack data={[2, 7]} />
+
+When we call `pop(aStack)`, we get:
+
+```rust
+capacity = 3
+height = 2;
+top = 1;
+```
+
+<Stack data={[{ val: 2, pop: true }, 7, 1]} />
+
+Notice that the value occupying `S[2]` doesn't disappear. It's still there,
+it's just that the `top` has changed. And because the `top` has changed,
+`S[2]` can be overwritten later. Because of this fact, `S[2]` been popped
+off the stack for all functional purposes.
+
+When we call `pop(aStack)` again, we get:
+
+```rust
+capacity = 3
+height = 1;
+top = 0;
+```
+
+<Stack data={[{ val: 2, pop: true }, { val: 7, pop: true }, 1]} />
+
+And when we call `pop(aStack)` one more time:
+
+```rust
+capacity = 3
+height = 0;
+top = -1;
+```
+
+<Stack
+	data={[
+		{ val: 2, pop: true },
+		{ val: 7, pop: true },
+		{ val: 1, pop: true },
+	]}
+/>
+
+At this point, the `aStack` is effectively empty, identified by a
+particular property of its current state: `height = 0`.
+
+Now that we have an empty guard, we can rewrite our `pop()` function:
+
+```rust
+fn pop(Stack* stack) -> void;
+	if (isEmpty(stack)):
+		print "Stack underflow";
+	else:
+		stack->top -= 1;
+		stack->height -= 1;
+		stack->spaceRemaining += 1;
+```
+
+With the function above, if the user attempts to call `pop()` on an empty
+stack, the function returns an error message `"Stack underflow"`.
+Otherwise, the popping proceeds.
+
+Time Complexity. Like pushing, popping an element off the stack consists
+entirely of basic steps. As such, the `pop()` function has time complexity
+of ${O(1)}$—constant time.
+
+Here's an implementation of the `isEmpty()` function in C:
+
+```c
+bool isEmpty(struct Stack* stack) {
+	return (*stack).height == 0;
+}
+```
+
+And the `pop()` function's implementation:
+
+```c
+void pop(struct Stack* stack) {
+	if (isEmpty(stack)) {
+		printf("Stack underflow\n");
+	} else {
+		(*stack).top--;
+		(*stack).height--;
+		(*stack).spaceRemaining++;
+	}
+}
+```
+
+Testing:
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+struct Stack {
+	int capacity;
+	int height;
+	int top;
+	int spaceRemaining;
+	int* S;
+};
+
+struct Stack* newStack(int maxSize) {
+	struct Stack* stack = malloc(sizeof(struct Stack));
+	(*stack).capacity = maxSize;
+	(*stack).height = 0;
+	(*stack).top = -1;
+	(*stack).spaceRemaining = maxSize;
+	(*stack).S = malloc(sizeof(int) * maxSize);
+	return stack;
+}
+
+bool isFull(struct Stack* stack) {
+	return (*stack).capacity == (*stack).height;
+}
+
+bool isEmpty(struct Stack* stack) {
+	return (*stack).height == 0;
+}
+
+void push(struct Stack* stack, int data) {
+	if (isFull(stack)) {
+		printf("Stack overflow\n");
+	} else {
+		(*stack).top++;
+		(*stack).S[(*stack).top] = data;
+		(*stack).height++;
+	}
+}
+
+void pop(struct Stack* stack) {
+	if (isEmpty(stack)) {
+		printf("Stack underflow\n");
+	} else {
+		(*stack).top--;
+		(*stack).height--;
+		(*stack).spaceRemaining++;
+	}
+}
+
+void print(struct Stack* stack) {
+	if (isEmpty(stack)) {
+		printf("Empty\n");
+	} else {
+		for (int i = (*stack).top; i >= 0; i--) {
+			printf("%d\n", (*stack).S[i]);
+			printf("---\n");
+		}
+	}
+}
+
+int main() {
+	struct Stack* aStack = newStack(3);
+	push(aStack, 1);
+	push(aStack, 8);
+	push(aStack, 4);
+	print(aStack);
+
+	printf("\n");
+
+	pop(aStack);
+	print(aStack);
+
+	printf("\n");
+
+	pop(aStack);
+	print(aStack);
+
+	printf("\n");
+
+	pop(aStack);
+	print(aStack);
+
+	printf("\n");
+
+	pop(aStack);
+	print(aStack);
+
+	return 0;
+}
+```
+
+```bash
+4
+---
+8
+---
+1
+---
+
+8
+---
+1
+---
+
+1
+---
+
+Empty
+
+Stack underflow
+Empty
+```
+
+## Peeking
+
+An operation commonly associated with stacks is the _peek_ operation. The
+peek operation returns the stack frame at a given position ${i.}$ The
+operation is called _peeking_ because the topmost frame hides all of the
+frames beneath it.
+
+Suppose we had the following stack:
+
+<Stack data={[9, 2, 4, 7]} isIndexed={true} />
+
+The numbers to the right correspond to the indices of the array that
+implements the stack:
+
+However, because we think of the stack as going from top to bottom, we want
+to interpret the topmost frame as the "first" frame. In other words, the
+frame with position 0:
+
+We can implement this interpretation by finding an equation that expresses
+the position value in terms of `top` and the index `i` that must be passed
+to `S[i]`. To do so, let's compare the values in a table:
+
+| `position` | `top` | `array index` |
+| ---------- | ----- | ------------- |
+| 0          | 3     | 3             |
+| 1          | 3     | 2             |
+| 2          | 3     | 1             |
+| 3          | 3     | 0             |
+
+Looking at these values, we can express the array index ${i}$ we must use
+to obtain the position ${p}$ with the following formula:
+
+$$
+	i = t - p
+$$
+
+where ${i}$ is the index, ${t}$ is the value of `top`, and ${p}$ is the
+`position` argument passed. Implementing this procedure:
+
+```rust
+fn peek(Stack* stack, int position) -> int :
+	int frameVal = INT_MIN;
+	if (isEmpty(stack)):
+		print "Stack is empty, returning INT_MIN";
+	else:
+		if (0 <= position <= stack->top):
+			int i = (stack->top) - position;
+			frameVal = stack->S[i];
+		else:
+			print "Invalid index, returning INT_MIN";
+	return frameVal;
+```
+
+In the implementation above, we included two guards. First, a guard
+checking whether the stack is empty. If it is empty, we log an error
+message and return a dummy frame value, `INT_MIN`. If the stack is not
+empty, then we proceed to the else-branch.
+
+Inside the else-branch, we encounter the second guard:
+`0 <= position <= stack->top`. This guard ensures that a valid `position`
+value was passed—the value must be within the range of 0 through `top`.
+Otherwise, we log an error message and return the dummy frame value.
+
+Time Complexity. Because the procedure above consists entirely of basic
+steps, we have a time complexity of ${O(1)}$—constant time.
+
+Here's an implementation of the `peek()` function in C:
+
+```c
+int peek(struct Stack* stack, int position) {
+	int frameVal = INT8_MIN;
+	if (isEmpty(stack)) {
+		printf("Empty stack. Returning INT8_MIN.\n");
+	} else {
+		if (0 <= position && position <= (*stack).top) {
+			int i = (*stack).top - position;
+			frameVal = (*stack).S[i];
+		} else {
+			printf("Invalid index. Returning INT8_MIN.\n");
+		}
+	}
+	return frameVal;
+}
+```
+
+Testing the code:
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+struct Stack {
+	int capacity;
+	int height;
+	int top;
+	int space;
+	int* S;
+};
+
+struct Stack* newStack(int maxSize) {
+	struct Stack* stack = malloc(sizeof(struct Stack));
+	(*stack).capacity = maxSize;
+	(*stack).top = -1;
+	(*stack).height = 0;
+	(*stack).space = maxSize;
+	(*stack).S = malloc(sizeof(int) * maxSize);
+	return stack;
+};
+
+bool isFull(struct Stack* stack) {
+	return (*stack).height == (*stack).capacity;
+}
+
+bool isEmpty(struct Stack* stack) {
+	return (*stack).height == 0;
+}
+
+void push(struct Stack* stack, int datum) {
+	if (isFull(stack)) {
+		printf("Stack overflow\n");
+	} else {
+		(*stack).top++;
+		(*stack).S[(*stack).top] = datum;
+		(*stack).height++;
+		(*stack).space--;
+	}
+};
+
+void pushArray(struct Stack* stack, int dataArray[], int arraySize) {
+	if (arraySize > (*stack).space) {
+		int diff = arraySize - (*stack).space;
+		printf("Stack overflow by %d element(s).\n", diff);
+	} else {
+		for (int i = 0; i < arraySize; i++) {
+			push(stack, dataArray[i]);
+		}
+	}
+};
+
+int peek(struct Stack* stack, int position) {
+	int frameVal = INT8_MIN;
+	if (isEmpty(stack)) {
+		printf("Empty stack. Returning INT8_MIN.\n");
+	} else {
+		if (0 <= position && position <= (*stack).top) {
+			int i = (*stack).top - position;
+			frameVal = (*stack).S[i];
+		} else {
+			printf("Invalid index. Returning INT8_MIN.\n");
+		}
+	}
+	return frameVal;
+}
+
+void print(struct Stack* stack) {
+	if (isEmpty(stack)) {
+		printf("Empty stack.\n");
+	} else {
+		for (int i = (*stack).top; i >= 0; i--) {
+			printf("%d\n", (*stack).S[i]);
+			printf("---\n");
+		}
+	}
+}
+
+
+int main() {
+	struct Stack* stack = newStack(5);
+	const int arrSize = 5;
+	int arr[arrSize] = {3,9,2,1,5};
+	pushArray(stack, arr, arrSize);
+	print(stack);
+	int peek0 = peek(stack, 0);
+	printf("peek0: %d\n", peek0);
+	int peek4 = peek(stack, 4);
+	printf("peek4: %d\n", peek4);
+	int peek6 = peek(stack, 6);
+	printf("peek6: %d\n", peek6);
+	return 0;
+};
+```
+
+```bash
+5
+---
+1
+---
+2
+---
+9
+---
+3
+---
+peek0: 5
+peek4: 3
+Invalid index. Returning INT8_MIN.
+peek6: -128
+```
+
+## Pulling
+
+When we **pull** from a stack, we are retrieving the data value in the
+topmost frame. Because the `top` pointer updates each time we push and pop
+off the stack, the procedure is straightforward:
+
+```rust
+fn pull(Stack* stack) -> int:
+	if (isEmpty(stack)):
+		print "Stack is empty. Returning INT_MIN."
+		return INT_MIN
+	else:
+		return (*stack).S[stack->top];
+```
+
+As usual, whenever we're trying to retrieve some data from the stack, we
+want to ensury the stack is not empty. If it is, we log an error message
+and return a dummy value `INT_MIN`. If it isn't then we return the topmost
+frame's stored value.
+
+Complexity. Because all of the steps in the procedure above are basic
+steps, the time complexity for `pull()` is constant—${O(1).}$
+
+Here's an implementation of `pull()` in C:
+
+```c
+int pull(struct Stack* stack) {
+	if (isEmpty(stack)) {
+		printf("Stack is empty. Returning INT8_MIN.\n");
+		return INT8_MIN;
+	} else {
+		return (*stack).S[(*stack).top];
+	}
+}
+```
+
+Testing:
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+struct Stack {
+	int capacity;
+	int height;
+	int top;
+	int spaceRemaining;
+	int* S;
+};
+
+struct Stack* newStack(int maxSize) {
+	struct Stack* stack = malloc(sizeof(struct Stack));
+	(*stack).capacity = maxSize;
+	(*stack).top = -1;
+	(*stack).height = 0;
+	(*stack).spaceRemaining = maxSize;
+	(*stack).S = malloc(sizeof(int) * maxSize);
+	return stack;
+};
+
+bool isFull(struct Stack* stack) {
+	return (*stack).height == (*stack).capacity;
+}
+
+bool isEmpty(struct Stack* stack) {
+	return (*stack).height == 0;
+}
+
+void push(struct Stack* stack, int datum) {
+	if (isFull(stack)) {
+		printf("Stack overflow.\n");
+	} else {
+		(*stack).top++;
+		(*stack).S[(*stack).top] = datum;
+		(*stack).height++;
+		(*stack).spaceRemaining--;
+	}
+};
+
+void pushArray(struct Stack* stack, int dataArray[], int arraySize) {
+	if (arraySize > (*stack).spaceRemaining) {
+		int diff = arraySize - (*stack).spaceRemaining;
+		printf("Stack overflow by %d element(s).\n", diff);
+	} else {
+		for (int i = 0; i < arraySize; i++) {
+			push(stack, dataArray[i]);
+		}
+	}
+};
+
+void pop(struct Stack* stack) {
+	if (isEmpty(stack)) {
+		printf("Empty stack.\n");
+	} else {
+		(*stack).top--;
+		(*stack).height--;
+		(*stack).spaceRemaining++;
+	}
+}
+
+int peek(struct Stack* stack, int position) {
+	int frameVal = INT8_MIN;
+	if (isEmpty(stack)) {
+		printf("Empty stack. Returning INT8_MIN.\n");
+	} else {
+		if (0 <= position && position <= (*stack).top) {
+			int i = (*stack).top - position;
+			frameVal = (*stack).S[i];
+		} else {
+			printf("Invalid index. Returning INT8_MIN.\n");
+		}
+	}
+	return frameVal;
+}
+
+int pull(struct Stack* stack) {
+	if (isEmpty(stack)) {
+		printf("Stack is empty. Returning INT8_MIN.\n");
+		return INT8_MIN;
+	} else {
+		return (*stack).S[(*stack).top];
+	}
+}
+
+void print(struct Stack* stack) {
+	if (isEmpty(stack)) {
+		printf("Empty stack.\n");
+	} else {
+		for (int i = (*stack).top; i >= 0; i--) {
+			printf("%d\n", (*stack).S[i]);
+			printf("---\n");
+		}
+	}
+}
+
+
+int main() {
+	struct Stack* stack = newStack(5);
+	const int arrSize = 5;
+	int arr[arrSize] = {3,9,2,1,5};
+	pushArray(stack, arr, arrSize);
+	print(stack);
+	int currentTop = pull(stack);
+	printf("Current top: %d\n", currentTop);
+	return 0;
+};
+```
+
+```bash
+5
+---
+1
+---
+2
+---
+9
+---
+3
+---
+Current top: 5
+```
+
+## Dynamic Stacks
+
+In contrast to static stacks, **dynamic stacks** are stacks that have no
+set capacity. As long as we have memory available, we can store as many
+stacks as we'd like. To realize this property, we implement dynamic stacks
+with _linked lists_ rather than arrays. Consider the following dynamic
+stack:
+
+<Stack data={[8, 5, 1, 6]} />
+
+As a linked list:
+
+<LinkedList data={[8, 5, 1, 6]} />
+
+Notice that with the linked list implementation, the list's head serves as
+the topmost frame, and the list's tailend serves as the bottom-most frame.
+Contrast this with arrays, where the array's last element is the topmost
+frame, and the array's first element is the bottom-most frame.
+
+Why this difference? Because when used an array, inserting new elements
+into the array would require _shifting_ the elements. Given ${n}$ elements,
+this would take ${O(n).}$ By interpreting the last element as the topmost
+element, we do not need to shifting; we simply append, and that takes
+${O(1)}$ time.
+
+With the linked list, however, appending takes ${O(n)}$ time. Why? Because
+to append to a linked list, we must traverse over ${n}$ nodes to reach the
+tailend. If we interpreted the head as the topmost element, then pushing an
+element onto the stack takes ${O(1)}$ time—we just have to link the new
+node to the head, and change the head to the newly prepended head.
+
+For example, suppose we wanted to implement the stack:
+
+<Stack data={[3, 2, 7]} />
+
+The first frame in this stack is `F(7)` Thus, this is the first node in the
+list. When we prepend a node to the list, `F(2)` that becomes the next
+frame. And when we prepend another, that becomes the next frame. The end
+result:
+
+<LinkedList data={[{ val: 3, ant: "t" }, 2, 7]} />
+
+Notice that the `head` pointer, denoted `t`, is equivalent to the stack's
+`top` pointer. Let's implement the base data structure.
+
+To implement the linked list qua stack, we need a linked list data
+structure. And to implement a linked list data structure, we need a node
+data structure. Below is C code for implementing a node and its
+constructor:
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+	int data;
+	struct Node* next;
+};
+
+struct Node* newNode(int newData) {
+	struct Node* node = malloc(sizeof(struct Node));
+	(*node).data = newData;
+	(*node).next = NULL;
+	return node;
+}
+```
+
+Because we're working with stacks, however, we should use more descriptive
+names:
+
+```c
+struct Frame {
+	int data;
+	struct Frame* next;
+};
+
+struct Frame* newFrame(int newData) {
+	struct Frame* frame = malloc(sizeof(struct Frame));
+	(*frame).data = newData;
+	(*frame).next = NULL;
+	return frame;
+}
+```
+
+The only change here is using the word "frame" instead of "stack." This is
+a matter of personal style, but whenever we work with abstract data types,
+we want to use names that allow us to think in terms of the type.
+
+Next, we'll want to implement some `struct` for the stack and its
+constructor:
+
+```c
+struct Stack {
+	struct Frame* top;
+	int height;
+};
+
+struct Stack* newStack() {
+	struct Stack* stack = malloc(sizeof(stack));
+	(*stack).top = NULL;
+	(*stack).height = 0;
+	return stack;
+}
+```
+
+Notice that the `newStack()` constructor has its `top` pointer initially
+set to `NULL`. We do so because it makes logical sense—a new stack is
+initially empty; it's `top` points to nothing. With the data structure in
+place, we can begin implementing its operations.
+
+We also include a `height` property. This allows us to keep track of how
+high the stack has grown. We'll later see that this is a useful property to
+have.
+
+## Dynamic Stacks: Pushing
+
+Suppose we had the following existing stack:
+
+<Stack data={[7, 8, 2]} />
+
+As a linked list, the stack above looks like:
+
+<LinkedList data={[{ val: 7, ant: "h" }, 8, 2]} />
+
+Now let's say we wanted to add the frame `F(5)`.
+
+<Stack data={[5, 7, 8, 2]} />
+
+Now that we know that the `head` pointer is equivalent to the `top`
+pointer, pushing the frame `F(5)` to the stack is equivalent to prepending
+a new node. The procedure:
+
+1. First create a new node with some pointer `t`.
+2. Have `t`'s pointee (the node we're to prepend) point to `h`'s pointee
+   (the current head).
+3. Make `t`'s pointee become the new `head`.
+
+Implementing `push()` for a dynamic stack is similar to to implementing
+`push()` for a static stack. The key difference, however, is that the
+dynamic stack has no set capacity (we can, of course, impose such a limit).
+But, just because we don't impose a set capacity doesn't mean the dynamic
+stack grows infinitely. Memory is a finite resource, and at some point,
+we'll hit a wall. Accordingly, we still need a _capacity guard_ for
+pushing:
+
+```rust
+fn push(Stack* stack, int data) -> void:
+	Node* t = newNode(data);
+	if (*t == NULL):
+		print "Stack overflow";
+	else:
+		t->next = stack->top;
+		stack->top = t;
+		stack->height++;
+```
+
+In the code above, the capacity guard is `(*t == NULL)`. This condition
+occurs if, and only if, we no longer have any memory to work with. Most
+programs don't run into this issue, but because it can occur—e.g., pushing
+with an accidental runaway recursive function or too long of a loop—we
+always want to have this guard in place.
+
+Additionally, we also increment the stack's `height` property, since adding
+a new frame grows the stack.
+
+Below is an implementation of the `push()` function in C:
+
+```c
+void push(struct Stack* stack, int data) {
+	struct Frame* frame = newFrame(data);
+	if (frame == NULL) {
+		printf("Stack overflow.");
+	} else {
+		(*frame).next = (*stack).top;
+		(*stack).top = frame;
+	}
+}
+```
+
+For testing, we'll also want a `print()` function:
+
+```c
+void print(struct Stack* stack) {
+	struct Frame* p = (*stack).top;
+	while (p != NULL) {
+		printf("%d\n", (*p).data);
+		printf("---\n");
+		p = (*p).next;
+	}
+}
+```
+
+The test:
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Frame {
+	int data;
+	struct Frame* next;
+};
+
+
+struct Frame* newFrame(int newData) {
+	struct Frame* frame = malloc(sizeof(struct Frame));
+	(*frame).data = newData;
+	(*frame).next = NULL;
+	return frame;
+}
+
+struct Stack {
+	struct Frame* top;
+	int height;
+};
+
+struct Stack* newStack() {
+	struct Stack* stack = malloc(sizeof(stack));
+	(*stack).top = NULL;
+	(*stack).height = 0;
+	return stack;
+}
+
+void push(struct Stack* stack, int data) {
+	struct Frame* frame = newFrame(data);
+	if (frame == NULL) {
+		printf("Stack overflow.");
+	} else {
+		(*frame).next = (*stack).top;
+		(*stack).top = frame;
+		(*stack).height++;
+	}
+}
+
+void print(struct Stack* stack) {
+	struct Frame* p = (*stack).top;
+	while (p != NULL) {
+		printf("%d\n", (*p).data);
+		printf("---\n");
+		p = (*p).next;
+	}
+}
+
+int main() {
+	struct Stack* stack = newStack();
+	push(stack, 3);
+	push(stack, 5);
+	push(stack, 2);
+	push(stack, 9);
+	print(stack);
+	push(stack, 3);
+	push(stack, 5);
+	printf("\n");
+	print(stack);
+	return 0;
+}
+```
+
+```bash
+9
+---
+2
+---
+5
+---
+3
+---
+
+5
+---
+3
+---
+9
+---
+2
+---
+5
+---
+3
+---
+```
+
+## Popping
+
+Suppose we had the following dynamic stack.
+
+<Stack data={[2, 8, 1]} />
+
+<LinkedList data={[2, 8, 1]} />
+
+To pop the topmost frame in the dynamic stack, we must first have a pointer
+`p` to `t`'s pointee, the topmost frame:
+
+<Stack data={[{ val: 2, ant: "p" }, 8, 1]} />
+
+<LinkedList data={[{ val: 2, ant: "p" }, 8, 1]} />
+
+Then, we want to have `t` point to the frame immediately below the topmost
+frame:
+
+<Stack data={[{ val: 2, ant: "p" }, { val: 8, ant: "t" }, 1]} />
+
+<LinkedList data={[{ val: 2, ant: "p" }, { val: 8, ant: "t" }, 1]} />
+
+Positioned as such, we can then delete `p`'s pointee, the former topmost
+frame:
+
+<LinkedList data={[{ val: 8, ant: "t" }, 1]} />
+
+The pseudocode:
+
+```rust
+fn: pop(Stack* stack) -> void:
+	Node* p = stack->top;
+	p = (stack->top);
+	(stack->top) = (stack->top)->next;
+	free (p);
+	(stack->height)--
+```
+
+As we saw with linked lists, this function is incomplete, because we need
+an _empty guard_:
+
+```rust
+fn: isEmpty(Stack* stack) -> bool:
+	(stack->top) == NULL;
+```
+
+All we're doing here is checking if the stack argument's `top` pointer is
+`NULL`. If it is, then the stack is empty. Accordingly, our revised `pop()`
+function:
+
+```rust
+fn: pop(Stack* stack) -> void:
+	if (isEmpty(stack)):
+		print "Nothing to pop: empty stack."
+	else:
+		Node* p = stack->top;
+		(stack->top) = (stack->top)->next;
+		free(p);
+		(stack->height)--;
+```
+
+The `pop()` function in C:
+
+```c
+void pop(struct Stack* stack) {
+	if (isEmpty(stack)) {
+		printf("Nothing to pop: stack is empty.\n");
+	} else {
+		struct Frame* p = (*stack).top;
+		(*stack).top = (*(*stack).top).next;
+		free(p);
+	}
+}
+```
+
+The `isEmpty()` function:
+
+```c
+bool isEmpty(struct Stack* stack) {
+	return (*stack).top == NULL;
+}
+```
+
+For convenience, we'll also use a function `pushFromArray()` for pushing
+multiple frames onto the stack:
+
+```c
+void pushFromArray(struct Stack* stack, int dataArray[], int arraySize) {
+	if (arraySize <= 0) {
+		printf("Invalid index.\n");
+	} else {
+		for (int i = 0; i < arraySize; i++) {
+			push(stack, dataArray[i]);
+		}
+	}
+}
+```
+
+Testing:
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+struct Frame {
+	int data;
+	struct Frame* next;
+}
+;
+struct Frame* newFrame(int newData) {
+	struct Frame* frame = malloc(sizeof(struct Frame));
+	(*frame).data = newData;
+	(*frame).next = NULL;
+	return frame;
+}
+struct Stack {
+	struct Frame* top;
+	int height;
+};
+struct Stack* newStack() {
+	struct Stack* stack = malloc(sizeof(struct Stack));
+	(*stack).top = NULL;
+	(*stack).height = 0;
+	return stack;
+}
+bool isEmpty(struct Stack* stack) {
+	return (*stack).top == NULL;
+}
+void push(struct Stack* stack, int data) {
+	struct Frame* frame = newFrame(data);
+	if (frame == NULL) {
+		printf("Stack overflow.\n");
+	} else {
+		(*frame).next = (*stack).top;
+		(*stack).top = frame;
+		(*stack).height++;
+	}
+}
+void pushFromArray(struct Stack* stack, int dataArray[], int arraySize) {
+	if (arraySize <= 0) {
+		printf("Invalid index.\n");
+	} else {
+		for (int i = 0; i < arraySize; i++) {
+			push(stack, dataArray[i]);
+		}
+	}
+}
+void pop(struct Stack* stack) {
+	if (isEmpty(stack)) {
+		printf("Nothing to pop: stack is empty.\n");
+	} else {
+		struct Frame* p = (*stack).top;
+		(*stack).top = (*(*stack).top).next;
+		free(p);
+		(*stack).height--;
+	}
+}
+void print(struct Stack* stack) {
+	struct Frame* p = (*stack).top;
+	if (p == NULL) {
+		printf("Empty list.\n");
+	} else {
+		printf("\n");
+		while (p != NULL) {
+			printf("%d \n", (*p).data);
+			printf("---\n");
+			p = (*p).next;
+		}
+	}
+}
+int main() {
+	const int arrSize = 2;
+	int arr[arrSize] = {1,2};
+	struct Stack* stack = newStack();
+
+	pushArray(stack, arr, arrSize);
+	print(stack);
+
+	push(stack, 3);
+	print(stack);
+
+	pop(stack);
+	print(stack);
+
+	pop(stack);
+	print(stack);
+
+	pop(stack);
+	print(stack);
+
+	pop(stack);
+	print(stack);
+	return 0;
+}
+```
+
+```bash
+2
+---
+1
+---
+
+3
+---
+2
+---
+1
+---
+
+2
+---
+1
+---
+
+1
+---
+Empty list.
+Nothing to pop: stack is empty.
+Empty list.
+```
+
+## Peeking
+
+Let's say we had the following dynamic stack, called `stackA`:
+
+<Stack data={[8, 1, 5, 7]} />
+
+<LinkedList data={[8, 1, 5, 7]} />
+
+We want to retrieve the data in the frame just above the bottom-most frame.
+To do so, we pretend each frame in the stack has an index, starting at 0:
+
+<Stack data={[8, 1, 5, 7]} isIndexed={true} />
+
+<LinkedList data={[8, 1, 5, 7]} isIndexed={true} />
+
+Once we have this interpretation, we can implement a function `peek()`,
+which takes a `position` argument, corresponding to the interpreted index.
+In this case, to retrieve the frame just above the bottom-most frame, we
+would call: `peek(stackA, 3)`.
+
+Implementing the function in pseudocode:
+
+```rust
+fn peek(Stack* stack, int position) -> int:
+	if (isEmpty(stack)):
+		print "Nothing to peek at. Returning MIN_INT."
+		return MIN_INT;
+	else if ((stack->height) <= position < 0):
+		print "Invalid position. Returning MIN_INT."
+		return MIN_INT;
+	else:
+		Stack* p = stack->top;
+		for (int i = 0; i < position; i++):
+			p = p->next;
+		return p->data;
+```
+
+We have two guards with the procedure above. First, we need a guard against
+peeking at an empty stack. If the stack has no frames, there's nothing to
+peek at.
+
+Second, we used the stack's `height` property and the value 0 as a guard
+against peeking at something that isn't inside the stack. If the `position`
+argument is either (a) greater than or equal to the `height`, or (b) less
+than 0, then the `position` argument is invalid.[^index_note] And if the
+`position` argument is invalid, we log an error message and return a dummy
+value, `MIN_INT`.
+
+[^index_note]:
+    Since we're indexing from 0, we have to offset by 1. This means that if
+    the `height` is, say, 3, then the valid indices are ${0, 1, 2.}$
+
+Only if the `position` is valid—i.e., it passes the guards—do we proceed to
+the for-loop and traverse the frames to the correct position. Once there,
+we return that frame's stored data.
+
+Below is an implementation in C. The `peek()` function:
+
+```c
+int peek(struct Stack* stack, int position) {
+	if (position >= (*stack).height || position < 0) {
+		printf("Invalid position entered. Returning INT8_MIN.\n");
+		return INT8_MIN;
+	} else {
+		struct Frame* p = (*stack).top;
+		for (int i = 0; i < position; i++) {
+			p = (*p).next;
+		}
+		return (*p).data;
+	}
+}
+```
+
+For convenience, we'll write a function called `popMultiple()` for popping
+multiple elements off the stack:
+
+```c
+void popMultiple(struct Stack* stack, int popCount) {
+	if (isEmpty(stack)) {
+		printf("Nothing to pop. Stack is empty.\n");
+	} else if (popCount > (*stack).height || popCount <= 0) {
+			printf("popCount invalid.\n");
+	} else {
+		for (int i = 0; i < popCount; i++) {
+			pop(stack);
+		}
+	}
+}
+```
+
+Testing:
+
+```c
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+struct Frame {
+	int data;
+	struct Frame* next;
+};
+struct Frame* newFrame(int newData) {
+	struct Frame* frame = malloc(sizeof(struct Frame));
+	(*frame).data = newData;
+	(*frame).next = NULL;
+	return frame;
+}
+struct Stack {
+	struct Frame* top;
+	int height;
+};
+struct Stack* newStack() {
+	struct Stack* stack = malloc(sizeof(struct Stack));
+	(*stack).top = NULL;
+	(*stack).height = 0;
+	return stack;
+}
+void push(struct Stack* stack, int newData) {
+	struct Frame* frame = newFrame(newData);
+	if (frame == NULL) {
+		printf("Stack overflow.\n");
+	} else {
+		(*frame).next = (*stack).top;
+		(*stack).top = frame;
+		(*stack).height++;
+	}
+}
+void pushFromArray(struct Stack* stack, int dataArray[], int arraySize) {
+	if (arraySize <= 0) {
+		printf("Invalid index.\n");
+	} else {
+		for (int i = 0; i < arraySize; i++) {
+			push(stack, dataArray[i]);
+		}
+	}
+}
+bool isEmpty(struct Stack* stack) {
+	return (*stack).top == NULL;
+}
+void pop(struct Stack* stack) {
+	if (isEmpty(stack)) {
+		printf("Stack is empty.\n");
+	} else {
+		struct Frame* p = (*stack).top;
+		(*stack).top = (*(*stack).top).next;
+		(*stack).height--;
+		free(p);
+	}
+}
+void popMultiple(struct Stack* stack, int popCount) {
+	if (isEmpty(stack)) {
+		printf("Nothing to pop. Stack is empty.\n");
+	} else if (popCount > (*stack).height || popCount <= 0) {
+			printf("popCount invalid.\n");
+	} else {
+		for (int i = 0; i < popCount; i++) {
+			pop(stack);
+		}
+	}
+}
+int peek(struct Stack* stack, int position) {
+	if (isEmpty(stack)) {
+		printf("Nothing to peek at. Stack is empty. Returning INT8_MIN.\n");
+		return INT8_MIN;
+	} else if (position >= (*stack).height || position < 0) {
+		printf("Invalid position entered. Returning INT8_MIN.\n");
+		return INT8_MIN;
+	} else {
+		struct Frame* p = (*stack).top;
+		for (int i = 0; i < position; i++) {
+			p = (*p).next;
+		}
+		return (*p).data;
+	}
+}
+void print(struct Stack* stack) {
+	struct Frame* p = (*stack).top;
+	if (p == NULL) {
+		printf("Empty stack.\n");
+	} else {
+		while (p != NULL) {
+			printf("%d\n", (*p).data);
+			printf("---\n");
+			p = (*p).next;
+		}
+	}
+}
+
+int main() {
+	const int arrSize = 4;
+	int arr[arrSize] = {1,2,3,4};
+	struct Stack* stack = newStack();
+	pushFromArray(stack, arr, arrSize);
+	print(stack);
+	printf("Stack height: %d\n", (*stack).height);
+
+	int topFrame = peek(stack, 0);
+	printf("topFrame: %d\n", topFrame);
+
+	int bottomFrame = peek(stack, 3);
+	printf("bottomFrame: %d\n", bottomFrame);
+
+	int someFrame = peek(stack, 4);
+	printf("someFrame: %d\n", someFrame);
+
+	popMultiple(stack, 4);
+	print(stack);
+
+	peek(stack, 1);
+
+	return 0;
+}
+```
+
+```bash
+4
+---
+3
+---
+2
+---
+1
+---
+Stack height: 4
+topFrame: 4
+bottomFrame: 1
+Invalid position entered. Returning INT8_MIN.
+someFrame: -128
+Empty stack.
+Nothing to peek at. Stack is empty. Returning INT8_MIN.
+```
+
+## Stack Use Cases
+
+Because of the stack's last-in-first-out nature, they are tremendously
+useful for a wide variety of applications. In the sections below, we
+examine some of the more common use cases.
+
+### Parentheses Matching
+
+The program below is a sample program in Scheme:
+
+```scheme
+(define (sqrt x)
+	(define (good-enough? guess x)
+		(< (abs (- (square guess) x)) 0.001))
+	(define (improve guess x)
+		(average guess (/ x guess)))
+	(define (sqrt-iter guess x)
+		(if (good-enough? guess x)
+				guess
+				(sqrt-iter (improve guess x) x)))
+	(define (average x y)
+		(/ (+ x y) 2))
+	(define (square x)
+		(* x x))
+	(sqrt-iter 1.0 x))
+(sqrt 2)
+```
+
+```bash
+1.4142156862745097
+```
+
+Those who don't work with the Lisp-descendant languages almost always say
+the same thing: "`))))))`". Accordingly, there are a whole host of text
+editors with various solutions" to the parentheses use.[^lisp_note] Some
+editors take the approach of coloring the matching parentheses.
+
+[^lisp_note]:
+    Slandering the Lisp descendant's use of parentheses is somewhat of a
+    pastime among the programming community. In reality, the parentheses
+    are really not that big of a deal; after a few programming sessions in
+    the language they're second nature.
+
+```scheme
+(sqrt 2)
+```
+
+To color these parentheses, however, there must be a way to match
+parentheses. This raises the question: How do we match parentheses? It
+turns out the stack is a particularly useful data structure for parentheses
+matching.
+
+First, suppose we had the following parenthesized expression, a string
+value:
+
+```rust
+"(a+b)"
+```
+
+To determine if the parenthesis match, we'll use a dynamic stack,
+performing the following:
+
+1. Begin with an empty stack.
+
+2. Iterate over the string from 0 to ${L,}$ where ${L}$ is the length of
+   the string.
+
+3. If a `'('` is encountered, push `'('` character onto the stack.
+   Otherwise, continue.
+
+4. If a `')'` is encountered, and the stack is not empty, pop off the
+   stack. If the stack is empty, the parenthesis do not match. Otherwise,
+   continue.
+
+5. Once all characters have been iterated over:
+   1. If the stack is empty, the parenthesis match.
+   2. If the stack is not empty, the parenthesis do not match.
+
+To see that this works, let's consider our simple expression, `(a+b)`.
+First, string values are really just arrays of characters, with the last
+character being the string terminator.
+
+<Sequence data={["(", "a", "+", "b", ")", "\0"]} />
+
+We can thus iterate over this array. Starting with the first character, we
+see that the character is a parenthesis, so we push it onto our dynamic
+stack:
+
+<Sequence
+	data={[{ val: "(", focus: "match" }, "a", "+", "b", ")", "\0"]}
+/>
+
+<Stack data={["("]} />
+
+We go to the next character, and see that it isn't a parenthesis so we skip
+it:
+
+<Sequence data={["(", { val: "a", focus: "skip" }, "+", "b", ")", "\0"]} />
+
+<Stack data={["("]} />
+
+We skip the next character because it isn't a parenthesis either:
+
+<Sequence data={["(", "a", { val: "+", focus: "skip" }, "b", ")", "\0"]} />
+
+<Stack data={["("]} />
+
+And again we skip the next character because it isn't a parenthesis:
+
+<Sequence data={["(", "a", "+", { val: "b", focus: "skip" }, ")", "\0"]} />
+
+<Stack data={["("]} />
+
+When we get to the next character, it is a parenthesis, so we pop off the
+stack:
+
+<Sequence
+	data={["(", "a", "+", "b", { val: ")", focus: "match" }, "\0"]}
+/>
+
+<Stack data={[{ val: "(", pop: true }]} />
+
+Since the stack is empty, the parentheses in this expression match. To see
+when parentheses don't match, let's consider the expression `((a + b)`. The
+first run:
+
+<Sequence
+	data={[{ val: "(", focus: "match" }, "(", "a", "+", "b", ")", "\0"]}
+/>
+
+<Stack data={["("]} />
+
+The second run:
+
+<Sequence
+	data={["(", { val: "(", focus: "match" }, "a", "+", "b", ")", "\0"]}
+/>
+
+<Stack data={["(", "("]} />
+
+We skip the next three characters because they aren't parentheses. When we
+get to `)`, we pop off the stack:
+
+<Sequence
+	data={["(", "(", "a", "+", "b", { val: ")", focus: "match" }, "\0"]}
+/>
+
+<Stack data={["(", { val: "(", pop: "true" }]} />
+
+At the end, we see that the stack is not empty.
+
+<Stack data={["("]} />
+
+This tells us that there aren't enough parentheses.
+
+There's one more case where the parentheses do not match. Consider the
+expression `(a + b))`. After the first parentheses, we have:
+
+<Stack data={["("]} />
+
+And after the second parentheses:
+
+<Stack data={[{ val: "(", pop: true }]} />
+
+When we get to the third parentheses, we attempt to pop off an empty stack.
+This is where we immediately return `false`—the parentheses do not match.
+
+Implementing this algorithm:
+
+```rust
+fn parenMatch(String exp) -> bool:
+	Stack* stack = newStack();
+	for (int i == 0; exp[i] != '\0'; i++):
+		if (exp[i] == '('):
+			push(stack, exp[i]);
+		else if (exp[i] == ')'):
+			if (isEmpty(stack)): return false;
+			else: pop(stack);
+	return isEmpty(stack);
+```
+
+Below is an implementation in C. Recall that a `char*` is simply a pointer
+to a character, and array indices are just shorthand for pointers. The
+`parenMatch()` function:
+
+```c
+bool parenMatch(char* exp) {
+	struct Stack* pStack = newStack();
+	for (int i = 0; exp[i] != '\0'; i++) {
+		if (exp[i] == '(') {
+			push(pStack, exp[i]);
+		} else if (exp[i] == ')') {
+			if (isEmpty(pStack)) {
+				return false;
+			} else {
+				pop(pStack);
+			}
+		}
+	}
+	bool result = isEmpty(pStack);
+	free(pStack);
+	return result;
+}
+```
+
+Notice how we're freeing `pStack` once we're done. Because the stack is
+used purely to check if the parentheses in a given expression match, it's
+imperative that we free that memory once we're done.
+
+Testing the function:
+
+```c
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+
+struct Frame {
+	char data;
+	struct Frame* next;
+};
+struct Frame* newFrame(char newData) {
+	struct Frame* frame = malloc(sizeof(struct Frame));
+	(*frame).data = newData;
+	(*frame).next = NULL;
+	return frame;
+};
+struct Stack {
+	struct Frame* top;
+	int height;
+};
+struct Stack* newStack() {
+	struct Stack* stack = malloc(sizeof(struct Stack));
+	(*stack).top = NULL;
+	(*stack).height = 0;
+	return stack;
+}
+bool isEmpty(struct Stack* stack) {
+	return (*stack).height == 0;
+}
+void push(struct Stack* stack, char data) {
+	struct Frame* frame = newFrame(data);
+	if (frame == NULL) {
+		printf("Stack overflow.\n");
+	} else {
+		(*frame).next = (*stack).top;
+		(*stack).top = frame;
+		(*stack).height++;
+	}
+}
+void pop(struct Stack* stack) {
+	if (isEmpty(stack)) {
+		printf("Nothing to pop. Stack is empty.\n");
+	} else {
+		struct Frame* p = (*stack).top;
+		(*stack).top = (*(*stack).top).next;
+		free(p);
+		(*stack).height--;
+	}
+}
+bool parenMatch(char* exp) {
+	struct Stack* pStack = newStack();
+	for (int i = 0; exp[i] != '\0'; i++) {
+		if (exp[i] == '(') {
+			push(pStack, exp[i]);
+		} else if (exp[i] == ')') {
+			if (isEmpty(pStack)) {
+				return false;
+			} else {
+				pop(pStack);
+			}
+		}
+	}
+	bool result = isEmpty(pStack);
+	free(pStack);
+	return result;
+}
+void printBool(bool val) {
+	if (val) {
+		printf("True\n");
+	} else {
+		printf("False\n");
+	}
+}
+
+int main() {
+	char exp1[] = "(a(b+c))";
+	char exp2[] = "(a(b+c)";
+	char exp3[] = ")(a)(b+c)";
+	char exp4[] = "(ab+)(c)";
+
+	bool exp1Matched = parenMatch(exp1);
+	bool exp2Matched = parenMatch(exp2);
+	bool exp3Matched = parenMatch(exp3);
+	bool exp4Matched = parenMatch(exp4);
+
+	printBool(exp1Matched);
+	printBool(exp2Matched);
+	printBool(exp3Matched);
+	printBool(exp4Matched);
+	return 0;
+}
+```
+
+```bash
+True
+False
+False
+True
+```

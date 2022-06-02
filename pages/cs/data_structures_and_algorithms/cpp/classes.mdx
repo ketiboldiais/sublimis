@@ -1,0 +1,2363 @@
+# Classes
+
+In this essay, we explore object-oriented programming (OOP) in C++. OOP is
+the reigning paradigm in modern programming. A core goal of this essay is
+to understand why the OOP status quo continues, as well as reasons for why
+this may or may not change in the future.
+
+The cornerstone of object-oriented programming is the ability to construct
+our own data types. We know that there are types provided natively by a
+language, what we might call _primitive types_.[^typenote] In C++, these
+types include `char`, `int`, `double`, `bool`, `float`, etc.
+
+[^typenote]:
+    Primitive types are also called _base types_ or _atomic types_.
+
+Although we can solve many problems with just these types, having such a
+small set of types can feel restrictive and stuffy. What if we have data
+that should be paired together? The airline passenger isn't just a number;
+they have a name, an age, gender, address, consumer preferences, mileage
+quantity, and possibly a special customer status. The solar system isn't
+just an array of eight planets; there are moons, dwarf planets, revolution
+paths, which themselves have related data.
+
+Related data doesn't even just occur with discrete entities. Mathematical
+formulas might be classified according to fields. We might have a formula
+related to probability, another related to geometry, another to calculus,
+another to number theory.
+
+Trying to model these complex ideas with just primitive types is painful.
+Worse, what if we need to change those models? What we need is an
+_abstraction_—**higher-order data types**.
+
+Recall that a data type is a set consisting of two subsets: a set of
+values, called the data type's **domain**, and a **set of operations** on
+those values. For example, the data type `int` is a data type pre-defined
+by C++. The values it represents are the integers (specifically ${-2^{31}}$
+to ${2^{31}}$), and the operations we may perform on those values are the
+various arithmetic and comparison operators (`+`, `*`, `%`, etc.).
+
+With object-oriented programming, we write C++ code to define new data
+types. We say that an **object** is an entity that holds a _data-type
+value_—you can manipulate the data type value by using the object's
+data-type operations. The practice of defining new data types and
+manipulating objects holding data-type values is called **data
+abstraction**.
+
+The foundational principle of object-oriented programming:
+
+> Principle. Always separate data from operations on that data.
+
+Notice that with the primitive data types, we were never really worried
+about how the data type represents the values. Of course, we know how the
+data is represented (bits allocated in memory), but when using the data
+types, we rarely stopped to consider the data type's implementation. This
+is precisely what data types are supposed to do. For the data type user,
+the only concern should be the _operations_ that can be performed with that
+data type. Of course, the story is different for the data type implementer.
+The implementer must always think about both the set of values represented,
+as well as the operations that can be performed on those values.
+
+> Principle. A data type should not require the user to know how the data
+> type is implemented.
+
+## The Class
+
+The C++ `class` provides a way to define data types. In a `class`, we
+specify the data-type values and implement the data-type operations. Let's
+write a simple class for a rectangle:
+
+```cpp
+class Rectangle {
+	int width;
+	int height;
+	int area() {
+		return width * height;
+	}
+	int perimeter() {
+		return 2 * (width + height);
+	}
+};
+
+```
+
+Above, we created a class called `Rectangle`. This is a new data type. It
+has two _properties_, `width` and `height`, of type `int`. It also has two
+functions—called _methods_—which have a return type of `int`.
+
+Now, let's try using this new class:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Rectangle {
+	int width;
+	int height;
+	int area() {
+		return width * height;
+	}
+	int perimeter() {
+		return 2 * (width + height);
+	}
+};
+
+int main() {
+	Rectangle r1;
+	r1.width = 7;
+	r1.height = 2;
+	return 0;
+}
+```
+
+Above, we created an _object_ of type `Rectangle`. This object is named
+`r1`. Alternatively, we say that `r1` is an _instance_ of the class
+`Rectangle`. Having created these two objects, we attempt to assign to
+`r1`'s properties—`width` and `height`—that `int` values `7` and `2`
+respectively. The compiler's response:
+
+```bash
+rectangle.cpp:17:5: error: 'width' is a private member of 'Rectangle'
+				r1.width = 7;
+					^
+rectangle.cpp:5:6: note: implicitly declared private here
+				int width;
+						^
+rectangle.cpp:18:5: error: 'height' is a private member of 'Rectangle'
+				r1.height = 2;
+					^
+rectangle.cpp:6:6: note: implicitly declared private here
+				int height;
+						^
+2 errors generated.
+```
+
+We get back an error. Why? We're seeing this error because of the concept
+of **visibility**. By default, all class properties and methods are
+`private`. This is an example of an **access modifier**. If a property or
+method is `private`, then only functions _within_ the class have access to
+the class's properties or methods. Functions outside of the class—e.g.,
+`main()`—do not have access to the private properties or methods. We can
+fix this by appending the keyword `public`:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Rectangle {
+	public:
+		int width;
+		int height;
+		int area() {
+			return width * height;
+		}
+		int perimeter() {
+			return 2 * (width + height);
+		}
+};
+```
+
+By appending the keyword `public`, we have effectively made the class's
+properties and methods visible—i.e., available for use—to any part of our
+program. Now let's try using the methods:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Rectangle {
+	public:
+		int width;
+		int height;
+		int area() {
+			return width * height;
+		}
+		int perimeter() {
+			return 2 * (width + height);
+		}
+};
+
+int main() {
+	Rectangle r1;
+	r1.width = 7;
+	r1.height = 2;
+	cout << r1.area() << endl;
+	cout << r1.perimeter() << endl;
+	return 0;
+}
+```
+
+```bash
+14
+18
+```
+
+It works. Notice the use of dots, or periods, to access properties and
+methods. This is called **dot notation**, and is a common syntactic
+approach for accessing properties and methods in object-oriented
+languages.[^dotnotationnote]
+
+[^dotnotationnote]:
+    The use of **dot notation** can be traced back to Simula 67, the
+    language widely credited as the first object-oriented language.
+    However, there is evidence of the dot notation being used even further
+    back: The PL/I language for the IBM 360 used dot notation to specify
+    fields in a record.
+
+## Access Modifiers
+
+In the examples above, we set the properties and methods in our classes
+`public`. This is not always a good idea. For starters, having them set to
+`public` implies that anyone has access to them. This can be very
+dangerous, depending on what our class is being used for. How do we ensure
+that properties and methods are hidden? I.e., only the class has access to
+its methods and properties? For that, we need **access modifiers**. Access
+modifiers are also called _accessors_ or _access specifiers_.
+
+In C++, there are three access modifiers: `public`, `protected`, and
+`private`. We'll look at each of them in turn.
+
+### The Private Keyword
+
+By default, all properties and methods in a C++ class are set to `private`.
+This means that outside of the class containing those properties and
+methods, no access is provided. For example:
+
+```cpp
+// we don't have to write out 'private', but we do so here to be explicit
+class Cylinder {
+	private:
+		double pi = 3.14;
+		double radius;
+		double height;
+	public:
+		double surfaceArea() {
+			return 2 * pi * radius * (radius + height);
+		}
+		double volume() {
+			return pi * radius * radius * height;
+		}
+};
+```
+
+By default, all of the properties in class `Cylinder` is set to `private`.
+However, we set the methods `public`, because those are functions we would
+like to access directly. Now, because the properties of `Cylinder` are set
+to `private`, we cannot access them in `main()`, nor anywhere else outside
+of `class Cylinder`'s definition. But this means that the methods
+`surfaceArea()` and `volume()` are essentially useless, because we don't
+have a way to set the values of `radius` and `height`. But we want to keep
+the properties `private` _and_ be still be able to initialize them outside
+of the `class` definition. Can we do so? It seems like we can't.
+
+Oh but we can. We can get around the `private` barrier by setting some
+function in the inside the class as `public`. Think of it as leaving a tiny
+gap, or window, for us to access the class. Let's start with one of the
+properties, `radius`. To be able to initialize this property, we just need
+a `public` method that initializes the property:
+
+```cpp
+class Cylinder {
+	double pi = 3.14;
+	double radius;
+	double height;
+	public:
+		double surfaceArea() {
+			return 2 * pi * radius * (radius + height);
+		}
+		double volume() {
+			return pi * radius * radius * height;
+		}
+		void setRadius(double r) {
+			radius = r; // you don't need a return for void return types
+		}
+		void setHeight(double h) {
+			height = h;
+		}
+};
+```
+
+The functions `setRadius()` and `setHeight()` are set to `public`, and they
+are what allow us to access to initialize the properties `radius` and
+`height`, even if they are set to `private`. Let's try it:
+
+```cpp
+#include <iostream>
+using namespace std;
+class Cylinder {
+	double pi = 3.14;
+	double radius;
+	double height;
+	public:
+		double surfaceArea() {
+			return 2 * pi * radius * (radius + height);
+		}
+		double volume() {
+			return pi * radius * radius * height;
+		}
+		void setRadius(double r) {
+			radius = r; // remember you don't need a return for void return types
+		}
+		void setHeight(double h) {
+			height = h;
+		}
+};
+int main() {
+	Cylinder cindy = Cylinder();
+	cindy.setRadius(3.2);
+	cindy.setHeight(8.6);
+	cout << cindy.surfaceArea() << endl;
+	cout << cindy.volume() << endl;
+	return 0;
+}
+```
+
+```bash
+237.133
+276.521
+```
+
+Great. It works. Unfortunately, we can't directly access `radius` and
+`height` because they're still set to `private`. But what if we need the
+`radius` and `height`? Well, we'll just write another `public` method, one
+that retrieves `radius` and `height`. We'll call them `getRadius()` and
+`getHeight()`:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Cylinder {
+	double pi = 3.14;
+	double radius;
+	double height;
+	public:
+		double surfaceArea() {
+			return 2 * pi * radius * (radius + height);
+		}
+		double volume() {
+			return pi * radius * radius * height;
+		}
+		void setRadius(double r) {
+			radius = r; // remember you don't need a return for void return types
+		}
+		double getRadius() {
+			return radius;
+		}
+		void setHeight(double h) {
+			height = h;
+		}
+		double getHeight() {
+			return height;
+		}
+};
+
+int main() {
+	Cylinder cindy = Cylinder();
+	cindy.setRadius(3.2);
+	cindy.setHeight(8.6);
+	cout << cindy.getRadius() << endl;
+	cout << cindy.getHeight() << endl;
+	return 0;
+}
+```
+
+```bash
+3.2
+8.6
+```
+
+Above, we wrote two new functions, `getRadius()` and `getHeight()`, both of
+which are of type `double`, since they return a `double`. Let's think a
+little more carefully about what this means. The methods `getRadius()` and
+`getHeight()` are one way streets. We can only _retrieve_ the values
+assigned to the properties `radius` and `height`, but in no way can we use
+them to _modify_ the values assigned. This effectively ensures that
+`radius` and `height` remain `private`; we cannot modify them, we can only
+read them. Hence the term _access modifier_, rather than something like
+"visibility modifier." In other words, the access modifier only restricts
+the ability to write; it doesn't necessarily restrict the ability to read.
+
+The methods `setRadius()` and `setHeight()` are examples of what we call
+**setters**. Setters are methods for _initializing_ properties in a class
+definition. The methods `getRadius()` and `getHeight()` are examples of
+**getters**: methods that _retrieve_, or _read_, the values assigned to
+properties in a class definition.[^classdefinitionnote]
+
+[^classdefinitionnote]:
+    Getters are also called _accessors_, and setters are also called
+    _mutators_. These methods are more broadly called _property functions_.
+
+With getters and setters, we can now be more elaborate in how class
+properties are initialized. For example, there's a troubling aspect to our
+properties and methods: What if the user sets a property to negative? That
+would make no sense mathematically, because the lengths, widths, heights,
+radii, volumes, etc. of geometric figures cannot be negative. Accordingly,
+we should ensure that these values are always positive:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Maths {
+	public:
+		template<class T>
+		T abs(T x) {
+			if (x < 0) { return -1 * x; }
+			else { return x; }
+		}
+};
+
+class Cylinder {
+	double pi = 3.14;
+	double radius;
+	double height;
+	public:
+		double surfaceArea() {
+			return 2 * pi * radius * (radius + height);
+		}
+		double volume() {
+			return pi * radius * radius * height;
+		}
+		void setRadius(double r) {
+			radius = abs(r);
+		}
+		double getRadius() {
+			return radius;
+		}
+		void setHeight(double h) {
+			height = abs(h);
+		}
+		double getHeight() {
+			return height;
+		}
+};
+
+int main() {
+	Cylinder cindy = Cylinder();
+	cindy.setRadius(-1.2);
+	cindy.setHeight(-4.3);
+	cout << cindy.getRadius() << endl;
+	cout << cindy.getHeight() << endl;
+	return 0;
+}
+```
+
+```bash
+1.2
+4.3
+```
+
+Above, we wrote a separate class, `Maths`, which provides a method called
+`abs`. We then call that method in `Cylinder` to ensure the values set for
+`Radius` and `Height` are positive only.
+
+## Constructors
+
+In the examples above, we initialized the properties of `Cylinder()` with
+special methods—getters and setters. Getters and setters, however, should
+not be the default way we initialize properties. To understand why, let's
+think more abstractly about what a class does. A class is akin to a
+factory. It produces objects that have certain properties and can do
+certain things. When we write:
+
+```cpp
+Cylinder cindy = Cylinder();
+```
+
+we are asking the `Cylinder` factory to give us a cylinder. Does it make
+sense for that cylinder to have no radius and height? Of course not. Every
+cylinder has a radius and a height. The same goes for other objects. when
+we order a `Cake()`, it would be odd for the cake not to have ingredients
+or volume. It's an _object_.
+
+Of course, there are objects in the world where we order the recipe or
+instructions, but not the object itself. Those transactions are best
+modeled with getters and setters. These processes, however, are the
+exception rather than the rule.
+
+Having said that, when we order something from a factory, we want to
+specifically state the properties our ordered object should have. For
+example, when we order a `Cylinder()`, we should state what the
+`Cylinder()`'s radius and height should be. This is especially important
+because in C++, when we order an object without its properties initialized
+(using the code we wrote above), the properties have _garbage values_. It's
+akin to a factory sending us some random cylinder.
+
+So how do we ensure that the factory doesn't send us a random cylinder? By
+ensuring that the factory forces us to specify what the cylinder's radius
+and height should be. To do so, we use a **constructor**. A constructor is
+a method we write inside a class that is automatically called when we
+create an instance of that class. I.e., whenever we order a particular
+object, we must specify what that object's properties are.
+
+There are four different types of constructors in C++: (1) the **default
+constructor**; (2) **non-parameterized constructor**; (3) **parameterized
+constructor**; and (4) **copy constructor**. Of these four, the last three
+are constructors that we write. The default constructor is the constructor
+provided by the compiler. There are several other constructors, but we will
+focus on the latter three first. To do so, let's write a new class called
+`Cuboid`
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Maths {
+	public:
+		template<class T>
+		T abs(T x) {
+			if (x < 0) { return -1 * x; }
+			else { return x; }
+		}
+};
+
+class Cuboid {
+	double length;
+	double width;
+	double height;
+
+	public:
+		double volume() {
+			return length * width * height;
+		}
+		double surfaceArea() {
+			return 2 * ((length * width) + (width * height) + (height * length));
+		}
+		double lateralSurfaceArea() {
+			return 2 * ((width * height) + (height * length));
+		}
+		// Getters and setters
+		void setLength(double l) {
+			length = Maths().abs(l);
+		}
+		double getLength() {
+			return length;
+		}
+		void setWidth(double w) {
+			width = w;
+		}
+		double getWidth() {
+			return width;
+		}
+		void setHeight(double h) {
+			height = h;
+		}
+		double getHeight() {
+			return height;
+		}
+};
+
+int main() {
+	return 0;
+}
+```
+
+Notice how many getters and setters we have. This evidences yet another
+problem with getters and setters: The more properties we have that must be
+initialized, the more getters and setters we have to write. Constructors
+allow us to define our `Cuboid` class more concisely. Before we see how
+much more concise our code can be, let's first consider what the
+constructor does.
+
+The constructor is just another function. First, let's consider the
+_non-parameterized constructor_. This is a constructor that performs one
+task: If we call the constructor without passing it any arguments, it
+creates a new object whose properties are initialized with _default
+values_:
+
+```cpp
+#include <iostream>
+using namespace std;
+class Maths {
+	public:
+		template<class T>
+		T abs(T x) {
+			if (x < 0) { return -1 * x; }
+			else { return x; }
+		}
+};
+class Cuboid {
+	double length;
+	double width;
+	double height;
+	public:
+		double volume() {
+			return length * width * height;
+		}
+		double surfaceArea() {
+			return 2 * ((length * width) + (width * height) + (height * length));
+		}
+		double lateralSurfaceArea() {
+			return 2 * ((width * height) + (height * length));
+		}
+		void setLength(double l) {
+			length = Maths().abs(l);
+		}
+		double getLength() {
+			return length;
+		}
+		void setWidth(double w) {
+			width = w;
+		}
+		double getWidth() {
+			return width;
+		}
+		void setHeight(double h) {
+			height = h;
+		}
+		double getHeight() {
+			return height;
+		}
+		Cuboid() {       // Non-parameterized constructor
+			length = 1.0;
+			width = 1.0;
+			height = 1.0;
+		}
+};
+
+int main() {
+	return 0;
+}
+```
+
+Now whenever we write `Cuboid()`, we will create a `Cuboid` object whose
+properties are all initialized to `1.0`. The non-parameterized constructor
+ensures that we never get back an object whose properties are initialized
+to garbage values.
+
+But what if the user passes an argument? For that case, we write a
+_parameterized constructor_. This constructor will take the arguments, and
+_set_ the properties to those values.
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Maths {
+	public:
+		template<class T>
+		T abs(T x) {
+			if (x < 0) { return -1 * x; }
+			else { return x; }
+		}
+};
+class Cuboid {
+	double length;
+	double width;
+	double height;
+	public:
+		double volume() {
+			return length * width * height;
+		}
+		double surfaceArea() {
+			return 2 * ((length * width) + (width * height) + (height * length));
+		}
+		double lateralSurfaceArea() {
+			return 2 * ((width * height) + (height * length));
+		}
+		void setLength(double l) {
+			length = Maths().abs(l);
+		}
+		double getLength() {
+			return length;
+		}
+		void setWidth(double w) {
+			width = w;
+		}
+		double getWidth() {
+			return width;
+		}
+		void setHeight(double h) {
+			height = h;
+		}
+		double getHeight() {
+			return height;
+		}
+		Cuboid() {
+			length = 1.0;
+			width = 1.0;
+			height = 1.0;
+		}
+		Cuboid(double l, double w, double h) { 		// Parameterized constructor
+			setLength(l);
+			setWidth(w);
+			setHeight(h);
+		}
+};
+
+int main() {
+	return 0;
+}
+```
+
+Notice that with the parameterized constructor, we take the arguments, and
+use those arguments as arguments to the setters. This has the effect of
+initializing all of the `Cuboid` object's properties. With the
+parameterized constructor, we can now clean up our code. The setters are
+all redundant. We can simply take the arguments passed to the parameterized
+constructor and assign them directly, rather than passing them into
+separate functions. The non-paramterized constructor is also redundant
+because we can pass default values to functions.
+
+```cpp
+#include <iostream>
+using namespace std;
+class Maths {
+	public:
+		template<class T>
+		T abs(T x) {
+			if (x < 0) { return -1 * x; }
+			else { return x; }
+		}
+};
+class Cuboid {
+	double length;
+	double width;
+	double height;
+	public:
+		double volume() {
+			return length * width * height;
+		}
+		double surfaceArea() {
+			return 2 * ((length * width) + (width * height) + (height * length));
+		}
+		double lateralSurfaceArea() {
+			return 2 * ((width * height) + (height * length));
+		}
+		double getLength() {
+			return length;
+		}
+		double getWidth() {
+			return width;
+		}
+		double getHeight() {
+			return height;
+		}
+		Cuboid(double l=1.0, double w=1.0, double h=1.0) {
+			length = Maths().abs(l);
+			width = Maths().abs(w);
+			height = Maths().abs(h);
+		}
+};
+
+int main() {
+	return 0;
+}
+```
+
+Finally, a helpful constructor to write alongside the parameterized
+constructor is a _copy constructor_. This constructor creates a copy of an
+existing object:
+
+```cpp
+#include <iostream>
+using namespace std;
+class Maths {
+	public:
+		template<class T>
+		T abs(T x) {
+			if (x < 0) { return -1 * x; }
+			else { return x; }
+		}
+};
+class Cuboid {
+	double length;
+	double width;
+	double height;
+	public:
+		double volume() {
+			return length * width * height;
+		}
+		double surfaceArea() {
+			return 2 * ((length * width) + (width * height) + (height * length));
+		}
+		double lateralSurfaceArea() {
+			return 2 * ((width * height) + (height * length));
+		}
+		double getLength() {
+			return length;
+		}
+		double getWidth() {
+			return width;
+		}
+		double getHeight() {
+			return height;
+		}
+		Cuboid(double l=1.0, double w=1.0, double h=1.0) {
+			length = Maths().abs(l);
+			width = Maths().abs(w);
+			height = Maths().abs(h);
+		}
+		Cuboid(Cuboid &c) { 	// Copy Constructor
+			length = c.length;
+			width = c.width;
+			height = c.height;
+		}
+};
+
+int main() {
+	Cuboid c1 = Cuboid(2.0, 3.0, 5.0);
+	Cuboid c2 = Cuboid(c1);
+	cout << c1.volume() << endl;
+	cout << c2.volume() << endl;
+	return 0;
+}
+```
+
+```bash
+30
+30
+```
+
+### Deep Copy Constructor
+
+Because copy constructors use references, there's an underlying problem we
+might encounter whenever we use them. Consider a class called `A` (for the
+sake of simplicity, we will think of this outside the context of a
+real-world application and keep the properties public):
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class A {
+	public:
+		int x;
+		int *p;
+		A(int n) {
+			x = n;
+			p = new int[x];
+		}
+		A(A &t) {
+			x = t.x;
+			p = t.p;
+		}
+};
+
+int main() {
+	return 0;
+}
+```
+
+The class `A` has two properties: `x`, which takes an `int` value, and
+`*p`, which is a pointer. Next, it has two methods. First, a parameterized
+constructor, which assigns to `x` the argument passed as `n`. Additionally,
+the parameterized constructor initializes `p` with a new `int` array, of
+size `x` (which is the value of `n`, the integer passed as argument). Thus,
+whenever we create an instance of `A`, we create a new `int` array in the
+heap.
+
+The class `A` also contains a copy constructor, which takes as an argument
+a reference, `&t`. That argument is a reference to an existing instance of
+`A`. Inside the copy constructor, we assign to `x` the `x` property of the
+existing `A` instance, and to `p` the pointer property `p` of the existing
+`A` instance. Instantiating:
+
+```cpp
+#include <iostream>
+using namespace std;
+class A {
+	public:
+		int x;
+		int *p;
+		public:
+			A(int n) {
+				x = n;
+				p = new int[x];
+			}
+			A(A &t) {
+				x = t.x;
+				p = t.p;
+			}
+};
+int main() {
+	A foo = A(3);
+	return 0;
+}
+```
+
+We've now created an instance of `A` called `foo`. That instance has a
+property `x`, containing the `int 3`. More importantly, it contains a
+pointer property `p`, which points to an array in the heap of size 5. Now
+what happens when we create a copy of `foo`?
+
+```cpp
+#include <iostream>
+using namespace std;
+class A {
+	public:
+		int x;
+		int *p;
+		public:
+			A(int n) {
+				x = n;
+				p = new int[x];
+			}
+			A(A &t) {
+				x = t.x;
+				p = t.p;
+			}
+};
+int main() {
+	A foo = A(3);
+	A boo = A(foo);
+	return 0;
+}
+```
+
+We've created a copy of `foo` called `boo`. Did `boo` create a new array of
+its own? Well, we can check by outputting the address. If `boo` created its
+own array, they should be different:
+
+```cpp
+#include <iostream>
+using namespace std;
+class A {
+public:
+	int x;
+	int *p;
+		A(int n) {
+			x = n;
+			p = new int[x];
+		}
+		A(A &t) {
+			x = t.x;
+			p = t.p;
+		}
+};
+int main() {
+	A foo = A(3);
+	A boo = A(foo);
+	foo.p[0] = 1;
+	cout << foo.p << endl;
+	cout << boo.p << endl;
+	return 0;
+}
+```
+
+```bash
+0x7fc6f1405c00
+0x7fc6f1405c00
+```
+
+They're the same address. The copy of `foo`, named `boo`, didn't create its
+own array. We now have two pointers pointing to the same array in the heap.
+This is something we have to be very careful with. If we want a copy to
+have its own array in the heap, we must write a _deep copy constructor_.
+
+```cpp
+A(A &t) {
+	x = t.x;
+	p = t.p;
+}
+```
+
+```cpp
+A(A &t) {
+	x = t.x;
+	p = new int[x]; // revision
+}
+```
+
+Testing our deep copy constructor:
+
+```cpp
+#include <iostream>
+using namespace std;
+class A {
+public:
+	int x;
+	int *p;
+		A(int n) {
+			x = n;
+			p = new int[x];
+		}
+		A(A &t) {
+			x = t.x;
+			p = new int[x]; // revision
+		}
+};
+int main() {
+	A foo = A(3);
+	A boo = A(foo);
+	foo.p[0] = 1;
+	cout << foo.p << endl;
+	cout << boo.p << endl;
+	return 0;
+}
+```
+
+```bash
+0x7fe603c05c00
+0x7fe603c05c10
+```
+
+Having revised our copy constructor, we now see that the copies have their
+own arrays.
+
+## Destructors
+
+Where the constructor initializes an instance of a class, the
+**destructor** is a function that deletes, or destroys, an instance of the
+class in memory. For example, suppose we have the following class:
+
+```cpp
+class Coordinate {
+	int x;
+	int y;
+	public:
+		Coordinate(int xCoordinate, int yCoordinate) {
+			x = xCoordinate;
+			y = yCoordinate;
+		}
+		void printCoordinate() {
+			std::cout << "(" << x << "," << y << ")\n";
+		}
+};
+```
+
+This is a class for a 2-point coordinate. Now, there are two ways we can
+instantiate the `Coordinate` class:
+
+```cpp
+#include <iostream>
+class Coordinate {
+	int x;
+	int y;
+	public:
+		Coordinate(int xCoordinate, int yCoordinate) {
+			x = xCoordinate;
+			y = yCoordinate;
+		}
+		void printCoordinate() {
+			std::cout << "(" << x << "," << y << ")\n";
+		}
+};
+int main() {
+	Coordinate point = Coordinate(0, 1);
+	point.printCoordinate(); // outputs (0,1)
+}
+```
+
+```cpp
+#include <iostream>
+class Coordinate {
+	int x;
+	int y;
+	public:
+		Coordinate(int xCoordinate, int yCoordinate) {
+			x = xCoordinate;
+			y = yCoordinate;
+		}
+		void printCoordinate() {
+			std::cout << "(" << x << "," << y << ")\n";
+		}
+};
+int main() {
+	Coordinate *point = new Coordinate(0, 1);
+	point->printCoordinate(); // outputs (0,1)
+}
+```
+
+When we implement `Coordinate()` on the stack, we don't have to worry all
+that much about memory leaks, since the memory is automatically deallocated
+when the function—in this case, `main()`—returns. When we allocate on the
+heap, however, we _must_ worry about deallocation. With the heap allocated
+instance, we must follow up the instantiation with a `delete point`:
+
+```cpp
+#include <iostream>
+class Coordinate {
+	int x;
+	int y;
+	public:
+		Coordinate(int xCoordinate, int yCoordinate) {
+			x = xCoordinate;
+			y = yCoordinate;
+		}
+		void printCoordinate() {
+			std::cout << "(" << x << "," << y << ")\n";
+		}
+};
+int main() {
+	Coordinate *point = new Coordinate(0, 1);
+	point->printCoordinate(); // outputs (0,1)
+	delete point;
+}
+```
+
+By writing `delete point`, we are deallocating the memory used for the
+instance of `Coordinate` we created. With the class we've written, writing
+`delete point` ends the story. But if we wrote a class with pointers, we'd
+see something different. Consider the following:
+
+```cpp
+#include <iostream>
+
+class Coordinate {
+	int x;
+	int y;
+	public:
+		Coordinate(int xCoordinate, int yCoordinate) {
+			x = xCoordinate;
+			y = yCoordinate;
+		}
+		void printCoordinate() {
+			std::cout << "(" << x << "," << y << ")\n";
+		}
+		friend class LineSegment;
+};
+
+class LineSegment {
+	Coordinate *p1;
+	Coordinate *p2;
+	public:
+		LineSegment(int x1, int y1, int x2, int y2) {
+			p1 = new Coordinate(x1, y1);
+			p2 = new Coordinate(x2, y2);
+		}
+		void print() {
+			std::cout << "(" << p1->x << "," << p1->y << ")";
+			std::cout << " (" << p2->x << "," << p2->y << ")\n";
+		}
+};
+```
+
+In the code above, we wrote an additional class, `LineSegment`, which is a
+_friend_ of the `Coordinate` class. We'll discuss friends in a later
+section, but in a nutshell, the `friend` keyword allows us a class access
+the private properties and methods of a particular class. It's not
+something we should use often; we use it here just to cut down the amount
+of code.
+
+The `LineSegment` class is simple. An instance of `LineSegment` is an
+object with two properties: a `Coordinate` `p1`, corresponding to a line
+segment's starting point, and a `Coordinate` `p2`, corresponding to the
+line segment's end point. We also include a method `print()` for displaying
+the line segment's properties.
+
+Notice, however, the output to the statements in `main()`:
+
+```cpp
+#include <iostream>
+class Coordinate {
+	int x;
+	int y;
+	public:
+		Coordinate(int xCoordinate, int yCoordinate) {
+			x = xCoordinate;
+			y = yCoordinate;
+		}
+		void printCoordinate() {
+			std::cout << "(" << x << "," << y << ")\n";
+		}
+		friend class LineSegment;
+};
+class LineSegment {
+	Coordinate *p1;
+	Coordinate *p2;
+	public:
+		LineSegment(int x1, int y1, int x2, int y2) {
+			p1 = new Coordinate(x1, y1);
+			p2 = new Coordinate(x2, y2);
+		}
+		void print() {
+			std::cout << "(" << p1->x << "," << p1->y << ")";
+			std::cout << " (" << p2->x << "," << p2->y << ")\n";
+		}
+};
+int main() {
+	LineSegment *L = new LineSegment(0,0,3,3);
+	L->print();
+	delete L;
+	L->print();
+	return 0;
+}
+```
+
+```bash
+(0,0) (3,3)
+(0,0) (3,3)
+```
+
+That is odd. We've deleted the pointer `L`, but we're still getting output.
+We're seeing this behavior because the line segment class consists of
+pointers. Even if we delete `L`, the memory allocated for the pointees of
+`p1` and `p2` are still occupied. Accordingly, to truly free the memory
+taken up by the instance of `LineSegment`, we must free its pointers as
+well.
+
+But how do we do this if we can't access `p1` and `p2`? The answer is
+through the **destructor**. Inside our `LineSegment` class, we include the
+following function:
+
+```cpp
+~LineSegment() {
+	delete p1;
+	delete p2;
+}
+```
+
+The tilde (`~`) is a special symbol that tells C++,
+
+"This function is a destructor. It frees the memory allocated for instances
+of this class. " If we now run our code:
+
+```cpp
+#include <iostream>
+class Coordinate {
+	int x;
+	int y;
+	public:
+		Coordinate(int xCoordinate, int yCoordinate) {
+			x = xCoordinate;
+			y = yCoordinate;
+		}
+		void printCoordinate() {
+			std::cout << "(" << x << "," << y << ")\n";
+		}
+		friend class LineSegment;
+};
+class LineSegment {
+	Coordinate *p1;
+	Coordinate *p2;
+	public:
+		LineSegment(int x1, int y1, int x2, int y2) {
+			p1 = new Coordinate(x1, y1);
+			p2 = new Coordinate(x2, y2);
+		}
+		void print() {
+			std::cout << "(" << p1->x << "," << p1->y << ")";
+			std::cout << " (" << p2->x << "," << p2->y << ")\n";
+		}
+		~LineSegment() {
+			delete p1;
+			delete p2;
+		}
+};
+int main() {
+	LineSegment *L = new LineSegment(0,0,3,3);
+	L->print();
+	delete L;
+	L->print();
+	return 0;
+}
+```
+
+```bash
+(0,0) (3,3)
+(0,-1073741824) (3,3)
+```
+
+It looks as if we're still getting the same values, but rest assured, the
+memory is in fact freed. The key indicator being the seemingly random
+negative integer. This is _garbage value_. The fact that we can still
+dereference `L` is merely a side effect of pointers. The pointer points to
+the same address in memory, but anything could be in there. In this case,
+som garbage value `-1073741824`.
+
+## Scope Resolution
+
+Let's consider a simple class called `Rectangle`:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Rectangle {
+	double length;
+	double height;
+	public:
+		Rectangle(double l = 1.0, double h = 1.0) {
+			length = l;
+			height = h;
+		}
+		// method
+		double area() { return length * height; }
+		double perimeter() { return 2 * (length + height); }
+};
+
+int main() {
+	Rectangle r = Rectangle(2.1, 4.7);
+	cout << r.area() << endl;
+	cout << r.perimeter() << endl;
+	return 0;
+}
+```
+
+```bash
+9.87
+13.6
+```
+
+While the class above works fine, it doesn't exactly coincide with C++'s
+approach to OOP. For starters, a core rule of OOP is to hide away the
+implementation details. Here, we can clearly see how the methods
+`perimeter()` and `area()` are implemented. The first step to ensuring
+they're hidden is to use the **scope resolution operator**, denoted with
+`::` (two colons).
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Rectangle {
+	double length;
+	double height;
+	public:
+		Rectangle(double l=1.0, double h=1.0);
+		double area();
+		double perimeter();
+};
+
+int main() {
+	Rectangle r = Rectangle(2.1, 4.7);
+	cout << r.area() << endl;
+	cout << r.perimeter() << endl;
+	return 0;
+}
+
+Rectangle::Rectangle(double l, double h) {
+	length = l;
+	height = h;
+};
+double Rectangle::area() { return length * height; }
+double Rectangle::perimeter() { return 2 * (length + height); }
+```
+
+```bash
+9.87
+13.6
+```
+
+Notice how we moved the implementations to below the `main()` function. On
+first glance, this appears even worse than the original implementation,
+because now the code looks even longer. However, the idea is to hide away
+these implementation details. What we want to do next is move these
+implementations into separate files. First, we create two files in the same
+directory: (1) a file called `Rectangle.cpp`, (2) a file called
+`Rectangle.h`, and (3) a file called `main.cpp`.
+
+Inside the `Rectangle.cpp` file, we write:
+
+```cpp
+#include "Rectangle.h"
+Rectangle::Rectangle(double l, double h) {
+	length = l;
+	height = h;
+};
+double Rectangle::area() { return length * height; }
+double Rectangle::perimeter() { return 2 * (length + height); }
+```
+
+Inside the `Rectangle.h` file, we write:
+
+```cpp
+#ifndef RECTANGLE_H
+#define RECTANGLE_H
+
+class Rectangle {
+	double length;
+	double height;
+	public:
+		Rectangle(double l=1.0, double h=1.0);
+		double area();
+		double perimeter();
+};
+#endif
+```
+
+Finally, inside the `main.cpp`, we have:
+
+```cpp
+#include <iostream>
+#include "Rectangle.h"
+using namespace std;
+
+int main() {
+	Rectangle r = Rectangle(2.1, 4.7);
+	cout << r.area() << endl;
+	cout << r.perimeter() << endl;
+	return 0;
+}
+```
+
+Now, to run the main program, we have to compile the `Rectangle.cpp` file
+and the `main.cpp` file separately:
+
+```bash
+g++ -c Rectangle.cpp
+g++ -c main.cpp
+```
+
+This will output two object files, `Rectangle.o` and `main.o`. Because we
+now have to separate object files, we'll need to link them into a single
+executable. We'll call this single object file `mainProgram`:
+
+```bash
+g++ -o mainProgram main.o Rectangle.o
+```
+
+Then when we execute the single executable:
+
+```bash
+./mainProgram
+9.87
+13.6
+```
+
+It works as expected. This seems like a lot of trouble, but notice what
+we've done: First, we've cleanly separated all of the different parts of
+our program: (1) The main program resides in its own file; (2) the
+`Rectangle` class resides its own file; and (3) the implementation details
+of the `Rectangle` class reside in their own files. Then, even better, the
+`Rectangle` class can be passed around and use with any other program we
+write. We do not have to copy and paste code. All we need to do is place
+the executable elsewhere, and link it. Even better, the implementation
+details are completely hidden away from the user.
+
+Now, we might be thinking, that's so much work! We have to compile each of
+these files separately and then link them ourselves? Is separation really
+worth it for all the time spent? The answer is yes, it is. The amount of
+time used to keep all of these different components separate is far less
+than the amount of time we would spend having to debug and improve massive
+source code files. Furthermore, the premise that compiling these files
+separately takes too much time is not necessarily true. This is precisly
+why we use _make files_.
+
+## Make Files
+
+On UNIX systems, `make` is a tool provided to simplify building executables
+from different project modules. In our `Rectangle` example above, we have
+three separate modules: `main.cpp`, `Rectangle.cpp`, and `mainProgram` (the
+final executable containing all of the individual executables, linked). A
+`make` file is simply a text file that the `make` command referencs to
+build the **targets**—the modules we want built.
+
+The basic idea behind `make` is this: We want to be able to write
+`make ${t}$`, where ${t}$ is some target file, after which ${t}$ is built.
+We also want to write things like `make clean`, upon which the `rm` command
+is executed on certain files (thereby "cleaning up" previous executables).
+
+To see how all this works, let's write a `make` file for our `Rectangle`
+example above. First, we note all the different modules we have: (1)
+`main.cpp` (the main driver of our program); (2) `Rectangle.h` (the header
+file for the `Rectangle` class); and (3) `Rectangle.cpp` (the C++
+implementation file for the `Rectangle` class).
+
+Now, when run `g++ -c main.cpp`, we generate the object file (executable),
+`main.o`. And when we write `g++ -c Rectangle.cpp`, we generate the object
+file `Rectangle.o`. These are two individual compilations, resulting in two
+individual executables. For our program to run, we need a single
+executable, where `main.o` and `Rectangle.o` are linked.
+
+To link those files, we write: `g++ -o main main.o Rectangle.o`. The single
+word `main` is just the name of the final executable. We could just as
+easily written it, `mainProgram` (as we did previously), or `mainDriver`,
+or `program`. Ideally, it should be descriptive.
+
+We can run this entire process by executing `make`. To do so, we create a
+new file called `Makefile`, in the same directory as our project. Inside
+`Makefile`, we write the following:
+
+```bash
+CC = g++
+CFLAGS = -Wall -g
+clean:
+	$(RM) main Rectangle
+main: main.o Rectangle.o
+	$(CC) $(CFLAGS) -o main main.o Rectangle.o
+```
+
+Let's go over what the symbols in this file mean. First, `CC` and `CFLAGS`
+are constants. The `CC` constant indicates which C compiler to use. In this
+case, we indicated the `g++` compiler. We could also have indicated `gcc`.
+
+The `CFLAGS` constant indicates what flags we should pass to the
+compilation command. The `-g` flags tells the compiler to include debugging
+information in the executable file. The `-Wall` flag tells the compiler to
+include compiler warnings.
+
+The next two symbols, `clean` and `main`, are _targets_. Targets can be
+file names used as input, or the name of an action to be carried out. In
+the case where it's the name of an action such as `clean`, we effectively
+create a new rule, called `make clean`. When we execute `make clean`, we
+execute the command `$(RM) main Rectangle`, or, in bash terms,
+`rm main.o rectangle.o`. This effectively cleans up the object files we
+have in our project.
+
+When we execute `make main`, we execute the command
+`CC CFLAGS -o main main.o Rectangle.o`. This command evaluates to,
+`g++ -Wall -g -o main main.o Rectangle.o`. Notice that this is the line we
+executed when we didn't have the makefile. The only difference is now we
+just need to write `make main`.
+
+Here's a slightly better makefile:
+
+```bash
+CC = g++
+CFLAGS = -Wall -g
+objects = main.o Rectangle.o
+all: $(objects)
+clean:
+	$(RM) *.o all
+```
+
+With the implementation above, we list all of the files we want compiled in
+a variable called `objects`. That variable is then used for the target
+`all`. When execute `make all`, the files `main.cpp` and `Rectangle.cpp`
+are compiled and linked.
+
+To summarize, using scope resolution, we've separated our files program
+into the following:
+
+```cpp
+	// Rectangle.cpp
+	#include "Rectangle.h"
+	Rectangle::Rectangle(double l, double h) {
+		length = l;
+		height = h;
+	};
+	double Rectangle::area() { return length * height; }
+	double Rectangle::perimeter() { return 2 * (length + height); }
+```
+
+```cpp
+	// Rectangle.h
+	#ifndef RECTANGLE_H
+	#define RECTANGLE_H
+
+	class Rectangle {
+		double length;
+		double height;
+		public:
+			Rectangle(double l=1.0, double h=1.0);
+			double area();
+			double perimeter();
+	};
+	#endif
+```
+
+```cpp
+	// main.cpp
+	#include <iostream>
+	#include "Rectangle.h"
+	using namespace std;
+
+	int main() {
+		Rectangle r = Rectangle(2.1, 4.7);
+		cout << r.area() << endl;
+		cout << r.perimeter() << endl;
+		return 0;
+	}
+```
+
+## Inline Functions
+
+Consider the following functions:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Foo {
+	public:
+		void func1() {
+			cout << "Hi" << endl;
+		}
+		void func2();
+};
+
+void Foo::func2() {
+	cout << "Hi" << endl;
+}
+
+int main() {
+	Foo x;
+	x.func1();
+	x.func2();
+	return 0;
+}
+```
+
+```bash
+Hi
+Hi
+```
+
+Notice that the function `func1` is defined inside the class definition for
+`Foo`, while `func2` is defined outside the definition through scope
+resolution.
+
+Both `func1` and `func2` perform the same computation; namely, outputting
+the string `"Hi"` to the console. However, both functions go about it
+differently.
+
+the function `func1` is an **inline function**, while the function `func2`
+is a **non-inline function**. What's the difference between an inline
+function and a non-inline function?
+
+With an inline function, the machine code is "copied-and-pasted" directly
+into the function that calls functions. In this case, the function
+`func1()` has its machine code directly pasted into the `main()` function's
+machine code. In contrast, the function `func2()` will have its machine
+code allocated in a separate stack.
+
+If we want `func2()` to be treated as an inline function, we simply include
+the `inline` keyword:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Foo {
+	public:
+		void func1() {
+			cout << "Hi" << endl;
+		}
+		inline void func2();
+};
+
+void Foo::func2() {
+	cout << "Hi" << endl;
+}
+
+int main() {
+	Foo x;
+	x.func1();
+	x.func2();
+	return 0;
+}
+```
+
+## The Keyword This
+
+Suppose we wrote a class called `City`:
+
+```cpp
+#include <string>
+using namespace std;
+
+class City {
+	string city_name;
+	int population;
+	City(string cn = "uninitialized", int p = 0) {
+		city_name = cn;
+		population = p;
+	}
+};
+
+int main() {
+	return 0;
+}
+```
+
+The code above runs well, but notice the constructor's parameters. Those
+names—`cn` and `p`—are pretty bad. Names should always be descriptive. We
+could get around this problem by simply writing a more descriptive name,
+but what would be more descriptive than `city_name`? We don't want to use
+something like `cityName`; differentiating names purely on the way they
+look is almost always a bad idea. What if we instead just used the original
+identifiers, `city_name` and `population`?
+
+```cpp
+#include <string>
+using namespace std;
+
+class City {
+	string city_name;
+	int population;
+	City(string city_name = "uninitialized", int population = 0) {
+		city_name = city_name;
+		population = population;
+	}
+};
+
+int main() {
+	return 0;
+}
+```
+
+```bash
+city.cpp:8:13: warning: explicitly assigning value of variable of type 'std::__1::string' (aka 'basic_string<char>') to itself [-Wself-assign-overloaded]
+			city_name = city_name;
+			~~~~~~~~~ ^ ~~~~~~~~~
+city.cpp:9:14: warning: explicitly assigning value of variable of type 'int' to itself [-Wself-assign]
+			population = population;
+			~~~~~~~~~~ ^ ~~~~~~~~~~
+city.cpp:6:6: warning: private field 'population' is not used [-Wunused-private-field]
+int population;
+```
+
+Nope. Not a good idea. The compiler can't differentiate between the
+variable `city_name` and `population` inside the class, and the parameters
+`city_name` and `population`. And fairly so; just reading those two lines
+looks off.
+
+The solution? Use the `this` keyword:
+
+```cpp
+#include <string>
+using namespace std;
+
+class City {
+	string city_name;
+	int population;
+	City(string city_name = "uninitialized", int population = 0) {
+		this->city_name = city_name;
+		this->population = population;
+	}
+};
+
+int main() {
+	return 0;
+}
+```
+
+Compiling the code above, we don't get any problems. The `this` keyword
+operates as it sounds like. It tells the `compiler`, "I'm refer to _this
+object's_ variable."
+
+## The Static Keyword
+
+The keyword `static` in C++ has two different meanings depending on
+context. There are four contexts for using `static`:
+
+- **Static variables**—a static variable that exists _outside_ of a class
+  or struct.
+
+- **Static functions**—a static function that exists _outside_ of a class
+  or struct.
+
+- **Static properties**—a static variable that exists _inside_ of a class
+  or struct.
+
+- **Static methods**—a static function that exists _inside_ of a class of
+  struct.
+
+## Static Variables.
+
+Static variables or are variables that are only visible inside the
+translation unit they were defined in. For example, consider the static
+variable below:
+
+```cpp
+static int s_Variable = 7;
+```
+
+In C++, the convention is to append `s_` to a static variable identifier.
+
+Writing the line above effectively changes the way the linker works. When
+the linker comes to defining all of the symbols in our program, it will not
+look outside of the translation unit's scope for the definition of
+`s_Variable`. This is best examined by linking two separate `.cpp` files.
+First, a file called `statics.cpp`, inside of which is the following:
+
+```cpp
+static int s_Variable = 7;
+```
+
+Then a file called `driver.cpp`, inside of which is:
+
+```cpp
+int s_Variable = 8;
+int main() {
+return 0;
+}
+```
+
+Compiling and linking the two files:
+
+```bash
+$ g++ -c statics.cpp
+$ g++ -c driver.cpp
+$ g++ -o main statics.o driver.o
+```
+
+We have no issues compiling. Now, notice what happens when we remove the
+`static` keyword inside `statics.cpp`:
+
+```bash
+$ g++ -c statics.cpp
+$ g++ -c driver.cpp
+$ g++ -o main statics.o driver.o
+duplicate symbol '_s_Variable' in:
+	statics.o
+	driver.o
+ld: 1 duplicate symbol for architecture x86_64
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+```
+
+We're seeing this output because now we have two global variables,
+`s_Variable`, with the same name. In the previous scenario, when we had the
+keyword `static` included in `statics.cpp`, the linker only looked for the
+definition of `s_Variable` inside `statics.cpp`. Removing that keyword, the
+linker went on to examine `driver.cpp`.
+
+We could avoid this problem by using **external linkage**. Inside
+`statics.cpp`, we avoid initialization, and write:
+
+```cpp
+extern int s_Variable;
+```
+
+while keeping the same code for `driver.cpp`:
+
+```cpp
+int s_Variable = 7;
+int main() {
+return 0;
+}
+```
+
+Compiling:
+
+```bash
+$ g++ -c statics.cpp
+$ g++ -c driver.cpp
+$ g++ -o main statics.o driver.o
+```
+
+We get no errors. By using the keyword `extern`, we notify the linker that
+the definition for `s_Variable` is found in a file external to
+`statics.cpp`.
+
+## Static Functions.
+
+The same idea extends to static functions. Suppose we have the following
+function definition in `statics.cpp`:
+
+```cpp
+static void Function() {}
+```
+
+And the following in `driver.cpp`:
+
+```cpp
+void Function() {}
+int main() {
+return 0;
+}
+```
+
+There are no problems with compiling. But the moment we remove the keyword
+`static`, we will get a duplicate-symbol error.
+
+## Static Properties.
+
+Static properties are variables that are visible to all instances of the
+class or struct. Essentially, this means that across all instances of some
+class/struct ${x,}$ given some static property ${p,}$ there is only one
+instance of ${p}$ for all instances of the class/struct ${x.}$
+
+For example, here is a simple struct called `point`:
+
+```cpp
+#include <iostream>
+struct Point {
+int x, y;
+void Print() {
+	std::cout << x << ", " << y << std::endl;
+}
+};
+
+void Function() {}
+int main() {
+Point p1;
+p1.x = 1;
+p1.y = 1;
+Point p2 = {3, 3};
+
+p1.Print();
+p2.Print();
+return 0;
+}
+```
+
+```bash
+$ g++ -c driver.cpp
+$ g++ -o driver driver.o
+1, 1
+3, 3
+```
+
+This works as we'd expect. Now, notice what happens when write the keyword
+`static`:
+
+```cpp
+#include <iostream>
+struct Point {
+static int x, y;
+void Print() {
+	std::cout << x << ", " << y << std::endl;
+}
+};
+
+// We have to define x and y somewhere for static to work
+int Point::x;
+int Point::y;
+
+void Function() {}
+int main() {
+Point p1;
+p1.x = 1;
+p1.y = 1;
+Point p2;
+p2.x = 3;
+p2.y = 3;
+
+p1.Print();
+p2.Print();
+return 0;
+}
+```
+
+```bash
+$ g++ -c driver.cpp
+$ g++ -o driver driver.o
+3, 3
+3, 3
+```
+
+We're seeing the output above because we've changed the static properties
+`x` and `y`. There are is only one instance of `x` and only one instance of
+`y` for all instances of `Point`. Modifying `x` and `y` for any given
+instance will modify it for all. In actuality, it's non-sensical to refer
+to the static properties `x` and `y` the way we did in the example above.
+What we're really writing is:
+
+```cpp
+#include <iostream>
+struct Point {
+static int x, y;
+void Print() {
+	std::cout << x << ", " << y << std::endl;
+}
+};
+
+int Point::x;
+int Point::y;
+
+void Function() {}
+int main() {
+Point p1;
+
+Point::x = 1;
+Point::y = 1;
+
+Point p2;
+
+Point::x = 3;
+Point::y = 3;
+
+p1.Print();
+p2.Print();
+return 0;
+}
+```
+
+## Static Methods.
+
+Static methods are member functions that do not require a class or struct
+instance to be called. In other words, given some class/struct ${C}$ with a
+member function ${m,}$ we do not need an instance of ${C}$ to call ${m.}$
+
+```cpp
+#include <iostream>
+struct Point {
+static int x, y;
+static void Print() {
+std::cout << x << ", " << y << std::endl;
+}
+};
+
+int Point::x;
+int Point::y;
+
+void Function() {}
+int main() {
+Point p1;
+Point::x = 1;
+Point::y = 1;
+Point p2;
+Point::x = 3;
+Point::y = 3;
+
+Point::Print();
+return 0;
+}
+```
+
+```bash
+$ g++ -c driver.cpp
+$ g++ -o driver driver.cpp
+$ ./driver
+3, 3
+```
+
+Notice that we do not need an instance of `Point` to call the member
+function `Print()`. Importantly, static methods _cannot_ access non-static
+properties. In other words, if we have a static method, it can only access
+static properties. This stems from the fact that static methods do not have
+class instances. This in turn originates in the fact that classes are
+really just syntactic sugar for functions with a hidden parameter—an
+instance of itself, the instance of the class. When we prepend the keyword
+`static` before the function's identifier, we are essentially writing the
+method _outside_ of the class:
+
+```cpp
+#include <iostream>
+struct Point {
+int x, y;
+};
+
+static void Print() {
+std::cout << x << ", " << y << std::endl;
+}
+
+int Point::x;
+int Point::y;
+
+void Function() {}
+int main() {
+Point p1;
+
+Point::x = 1;
+Point::y = 1;
+
+Point p2;
+
+Point::x = 3;
+Point::y = 3;
+
+p1.Print();
+p2.Print();
+return 0;
+}
+```
+
+Viewing it in this way, it should be apparent why we cannot call static
+methods on non-static properties. The method has no idea what those
+properties are. But, if we placed a parameter in the method, it suddenly
+works:
+
+```cpp
+#include <iostream>
+struct Point {
+int x, y;
+};
+
+static void Print(Point p) {
+std::cout << p.x << ", " << p.y << std::endl;
+}
+
+int Point::x;
+int Point::y;
+
+void Function() {}
+int main() {
+Point p1;
+
+Point::x = 1;
+Point::y = 1;
+
+Point p2;
+
+Point::x = 3;
+Point::y = 3;
+
+p1.Print();
+p2.Print();
+return 0;
+}
+```
+
+### Static Variables
+
+To understand how static variables work, it's worth reviewing three key
+concepts: scope, duration, and linkage.
+
+## Scope.
+
+A variable's _scope_ denotes where in our file we can access a variable. In
+C++, there are two kinds of scope: (i) _local scope_, and (ii) _global
+scope_. Variables defined in the global scope are accessible from anywhere
+in our program. Variables defined in the local scope are accessible only to
+the locations defined as "local." For example, if we initialized
+`int a = 1` inside a function `foo()`'s body, `int a = 1` is accessible
+only inside `foo()`.
+
+## Duration.
+
+A variable's **duration**, or **lifetime**, denotes how long a variable
+lives. Or, more specifically, it determines when a variable is created, and
+when a variable is destroyed. There are two types of lifetimes: (a)
+_automatic storage duration_, and (b) _static storage duration_.
+
+Variables with a local or block scope have automatic storage duration. For
+example, consider our function `foo()`. Once `foo()` has finished
+executing, `int a = 1` is destroyed. In contrast, variables that are either
+(i) within global scope or (ii) local variables with the `static`
+specifier, have static storage duration.
+
+## Linkage.
+
+The term **linkage** refers to whether a variable can accessed (or linked)
+in a file other than where it's defined. There are two kinds of linkage:
+(i) internal linkage, and (ii) external linkage. To understand the
+distinction between these two varieties, it's critical to understand how
+linking works.
+
+Recall that when we execute our source code, the compiler generates a
+_translation unit_. **Internal linkage** refers to variables only within
+the scope of the translation unit. **External linkage** refers to variables
+that exist beyond the translation unit; i.e., the variables are accessible
+throughout the entire program.
+
+Internal linkage applies to variables that: (a) have block scope and global
+scope, block scope file scope, blockscope and global namespace scope.
+External linkage applies to variables with _only_ global scope, file scope,
+or global namespace scope.
+
+## Inheritance
+
+As C++ supports object-oriented programming, inheritance is unusurprisingly
+supported in the language. There are, however, some significant differences
+between inheritance in C++ and inheritance in a language like Java.
+
+Inhertiance allows us to design generic classes that can later be
+specialized to more particular classes. For example, in a video game, we
+might have a class called `Being`, from which more particular classes are
+derived—`Mortal` and `Immortal`. In C++, we would write:
+
+```cpp
+class Being {};
+class Mortal : public Being {};
+class Immortal : public Being {};
+```
+
+Let's add a few properties and member functions to the `Being` class:
+
+```cpp
+#include <iostream>
+#include <string>
+
+typedef std::string string;
+
+class Being {
+	string name;
+	int age;
+	void printName() {
+		std::cout &lt;&lt; name &lt;&lt; std::endl;
+	}
+};
+class Mortal : public Being {};
+class Immortal : public Being {};
+```
+
+All of the properties and methods of `Being` are `private` by default.
+However, they all exist in `Mortal` and `Immortal`.[^inheritancenote]
+
+[^inheritancenote]: Inheritance allows us to avoid writing:
+
+```cpp
+#include <iostream>
+#include <string>
+
+typedef std::string string;
+
+class Being {
+	string name;
+	int age;
+	void printName() {
+		std::cout &lt;&lt; name;
+	}
+};
+class Mortal : public Being {
+	string name;
+	int age;
+	void printName() {
+		std::cout &lt;&lt; name;
+	}
+};
+class Immortal : public Being {
+	string name;
+	int age;
+	void printName() {
+		std::cout &lt;&lt; name;
+	}
+};
+```
+
+By writing `Mortal : public Being`, we instruct C++ that the class `Mortal`
+inhertis from `Being`. The keyword `public` specifies _public inheritance_.
+We will examine different types of inheritance.
+
+## Heap v. Stack Objects
+
+We saw in earlier sections that we can create values of primitive types in
+either the stack or the heap. We also saw that we can create pointers to
+those values. We can do the same with classes. Let's first consider how to
+create pointers to objects.
+
+### Pointers to Objects
+
+Let's write another class, called `Circle`:
+
+```cpp
+class Circle {
+	public:
+		double radius;
+		double pi = 3.14;
+
+		double area() {
+			return pi * (radius * radius);
+		}
+		double perimeter() {
+			return 2 * pi * radius;
+		}
+};
+```
+
+Now suppose we want to create a pointer to a `Circle` object (i.e., an
+instance of `Circle`). To do so, we write the following:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Circle {
+	public:
+		double radius;
+		double pi = 3.14;
+
+		double area() {
+			return pi * (radius * radius);
+		}
+		double perimeter() {
+			return 2 * pi * radius;
+		}
+};
+
+int main() {
+	Circle c; // create a Circle object, called 'c' in the STACK
+	Circle *p; // Create a pointer 'p' of type Circle
+	p = &amp;c; // p now points to the Circle object, 'c'
+	return 0;
+}
+```
+
+Above, we instantiated the class `Circle`, creating a `Circle` object with
+the identifier `c`. The object `c` lives in the stack. After creating `c`,
+we then created a pointer `p` of type `Circle`. Finally, when we wrote
+`p = &c`, we are saying, "This pionter `p` points to the object `c`."
+Because pointer `p` points to the address where `c` is located, we can
+assign properties to it via pointer:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Circle {
+	public:
+		double radius;
+		double pi = 3.14;
+
+		double area() {
+			return pi * (radius * radius);
+		}
+		double perimeter() {
+			return 2 * pi * radius;
+		}
+};
+
+int main() {
+	Circle c; // create a Circle object, called 'c' in the STACK
+	Circle *p; // Create a pointer 'p' of type Circle
+	p = &amp;c; // p now points to the Circle object, 'c'
+	p->radius = 3.2;
+	cout << p->area() << endl;
+	cout << p->perimeter() << endl;
+	return 0;
+}
+```
+
+```bash
+32.1536
+20.096
+```
+
+Notice the syntax. To instantiate a property of `c` with a pointer, we
+wrote `p->radius`. To call the methods of `c` with a pointer, we wrote
+`p->area()` and `p->perimeter()` respectively.
+
+### Storing Objects in the Heap
+
+We can store class instances in the heap, just as we would store values of
+primitive types.
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Trapezoid {
+	public:
+		double side_a;
+		double side_b;
+		double height;
+		double area() {
+			return ((side_a + side_b) * height) / 2;
+		}
+};
+
+int main() {
+	Trapezoid *ptr; // declare a pointer ptr
+	ptr = new Trapezoid; // create a Trapezoid in the heap
+	ptr->side_a = 3.2;
+	ptr->side_b = 6.1;
+	ptr->height = 8.9;
+	cout << ptr->area() << endl;
+	return 0;
+}
+```
+
+```bash
+41.385
+```
+
+Above, we stored a `Trapezoid` object in the heap via the pointer `ptr`.
+Notice the keyword `new`. This keyword tells C++ that we are instantiating
+the class `Trapezoid`; i.e., creating a _new_ instance of `Trapezoid`.
+Then, using the arrow operator, `->`, we initialized the properties of that
+`Trapezoid`, pointed to by `ptr`. Alternatively, we can write the pointer
+declaration, initialization all in one line:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+class Trapezoid {
+	public:
+		double side_a;
+		double side_b;
+		double height;
+		double area() {
+			return ((side_a + side_b) * height) / 2;
+		}
+};
+
+int main() {
+	Trapezoid *ptr = new Trapezoid();
+	ptr->side_a = 2.2;
+	ptr->side_b = 5.3;
+	ptr->height = 3.8;
+	double ptrArea = ptr->area();
+	cout << ptrArea << endl;
+	return 0;
+}
+```
+
+```bash
+14.25
+```

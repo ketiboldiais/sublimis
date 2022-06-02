@@ -1,0 +1,405 @@
+# Data Structures & Algorithms
+
+This volume explores data structures and algorithms, a core topic in
+computer science. In our investigation, our primary language of choice for
+implementation will be C++. Accordingly, as with the other volumes, the
+first few sections focus on syntax, idioms, and how key programming
+concepts are represented in the language.
+
+Importantly, the focus of this volume is not on learning C++, but on data
+structures and algorithms. As such, a fair amount of pseudocode is used for
+clarity. Usually, these pseudocode demonstrations will be implemented in
+C++. Occassionally, however, we will deviate and use a language other than
+C++ for implementation. For example, with simple and low level data
+structures and algorithms, C is often has easier and clearer
+implementations. For much more abstract approaches, Python is a better
+choice. For functional data structures and algorithms, we use either
+Racket, Scala, ML, or JavaScript. For everything else (the vast majority),
+we will use C++. Hence the "primary language of choice".
+
+It may seem odd to use a myriad of languages, but the intent is not to make
+data structures and algorithms confusing or difficult. Instead, we use
+different languages because we want to use the right tool for the job. We
+also want to avoid mooring ourselves to a specific language. Data
+structures and algorithms appear everywhere in programming &mdash; not just
+C++. Moreover, the user can freely ignore the implementations. They are not
+the focus. Instead, the reader should hone in on the text, the mathematics,
+and the pseudocode demonstrations. That's the cake. The language-specific
+implementations are just icing.
+
+## Data Models
+
+To begin, we review some computer science fundamentals, but now with a more
+detailed view. The earlier volumes omitted several details, for the sake of
+expediency and keeping the exposition as simple as possible. Having
+grounded the most basic concepts, we now examine the same fundamentals with
+a magnifying glass.
+
+In programming, there are three tools we always use: (1) data models; (2)
+data structures; and (3) algorithms. These are the three ongoing themes in
+this volume.
+
+In all of the languages we've seen thus far, there are rules as to what we
+can and cannot do with particular pieces of data. These are called the
+language's **syntax**. A language's syntax stems directly from the
+language's **data model** &mdash; a set of rules, or a standard, dictating
+how data is organized, how they relate to one another, and how the data
+relates to the real-world entities. Every programming language has a data
+model, and data models vary across languages.
+
+Every data model answers two questions: (1) What values can a given object
+assume in the language? (2) What operations can be performed on a given
+object? The data model's answer to the first question embodies the
+**static** aspect of the language. It tells us what values a particular
+object can have. This static aspect is called the language's **type
+system**.
+
+The answer to the second question is embodies the **dynamic** aspect of the
+language. It provides the ways in which we can change and create new values
+in the language.
+
+## Why C++?
+
+C++ is one of the most popular languages at the moment. As a popular
+language, it has a large and active community. And with a large and active
+community, there's plenty of source code to examine and libraries to use.
+
+Moreover, C++ is a particularly relevant language. It used in implementing
+numerous applications, ranging from operating systems like Windows and Mac
+OS X, to database languages like MySQL, to consumer-facing services like
+Google, Amazon, PayPal, Facebook, and many more. C++ is built for systems
+programming, where high speed and efficiency is prioritized.
+
+Finally, C++ is well-suited to learning both lower-level and high-level
+abstractions, ranging from memory management to complex algorithms and data
+structures. This partly due to how powerful C++ is &mdash; it's a compiled,
+highly-scalable, procedural, and object-oriented language. It is also
+partly due to how large its community is. Numerous papers, blog posts, and
+other commentaries on algorithms and data structure analysis are done
+through a C++ lens. All that said, much of what's covered below can be done
+in other languages, so the focus in the following materials is not so much
+in learning C++ programming, but rather on the inter-relationships between
+_data structures_ and _algorithms_.
+
+## Brief History of C++
+
+The C++ languages traces its origins to another language, C. C is a very
+old language, developed in early 1970s by Dennis Ritchie at Bell Labs. C
+continues to be used today in embedded systems programming (in very rough
+terms, programming for machines like digital watches, washing machines,
+stoves, fridges, avionics, hybrid vehicles, HVAC systems, etc.).
+
+In 1979, computer scientist Bjarne Stroustrup invented C++, a programming
+language aimed at extending C to handle classes (.e., object-oriented
+programming). Of note, C++ is a different language from Objective-C, a
+language that extends C to the OOP sphere, but through a different
+approach. For example, Objective-C is premised on the message-passing
+approach to object instances (i.e., an object does not call a method, it
+sends a message), while C++ is premised on the `Simula` approach (objects
+_call_ methods).
+
+Therein lies the biggest differences between Objective-C and C++.
+Objective-C, created primarily by computer scientists Brad Cox and Tom Love
+in the early 1980s, was driven largely by the features of another language,
+`Smalltalk`. C++, in contrast, was inspired in part by the features of
+`Simula`, yet another language. Both `Smalltalk` and `Simula` took very
+different approaches to object-oriented programming.
+
+By 1989, C++ was released to the public by the C++ standards committee (a
+committee that continues to this day). Several standards have been released
+since the first commercial release: C++98 in 1998, C++03 in 2003, C++11 in
+2011, C++14 in 2014, C++17 in 2017, and C++20 in 2020. The most drastic
+changes made to the language were C++11, C++14, C++17, and C++20. Modern
+C++ is based almost entirely on these standards, and they are the standards
+we will apply. We call all the standards before C++11 **classical C++**,
+and everything from C++11 onwards **modern C++**. The changes are so
+drastic that Bjarne Stroustrup has described modern C++ as effectively an
+entirely new language.
+
+## Executing a Program
+
+As mentioned, C++ is a compiled language. Our source code goes into a
+`.cpp` file. To run the source code in that `.cpp` file, we must compile
+the source code. On compilation, the `.cpp` file is transformed into an
+**object file**, with the extension `.o` or `.obj`. If our program requires
+multiple `.cpp` files, those files are all compiled separately. This
+results in multiple object files, which must all be linked together for the
+program to execute. That linking is done by the **linker**. We can think of
+the linker as gluing, or stitching all of the separate `.o` files together.
+
+The denouement: an **executable**. Of note, in contrast to Java programs
+&mdash; which compile to a `.class` file &mdash; C++ objects and
+executables are **platform-dependent**. This means that the files will not
+run on an operating system other than the operating system we compiled
+in.[^osnote]
+
+[^osnote]:
+    Those familiar with C might notice that the object files in C++ have
+    the same `.o` extension as the object files in C. This is no
+    coincidence. C++ was created with the intent of being
+    backwards-compatible with C.
+
+Of note, there is no such thing as a "file" in C++. At the end of the day,
+C++ doesn't impose requirements on what files you must include. A file is
+purely a vessel for feeding code to the compiler. Unlike languages like
+Java, where there are file requirements, the onus is placed on the
+programmer to decide what files will be fed to the compiler. This is an
+important point to understand, because it implies that files have no
+meaning in C++. The extensions `.cpp` and `.h` are purely implemented
+conventions. If our file has the extension `.cpp`, then C++, by default,
+will treat it as a C++ file. If it's `.h`, a header file, and `.c`, a C
+file. We can always override these defaults, or even create our own
+extensions. We might save source code to some file with a `.math`
+extension, and instruct C++ to treat it as a `C++` file. We bear that
+responsibility, not C++.
+
+All the programs that follow are executed via the command line. Suppose we
+have a program written in a file called `main.cpp`, containing the
+following code:
+
+```cpp
+#include <iostream>
+
+int main() {
+	std::cout << "Hello, world!" << std::endl;
+	return 0
+}
+```
+
+The `int` is a return type for `main()`. By convention, we include a
+`return 0` inside `main()`. All of our program's primary source code
+&mdash; i.e., the source code that actually runs our program &mdash; is
+included in `main()`. We can think of `main()` as the master conductor for
+a massive orchestra. There are numerous different sections, musicians, and
+instruments, but there is one thing that keeps them all together and in
+sync.
+
+The `#include <iostream>` is an _include statement_. It is more generally
+called a **preprocessor**. In other languages like Python, it is referred
+to as an _import statement_. In other words, the `#include` is a way of
+including source code in files other than the file containing `main()`.
+Before C++ executes our program it "copies-and-pastes" the code inside
+`<iostream>` into the file containing `main()`. This is the preprocessing
+stage.[^preprocessing]
+
+[^preprocessing]:
+    Importantly, header files are not compiled or executed separately. They
+    are "copied-and-pasted" into the relevant `.cpp` file, and that `.cpp`
+    file is compiled.
+
+In the code above, `cout` and `endl` objects come from the `iostream`
+_header file_, a library. The `std::` is called a _scope resolution_, and
+it tells the compiler that `cout` and `endl` are entities found in the
+`iostream` header file. We can shorten the code above with a _namespace_:
+
+```cpp
+#include <iostream>
+using namspace std;
+
+int main() {
+	cout << "Hello, world!" << endl; return 0
+}
+```
+
+The `using namespace std` essentially tells the compiler that for all of
+the following code, keep in mind that we're using `std`. Thus, when the
+compiler encounters `cout` and `endl`, it knows that these are entities
+from `std`.
+
+To execute the code above, we open a terminal session in the directory
+containing `main.cpp`, and execute the following line to compile:
+
+```bash
+make main
+```
+
+Running the command above, we should see that there are now two files in
+the directory: `a.out` and `main.cpp`. To execute the source code in
+`main.cpp`, we run:
+
+```bash
+./main Hello, world!
+```
+
+For the rest of the source code examples following, we will omit these
+shell commands when displaying the output to the console. Note that
+whenever we make changes to a source code file, that source code must be
+compiled again to see the changes take effect.
+
+All code in a C++ program is written in the curly braces following `main`:
+
+```cpp
+int main() {
+	// statements
+	return 0;
+}
+```
+
+`main()` is a function, and the brunt of our source code is placed inside
+the function `main()` because `main()` is what the operating system calls
+when it executes a C++ program. Given this role, `main()` is called our
+program's **entry point**. The `int` prefacing `main()` is the function's
+**return type**, `main` is the function's **name**, the `()` enclose the
+function's **parameters**, and everything inside the curly braces `{}` is
+the **function body**. By convention, we will `return 0` to indicate the
+program ran successfully. For example:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main() {
+	cout << "Hello, world!" << endl;
+	return 0;
+}
+```
+
+```bash
+Hello, world!
+```
+
+Another example, gathering user input:
+
+```cpp
+#include <iostream>
+
+int main() {
+	int user_num;
+	std::cout << "Enter your favorite integer: ";
+	std::cin >> user_num;
+	std::cout << "Great choice!";
+
+	return 0;
+}
+```
+
+```bash
+Enter your favorite number: 10 Great choice!
+```
+
+Notice the differences between the code above. The symbol `std` is called a
+_namespace_. We will explore what a namespace is in later sections. The
+symbol `cout` is a method inside the namespace `std`, and it allows us to
+output things to the console. Notice the direction of the _arrow-arrows_
+(formally called _chevrons_). The symbol `cin` is also a method inside the
+namespace `std`, and it allows us to collect user input via the console.
+Again note the direction of the arrow-arrows. In this case, we are storing
+the user's console input to a variable called `user_num`.
+
+C++ is a compiled language. This separates it from languages like Python,
+which are interpreted. In very broad terms, a compiled language is one
+whose programs must be first entirely translated into machine code by a
+compiler before execution. An interpreted language, however, translates
+each statement into machine code and executes, one by one (these days, most
+interpreted languages translate source code into an intermediate format,
+called _byte code_). Examples of compiled languages include C++, C, `Go`,
+`Haskell`, and `Rust`. Examples of interpreted languages include `Python`,
+`JavaScript`, `Scheme`, `Ruby`, etc. Some languages fall somewhere in the
+middle, like `Java`, which first compiles source code to bytecode before
+compiling or interpreting to machine code.
+
+The supposed distinction between interpreted and compiled languages is not
+all that meaningful; what is more important is _how_ the particular
+language is understood by the computer. The real benefit to languages like
+C++ is that it takes us very close to the metal &mdash; we have access to
+very low-level computing resources, such as direct control over computer
+memory. We could, of course, do the same using C, but it would be too
+cumbersome to create and handle large, complex data structures. Moreover,
+C++ is a superset of C.
+
+From these facts, all of our C++ source code must be _compiled_ and
+_linked_ before it _executes_. The processes of compiling and linking are
+collectively called **building** &mdash; our code must first _build_ before
+it is _executed_.
+
+We raise this point because the programs in the following sections are all
+compiled via the command line. Accordingly, we must always be sure we
+perform a **clean build** with our C++ programs. Useful C++ programs tend
+to contain many `.cpp` and `.h` files. And when we compile a program, we
+are compiling just that program. Most IDEs either build cleanly by default
+or provide an option to clean before compiling. This is not the case with
+compiling via the terminal, and we must ensure that all of our files are
+compiled again before execution. We can do so either listing all of our
+relevant files when executing `g++` separated by a space, or using some
+other shell command to ensure all the relevant files are included when
+executing `g++`.
+
+## Comments.
+
+Comments in C++ take the following form:
+
+```cpp
+// This is a single line comment
+
+/*
+ * This is
+ * a multiline
+ * comment
+*/
+```
+
+## The `includes` Keyword
+
+`includes`. We can utilize code written by other programmers by _including_
+a header file. There are two ways to do so:
+
+```cpp
+#include <iostream> #include "console.h"
+```
+
+By convention, angle brackets are used for code from the C++ standard
+library. All other external code, use quotes.
+
+## Console Output
+
+We will be using a console for many of the programs in the following
+discussions. The console provides a means of communicating information from
+a program to the user of the program. To output information to the console,
+we use the keyword `cout`:
+
+```cpp
+cout << "Hello, world" << endl;
+```
+
+We can think of the `<<` operator as saying, Send `"Hello, world!"` to the
+console. Those coming from other languages might ask, isn't the `<<` a
+bit-shift operator? In C++, yes, it is also a bit-shift operator. `<<` is
+an overloaded operators (and since operators are really just functions, an
+overload function). The keyword `endl` ensures that the cursor in the
+console is placed on a new line. This allows multiple console outputs to
+display on different lines.
+
+Notice further the use of semicolons after each statement. Like `Java` and
+C, C++ is a **semicolon-delimited** language, meaning statements are
+indicated as complete with semicolons. Of course, not all all languages are
+semicolon-delimited, or delimited. `Prolog` is a _full-stop delimited_
+language (periods mark the end of statements), and `Python` depends only on
+tabbing.
+
+## Compilers v. Interpreters
+
+Some programming languages are **interpreted languages**, others are
+**compiled languages**, and yet others are somewhere in the middle, a sort
+of hybrid. What is the difference between an interpreted language and a
+compiled language?
+
+The most obvious difference is that a compiled language employs a
+**compiler**, while an interpreted language employs an **interpreter**.
+Both interpreters and compilers are computer programs. The most common task
+for these programs is to check for errors. What errors a compiler or
+interpreter checks depends on its implementation. Some will only check for
+syntax issues. Others go a step further, and check for errors that would
+normally only be caught at runtime. Others will raise _warnings_ &mdash; a
+potential error.
+
+The second task both programs perform is translating source code into
+machine code. That machine code consists of either (a) _constant data_ or
+(b) _instructions_. Interpreted and compiled languages are necessarily
+non-machine code languages, and as such, the computer has no way of
+understanding them. Thus, the particular language's source code must be
+translated into machine code before they can be _executed_.
+
+It is the third task that distinguishes compilers from interpreters.
+Compilers do not handle execution. They perform the preliminary step of
+checking for errors before runtime is used. Interpreters, however, take on
+the task of error-checking, translation, and execution all at once.

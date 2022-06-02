@@ -1,0 +1,874 @@
+# Variables & Types
+
+1. [Constants](#constants)
+2. [Types](#types)
+   1. [Integer Type](#integer-type)
+      1. [Two's-Complement](#twos-complement)
+   2. [Floating Point Types](#floating-point-types)
+   3. [Text](#text)
+3. [Boolean](#boolean)
+4. [Initialization](#initialization)
+5. [Modifying Variables](#modifying-variables)
+6. [Type Safety](#type-safety)
+7. [Why "Primitive" Type?](#why-primitive-type)
+8. [Strongly-typed v. Weakly-typed Languages](#strongly-typed-v-weakly-typed-languages)
+   1. [Why are there are so many types?](#why-are-there-are-so-many-types)
+9. [Operators](#operators)
+   1. [Addition](#addition)
+   2. [Subtraction](#subtraction)
+   3. [Multiplication](#multiplication)
+   4. [Division](#division)
+   5. [Remainder](#remainder)
+   6. [Increment](#increment)
+   7. [Decrement](#decrement)
+   8. [The Less Than Symbol](#the-less-than-symbol)
+   9. [The Greater Than Symbol](#the-greater-than-symbol)
+   10. [Less than or Equal To](#less-than-or-equal-to)
+   11. [Greater than or Equal To](#greater-than-or-equal-to)
+   12. [Equality](#equality)
+   13. [Non-equality](#non-equality)
+   14. [Logical AND](#logical-and)
+   15. [Logical OR](#logical-or)
+   16. [Logical NOT](#logical-not)
+10. [Idioms](#idioms)
+    1. [Bitwise Operators](#bitwise-operators)
+11. [Naming](#naming)
+12. [Library Methods & APIs](#library-methods--apis)
+
+Programs need data. To give our programs that data, they must be stored
+somewhere in memory. But before we store any data in Java, we must tell
+Java beforehand that you are going to store data. To do so, we need
+**variables**—an entity that holds a data type value. In Java, every
+variable has a **name** and a **data type**.[^note_data_type]
+
+```java
+// Declare variable named c of type char
+char c;
+
+// Declare variable named num of type int
+int num;
+
+// Declare variable named isPresent of type boolean
+boolean isPresent;
+```
+
+[^note_data_type]:
+    A **data type** is a finite set of values and the operations on those
+    values. For example, the data type `int` consists of values: integers
+    ${-2^{31}}$ to ${2^{31}-1.}$ And it consists of operations: addition,
+    subtraction, multiplication, division, comparison, etc.
+
+In the example above, there are _comments_, denoted by two forward slashes
+(`//`). Every other statement is called a **declaration**. The left side is
+the variable's **type**, and the right side the variable's **name**. Simply
+put, variable declaration is the act of creating a variable.
+
+In programming, a comment is a statement ignored by the compiler. Because
+they're ignored by the compiler, we can use them to annotate our code.
+Comments are valuable in programming. They tell readers what a particular
+statement means or does. But, they also take up space and too many comments
+can clutter a program, making it unreadable.
+
+Comments should be concise and descriptive. They should not be simply
+identical to the actual code (since that would simply be a waste of space).
+
+A brief note on terminology: There are different kinds of variables in
+Java. Variables that store primitive type values are called **primitive
+variables** (or, **primitive constants**). Variables that store objects are
+called **object references**. With an object reference, the variable
+doesn't actually hold the object—it instead holds a reference to the
+object.
+
+## Constants
+
+Variables fall into two categories: (1) variables, and (2) constants. In
+languages like Java, the values we store in a variable can be mutated.
+Accordingly, the term variable, on its own, usually implies that the value
+stored in the variable can be mutated (again, in the context of Java; some
+languages do not permit such mutation). When we use the term _constant_,
+however, we are referring to a variable whose stored value _cannot_ be
+changed.
+
+## Types
+
+Data comes in many forms. The "Call me Ishmael" and "WARNING" are textual
+data. The number of users visiting this page is numeric data. These data
+all take a different form, and there are things we can and cannot do with
+them. We can add 4 and 7, but we cannot divide "love" by "children" (at
+least not logically). Because of this fact, Java (and many other
+programming languages) classify data by type.
+
+While a program runs, and while a file is open, it is stored in a hardware
+component called the RAM ("Random Access Memory"). When you install
+programs and save files (and they are not running or open), they are stored
+in a different hardware component, the `hard drive` (or _hard disk_ or
+_solid state disk_; or a CD; or a USB; devices that store data, other than
+RAM). Devices like hard drives do not require electricity to store data.
+RAM, however, does. It is much faster than a hard drive, because it is a
+purely electronic device—unlike hard drives, there are no moving parts.
+With RAM, we have the ability to very quickly open files and execute
+programs, because everything is electric. This is why we lose data when our
+computer suddenly dies midway through writing a Word Document or a C
+program. The data is stored in RAM, and without electricity coming from the
+computer's power source, everything is lost.
+
+At a very high level overview, the RAM can be understood as:
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653527635/cs/ram_allocation_mzcjee.svg"
+	}
+	caption={"RAM Allocation"}
+	width={"100"}
+	imwidth={"703"}
+	imheight={"269"}
+/>
+
+Whenever we declare a variable in Java, we must explicitly state the
+variable's type. This is an instruction to the compiler that the particular
+variable will store a value of a particular type. We will see later why
+Java's designers decided to implement this feature.
+
+Now, once we declare a variable to be of a particular type, that variable's
+type can never change. For example, when write `int x;` the variable `x`
+will always store some value of type `int`. That value may change later,
+but the variable's type `int` can never be changed to `double` or `char`.
+Because of this trait—the prohibition of changing a variable's type after
+declaration—Java is described as a **statically-typed language** (i.e., the
+language's types are "static").[^typing_note]
+
+[^typing_note]:
+    The other end of the spectrum are the **dynamically-typed languages**
+    like JavaScript; in these languages, a variable can store an integer,
+    then later store a Boolean, then later store a string. Furthermore,
+    type checking is done at runtime—**dynamic type checking**.
+
+Whenever we compile Java source code, the `javac` compiler will check all
+of our source code to ensure we are complying with Java's type-checking
+rules. Because type checking is done at compile time, we say that Java
+employs a **static type checking** system.
+
+With few exceptions relating to scope—in Java, once you have declared a
+variable name of a particular type, you cannot redeclare it later down the
+program:
+
+```java
+// Declare variable named c of type char
+char c;
+
+// Variable is already declared, this will return an error
+char c;
+
+// This also won't work, even if it's of different type
+int c;
+```
+
+Even if the last example worked, it would be a stark example of _dirty
+code_, poor programming hygiene. How will our future selves or other coders
+tell the two apart?
+
+In Java, there are eight **primitive data types**. All other data in Java
+is represented by some combination of these eight primitive types. The
+types fall into four broad categories:
+
+1. integers
+2. floating point numbers
+3. text
+4. booleans
+
+A helpful way to think about types is to imagine them as cups. They hold
+something. For example, at a coffee shop, drinks can be ordered in various
+sizes. Suppose the sizes are small, short, tall, grande, gigante, and
+monstruoso. Some of the drink sizes are specific to certain drinks. Maybe
+the monstruouso size is only available for lemonade or water—it would be
+too costly to serve high quality coffee at such a size. The same idea
+extends to types. As we'll see, an `int` is ${32}$ bits, a `long` is ${64}$
+bits, a `char` is ${16}$ bits, and so on.
+
+### Integer Type
+
+Integers are the whole numbers and their negative counterparts (e.g., 0, 5,
+-11, 27, etc.). In Java, these numbers can be represented by any one of
+these four types:
+
+```java
+byte
+short
+int
+long
+```
+
+We will later discuss why there are 4 different types. For now, let's
+review some representation. As we know, the computer doesn't actually know
+what `2` or `17` are—the computer only understands 1s and 0s. As such,
+integers, written in Hindu-Arabic numerals, must be translated to binary
+form for the computer to process.
+
+#### Two's-Complement
+
+With the natural numbers, we can convert these easily. The number ${2}$ is
+${10_{[0]}}$ in binary, and ${17}$ is ${10001_{[0]}.}$ But how do we deal
+with negative integers?
+
+Let's consider the data type `byte`. As its name implies, a `byte` can only
+hold 8 bits. With 8 bits, we can represent ${2^n}$ unique bit patterns,
+starting from ${00000000_{[0]}}$ (0 in decimal) through ${01111111_{[0]}}$
+(127 in decimal). Hang on. Why is is there ${0}$ there? Shouldn't it be
+${01111111_{[0]}}$ (128)? That ${0}$ is called the **sign bit**. If the
+number is positive, the sign bit is ${0,}$ and if it's negative, the sign
+bit is ${1.}$
+
+The next question, however, is how does the computer _store_ negative
+integers? For example, if we wrote ${-5,}$ how does the computer go from
+this literal to binary? The answer is through **two's-complement**. The
+idea is fairly straightforward. Let's start with the number ${5,}$ stored
+in a `byte`, and work our way to negative ${5.}$ First, we represent the
+number ${5}$ in binary:
+
+$$
+	00000101_{[0]}
+$$
+
+Next, we take what we call the **one's-complement**. Essentially, we,
+invert, or change, all of the digits into their opposites:
+
+$$
+	11111010_{[0]}
+$$
+
+Then, we add ${1}$ to the one's-complement:
+
+$$
+	\begin{align*} 11111010_{[0]} \\ + 00000001_{[0]} \\ \hline 11111011_{[0]} \end{align*}
+$$
+
+This result, ${11111011_{[0]},}$ is called **two's-complement**. Notice
+that we now have a ${1}$ as the sign-bit. This is a negative number, but
+it's not ${-5,}$ as read. We need the ${5.}$ To get the ${5,}$ we simply
+take the two's-complement of ${11111011_{[0]},}$ while keeping the sign bit
+in place.
+
+As an aside, notice that when we add the binary representation of ${5}$ to
+the binary representation of ${-5,}$ we get ${0:}$
+
+$$
+	\begin{align*} 00000101_{[0]} \space &(5_{[10]}) \\ + 11111011_{[0]} \space &(-5_{[10]}) \\ \hline 00000000_{[0]} \space &(0_{[10]}) \end{align*}
+$$
+
+### Floating Point Types
+
+Floating point numbers are those numbers with fractional parts, or decimal
+points (i.e., 0.0, 12.9, 3.14, -1.29, etc.) We can represent these numbers
+with any one of these two types:
+
+```java
+float pi = 3.14;
+double e = 0.577;
+```
+
+### Text
+
+There are two ways to represent textual data in Java: with the primitive
+type `char` or with the abstract data type `String`. We will investigate
+what the differences between a primitive type and an abstract data type are
+in later sections, but for now, it suffices to understand that `char` is a
+primitive, but `String` is not.
+
+The `char` type represents individual alphanumeric characters for symbols.
+There are ${2^16}$ different possible `char` values; this includes letters,
+numbers, symbols, and whitespace characters like single-space, tab, and
+newline.
+
+```java
+char x = 'x';
+String n = "Hello";
+```
+
+The `String` type represents _sequences_ of characters. In Java, we denote
+strings by enclosing a sequence of characters in double quotes.
+
+## Boolean
+
+Boolean values are the binary values `true` and `false`. These are the only
+two values under the type.
+
+```java
+boolean a = true;
+boolean b = false;
+```
+
+With just these eight types:
+
+- `byte, short, int, long`
+- `float, double`
+- `char`
+- `boolean`
+
+we can represent any data that a computer can work with.
+
+## Initialization
+
+Once we have declared a variable, we can assign it data. In doing so, we
+**initialize** the variable (we give the variable an _initial_ value):
+
+```java
+// declaration
+float increment;
+
+// initialization
+increment = 0.1;
+
+// inline-initialization: declare and initialize in one line
+boolean isItSnowing = false;
+long weightBlueWhale = 330000;
+```
+
+In the example above, notice that we can declare and initialize variables
+in one line. This is called **inline-initialization**.
+
+Note that every statement in Java ends with a semicolon (;). Java is a
+**semicolon-delimited language**. To use variables in Java, they _must_ be
+initialized:
+
+```java
+double x;
+System.out.println(x);
+```
+
+```bash
+Line 3: error: variable x might not have been initialized
+System.out.println(x);
+									^
+1 error
+```
+
+A **literal** is the Java source code representation of a data type value.
+The number or value we explicitly assign to a variable is called a literal.
+In programs, there are values that change as the program runs; an
+_incrementer_ or _accumulator_, for example. Literals are those values that
+are not computed; they are explicitly written. They might be manipulated,
+but the value we explicitly wrote always appears directly in our source
+code.
+
+The opposite of a literal is an **expression**. An expression is a
+combination of literals, variables, and operations that Java must
+_evaluate_ to produce a single value. We can also think of the expression
+as the Java source code representation of a computation.
+
+```java
+// These are literals
+char tic = 'x';
+char tac = 'o';
+
+// Note the L suffix; this is how we tell Java that this is big number
+long bigNum = 10000L;
+
+boolean isComplete = true;
+boolean isIncomplete = false;
+
+// These are expressions, not a literal
+int foo = 1 + 1;
+long biggerNum = bigNum + 10000L;
+```
+
+## Modifying Variables
+
+Once a value is assigned to a variable, we can modify it as the program
+runs:
+
+```java
+int changing = 10;
+
+changing = 20; // assign a new value
+
+changing = 20 + 20; // Arithmetic is ok right of =
+
+changing += 1; // Add 1, assign it the result
+
+changing -= 1; // Subtract 1, assign it the result
+
+changing *= 2; // Multiply by 2, assign it the result
+
+changing /= 2; // Divide by 2, assign it the result
+```
+
+We can also modify variables by assigning existing variables. Always read
+assignments from right to left:
+
+```java
+double first = 10.0;
+double second = 5.0;
+first = second // assignment, right to left
+second = 20.0;
+first = second + 10.0;
+double third = 2.0;
+first = second + third; // arithmetic with variables on right is ok
+
+int z = 10;
+z = z + 1; // z is now 11
+```
+
+The last example reveals a crucial point about assignment, and why we want
+to always read them from right to left. The value assigned to `z` at the
+very last line is first computed—`z + 1`—then assigned. The value stored in
+`z` when `z + 1` is computed is `10`, so the value assigned to `z` at the
+very last line is `11`.
+
+## Type Safety
+
+Once we declare a variable in that variable must maintain its type. We
+cannot, say, declare a variable `num` of type `int`, and thereafter assign
+to it data of type `float`:
+
+```java
+int num = 10;
+num = 10.0; // error is returned
+```
+
+Failure to remember this rule can lead to unexpected results:
+
+```java
+int num = 35;
+num /= 2;
+System.out.println(num);
+```
+
+```bash
+11
+```
+
+The correct answer to the above should be ${11.\overline{6}.}$ (The
+overline, called a _vinculum_, indicates repeating digits). We're getting
+`11` because `num` was declared to store data of type `int`. Note that
+there is no rounding occurring here. Java is simply dropping the fractional
+digits. Note that Strings in Java must be enclosed in double quotes:
+
+```java
+System.out.println("Hello, world!'); // causes an error
+System.out.println("Hello, world!"); // no error
+```
+
+## Why "Primitive" Type?
+
+The eight types above are referred to as "primitive" types because they can
+all be represented by numbers. The numeric data types
+`byte, short, int, long, float, double` can obviously all be represented by
+numbers. But what about `char` and `boolean`? Well, `boolean` is simply a
+binary value—we can represent `false` with `0` and `true` with `1`.
+
+`char` is more interesting. In programming, English characters have a
+corresponding numeric code called an **ASCII code**, found in the ASCII
+table. Because each letter is encoded in ASCII with numbers, they too can
+be represented as numbers. ASCII has generally gone along the wayside,
+replaced by the much larger UNICODE enconding system. This is due to ASCII
+encoding only English characters—obviously English isn't the only language
+we speak.
+
+## Strongly-typed v. Weakly-typed Languages
+
+In many languages, like Python and JavaScript, we, the programmers, are not
+required to explicitly state what types our data are. These are called
+_weakly-typed languages_. Java and C, however, are _strongly-typed_
+languages—we must explicitly provide a datum's type. The benefit of
+strongly-typed languages: It forces us to specify how much space we need to
+store data. This means we have no choice but to be efficient. Moreover, it
+helps us catch some of the most common programming errors.
+
+### Why are there are so many types?
+
+Java provides a variety of types to manage memory and to respond to
+hardware advances. Each of the types takes up a certain amount of memory.
+Here's an API:
+
+| Java Primitive Type | Bytes Required | Range                                             | Default  |
+| ------------------- | -------------- | ------------------------------------------------- | -------- |
+| boolean             | 1 byte         | `true`, `false`                                   | `false`  |
+| byte                | 2 bytes        | ${[-128..127]}$                                   | `0`      |
+| char                | 2 bytes        | ${[0..65535]}$                                    | `\u0000` |
+| short               | 2 bytes        | ${[-32768..32767]}$                               | `0`      |
+| int                 | 4 bytes        | ${[-2147483649..2147483647]}$                     | `0`      |
+| float               | 4 bytes        | ${[-1.4 \times 10^{-45}..3.4 \times 10^{38}]}$    | `0.0f`   |
+| long                | 8 bytes        | --                                                | `0`      |
+| double              | 8 bytes        | ${[-4.39 \times 10^{-324}..1.7 \times 10^{308}]}$ | `0.0d`   |
+
+But why so many? For example, `byte`, `int`, `short`, and `long` all
+represent integers. But why are there four separate types? The answer is a
+combination of history and economics.
+
+First, all of the computations done by a computer are ultimately done by
+the computer's CPU. Without the CPU, a computer would just be a metal
+brick. Now, we might have heard of various terms like "64-bit processors"
+or "32-bit processors". At the time of writing, mainstream processors are
+64-bit processors. Before this, we had 32-bit processors, and before that,
+16-bit processors. There were, and are, 12-bit, 8-bit, and 4-bit
+processors. What do these terms mean?
+
+In our early years, we learned to count with our fingers. 5 for five
+fingers, and 10 for ten fingers. Computers also have to count, but they
+don't have fingers. However, recall our discussion on representation. All
+the computer really needs is two fingers to represent 0 and 1. The word
+"bit," as used in "64-bit" communicates how many fingers the computer has
+to count. With a 4-bit processor, the computer only has four fingers, and
+it can only count up to the binary number ${1111_{[0]}}$ (15 in decimal).
+With a 32-bit processor, the computer has 32 fingers, and it can count up
+to the binary number
+
+$$
+	11111111111111111111111111111111_{[0]}
+$$
+
+(4,294,967,296 in decimal).
+
+Now, recall that when we execute programs, we are really sending
+instructions to the CPU. Those instructions are in 0s and 1s. The CPU,
+however, has a fundamental constraint: It has a fixed size for how many 0s
+and 1s it can process at once (or more formally, in one _cycle_). With a
+64-bit processor, the CPU can process 64-bits of data in a single cycle.
+With a 32-bit processor, 32 bits, 16-bit 16 bits, and so on. This
+limitation impacts how well the computer handles large computations. For
+example, we can quickly compute ${2 + 2 = 4.}$ However, with something like
+${298 + 769,}$ we have to perform carry-overs. The same idea extends to
+CPUs. With numbers beyond what it can handle in a single cycle, the CPU
+must perform more than 1 step to complete the computation.
+
+This limitation extends to another important part of the computer: RAM.
+Recall the RAM diagram earlier. Each square in the grid has a **memory
+address**, and that address is named as an integer. For example, consider a
+3-bit processor. With 3 bits, the computer can only count up to ${111.}$
+This in turn means that the computer can only generate 8 possible patterns
+of bits: 000, 001, 010, 011, 100, 101, 110, or 111. In terms of memory, the
+computer would only be able to understand these 8 addresses. Reference
+anything beyond these addresses, and the computer won't know what we're
+talking about. And with that limitation, our programs can only be so large
+and complex—memory is everything.
+
+How does this all relate to Java's types? At the time Java was introduced,
+mainstream processors were 32-bit processors. Accordingly, Java used 4
+bytes to represent integers (8 bits in a byte, 4 bytes yields 32 bits).
+This also explains why compilers for older languages like C use 2 bytes to
+represent integers—at the time, 16-bit processors were the norm. To allow
+programmers to write programs for older machines—called **backwards
+compatibility**—Java provides `byte` and `short`. And in response to newer
+machines—using 64-bit processors—Java provided `long`.
+
+Knowing these limitations is critical when we're working with data types of
+small value ranges. Failing to recall them can lead to unexpected results:
+
+```java
+class Overflow {
+	public static void main(String[] args) {
+		byte num = 10;
+		num += 256;
+		System.out.println(num);
+	}
+}
+```
+
+```bash
+10
+```
+
+Why isn't the console displaying `356`? Because the type `byte` is
+restricted to exactly 1 byte—it can only store integers up to 256. Once we
+go beyond `256`, go back to `0`. In programming, this is called
+**overflow**. We can prevent encountering overflows by testing for the
+type's `MIN_VALUE` and `MAX_VALUE`.
+
+## Operators
+
+Operators are evaluated in a specific order. Parentheses are always
+evaluated first. Inside the parentheses or otherwise, operators are
+evaluated left-to-right. Going from left to right, multiplication (`*`) and
+modulus (`%`) are evaluated before addition (`+`) and subtraction (`-`).
+Below is an API of the various operators in Java, where ${a}$ and ${b}$ are
+variables or literals.
+
+### Addition
+
+> `a+b`
+
+The addition operator is straightforward. It computes ${a + b,}$ where
+${a}$ and ${b}$ are numeric types or `char`. If ${a}$ and ${b}$ are
+strings, then the strings are _concatenated._
+
+### Subtraction
+
+> `a-b`
+
+Another basic operation is subtraction—compute ${a - b}$, where ${a}$ and
+${b}$ are numeric types or `char`.
+
+### Multiplication
+
+> `a * b`
+
+Multiplication — ${a \times b}$ — is done with the asterisk or star symbol.
+In Java ${a}$ and ${b}$ are numeric types or `char`.
+
+### Division
+
+> `a / b`
+
+Division — ${\dfrac{a}{b}}$ — is done with the forward slash character.
+${a}$ and ${b}$ are numeric types or `char`.
+
+### Remainder
+
+> `a % b`
+
+The percentage sign corresponds to the remainder operator. It computes:
+
+$$
+	\dfrac{a}{b}
+$$
+
+and returns the remainder. ${a}$ and ${b}$ are numeric types.
+
+### Increment
+
+> `a++`
+
+The increment operator computes ${a + 1.}$ ${a}$ is a numeric type.
+
+### Decrement
+
+> `a--`
+
+The Decrement operator computes ${a - 1,}$ ${a}$ is a numeric type.
+
+### The Less Than Symbol
+
+> `a < b`
+
+The less than symbol is a _relational operator_. It returns `true` if
+${a < b,}$ other wise false|${a}$ is a numeric type.
+
+### The Greater Than Symbol
+
+> `a > b`
+
+The greater than symbol is a relational operator. It returns `true` if
+${a > b,}$ other wise false|${a}$ and ${b}$ are numeric types.
+
+### Less than or Equal To
+
+> `a <= b`
+
+Another relational operator; returns `true` if ${a < b}$ or ${a = b,}$
+other wise false. ${a}$ and ${b}$ are numeric types.
+
+### Greater than or Equal To
+
+> `a >= b`
+
+Relational operator; returns `true` if ${a > b}$ or ${a = b,}$ other wise
+false|${a}$ and ${b}$ are numeric types.
+
+### Equality
+
+> `a == b`
+
+Relational operator; returns `true` if ${a = b,}$ other wise false|${a}$
+and ${b}$ are numeric types.
+
+### Non-equality
+
+> `a != b`
+
+Returns `true` if ${a \neq b,}$ other wise false|${a}$ is a numeric type.
+
+### Logical AND
+
+> `a && b`
+
+Logical operator AND; returns `true` if ${a}$ is `true` and `b` is `true`;
+otherwise false. ${a}$ and ${b}$ are of type `bool`
+
+### Logical OR
+
+> `a || b`
+
+Logical operator OR; returns `true` if ${a}$ is `true` or `b` is `true`;
+otherwise false. ${a}$ and ${b}$ are of type `bool`.
+
+### Logical NOT
+
+> `!a`
+
+The logical operator NOT returns `false` if ${a}$ is `true`, and returns
+`true` if ${a}$ is `false`. ${a}$ is of type `bool`
+
+## Idioms
+
+Many computer science newcomers are unfamiliar with the remainder operator.
+This operator simply returns the remainder from dividing some number $a$ by
+${b.}$
+
+The remainder operator is a particularly useful operation. For example, if
+${a \bmod 2}$ returns a remainder of 0, then we know that $a$ is an even
+number. If ${a \bmod 2}$ returns a remainder greater than 0, then we know
+that $a$ is an odd number. For example:
+
+```java
+public class Demo {
+	public static void main(String[] args) {
+		int x = 4;
+		int y = 5;
+		boolean xIsEven = (x % 2 == 0); // xIsEven is true
+		boolean yIsEven = (y % 2 == 0); // yIsEven is false
+		System.out.println(xIsEven);
+		System.out.println(yIsEven);
+	}
+}
+```
+
+```bash
+true
+false
+```
+
+Examining this use of the modulus operator, we can see that we can
+generalize this pattern even more—write `x % 3`, and we check if `x` is a
+multiple 3, `x % 4`, a multiple of 4, `x % 11` a multiple of 11, and so on.
+
+In computer science, this is an example of a **idiom**. An idiom is just a
+programming pattern. In this case, we have some pattern `${x}$ % ${n}$`,
+where ${x}$ is some variable, and `${n}$` is a positive integer. Learning
+and recognizing idioms is a core skill in programming; with it, we can
+identify and solve smaller problems quickly. And as we'll see with
+functions, the best way to approach a problem is to break it down into
+smaller problems.
+
+### Bitwise Operators
+
+The bitwise operators operate on bits of data. Because these operators
+operate on bits, they are the fastest of all operators. Below is an API of
+the operators. We will present examples separately.
+
+| Operator | Meaning                                              |
+| -------- | ---------------------------------------------------- |
+| `&`      | Bitwise `AND`; corresponds to the logical ${\land}$  |
+| `\|`     | Bitwise `OR`; corresponds to the logical ${\lor}$    |
+| `~`      | Bitwise `NOT`; corresponds to the logical ${\neg}$   |
+| `^`      | Bitwise `XOR`; corresponds to the logical ${\oplus}$ |
+| `>>`     | Bitwise `RIGHT SHIFT`                                |
+| `>>>`    | Bitwise `UNSIGNED RIGHT SHIFT`                       |
+| `<<`     | Bitwise `LEFT SHIFT`                                 |
+
+The bitwise operators are analogous to computing truth tables. Let's say we
+had two literals, `a` and `b.` Let's further say that `a` and `b` are
+represented in binary by just a single bit. Thus, `a` and `b` can only be
+`1` or `0`. The bitwise `AND` `&` performs as such:
+
+| a   | b   | a && b |
+| --- | --- | ------ |
+| 0   | 0   | 0      |
+| 0   | 1   | 0      |
+| 1   | 0   | 0      |
+| 1   | 1   | 1      |
+
+The bitwise `OR`, `|`,
+
+| a   | b   | a \| b |
+| --- | --- | ------ |
+| 0   | 0   | 0      |
+| 0   | 1   | 1      |
+| 1   | 0   | 1      |
+| 1   | 1   | 1      |
+
+The bitwise `XOR`, `^`,
+
+| a   | b   | a ^ b |
+| --- | --- | ----- |
+| 0   | 0   | 0     |
+| 0   | 1   | 1     |
+| 1   | 0   | 1     |
+| 1   | 1   | 0     |
+
+and the bitwise `NOT`, `~`,
+
+| a   | ~a  |
+| --- | --- |
+| 0   | 1   |
+| 1   | 0   |
+
+## Naming
+
+A **name**, or more formally, an **identifier**, is a sequence of
+characters in source code used to label a particular entity (for example, a
+variable). In Java, names must begin with either Unicode letters and
+digits, the dollar sign (`$`), or the underscore (`_`). By convention,
+however, names should always begin with a letter. Names in Java also follow
+camelCasing (capitalizing every other word to indicate spacing), rather
+than pothole*casing (using underscores to indicating spacing). The
+exception to this convention is with constants—very letter in a constant
+should be in upper case, with spaces indicated by undercores. Finally, Java
+places heavy emphasis on \_descriptive* and _concise_ variable names,
+erring on the side of _descriptive_.
+
+```java
+// This is good
+int age = 22;
+
+// These are good
+int NUM_ATTENDEES = 87;
+boolean ATTENDED = true;
+
+// This is bad
+float $pi = 3.14;
+
+```
+
+In general, there are three guidelines we should follow when creating
+variable names:
+
+1. The variable name should describe the data stored in the variable.
+
+2. Our code is read more times than it is written (whether by ourselves or
+   others). Our priority should be "easy to understand," not "easy to
+   write."
+
+3. If there are standard conventions, follow them; else, create a name and
+   be consistent.
+
+4. Additionally, like any other programming language, there are certain
+   words we cannot use as names in Java. These are called **reserved
+   words**:
+
+```rust
+abstract, assert
+boolean, break, byte
+case, catch, char, class, const, continue
+default, do, double
+else, extends
+false, final, finally, float, for
+goto
+if, implements, import, instanceof, int, interface
+```
+
+```rust
+long
+native, new, null
+package, private, protected, public
+return
+short, static, strictfp, super, switch, synchronized
+this, throw, throws, transient, true, try
+void, volatile, while
+```
+
+## Library Methods & APIs
+
+In the examples above, we wrote the following:
+
+```java
+System.out.print(/* some expression or value */)
+```
+
+This is a **library method**—a method provided by the Java library. There
+are numerous library methods in Java; methods for mathematics, printing,
+input and output, etc. Because of how many library methods there are, we
+will not list and explain them all at once. Instead, we will use and
+elaborate on them as needed.
+
+$$
+$$

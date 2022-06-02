@@ -1,0 +1,105 @@
+import Table2 from "@components/Table2/Table2";
+
+# Shells
+
+## Basic Commands
+
+To effectively navigate with a shell, we must first know the most basic
+commands (where CWD stands for "current working directory" — the directory
+we're currently in):
+
+| Operation                                  |            Bash            |            Power Shell            |
+| ------------------------------------------ | :------------------------: | :-------------------------------: |
+| Tell me what the CWD is                    |           `pwd`            |          `get-location`           |
+| Clear the console                          |          `clear`           |           `clear-host`            |
+| Enter the directory `⟨dir⟩` inside the CWD |         `cd ⟨dir⟩`         |       `set-location ⟨dir⟩`        |
+| Tell me what's inside the CWD              |            `ls`            |          `get-childitem`          |
+| Copy the `⟨file⟩`                          |        `cp ⟨file⟩`         |        `copy-item ⟨file⟩`         |
+| Permanently delete the `⟨file⟩`            |        `rm ⟨file⟩`         |       `remove-item ⟨file⟩`        |
+| Permanently delete the directory `⟨dir⟩`   |       `rmdir ⟨dir⟩`        |        `remove-item ⟨dir⟩`        |
+| Print text to the terminal window          |           `echo`           |           `write-host`            |
+| Create a new `⟨file⟩` in CWD               |       `touch ⟨file⟩`       |         `new-item ⟨file⟩`         |
+| Create a new directory `⟨dir⟩` in the CWD  |       `mkidr ⟨dir⟩`        |            `md ⟨dir⟩`             |
+| Show the contents of `⟨file⟩`              |        `cat ⟨file⟩`        |       `get-content ⟨file⟩`        |
+| Show the user manual of `⟨command⟩`        |      `man ⟨command⟩`       |       `get-help ⟨command⟩`        |
+| Move or rename the `⟨dir/file⟩`            | `mv ⟨dir/file⟩ ⟨dir/file⟩` | `move-item ⟨dir/file⟩ ⟨dir/file⟩` |
+
+## Grep
+
+The `grep` command is one of the most powerful and useful commands in the
+Bash shell. In short, it's a search command. Suppose we had a file called
+`bar.md` in some directory `foo`. Inside `bar.md`, we have the following:
+
+```terminal
+Hello, world!
+```
+
+We `cd` into `foo`, and run the following:
+
+```bash
+grep world ./bar.md
+Hello, world!
+```
+
+Notice how it returned the line `Hello, world!`. There are several
+templates for `grep`:
+
+<Table2 col1="Grep Command" col2="Operation">
+
+- `grep ⟨word⟩ ⟨filename⟩`
+  - Show me all the lines that exactly match `⟨word⟩` in `⟨filename⟩`
+- `grep -i ⟨word⟩ ⟨filename⟩`
+  - Ignoring case, show me all the lines that contain `⟨word⟩` in
+    `⟨filename⟩`.
+  - Note that this command will return words containing `⟨word⟩`. For
+    example, searching for `colon` will return `semicolon`, `colony`, and
+    `colonization`. To ignore these matches, use the `-w` flag (see next
+    command below)
+- `grep -w ⟨word⟩ ⟨filename⟩`
+  - Show me all the lines that contain `⟨word⟩`, and only `⟨word⟩` in
+    `⟨filename⟩`
+- `grep -R ⟨word⟩`
+  - Show me every file that contains an exact match to `⟨word⟩`
+- `grep -c ⟨word⟩ ⟨filename⟩`
+  - Show me the number of exact matches to `⟨word⟩` in `⟨filename⟩`
+
+</Table2>
+
+## Common Commands
+
+Below are some useful commands for more specific use cases.
+
+### Killing a Port Process
+
+In development, some ports may get stuck with a process, rendering them
+unusable until the process is killed. To kill the process at the port, the
+following commands can be used:
+
+| Bash                    | Power Shell                                |
+| ----------------------- | ------------------------------------------ |
+| `sudo lsof -i tcp:8000` | `netstat -ano \| findstr : ⟨port-number⟩ ` |
+
+Running the command above yields a list of PIDs (process IDs). For example,
+running the bash command on port 3000, we might get:
+
+```bash
+numerm$ lsof -i tcp:3000
+COMMAND     PID         USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+Google     2926 johndoe   46u  IPv6 0x963860c55a6a286f      0t0  TCP localhost:55962->localhost:hbci (ESTABLISHED)
+node      79733 johndoe   23u  IPv6 0x963860c55a6b0f4f      0t0  TCP *:hbci (LISTEN)
+node      79733 johndoe   36u  IPv6 0x963860c55a6a2f4f      0t0  TCP localhost:hbci->localhost:55962 (ESTABLISHED)
+```
+
+To kill a process, we then write:
+
+| Bash            | Power Shell              |
+| --------------- | ------------------------ |
+| `kill -9 ⟨PID⟩` | `taskkill /PID ⟨PID⟩ /F` |
+
+### Get the System's Current IP Address
+
+The commands below return the computer system's current IP address.
+
+| Bash                     | Power Shell                            |
+| ------------------------ | -------------------------------------- |
+| `ipconfig getifaddr en0` | `Get-NetIPAddress -AddressFamily IPV4` |

@@ -1,0 +1,191 @@
+<meta
+	name="description"
+	content="How to perform complexity analysis: An overview of Big O notation, theta notation, omega notation, time complexity, and space complexity."
+/>
+<meta name="author" content="Ketib Oldiais" />
+<meta
+	name="keywords"
+	content="complexity analysis, C++, Big O notation, theta notation, omega notation, time complexity, space complexity, complexity analysis exercises"
+/>
+<title>Complexity Analysis</title>
+
+# Complexity Analysis
+
+This section provides a general overview of algorithmic analysis in
+programming terms. We present the motivating question, its answer, as well
+as illustrations of the answer applied. The materials that follow assume a
+basic understanding of functions, limits, sequences, and series (i.e.,
+comfort with ideas from a basic calculus and discrete mathematics course).
+For a thorough mathematical justification of algorithmic analysis,
+
+One concern for analyzing algorithms is _efficiency_. While this is the
+most common concern, it is second to another—_correctness_. If an algorithm
+is incorrect, its efficiency is unimportant.[^efficiency_note] In these
+materials, we suppose that we've gotten over the correctness hurdle, and
+focus on efficiency.
+
+[^efficiency_note]:
+    For the most part. In later sections, we will see how analyzing the
+    efficiency of an incorrect algorithm can lead to insight elsewhere.
+
+The most common procedure for analyzing algorithms is determining the
+amount of _time_ an algorithm takes to execute. In essence, how long it
+takes a given algorithm to solve a particular problem. To do so, however,
+we need some agreed-upon method for quantifying time. We can't rely on
+units like seconds, because every machine is different. Solving some
+differential equation on a small mobile phone will be slower than running
+the same search on a super computer. Although it may be useful to know how
+fast the search runs on one device over another, it's not the principal
+concern in the analysis of algorithms. The search algorithm is the same for
+both the small mobile and the super computer. What we want to know is how
+the algorithm compares to another search algorithm, _regardless of
+device_.[^complexitynote]
+
+[^complexitynote]:
+    Time complexity is the way we measure how much time an algorithm takes
+    to execute (the algorithm's _runtime_) according to its input size.
+
+Occasionally, analyzing algorithms requires determining the amount of
+_space_ an algorithm takes to execute. For example, one algorithm ${A}$
+might be faster than algorithm ${B}$ but requires a significant amount of
+memory. Determining space complexity can often be immensely. Perhaps
+algorithms ${C}$ and ${D}$ take the same amount of time, but ${C}$ consumes
+less memory.
+
+So how do we determine the amount of time or space an algorithm takes? The
+first step is to count the number of _fundamental operations_ performed as
+a function of ${n,}$ where ${n}$ is the number of input values. In the
+pseudocode below, each line in the program on the left presents a unique
+operation. On the right are the time complexities for each line, along with
+comments (click on the comment to expand, or program line to see the
+accompanying comment).
+
+We list the operations as exhaustively as we can because in these first few
+sections we will count all of the operations. However, as we progress, we
+will learn that we rarely count every operation. Some operations are
+counted, others ignored. That said, let's consider an example. Suppose we
+had the following algorithm:
+
+```
+int sum = 0;
+	for (int i = 0; i < n; i++):
+	sum = sum + i;
+	return sum;
+```
+
+Counting the number of operations:
+
+| operation      | count                                                                                                                                                         |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `int sum = 0;` | ${1.}$                                                                                                                                                        |
+| `int i = 0;`   | ${1.}$                                                                                                                                                        |
+| `i < n;`       | ${n + 1.}$ The comparison is performed after each execution of the loop's body. Thus, it is true ${n}$ times and false once.                                  |
+| `sum + i;`     | ${n.}$ The addition operation is performed only if the test condition (the preceding comparison operation) returns `true`. Thus, it is performed ${n}$ times. |
+| `sum = sum;`   | ${n.}$ The assignment operation is performed only if the test condition returns `true`. Thus, it is performed ${n}$ times.                                    |
+| `i++;`         | ${n.}$ The increment is performed only if the test condition returns `true`. Thus, it is performed ${n}$ times.                                               |
+| `return sum;`  | ${1.}$ The `return` operation is performed exactly once.                                                                                                      |
+
+Summing the number of executions for each operation, ${\texttt{T}(n),}$ we
+get:
+
+$$
+	\begin{aligned} \texttt{T}(n) &= 1 + 1 + (n+1) + n + n + n \\ &= 1 + 1
+	+ n + 1 + n + n + n \\ &= 1 + 1 + 1 + n + n + n + n \\ &= 3 + 4n \end
+	{aligned}
+$$
+
+The final expression gives us a function of the algorithm's total run time:
+${\texttt{T}(n) = 4n + 3.}$ When we conduct complexity analysis, we want to
+express this runtime in terms of Big-O notation. To do so, we want to:
+
+1. Remove the constants.
+2. Remove the lowest terms.
+
+In this case, the constant is ${5,}$ and the lowest term is ${4.}$ Dropping
+the constant and the lowest term, we have some function ${g(n) = n,}$ and
+we express this as ${O(n).}$ We call this **linear time**, and we say that
+"The algorithm above runs no faster than ${n,}$" or "The runtime complexity
+is ${O(n).}$" Now, compare the algorithm above with the following:
+
+```
+return (n * (n + 1)) / 2
+```
+
+Counting the number of operations:
+
+| operation           | count |
+| ------------------- | ----- |
+| `n + 1`             | 1     |
+| `n * result(n + 1)` | 1     |
+| `result(n + 1) / 2` | 1     |
+| `return result`     | 1     |
+
+Summing the number of executions:
+
+$$
+	\begin{aligned} \texttt{T}(n) &= 1 + 1 + 1 + 1\\[1em] &= 4 \end {aligned}
+$$
+
+This algorithm has a running time function of ${\texttt{T}(n) = 4.}$
+Whenever the running time function is constant, we say that the algorithm
+runs on **constant time**, and we denote this with ${O(1).}$ This is a
+concise way of saying that algorithm's runtime does not depend on the input
+size ${n.}$ We can throw as many ${n}$ as we would like at the algorithm,
+and the runtime will never change. It's constant.
+
+Compare these two algorithms. Clearly, the first algorithm is slower than
+the second. We have function ${g(n) = n,}$ and ${g(n) = 1.}$ If we plot
+these two functions:
+
+![Linear versus constant plot. One is a flat, horizontal line, the other is angled.](https://res.cloudinary.com/sublimis/image/upload/v1652743076/cs/linear_versus_constant_plot.svg)
+
+we see that ${g(n)}$ will always grow faster than ${g(1).}$ This indicates
+that ${g(1)}$ will always be faster than ${g(n)}$—${g(1)}$ never grows to
+begin with.
+
+## Cases
+
+How well an algorithm performs depends on its inputs. Consider the simple
+linear search:
+
+```
+bool LinearSearch(TYPE[] array, TYPE key):
+	int n = array.Length();
+	for (int i = 0; i < n; i++):
+		if (arr[i] == key): return true;
+	return false;
+```
+
+If the key is found at `arr[0]`, the algorithm executes in just one
+iteration. If the key is found at `arr[n-1]`, the algorithm executes in `n`
+iterations (with `n` evaluations of the loop's condition). If the key isn't
+found anywhere in the array, the algorithm executes in `n` iterations, with
+`n+1` evaluations of the loop's condition. Thus, there are three unique
+scenarios:
+
+1. Key is found after just one iteration.
+2. Key is found after ${n}$ iterations. - Key is not found.
+
+Because of this phenomenon, algorithmic analysis can be performed in three
+different ways:
+
+- The **best-case time** of an algorithm is the algorithm's _smallest
+  possible run-time_, over all possible fixed-size inputs. The algorithmic
+  analysis for determining an algorithm's best-case time is called the
+  _best-case analysis_. When someone gives us an algorithm's best-case time
+  ${t,}$ they're essentially telling us that the algorithm has a speed
+  limit ${t}$—it can't get any faster than ${t.}$
+
+- The **worst-case time** of an algorithm is the algorithm's _largest
+  possible run-time_, over all possible fixed-size inputs. The algorithmic
+  analysis for determining an algorithm's best-case time is called the
+  _worst-case analysis_. When we're given an algorithm's worst-case time
+  ${w,}$ we're being told, "This algorithm can't get any slower than
+  ${w.}$"
+
+- The **average-case time** of an algorithm is the algorithm's _average
+  possible run-time_, over all possible fixed-size inputs. The algorithmic
+  analysis for determining an algorithm's best-case time is called the
+  _average-case analysis_. When we're given an algorithm's average-case
+  time ${a}$, we're being told, "On average, the algorithm has run time of
+  ${a.}$"

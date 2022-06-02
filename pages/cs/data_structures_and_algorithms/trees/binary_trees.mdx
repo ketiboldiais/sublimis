@@ -1,0 +1,1365 @@
+# Binary Trees
+
+Binary trees are a core data structure behind much of the software products
+and services we use today: The most common use case is the _binary search
+tree_, used in numerous search applications where data is constantly ebbing
+and flowing in a given system. _Binary space partition_ is used in nearly
+all 3D video games for determining which objects must be rerendered.
+_Binary tries_ are used in nearly all high-bandwidth routers for storing
+_router-tables_, large address books that routers use to direct internet
+traffic. _Huffman coding trees_ are binary trees used in compression
+algorithms, most notably the .jpeg and .mp3 file formats. _Syntax trees_
+are used by compilers and calculators to parse user-input expressions. The
+list goes on.
+
+Why are binary trees more commonly used than ternary trees or other
+${n}$-ary trees? Simply because ${n}$-ary trees are much more complicated.
+While we can do many interesting things with ${n}$-ary trees, we gain
+little in terms of speed. And as we know, speed is everything when it comes
+to data structures. Of course, ${n}$-ary trees outperform binary trees in
+certain situations, but the fact is, binary trees are easier to work with
+and cover more problem domains.
+
+So, what are binary trees, really? Binary trees are a special kind of tree.
+They consist of _nodes_ in a _parent-child relationship_. All binary trees
+have a single root—what we might think of as the _first node_, just as Adam
+was the first man or Eve the first woman—from which all other nodes
+descend. Moreover, binary trees have a two-child policy—all nodes can have
+at most two children.
+
+Because of these properties, we say that all binary trees are trees, but
+not all trees are binary trees. Accordingly, we have at our disposal all
+the usual arboreal terms:
+
+- The **root** is the top, or first, node in the tree.
+- A **child** is a node directly descending from a node.
+- The **parent** of a node ${n}$ is the node ${n}$ descends from.
+- **Siblings** are nodes with the same parent.
+- A **leaf** is a node with no children.
+- A **fork** is a node with children.
+- An **edge** is the connection between a child node and its parent.
+
+In general, there are two approaches to implementing binary trees:
+
+1. array implementation
+2. linked list implementation
+
+We begin first with the array implementation.
+
+## ABTs
+
+As its name implies, an **array-implemented binary tree (ABT)** is a binary
+tree implemented, and represented, with an array. First, we have the
+following binary tree, with an accompanying empty array:
+
+<BinaryTree
+	data={[
+		["A", ["B", "C"]],
+		["B", ["D", "E"]],
+		["C", ["F", "G"]],
+	]}
+/>
+
+<Sequence data={[" ", " ", " ", " ", " ", " ", " "]} />
+
+The challenge: How do we store each node in this binary tree in the array
+such that the relationships between the nodes are preserved? For example,
+`B` is the left child of `A`, and `C` is the right child of `A`. How is
+that information preserved in an array implementation?
+
+Here's an idea: Use the array's indices. Let's start by storing the
+elements from the top generation to the bottom generation, left to right.
+At ${L = 1,}$ we have a single node, `A`. So we store in the array:
+
+<Sequence data={["A", " ", " ", " ", " ", " ", " "]} />
+
+At ${L = 2,}$ we have two nodes, `B` and `C`, so we store, from left to
+right, `B` then `C`:
+
+<Sequence data={["A", "B", "C", " ", " ", " ", " "]} />
+
+Then, we go on to ${L = 3,}$ and see that there are ${4}$ nodes &mdash;
+`D`, `E`, `F`, and `G`. Again we store the nodes from left to right:
+
+<Sequence data={["A", "B", "C", "D", "E", "F", "G"]} />
+
+Let's construct a table to see if we can find a pattern. Suppose ${i}$ is
+an index in the array, ${i_L}$ is the index of the left child, and ${i_R}$
+is the index of the right child.
+
+| Element | ${i}$ | ${i_L}$         | ${i_R}$         |
+| ------- | ----- | --------------- | --------------- |
+| `A`     | ${0}$ | ${1}$           | ${2}$           |
+| `B`     | ${1}$ | ${3}$           | ${4}$           |
+| `C`     | ${2}$ | ${5}$           | ${6}$           |
+| `D`     | ${3}$ | ${\varnothing}$ | ${\varnothing}$ |
+| `E`     | ${4}$ | ${\varnothing}$ | ${\varnothing}$ |
+| `F`     | ${5}$ | ${\varnothing}$ | ${\varnothing}$ |
+| `G`     | ${6}$ | ${\varnothing}$ | ${\varnothing}$ |
+
+Examining the table, we see that at the first generation, the element's
+left child is offset by ${1,}$ and its right child is offset by ${2.}$ For
+the left node on the second generation, the element's left child is offset
+by ${2}$ and its right child is offset by ${3.}$ For the right node on the
+second generation, the element's left child is offset by ${3}$ and its
+right child is offset by ${4.}$ Examining these mappings we that, to get
+the left child, we use:
+
+$$
+	i_L = 2i + 1
+$$
+
+and to get the right child, we use:
+
+$$
+	i_R = 2i + 2
+$$
+
+These two formulas allow us to access the left and right children. But what
+about the parents? Well, let's construct another table, where ${i_P}$ is
+the index of the given element's parent.
+
+| Element | ${i}$ | ${i_P}$         |
+| ------- | ----- | --------------- |
+| `A`     | ${0}$ | ${\varnothing}$ |
+| `B`     | ${1}$ | ${0}$           |
+| `C`     | ${2}$ | ${0}$           |
+| `D`     | ${3}$ | ${1}$           |
+| `E`     | ${4}$ | ${1}$           |
+| `F`     | ${5}$ | ${2}$           |
+| `G`     | ${6}$ | ${2}$           |
+
+Examining this table, we see that given an element with the index ${i,}$
+the index of its parent is:
+
+$$
+	i_P = \left\lfloor \dfrac{i}{2} \right\rfloor
+$$
+
+This is a fairly useful piece of information, so we state it as a lemma:
+
+> _Lemma_. Let ${A}$ be an array representing an array-implemented binary
+> tree, and ${i}$ an index in the array. Given a branch node ${A[i],}$ the
+> left child of ${A[i]}$ has the index ${i_L,}$ where
+>
+> $$
+> 	  i_L = 2i + 1
+> $$
+>
+> and the right child of ${A[i]}$ has the index ${i_R,}$ where
+>
+> $$
+> 	  i_R = 2i + 2
+> $$
+
+The **linked-list-implemented binary tree (LBT)** looks similar to a
+general linked list in implementation. Usually, there's a _root pointer_, a
+pointer in the stack whose pointee is the _root_ of the binary tree. For
+the binary tree, each node has ${2}$ _next fields_ &mdash; one for a
+`leftChild` pointer and one for the `rightChild` pointer, and ${1}$ _data
+field_. Furthermore, each node in the tree, other than the root node, is
+the lone pointee of another node.
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1652931183/cs/binary_tree_pointers.svg"
+	}
+	caption={"A low level visualization of a binary tree."}
+	width={80}
+	imwidth={765}
+	imheight={493}
+/>
+
+Above, we see that each node is a square comprised of one left compartment
+and one right compartment, beneath a larger compartment. The larger
+compartment is called the data field, and stores the substantive data. The
+left compartment houses the left subtree pointer, and the right compartment
+houses the right subtree pointer.
+
+For example, suppose we had the following binary tree:
+
+<BinaryTree
+	data={[
+		["A", ["B", "C"]],
+		["B", ["D", "E"]],
+		["C", ["F", "G"]],
+	]}
+/>
+
+This tree would be implemented as:
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1652937072/cs/binary_tree_implementation.svg"
+	}
+	caption={"The tree's implementation"}
+	width={50}
+	imwidth={905}
+	imheight={740}
+/>
+
+If we look at the representation, we see that there are ${7}$ nodes,
+corresponding to the ${7}$ elements we seek to store. Notice that with
+${7}$ nodes, there are ${8}$ null pointers. If there are ${N}$ nodes, then
+are ${N + 1}$ null pointers.
+
+To begin, we need to implement the basic `Node` data structure, as we saw
+with linked lists, along with its constructor in pseudocode:
+
+```rust
+class Node {
+	TYPE   data
+	Node*  left
+	Node*  right
+}
+
+class BinaryTree {
+	Node* root = null
+}
+```
+
+Here's a JavaScript implementation:
+
+```javascript
+export class Node {
+	constructor(value) {
+		this.value = value;
+		this.left = null;
+		this.right = null;
+	}
+}
+
+export class BinarySearchTree {
+	constructor() {
+		this.root = null;
+	}
+}
+```
+
+## Dynamic Tree Constructor
+
+Once we have the node record, we want to think about how to _generate_, or
+create, the binary tree. In this section, we focus on a **dynamic tree
+constructor** &mdash; a tree constructor that generates a tree at runtime.
+The ideal starting point is the tree's root. Once we have a root, we create
+the root's left-child and right-child. That said, we have to keep in mind
+that there are four possiblities for a given node ${n}$'s lineage:
+
+1. ${n}$ is leaf &mdash; it has ${0}$ children.
+2. ${n}$ is left-uniparous &mdash; it has exactly ${1}$ left-child.
+3. ${n}$ is right-uniparous &mdash; it has exactly ${1}$ right-child.
+4. ${n}$ is full &mdash; it has exactly ${2}$ children.
+
+These conditions boil down to two questions: (1) Does a left-child exist?
+(2) Does a right-child exist?
+
+| ${\exists (\texttt{left-child})}$ | ${\exists (\texttt{right-child})}$ | `node is`         |
+| --------------------------------- | ---------------------------------- | ----------------- |
+| `true`                            | `true`                             | `full`            |
+| `true`                            | `false`                            | `left-uniparous`  |
+| `false`                           | `true`                             | `right-uniparous` |
+| `false`                           | `false`                            | `leaf`            |
+
+To illustrate, we'll use the following binary tree, called `B1`:
+
+<BinaryTree
+	data={[
+		[5, [8, 6]],
+		[8, [null, 9]],
+		[6, [3, null]],
+		[9, [4, 2]],
+	]}
+/>
+
+To implement the tree above, we will generate the binary tree generation by
+generation, from left to right. More specifically, we generate the tree
+using a _queue_.
+
+```rust
+Queue queue = newQueue();
+```
+
+<Queue data={["", "", "", "", ""]} />
+
+With the queue, we use the following procedure:
+
+1. Create a root node.
+2. Enqueue the address of the root node into `queue`.
+3. Dequeue the address of the new node, name that address the pointer
+   `p`.[^dequeuenote]
+4. Using `p`, ask: Does `p` have a left child?
+   1. Yes ${\implies}$ go to step 4.
+   2. No ${\implies}$ go to step 5.
+5. Create a pointer `t`.
+6. Create a new node and assign it to `t`.
+7. Initialize `p`'s `left_child` pointer as `t`.
+8. Initialize `p`'s `right_child` pointer as `t`.
+9. Using `p`, ask: Does `p` have a right child?
+   1. Yes ${\implies}$ go to step 4.
+   2. No ${\implies}$ go to step 5.
+10. Enqueue the address of `t` into `queue.`
+11. Return to step 3.
+
+[^dequeuenote]:
+    The operation `dequeue()` returns the address of the dequeued queuer.
+
+Applying this procedure, the first step is to create the root node. For our
+tree `B1`, this is the node ${n_5.}$
+
+```rust
+Node root = newNode(5); // address: F0
+Queue queue = newQueue();
+```
+
+Let's say the address of `root` is some address `F0`. We take that address,
+and insert it into the queue:
+
+```rust
+Node root = newNode(5);
+Queue queue = newQueue();
+queue.enqueue(root);
+```
+
+With these steps performed, we now have the first node in our tree:
+
+<Tree
+	data={[
+		{ child: "5", parent: "", ant: "F0" },
+		{ child: "8", parent: "5", display: "none" },
+		{ child: "6", parent: "5", display: "none" },
+		{ child: "3", parent: "6", display: "none" },
+		{ child: "", parent: "6", display: "none" },
+		{ child: "", parent: "8", display: "none" },
+		{ child: "9", parent: "8", display: "none" },
+		{ child: "4", parent: "9", display: "none" },
+		{ child: "2", parent: "9", display: "none" },
+	]}
+	containerHeight={10}
+/>
+
+<Queue data={["F0", "", "", "", ""]} />
+
+We then dequeue the address `F0`, and have a pointer `p` point to the
+address `F0`.
+
+```rust
+	Node root = newNode(5);
+	Queue queue = newQueue();
+	queue.enqueue(root);
+	Node* p = queue.dequeue();
+```
+
+<Tree
+	data={[
+		{ child: "5", parent: "", ant: "F0 p" },
+		{ child: "8", parent: "5", display: "none" },
+		{ child: "6", parent: "5", display: "none" },
+		{ child: "3", parent: "6", display: "none" },
+		{ child: "", parent: "6", display: "none" },
+		{ child: "", parent: "8", display: "none" },
+		{ child: "9", parent: "8", display: "none" },
+		{ child: "4", parent: "9", display: "none" },
+		{ child: "2", parent: "9", display: "none" },
+	]}
+	containerHeight={10}
+/>
+
+<Queue
+	data={[
+		{ val: "F0", focus: "red", ant: "p" },
+		{ val: "" },
+		{ val: "" },
+		{ val: "" },
+		{ val: "" },
+		{ val: "" },
+	]}
+/>
+
+With `p` pointed to `F0`, we ask: "Does the node `p` have a left-child?"
+Examining the tree `B1`, the answer is yes, the node `p` has a left child.
+So, we use a temporary pointer `t` to create a new node, and have `p`'s
+pointee's `left_child` pointer point to the new node:
+
+```rust
+	Node root = newNode(5);
+	Queue queue = newQueue();
+	queue.enqueue(root);
+	Node* p = queue.dequeue();
+	Node* t = newNode(8); `address: F1`
+	(*p).left_child = t;
+```
+
+<Queue
+	data={[
+		{ val: "F0", focus: "red" },
+		{ val: "F1", ant: "t" },
+		{ val: "" },
+		{ val: "" },
+		{ val: "" },
+		{ val: "" },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "5", parent: "", ant: "F0 p" },
+		{ child: "8", parent: "5", ant: "F1 t" },
+		{ child: "6", parent: "5", display: "none" },
+		{ child: "3", parent: "6", display: "none" },
+		{ child: "", parent: "6", display: "none" },
+		{ child: "", parent: "8", display: "none" },
+		{ child: "9", parent: "8", display: "none" },
+		{ child: "4", parent: "9", display: "none" },
+		{ child: "2", parent: "9", display: "none" },
+	]}
+	containerHeight={14}
+/>
+
+Suppose the address of the new node is `F1`. We enqueue this address to our
+queue:
+
+<Queue
+	data={[
+		{ val: "F0", focus: "red" },
+		{ val: "F1", ant: "t" },
+		{ val: "" },
+		{ val: "" },
+		{ val: "" },
+		{ val: "" },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "5", parent: "", ant: "F0 p" },
+		{ child: "8", parent: "5", ant: "F1" },
+		{ child: "6", parent: "5", ant: "F2 t" },
+		{ child: "3", parent: "6", display: "none" },
+		{ child: "", parent: "6", display: "none" },
+		{ child: "", parent: "8", display: "none" },
+		{ child: "9", parent: "8", display: "none" },
+		{ child: "4", parent: "9", display: "none" },
+		{ child: "2", parent: "9", display: "none" },
+	]}
+	containerHeight={14}
+/>
+
+With the left-child linked, we then ask the second question: "Does the node
+`p` have a right-child?" Again, the answer is yes. We use the temporary
+pointer `t` to create a new node, and have `p`'s pointee's `right_child`
+pointer point to the new node:
+
+```rust
+	Node root = newNode(5);
+	Queue queue = newQueue();
+	queue.enqueue(root);
+	Node* p = queue.dequeue();
+	Node* t = newNode(8);
+	(*p).left_child = t;
+	t = newNode(6); `address: F2`
+	(*p).right_child = t;
+```
+
+Let's say the address of the new node is `F2`. We enqueue this address to
+our queue:
+
+<Queue
+	data={[
+		{ val: "F0", focus: "red", ant: "p" },
+		{ val: "F1" },
+		{ val: "F2", ant: "t" },
+		{ val: "" },
+		{ val: "" },
+		{ val: "" },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "5", parent: "", ant: "F0 p" },
+		{ child: "8", parent: "5", ant: "F1" },
+		{ child: "6", parent: "5", ant: "F2 t" },
+		{ child: "3", parent: "6", display: "none" },
+		{ child: "", parent: "6", display: "none" },
+		{ child: "", parent: "8", display: "none" },
+		{ child: "9", parent: "8", display: "none" },
+		{ child: "4", parent: "9", display: "none" },
+		{ child: "2", parent: "9", display: "none" },
+	]}
+	containerHeight={14}
+/>
+
+We now have the first generation taken care of. So we go to the next
+generation, working from left to right.
+
+<Tree
+	data={[
+		{ child: "5", parent: "", ant: "F0 p", opacity: 0.2 },
+		{ child: "8", parent: "5", ant: "F1 t", opacity: 0.2 },
+		{ child: "6", parent: "5", ant: "F2", opacity: 0.2 },
+		{ child: "3", parent: "6" },
+		{ child: "", parent: "6", display: "none" },
+		{ child: "", parent: "8", display: "none" },
+		{ child: "9", parent: "8" },
+		{ child: "4", parent: "9", opacity: 0.2 },
+		{ child: "2", parent: "9", opacity: 0.2 },
+	]}
+/>
+
+We dequeue the address `F1`, and have the pointer `p` point to this
+address.
+
+```rust
+Node root = newNode(5);
+Queue queue = newQueue();
+queue.enqueue(root);
+Node* p = queue.dequeue();
+Node* t = newNode(8);
+(*p).left_child = t;
+t = newNode(6);
+(*p).right_child = t;
+Node* p = queue.dequeue();
+```
+
+With `p` set, we ask, "Does the node `p` have a left-child?" No. So we ask
+the next question: "Does the node `p` have a right child?" Yes. Use the
+temporary pointer `t` to create a new node, enqueue `t`, and have `p`'s
+right-child pointer point to `t`:
+
+```rust
+Node root = newNode(5);
+Queue queue = newQueue();
+queue.enqueue(root);
+Node* p = queue.dequeue();
+Node* t = newNode(8);
+(*p).left_child = t;
+t = newNode(6);
+queue.enqueue(t);
+(*p).right_child = t;
+p = queue.dequeue();
+t = newNode(9);
+queue.enqueue(t);
+(*p).right_child = t;
+```
+
+Now we have:
+
+<Queue
+	data={[
+		{ val: "F0", focus: "red" },
+		{ val: "F1", focus: "red", ant: "p" },
+		{ val: "F2" },
+		{ val: "F3", ant: "t" },
+		{ val: "" },
+		{ val: "" },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "5", parent: "", ant: "F0" },
+		{ child: "8", parent: "5", ant: "F1 p" },
+		{ child: "6", parent: "5", ant: "F2" },
+		{ child: "3", parent: "6", display: "none" },
+		{ child: "", parent: "6", display: "none" },
+		{ child: "", parent: "8", display: "none" },
+		{ child: "9", parent: "8", ant: "F3 t" },
+		{ child: "4", parent: "9", display: "none" },
+		{ child: "2", parent: "9", display: "none" },
+	]}
+	containerHeight={24}
+/>
+
+This takes care of the left node in the second generation, so now we
+consider the right node. We dequeue our `queue`, assigning the dequeued
+address to `p`:
+
+```rust
+Node root = newNode(5);
+Queue queue = newQueue();
+queue.enqueue(root);
+Node* p = queue.dequeue();
+Node* t = newNode(8);
+(*p).left_child = t;
+t = newNode(6);
+queue.enqueue(t);
+(*p).right_child = t;
+p = queue.dequeue();
+t = newNode(9);
+(*p).right_child = t;
+p = queue.dequeue();
+```
+
+Using `p`, again we ask, does `p` have a left child? Yes, it does. We
+create a new node using `t`, enqueue `t`, and have `p`'s left-child pointer
+point to `t`:
+
+```rust
+Node root = newNode(5);
+Queue queue = newQueue();
+queue.enqueue(root);
+Node* p = queue.dequeue();
+Node* t = newNode(8);
+(*p).left_child = t;
+t = newNode(6);
+queue.enqueue(t);
+(*p).right_child = t;
+p = queue.dequeue();
+t = newNode(9);
+(*p).right_child = t;
+p = queue.dequeue();
+t = newNode(3);
+queue.enqueue(t);
+(*p).left_child = t;
+```
+
+<Queue
+	data={[
+		{ val: "F0", focus: "red" },
+		{ val: "F1", focus: "red" },
+		{ val: "F2", focus: "red", ant: "p" },
+		{ val: "F3" },
+		{ val: "F4", ant: "t" },
+		{ val: "" },
+	]}
+/>
+<Tree
+	data={[
+		{ child: "5", parent: "", ant: "F0" },
+		{ child: "8", parent: "5", ant: "F1" },
+		{ child: "6", parent: "5", ant: "F2 p" },
+		{ child: "3", parent: "6", ant: "F4 t" },
+		{ child: "", parent: "6", display: "none" },
+		{ child: "", parent: "8", display: "none" },
+		{ child: "9", parent: "8", ant: "F3" },
+		{ child: "4", parent: "9", display: "none" },
+		{ child: "2", parent: "9", display: "none" },
+	]}
+	containerHeight={24}
+/>
+
+We then ask, does `p` have a right-child? No, it does not. So we go to the
+next generation:
+
+<Tree
+	data={[
+		{ child: "5", parent: "", ant: "F0", opacity: 0.2 },
+		{ child: "8", parent: "5", ant: "F1", opacity: 0.2 },
+		{ child: "6", parent: "5", ant: "F2 p", opacity: 0.2 },
+		{ child: "3", parent: "6", opacity: 0.2, ant: "F4 t" },
+		{ child: "", parent: "6", display: "none" },
+		{ child: "", parent: "8", display: "none" },
+		{ child: "9", parent: "8", opacity: 0.2, ant: "F3" },
+		{ child: "4", parent: "9" },
+		{ child: "2", parent: "9" },
+	]}
+/>
+
+We `dequeue` our `queue`, and assign the returned address to `p`.
+
+```rust
+	Node root = newNode(5);
+	Queue queue = newQueue();
+	queue.enqueue(root);
+	Node* p = queue.dequeue();
+	Node* t = newNode(8);
+	(*p).left_child = t;
+	t = newNode(6);
+	queue.enqueue(t);
+	(*p).right_child = t;
+	p = queue.dequeue();
+	t = newNode(9);
+	(*p).right_child = t;
+	p = queue.dequeue();
+	t = newNode(3);
+	queue.enqueue(t);
+	(*p).left_child = t;
+	p = queue.dequeue(); `address in p: F3`
+```
+
+<Queue
+	data={[
+		{ val: "F0", focus: "red" },
+		{ val: "F1", focus: "red" },
+		{ val: "F2", focus: "red" },
+		{ val: "F3", focus: "red", ant: "p" },
+		{ val: "F4", ant: "t" },
+		{ val: "" },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "5", parent: "", ant: "F0" },
+		{ child: "8", parent: "5", ant: "F1" },
+		{ child: "6", parent: "5", ant: "F2" },
+		{ child: "3", parent: "6", ant: "F4 t" },
+		{ child: "", parent: "6", display: "none" },
+		{ child: "", parent: "8", display: "none" },
+		{ child: "9", parent: "8", ant: "F3 p" },
+		{ child: "4", parent: "9", display: "none" },
+		{ child: "2", parent: "9", display: "none" },
+	]}
+/>
+
+We ask: Does the node `p` have a left child? Yes, it does. We create a new
+node using `t`, queue `t`, and assign `t` to the `left_child` pointer of
+`p`:
+
+```rust
+	Node root = newNode(5);
+	Queue queue = newQueue();
+	queue.enqueue(root);
+	Node* p = queue.dequeue();
+	Node* t = newNode(8);
+	(*p).left_child = t;
+	t = newNode(6);
+	queue.enqueue(t);
+	(*p).right_child = t;
+	p = queue.dequeue();
+	t = newNode(9);
+	(*p).right_child = t;
+	p = queue.dequeue();
+	t = newNode(3);
+	queue.enqueue(t);
+	(*p).left_child = t;
+	p = queue.dequeue(); `address in p: F3`
+	t = newNode(4); `address: F5`
+	queue.enqueue(t);
+	(*p).left_child = t;
+```
+
+<Queue
+	data={[
+		{ val: "F0", focus: "red" },
+		{ val: "F1", focus: "red" },
+		{ val: "F2", focus: "red" },
+		{ val: "F3", focus: "red", ant: "p" },
+		{ val: "F4" },
+		{ val: "F5", ant: "t" },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "5", parent: "", ant: "F0" },
+		{ child: "8", parent: "5", ant: "F1" },
+		{ child: "6", parent: "5", ant: "F2" },
+		{ child: "3", parent: "6", ant: "F4" },
+		{ child: "", parent: "6", display: "none" },
+		{ child: "", parent: "8", display: "none" },
+		{ child: "9", parent: "8", ant: "F3 p" },
+		{ child: "4", parent: "9", ant: "F5 t" },
+		{ child: "2", parent: "9", display: "none" },
+	]}
+/>
+
+Then we ask: Does the node `p` have a right child? Yes. Again we create a
+new node using `t`, queue `t`, and assign `t` to the `right_child` pointer
+of `p`:
+
+```rust
+	Node root = newNode(5);
+	Queue queue = newQueue();
+	queue.enqueue(root);
+	Node* p = queue.dequeue();
+	Node* t = newNode(8);
+	(*p).left_child = t;
+	t = newNode(6);
+	queue.enqueue(t);
+	(*p).right_child = t;
+	p = queue.dequeue();
+	t = newNode(9);
+	(*p).right_child = t;
+	p = queue.dequeue();
+	t = newNode(3);
+	queue.enqueue(t);
+	(*p).left_child = t;
+	p = queue.dequeue(); `address in p: F3`
+	t = newNode(4); `address: F5`
+	queue.enqueue(t);
+	(*p).left_child = t;
+	t = newNode(2); `address: F6`
+	(*p).right_child = t;
+```
+
+<Queue
+	data={[
+		{ val: "F0", focus: "red" },
+		{ val: "F1", focus: "red" },
+		{ val: "F2", focus: "red" },
+		{ val: "F3", focus: "red", ant: "p" },
+		{ val: "F4" },
+		{ val: "F5" },
+		{ val: "F6", ant: "t" },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "5", parent: "", ant: "F0" },
+		{ child: "8", parent: "5", ant: "F1" },
+		{ child: "6", parent: "5", ant: "F2" },
+		{ child: "3", parent: "6", ant: "F4" },
+		{ child: "", parent: "6", display: "none" },
+		{ child: "", parent: "8", display: "none" },
+		{ child: "9", parent: "8", ant: "F3 p" },
+		{ child: "4", parent: "9", ant: "F5" },
+		{ child: "2", parent: "9", ant: "F6 t" },
+	]}
+/>
+
+At this point, we see that we've generated our tree. The algorithm
+continues by dequeuing the remaining queuers, testing for the two
+conditions of left- and right-child existence. Once the last queuer is
+dequeued, the algorithm terminates.
+
+At this point, we see that we've generated our tree. The algorithm
+continues by dequeuing the remaining queuers, testing for the two
+conditions of left- and right-child existence. Once the last queuer is
+dequeued, the algorithm terminates.
+
+## C Implementation
+
+Below is an implementation in C. This is somewhat of a lengthy
+implementation because we need an auxiliary data structure, the circular
+queue.
+
+First, we start with a diagram of the tree we want to construct. In this
+case, we'll use the following tree for illustration:
+
+<Tree
+	data={[
+		{ child: "3", parent: "" },
+		{ child: "2", parent: "3" },
+		{ child: "1", parent: "3" },
+		{ child: "7", parent: "2" },
+		{ child: "4", parent: "2" },
+		{ child: "8", parent: "1" },
+		{ child: "", parent: "1", display: "none" },
+	]}
+/>
+
+Next, the program we'll run is written in a file called `Main.c`. Its
+source code and output appear as such:
+
+```c
+#include "Tree.h"
+
+int main() {
+	struct Tree* tree = newTree();
+	printTree(tree);
+	return 0;
+}
+```
+
+```bash
+$ make Main
+cc     Main.c   -o Main
+$ ./Main
+Enter root value: 3
+Enter left child of 3: 1
+Enter right child of 3: 2
+Enter left child of 1: 8
+Enter right child of 1: 7
+Enter left child of 2: -1
+Enter right child of 2: 4
+Enter left child of 8: -1
+Enter right child of 8: -1
+Enter left child of 3: -1
+Enter right child of 3: -1
+3
+|---2
+|   |---4
+|---1
+|   |---8
+|   |---7
+```
+
+In the code above, we use a function called `newTree()`, which takes no
+parameters. When `Main.c` is run, the user is prompted to enter the
+different values to be placed in each node. To keep the code simple, we'll
+use the value `-1` to indicate that a particular node does not exist.
+Entering `-1` for all leaves in the tree terminates the tree construction,
+which brings us to the next line, `printTree(tree)`. This function prints
+the newly constructed tree.
+
+Now that we know how the overall program works, let's examine the
+implementation details. First, we have an include: `#include "Tree.h"`.
+Let's look inside this header file.
+
+Inside the `Tree.h` header file, we have the following code:
+
+```c
+#include "Queue.h"
+
+struct Node {
+	int data;
+	struct Node* left_child;
+	struct Node* right_child;
+};
+
+struct Node* newNode(int datum) {
+	struct Node* node = (struct Node*) malloc(sizeof(struct Node));
+	(*node).data = datum;
+	(*node).left_child = NULL;
+	(*node).right_child = NULL;
+	return node;
+}
+
+struct Tree {
+	struct Node* root;
+};
+
+struct Tree* newTree() {
+	struct Tree* tree = (struct Tree*) malloc(sizeof(struct Tree));
+	(*tree).root = NULL;
+	struct Node *p, *t;
+	int user_input_data;
+	struct Queue* pointerQueue = newQueue(10);
+	printf("Enter root value: ");
+	scanf("%d", &user_input_data);
+	(*tree).root = newNode(user_input_data);
+	enqueue(pointerQueue, (*tree).root);
+
+	while(!isEmpty(pointerQueue)) {
+		p = dequeue(pointerQueue);
+		printf("Enter left child of %d: ", (*p).data);
+		scanf("%d", &user_input_data);
+		if (user_input_data != -1) {
+			t = newNode(user_input_data);
+			(*p).left_child = t;
+			enqueue(pointerQueue, t);
+		}
+		printf("Enter right child of %d: ", (*p).data);
+		scanf("%d", &user_input_data);
+		if (user_input_data != -1) {
+			t = newNode(user_input_data);
+			(*p).right_child = t;
+			enqueue(pointerQueue, t);
+		}
+	}
+	return tree;
+}
+
+void print(struct Node* tree, int level) {
+	if (tree != NULL) {
+		for (int i = 0; i < level; i++) {
+			printf(i == level - 1 ? "|---" : "|   ");
+		}
+		printf("%d\n", (*tree).data);
+		print((*tree).right_child, level + 1);
+		print((*tree).left_child, level + 1);
+	}
+}
+
+void printTree(struct Tree* tree) {
+	print((*tree).root, 0);
+}
+```
+
+The `queue.h` file contains the following code:
+
+```c
+#pragma once
+#include &lt;stdbool.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+
+struct Queue {
+	int capacity;
+	int length;
+	int front;
+	int rear;
+	struct Node** Q;
+};
+
+struct Queue* newQueue(int maxSize) {
+	struct Queue* queue = (struct Queue*) malloc(sizeof(struct Queue));
+	(*queue).capacity = maxSize;
+	(*queue).length = 0;
+	(*queue).front = -1;
+	(*queue).rear = -1;
+	(*queue).Q = (struct Node**) malloc(sizeof(int) * maxSize);
+	return queue;
+}
+
+bool isFull(struct Queue* queue) {
+	int rear = (*queue).rear + 1;
+	int front = (*queue).front;
+	int max = (*queue).capacity;
+	return rear % max == front;
+}
+
+bool isEmpty(struct Queue* queue) {
+	return (*queue).front == (*queue).rear;
+}
+
+void enqueue(struct Queue* queue, struct Node* data) {
+	if (isFull(queue)) {
+		printf("Queue is full; enqueue prohibited.\n");
+	} else {
+		(*queue).rear = ((*queue).rear + 1) % (*queue).capacity;
+		(*queue).Q[(*queue).rear] = data;
+	}
+}
+
+struct Node* dequeue(struct Queue* queue) {
+	struct Node* t = NULL;
+	if (isEmpty(queue)) {
+		printf("Queue is empty, dequeue prohibited. Returning null pointer.\n");
+	} else {
+		(*queue).front = ((*queue).front + 1) % ((*queue).capacity);
+		t = (*queue).Q[(*queue).front];
+	}
+	return t;
+}
+
+void printQueue(struct Queue* queue) {
+	for (int i = 0; i < (*queue).capacity; i++) {
+		printf("%p ", (*queue).Q[i]);
+		printf("\n");
+	}
+}
+```
+
+Let's go over this code carefully, focusing on `Tree.h`. First, we have the
+definition for a `Node` struct:
+
+```c
+struct Node {
+	int data;
+	struct Node* left_child;
+	struct Node* right_child;
+};
+```
+
+This is a tree node. It has a data field, `data`, which is bound to the
+value the node stores. The node also has a `left_child` pointer, which
+points to the node's left child, itself a node, and a `right_child`
+pointer, which points to the node's right child.
+
+Next, we have a _node constructor_. This is similar to the singly-linked
+list's node constructor &mdash; a function that creates a new instance of a
+node.
+
+```c
+struct Node* newNode(int datum) {
+	struct Node* node = (struct Node*) malloc(sizeof(struct Node));
+	(*node).data = datum;
+	(*node).left_child = NULL;
+	(*node).right_child = NULL;
+	return node;
+}
+```
+
+The node constructor `newNode()` has the parameter `int datum`. We pass the
+data we want stored in the resulting tree node into `newNode()` as an
+argument, which is bound to `int datum`. Inside `newNode()`, we allocate
+enough space for a `Node` struct, followed by an instantiation of the new
+node's fields. In this case, `datum` is bound to the new node's `data`
+field, and the `left_child` and `right_child` pointers are initialized to
+`NULL`. Once initialized, we return the newly instantiated node.
+
+Next, we have the definition for a `Tree` struct.
+
+```c
+struct Tree {
+	struct Node* root;
+};
+```
+
+For now, this structure only has a single field, the `root`. This is a
+`Node` pointer, which serves as our access point for the rest of the tree.
+In later sections, we will add further properties to the `Tree` structure
+(e.g., depth, height, levels, etc.), as well as more elaborate methods that
+utilize these additional properties.
+
+Following the tree structure, we have the _tree constructor_:
+
+```c
+struct Tree* newTree() {
+	struct Tree* tree = (struct Tree*) malloc(sizeof(struct Tree));
+	(*tree).root = NULL;
+	struct Node *p, *t;
+	int user_input_data;
+	struct Queue* pointerQueue = newQueue(10);
+	printf("Enter root value: ");
+	scanf("%d", &user_input_data);
+	(*tree).root = newNode(user_input_data);
+	enqueue(pointerQueue, (*tree).root);
+
+	while(!isEmpty(pointerQueue)) {
+		p = dequeue(pointerQueue);
+
+		printf("Enter left child of %d: ", (*p).data);
+		scanf("%d", &user_input_data);
+		if (user_input_data != -1) {
+			t = newNode(user_input_data);
+			(*p).left_child = t;
+			enqueue(pointerQueue, t);
+		}
+
+		printf("Enter right child of %d: ", (*p).data);
+		scanf("%d", &user_input_data);
+		if (user_input_data != -1) {
+			t = newNode(user_input_data);
+			(*p).right_child = t;
+			enqueue(pointerQueue, t);
+		}
+	}
+	return tree;
+}
+```
+
+This is a fairly large function, so we'll take it a piece at a time. First,
+we create a new instace of a tree, with its `root` pointer initially
+`NULL`:
+
+```c
+struct Tree* tree = (struct Tree*) malloc(sizeof(struct Tree));
+(*tree).root = NULL;
+```
+
+Next, we create two `Node` pointers, `p` and `t`.
+
+```c
+struct Node *p, *t;
+```
+
+The pointer `p` is used to point to the current node we want to test for
+child existence. The pointer `t` is then used to create new node instances.
+
+After these two pointers, we have the _pointer queue_:
+
+```c
+struct Queue* pointerQueue = newQueue(10);
+```
+
+This is a circular queue with a circumference of ${10:}$
+
+<CircularQueue
+	data={["", "", "", "", "", "", "", "", "", ""]}
+	name="address-circular-queue"
+/>
+
+We use this queue to keep track of the values of `p` and `t`. The auxiliary
+circular queue's implementation will be discussed shortly in the Queue.h
+section.
+
+Following these pointers, we have a variable `user_input_data`, followed by
+a prompt for user input:
+
+```c
+int user_input_data;
+printf("Enter root value: ");
+```
+
+The variable `user_input_data` stores the user's input passed to the
+`scanf` call:
+
+```c
+scanf("%d", &user_input_data);
+```
+
+When the user inputs a value, that value is bound to `user_input_data`.
+With `user_input_data` initialized, it is then passed as an argument to
+`newNode()`:
+
+```c
+(*tree).root = newNode(user_input_data);
+```
+
+This results in a new tree node, following the `newNode()` constructor's
+implementation.
+
+```pseudo
+*node = {
+	data = user_input_data;
+	left_child = NULL;
+	right_child = NULL;
+}
+```
+
+The `tree` we initialized earlier, whose pointer `root` was initially
+`NULL`, now points to the address of this new node:
+
+```pseudo
+(*tree).root = {
+	data = user_input_data;
+	left_child = NULL;
+	right_child = NULL;
+}
+```
+
+Suppose the address of `root` is `0x1`. We enqueue this address into our
+circular queue, `pointerQueue`:
+
+```c
+	enqueue(pointerQueue, (*tree).root);
+```
+
+<CircularQueue
+	data={["0x1", "", "", "", "", "", "", "", "", ""]}
+	name="address-circular-queue"
+/>
+
+All of this code establishes the tree's `root`. Once the root's
+established, we can begin inserting the root's descendants. To do so, we
+use a while-loop. The guard clause for the while loop: As long as the the
+pointer queue isn't empty.
+
+```c
+while(!isEmpty(pointerQueue)) {
+	p = dequeue(pointerQueue);
+
+	printf("Enter left child of %d: ", (*p).data);
+	scanf("%d", &user_input_data);
+	if (user_input_data != -1) {
+		t = newNode(user_input_data);
+		(*p).left_child = t;
+		enqueue(pointerQueue, t);
+	}
+
+	printf("Enter right child of %d: ", (*p).data);
+	scanf("%d", &user_input_data);
+	if (user_input_data != -1) {
+		t = newNode(user_input_data);
+		(*p).right_child = t;
+		enqueue(pointerQueue, t);
+	}
+}
+```
+
+If the pointer queue is not empty, we enter the while-loop. Inside, we
+first assign to `p` the return value of dequeuing `pointerQueue`.
+
+```c
+p = dequeue(pointerQueue);
+```
+
+The `dequeue()` function, found in `queue.h`, accesses the current front
+queuer of a queue, dequeues and returns that queuer as an output value.
+That output value, a node pointer, is then bound to `p`.
+
+Once dequeued, we proceed to the while-loop's two prongs:
+
+```c
+	printf("Enter left child of %d: ", (*p).data);
+	scanf("%d", &user_input_data);
+	if (user_input_data != -1) {
+		t = newNode(user_input_data);
+		(*p).left_child = t;
+		enqueue(pointerQueue, t);
+	}
+```
+
+```c
+	printf("Enter right child of %d: ", (*p).data);
+	scanf("%d", &user_input_data);
+	if (user_input_data != -1) {
+		t = newNode(user_input_data);
+		(*p).right_child = t;
+		enqueue(pointerQueue, t);
+	}
+```
+
+For both of these prongs, we prompt the user to enter the left- and
+right-child values for `p` respectively. The `(*p).data` is used to inform
+the user which node the user is entering data for. When the user enters the
+data, she has the choice to enter either `-1` or any other `int` value. If
+the user enters `-1`, we enter the relevant if-block and create a new node.
+For example, suppose the user enters `2` for the `root`'s left-child. The
+code block to execute:
+
+```c
+t = newNode(user_input_data);
+(*p).left_child = t;
+enqueue(pointerQueue, t);
+```
+
+In the first line, we create a new node:
+
+```c
+	t = newNode(user_input_data);
+```
+
+```pseudo
+	*t = {
+		data = 2;
+		left_child = NULL;
+		right_child = NULL;
+	}
+```
+
+Let's say the address of this new node is `0x2`. Once the new node is
+created, we make the left-child of `p`, currently the `root`, point to this
+new node:
+
+```rust
+*p = {
+	data = 3;
+	left_child = t;
+	right_child = NULL;
+}
+```
+
+Then we enqueue this address to the `pointerQueue`:
+
+```c
+	enqueue(pointerQueue, t);
+```
+
+<CircularQueue
+	data={["0x1", "0x2", "", "", "", "", "", "", "", ""]}
+	name="address-circular-queue"
+/>
+
+Next, we prompt the user to enter the right-child of `p` (still currently
+the root). The user enters `1`. Using `t`, we create a new node with, say,
+an address of `0x3`.
+
+```rust
+0x2 = {
+	data = 1;
+	left_child = NULL;
+	right_child = NULL;
+}
+*t = {
+	data = 1;
+	left_child = NULL;
+	right_child = NULL;
+}
+*p = {
+	data = 3;
+	left_child = 0x2;
+	right_child = t;
+}
+```
+
+We again enqueue the current address `t` points to into `pointerQueue`:
+
+```c
+	enqueue(pointerQueue, t);
+```
+
+<CircularQueue
+	data={["0x1", "0x2", "0x3", "", "", "", "", "", "", ""]}
+	name="address-circular-queue"
+/>
+
+Once the left- and right-children of the current `p` are taken care of, we
+move back to the top of the while-loop:
+
+```c
+p = dequeue(pointerQueue);
+```
+
+Dequeuing `pointerQueue`, `p` now becomes the new front queuer:
+
+<CircularQueue
+	data={["", "0x2", "0x3", "", "", "", "", "", "", ""]}
+	name="address-circular-queue"
+/>
+
+This process continues until the queue is completely empty.

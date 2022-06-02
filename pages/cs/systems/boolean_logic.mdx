@@ -1,0 +1,493 @@
+# Boolean Logic
+
+In the world of computing, there are only two values: `0` and `1.` With
+just `0` and `1`, we can perform a wide variety of operations.
+
+## AND
+
+The logical `AND` has the following truth table:
+
+<div id="and_truth_table"></div>
+
+Formally, the logical `AND` is represented with the symbol ${\land,}$ or,
+in the case of bitwise operations, the ampersand `&amp;`. The operation
+`a∧b` returns true if, and only if, both `a` and `b` are true. Otherwise,
+it returns false.
+
+## OR
+
+The logical `OR` has the following truth table:
+
+<div id="or_truth_table"></div>
+
+In formal logic, the logical `OR` is represented with the symbol ${\lor,}$
+or, in bitwise notation, the pipe character `|`. Examining the truth table,
+we see that `a|b` returns false if and only if `a` and `b` are both false.
+Otherwise, it returns true.
+
+## NOT
+
+The logical `NOT` is a _unary operator_. In formal logic, we represent the
+logical `NOT` with the symbol ${\neg,}$ and in bitwise logic, we use the
+exclamation mark `!` (some texts use the tilde, `~`). The truth table:
+
+<div id="not_truth_table"></div>
+
+With just these three operations &mdash; `AND`, `OR`, and `NOT` &mdash; we
+can create much more elaborate and complex operations.
+
+## Logical Equivalences
+
+Like the algebraic identities, Boolean logic also has laws like
+commutativity, associativity, and so on. These laws are called
+
+<b>logical equivalences</b> because their proofs are established by
+the fact that ${a \equiv b}$ if and only if ${a}$ is logically
+equivalent to ${b.}$
+
+### Identity Laws
+
+The identity laws provide that:
+
+$$
+	\begin{aligned} x \land 1 \equiv x \\ x \lor 0 \equiv x \end{aligned}
+$$
+
+In other words, the conjunction of some variable signal ${x}$ and a signal
+that's always ${1}$ will always return the variable signal ${x.}$
+Similarly, the disjunction of some variable signal ${x}$ and a signal
+that's always ${0}$ will always return the variable signal ${x.}$ The
+proof:
+
+$$
+	\begin{array}{c:c:c:c:c:c} & x & y & z & x \land y & x \lor z \\ \hline & 1 & 1 & 0 & 1 & 1 \\ & 0 & 1 & 0 & 0 & 0 \end{array}
+$$
+
+### Domination Laws
+
+The domination laws state:
+
+$$
+	\begin{aligned} x &\lor 1 \equiv 1 \\ x &\land 0 \equiv 0 \end{aligned}
+$$
+
+This domination laws provide that if we have a variable signal ${x}$ and a
+constant signal ${y,}$ then if ${y = 1,}$ the disjunction returns ${1,}$
+and if ${y = 0,}$ the conjunction returns ${0.}$ The proof:
+
+$$
+	\begin{array}{c:c:c:c:c} & x & y & x \land y & x \lor y \\ \hline & 0 & 0 & 0 & 0 \\ & 1 & 0 & 0 & 1 \\ & 0 & 1 & 0 & 1 \\ & 1 & 1 & 1 & 1 \\ \end{array}
+$$
+
+### Indemponent Laws
+
+The word "indemponent" is a mathematical term: An operation is
+_indemponent_ if it can be applied multiple times without changing the
+result beyond the initial application. For example, the constant function
+${f(x) = 2}$ is indempotent. No matter how many times we apply it (i.e.,
+passing different values of ${x}$), we will always get back ${2.}$
+Similarly, the absolute value operator is indempotent:
+${\lvert x \rvert = \lvert \lvert x \rvert \rvert =\lvert \lvert \lvert x \rvert \rvert \rvert.}$
+Not matter how many times we apply it, we will always get back
+${\lvert x \rvert.}$
+
+The same phenomenon exists in Boolean logic through the indempotent laws:
+
+> _Indempotent Laws_. Where ${x}$ is logically equivalent to ${y:}$
+>
+> $$
+> 	  \begin{aligned} x \lor y &\equiv x \\ x \land y &\equiv y \end{aligned}
+> $$
+
+The proof:
+
+$$
+	\begin{array}{c:c:c:c:c} & x & y & x \land y & x \lor y \\ \hline & 0 & 0 & 0 & 0 \\ & 1 & 1 & 1 & 1 \\ \end{array}
+$$
+
+Note that this implies a corollary:
+
+> _Corollary_. Where ${x}$ is logically equivalent to ${y:}$ $$ x \land y
+> \equiv x \lor y $$
+
+## Double Negation Laws
+
+The double negation law is similar to the _odd-even sign rule_ in
+mathematics. Recall that the odd-even sign rule provides that:
+
+> _Odd-Even Sign Rule_. Where ${n \in \Z,}$
+>
+> $$
+> 	(-1)^n = \begin{cases} 1 \text{if}~~ n \in \Z*{\text{even}} \ -1 ~~~\text{if}~~ n \in \Z*{\text{odd}} \end{cases}
+> $$
+
+In other words, ${-1}$ raised to an even number power returns ${1}$ (e.g.,
+${-1 \cdot -1 = 1}$) while ${-1}$ raised to an odd number power returns
+${-1}$ (e.g., ${-1 \cdot -1 \cdot -1 = -1}$). The same idea applies to the
+`NOT` operator. ${\neg(\neg x) \equiv x}$ and
+${\neg (\neg (\neg x)) \equiv \neg x.}$
+
+> _Double Negation Law_. Where ${x}$ is some signal: $$ \neg (\neg x)
+> \equiv x $$
+
+The proof:
+
+$$
+	\begin{array}{c:c:c:c} & x & \neg x & \neg(\neg x) \\ \hline & 0 & 1 & 0 \\ & 1 & 0 & 1 \end{array}
+$$
+
+### Commutative Law
+
+The Boolean commutative law provides that inter-changing the order of
+operands in a Boolean equation does not change its result:
+
+$$
+	\begin{aligned} (x \land y) &\equiv (y \land x) \\ (x \lor y) &\equiv (y \lor x) \end{aligned}
+$$
+
+For example, consider the following propositions:
+
+1. ${n < m}$ and ${m < w}$
+2. ${m < w}$ and ${n < m}$
+3. ${a < b}$ or ${a = b}$
+4. ${a = b}$ or ${a < b}$
+
+The commutative law provides that the propositions (1) and (2) are the
+same. In other words, it doesn't matter if we determine whether ${n}$ is
+less than ${m}$ first, or if we determine ${m}$ is less than ${w}$ first.
+This idea is encapsulated in the expression ${n < m < w.}$ It also provides
+that propositions (3) and (4) are the same. It doesn't matter whether we
+determine that ${a}$ is less than ${b}$ first, or if we determine that
+${a = b}$ first. Hence the encapsulating expression ${a \leq b.}$
+
+The Boolean commutative law is closely related to the commutative law of
+set theory:
+
+$$
+	\begin{aligned} A \cup B &= B \cup A \\ A \cap B &= B \cap A \\ \end{aligned}
+$$
+
+In the diagram above, ${\text{card}(A) = 6}$ and ${\text{card}(B) = 5.}$ To
+determine the cardinality of ${A}$ and ${B}$ combined, it doesn't matter if
+we count the number of elements in ${A}$ first or the number of elements in
+${B}$ first. We still get:
+
+$$
+	\begin{aligned} \text{card}(A \cup B) &= \text{card}(B \cup A) = \text{card}(A) + \text{card}(B) - \text{card}(A \cap B) \\ &= 6 + 5 - 2 \\ &= 9 \end{aligned}
+$$
+
+The same goes for intersection:
+
+$$
+	\begin{aligned} \text{card}(A \cap B) &= \text{card}(A) + \text{card}(B) - \text{card}(A \cup B) \\ &= 6 + 5 - 9 \\ &= 11 - 9\\ &= 2 \end{aligned}
+$$
+
+The commutative law's proof:
+
+### Associative Law
+
+The Boolean associative law provides that:
+
+$$
+	\begin{aligned} (x \land (y \land z)) &\equiv ((x \land y) \land z) \\ (x \lor (y \lor z)) &\equiv ((x \lor y) \lor z) \\ \end{aligned}
+$$
+
+For example, consider the following propositions:
+
+1. ${a + b = c}$, and
+2. ${p + q = r}$
+
+### Distributive Law
+
+The distribute law provides:
+
+$$
+	\begin{aligned} (x \land (y \lor z)) &\equiv (x \land y) \lor (x \land z) \\ (x \lor (y \land z)) &\equiv (x \lor y) \land (x \lor z) \\ \end{aligned}
+$$
+
+### De Morgan's Laws
+
+De Morgan's Laws govern how the `NOT` operator works alongside the `OR` and
+`NOT` operator. The laws provide:
+
+$$
+	\begin{aligned} (1)~~\neg (x \land y) &\equiv \neg (x) \lor \neg (y) \\ (2)~~\neg (x \lor y) &\equiv \neg (x) \land \neg (y) \end{aligned}
+$$
+
+We can verify these laws via truth table. Verifying the first corollary:
+
+$$
+	\begin{array}{c:c:c:c:c:c:c:c} & x & y & x \land y & \neg (x \land y) & \neg x & \neg y & \neg(x) \lor \neg(y) \\ \hline & 0 & 0 & 0 & 1 & 1 & 1 & 1 \\ & 0 & 1 & 0 & 1 & 1 & 0 & 1 \\ & 1 & 0 & 0 & 1 & 0 & 1 & 1 \\ & 1 & 1 & 1 & 0 & 0 & 0 & 0 \\ \end{array}
+$$
+
+Verifying the second corollary:
+
+$$
+	\begin{array}{c:c:c:c:c:c:c:c} & x & y & x \lor y & \neg (x \lor y) & \neg x & \neg y & \neg(x) \land \neg(y) \\ \hline & 0 & 0 & 0 & 1 & 1 & 1 & 1 \\ & 0 & 1 & 1 & 0 & 1 & 0 & 0 \\ & 1 & 0 & 1 & 0 & 0 & 1 & 0 \\ & 1 & 1 & 1 & 0 & 0 & 0 & 0 \\ \end{array}
+$$
+
+### Absorption Laws
+
+The absorption laws provide a way of dealing with sequences of `OR`
+operations or sequences of `AND` operations:
+
+> Absorption Laws Where ${x}$ and ${y}$ are variable signals:
+>
+> $$
+> 		x \lor (x \lor y) \equiv x \\ x \land (x \land y) \equiv x \\
+> $$
+
+The proof:
+
+$$
+	\begin{array}{c:c:c:c:c:c:c} & x & y & x \land y & x \lor y & x \land (x \land y) & x \lor (x \lor y) \\ \hline & 0 & 0 & 0 & 0 & 0 & 0\\ & 1 & 1 & 1 & 1 & 1 & 1\\ \end{array}
+$$
+
+### Negation Laws
+
+According to the negation laws, the statement
+
+> Mars is Earth's neighbor <em>or</em> Mars is not Earth's neighbor
+
+is always true, and the statement
+
+> Mars is Earth's neighbor <em>and</em> Mars is not Earth's neighbor
+
+is always false. Stated formally:
+
+> _Negation Laws_. Where ${x}$ is a variable signal:
+>
+> $$
+> 		\begin{aligned} x \lor (\neg x) &\equiv 1 \\ x \land (\neg x) &\equiv 0 \end{aligned}
+> $$
+
+## Boolean Expressions
+
+Because `AND`, `OR`, and `NOT` are operations (much like how addition and
+subtraction are oeprations), the logical operations can be strung together
+to form <b>Boolean expressions</b>. For example, here's a simple Boolean
+expression:
+
+$$
+	\neg (0 \lor (1 \land 1))
+$$
+
+Evaluating this expression, we start first with the innermost parenthesized
+expression, ${(1 \land 1).}$ This evaluates to ${1:}$
+
+$$
+	\begin{aligned} \neg (0 \lor (1 \land 1)) &\equiv \neg (0 \lor 1) \end{aligned}
+$$
+
+Then we evaluate the result, since that's the next parenthesized
+expression:
+
+$$
+	\begin{aligned} \neg (0 \lor (1 \land 1)) &\equiv \neg (0 \lor 1) \\ &\equiv \neg 1 \\ \end{aligned}
+$$
+
+The we perform the final operation:
+
+$$
+	\begin{aligned} \neg (0 \lor (1 \land 1)) &\equiv \neg (0 \lor 1) \\ &\equiv \neg 1 \\ &\equiv 0 \\ \end{aligned}
+$$
+
+### Boolean Functions
+
+Much like algebra, once we have Boolean expressions, we can begin creating
+
+<b>Boolean functions</b> &mdash; generalized Boolean expressions. Boolean functions
+are precisely how we create the additional variety of logical operations. For
+example, here's a Boolean function:
+
+$$
+	f(x, y, z) = (x \land y) \lor (\neg (x) \land z)
+$$
+
+This function takes three inputs, ${x,}$ ${y,}$ and ${z.}$ Because each
+input is either ${1}$ or ${0,}$ there are ${2^3 = 8}$ possible
+combinations.[logic_note]
+
+[^logic_note]:
+    From formal logic, we know that given ${n}$ statements, there are
+    ${2^n}$ possible truth value combinations.
+
+$$
+	\begin{array}{c:c:c:c} & x & y & z \\ \hline & 0 & 0 & 0 \\ & 0 & 0 & 1 \\ & 0 & 1 & 0 \\ & 0 & 1 & 1 \\ & 1 & 0 & 0 \\ & 1 & 0 & 1 \\ & 1 & 1 & 0 \\ & 1 & 1 & 1 \\ \end{array}
+$$
+
+Laying out the possible values)or ${f(x, y, z),}$ we get:
+
+$$
+	\begin{array}{c:c:c:c:c:c:c:c} & x & y & z & (x \land y) & \neg x & \neg(x) \land z & f(x, y, z) = (x \land y) \lor (\neg (x) \land z) \\ \hline & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\ & 0 & 0 & 1 & 0 & 1 & 1 & 1 \\ & 0 & 1 & 0 & 0 & 1 & 0 & 0 \\ & 0 & 1 & 1 & 0 & 1 & 1 & 1 \\ & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\ & 1 & 0 & 1 & 0 & 0 & 0 & 0 \\ & 1 & 1 & 0 & 1 & 0 & 0 & 1 \\ & 1 & 1 & 1 & 1 & 0 & 0 & 1 \\ \end{array}
+$$
+
+Unlike real functions, Boolean functions have a finite number of possible
+outputs. This makes it easy (for a feasible number of ${n}$ variables;
+generally ${n < 4}$) to lay out all the possible outputs.
+
+## Constructing Boolean Functions
+
+Suppose we were given the following truth table:
+
+$$
+	\begin{array}{c:c:c:c:c} & x & y & z & f \\ \hline & 0 & 0 & 0 & 1 \\ & 0 & 0 & 1 & 0 \\ & 0 & 1 & 0 & 1 \\ & 0 & 1 & 1 & 0 \\ & 1 & 0 & 0 & 1 \\ & 1 & 0 & 1 & 0 \\ & 1 & 1 & 0 & 0 \\ & 1 & 1 & 0 & 0 \\ \end{array}
+$$
+
+We want to construct a Boolean function that produces this truth table. The
+trick to doing so is to focus on one row at a time: First, write a function
+that particular row, apply it to the rest of the values. Second, focus on
+another row that doesn't match, write a function for that particular row,
+apply it, and so on.
+
+For example, let's focus on the first row:
+
+$$
+	\begin{array}{c:c:c:c:c} & x & y & z & f \\ \hline & \color{salmon} 0 & \color{salmon} 0 & \color{salmon} 0 & \color{salmon} 1 \\ & 0 & 0 & 1 & 0 \\ & 0 & 1 & 0 & 1 \\ & 0 & 1 & 1 & 0 \\ & 1 & 0 & 0 & 1 \\ & 1 & 0 & 1 & 0 \\ & 1 & 1 & 0 & 0 \\ & 1 & 1 & 0 & 0 \\ \end{array}
+$$
+
+A function that produces this row would be:
+${(\neg x) \land (\neg y) \land (\neg z):}$
+
+$$
+	\begin{array}{c:c:c:c:c:c} & x & y & z & f & (\neg x) \land (\neg y) \land (\neg z) \\ \hline & \color{salmon} 0 & \color{salmon} 0 & \color{salmon} 0 & \color{salmon} 1 & \color{salmon} 1 \\ & 0 & 0 & 1 & 0 & \color{salmon} 0 \\ & 0 & 1 & 0 & 1 & \color{salmon} 0 \\ & 0 & 1 & 1 & 0 & \color{salmon} 0 \\ & 1 & 0 & 0 & 1 & \color{salmon} 0 \\ & 1 & 0 & 1 & 0 & \color{salmon} 0 \\ & 1 & 1 & 0 & 0 & \color{salmon} 0 \\ & 1 & 1 & 0 & 0 & \color{salmon} 0 \\ \end{array}
+$$
+
+We then consider the next ${1}$ output:
+
+$$
+	\begin{array}{c:c:c:c:c} & x & y & z & f \\ \hline & 0 & 0 & 0 & 1 \\ & 0 & 0 & 1 & 0 \\ & \color{cornflowerblue} 0 & \color{cornflowerblue} 1 & \color{cornflowerblue} 0 & \color{cornflowerblue} 1 \\ & 0 & 1 & 1 & 0 \\ & 1 & 0 & 0 & 1 \\ & 1 & 0 & 1 & 0 \\ & 1 & 1 & 0 & 0 \\ & 1 & 1 & 0 & 0 \\ \end{array}
+$$
+
+A possible function would be: ${(\neg x) \land y \land (\neg z).}$ This
+results in the truth table:
+
+$$
+	\begin{array}{c:c:c:c:c} & x & y & z & f & (\neg x) \land y \land (\neg z) \\ \hline & 0 & 0 & 0 & 1 & \color{cornflowerblue} 0 \\ & 0 & 0 & 1 & 0 & \color{cornflowerblue} 0 \\ & \color{cornflowerblue} 0 & \color{cornflowerblue} 1 & \color{cornflowerblue} 0 & \color{cornflowerblue} 1 & \color{cornflowerblue} 1 \\ & 0 & 1 & 1 & 0 & \color{cornflowerblue} 0 \\ & 1 & 0 & 0 & 1 & \color{cornflowerblue} 0 \\ & 1 & 0 & 1 & 0 & \color{cornflowerblue} 0 \\ & 1 & 1 & 0 & 0 & \color{cornflowerblue} 0 \\ & 1 & 1 & 0 & 0 & \color{cornflowerblue} 0 \\ \end{array}
+$$
+
+That takes care of the second ${1}$ output. Now we write a function for the
+third ${1}$ output:
+
+$$
+	\begin{array}{c:c:c:c:c} & x & y & z & f \\ \hline & 0 & 0 & 0 & 1 \\ & 0 & 0 & 1 & 0 \\ & 0 & 1 & 0 & 1 \\ & 0 & 1 & 1 & 0 \\ & \color{green} 1 & \color{green} 0 & \color{green} 0 & \color{green} 1 \\ & 1 & 0 & 1 & 0 \\ & 1 & 1 & 0 & 0 \\ & 1 & 1 & 0 & 0 \\ \end{array}
+$$
+
+Here a possible function is ${x \land (\neg y) \land (\neg z),}$ yielding
+the truth table:
+
+$$
+	\begin{array}{c:c:c:c:c} & x & y & z & f & x \land (\neg y) \land (\neg z) \\ \hline & 0 & 0 & 0 & 1 & \color{green} 0 \\ & 0 & 0 & 1 & 0 & \color{green} 0 \\ & 0 & 1 & 0 & 1 & \color{green} 0 \\ & 0 & 1 & 1 & 0 & \color{green} 0 \\ & \color{green} 1 & \color{green} 0 & \color{green} 0 & \color{green} 1 & \color{green} 1 \\ & 1 & 0 & 1 & 0 & \color{green} 0 \\ & 1 & 1 & 0 & 0 & \color{green} 0 \\ & 1 & 1 & 0 & 0 & \color{green} 0 \\ \end{array}
+$$
+
+Putting it all together, we get:
+
+$$
+	\begin{array}{c:c:c:c:c} & x & y & z & f & \color{salmon} (\neg x) \land (\neg y) \land (\neg z) & \color{cornflowerblue} (\neg x) \land y \land (\neg z) & \color{green} x \land (\neg y) \land (\neg z) \\ \hline & \color{salmon} 0 & \color{salmon} 0 & \color{salmon} 0 & \color{salmon} 1 & \color{salmon} 1 & \color{cornflowerblue} 0 & \color{green} 0 \\ & 0 & 0 & 1 & 0 & \color{salmon} 0 & \color{cornflowerblue} 0 & \color{green} 0 \\ & \color{cornflowerblue} 0 & \color{cornflowerblue} 1 & \color{cornflowerblue} 0 & \color{cornflowerblue} 1 & \color{salmon} 0 & \color{cornflowerblue} 1 & \color{green} 0 \\ & 0 & 1 & 1 & 0 & \color{salmon} 0 & \color{cornflowerblue} 0 & \color{green} 0 \\ & \color{green} 1 & \color{green} 0 & \color{green} 0 & \color{green} 1 & \color{salmon} 0 & \color{cornflowerblue} 0 & \color{green} 1 \\ & 1 & 0 & 1 & 0 & \color{salmon} 0 & \color{cornflowerblue} 0 & \color{green} 0 \\ & 1 & 1 & 0 & 0 & \color{salmon} 0 & \color{cornflowerblue} 0 & \color{green} 0 \\ & 1 & 1 & 0 & 0 & \color{salmon} 0 & \color{cornflowerblue} 0 & \color{green} 0 \\ \end{array}
+$$
+
+All that's left to do is to just string these three functions with `OR`
+operators:
+
+$$
+	f(x, y, z) = [(\neg x) \land (\neg y) \land (\neg z)] \lor [(\neg x) \land y \land (\neg z)] \lor [x \land (\neg y) \land (\neg z)]
+$$
+
+Although this function is correct, it's fairly complex. A better definition
+would be to simplify the expression. First, examining the first two
+functions:
+
+$$
+	\begin{aligned} & [(\neg x) \land (\neg y) \land (\neg z)] \\ & [(\neg x) \land y \land (\neg z)] \end{aligned}
+$$
+
+we see that in both of these expressions, we have ${(\neg x)}$ and
+${(\neg z).}$ This means that the only fixed values are ${(\neg x)}$ and
+${(\neg z).}$ The value for ${(\neg y)}$ is captured in both expressions.
+Thus, all we really need to know is ${(\neg x)}$ and ${(\neg z):}$
+
+$$
+	(\neg x) \land (\neg z)
+$$
+
+This reduces our function definition to:
+
+$$
+	f(x, y, z) = [(\neg x) \land (\neg z)] \lor [x \land (\neg y) \land (\neg z)]
+$$
+
+We can then reduce the term:
+
+$$ [x \land (\neg y) \land (\neg z)] $$
+
+to:
+
+$$ [(\neg y) \land (\neg z)] $$
+
+resulting in the definition:
+
+$$ f(x, y, z) = [(\neg x) \land (\neg z)] \lor [(\neg y) \land (\neg z)] $$
+
+From there we can reduce the definition even further:
+
+$$ f(x, y, z) = (\neg z) \land [(\neg x) \lor (\neg y)] $$
+
+As we might be able to tell, constructing Boolean functions from a given
+truth table is a difficult task. Moreover, finding the shortest possible
+equivalent expression for a given Boolean expression is an NP-complete
+problem. There is no algorithm for finding such an expression. This means
+that, at the moment, a significant aspect of designing the logic circuits
+behind processors depends on human ingenuity and labor.
+
+What's more remarkable, however, is that we've seen a demonstration of the
+following theorem:
+
+> _Canonical Representation Theorem_. Any Boolean function can be
+> represented using the operations of ${\land}$ (`AND`), ${\lor}$ (`OR`),
+> and ${\neg}$ (`NOT`).
+
+This is a very special theorem. It is because of this theorem that
+computers exist. It turns out, however, that we don't actually need the
+`OR` operator. We can get away with just `AND` and `NOT`. This is because
+the `OR` operator can be expressed with `AND` and `NOT`, following De
+Morgan's laws:
+
+$$ x \lor y \equiv \neg(\neg x) \land (\neg y) $$
+
+Accordingly, we have the more generalized form of the theorem:
+
+> _General Canonical Representation Theorem_. Any Boolean function can be
+> represented using the operations of ${\land}$ (`AND`) and ${\neg}$
+> (`NOT`).
+
+But we can go even a step further:
+
+> _NAND Representation Theorem_. Any Boolean function can be represented
+> using the ${\uparrow}$ (`NAND`) operator.
+
+The `NAND` (`NOT AND`) operator is the result of the function:
+
+$$ f(x,y) = x \uparrow y \equiv \neg (x \land y) $$
+
+The truth table:
+
+$$
+	\begin{array}{c:c:c:c:c} & x & y & x \land y & \neg(x \land y) \equiv x \uparrow y \\ \hline & 0 & 0 & 0 & 1 \\ & 0 & 1 & 0 & 1 \\ & 1 & 0 & 0 & 1 \\ & 1 & 1 & 1 & 0 \end{array}
+$$
+
+The proof of the _NAND representation theorem_ stems from the fact that we
+can represent `AND` and `NOT` with `NAND`. From the _General Canonical
+Representation Theorem_, we know that every Boolean function can be be
+represented using `AND` and `NOT`, so if we can write these two operations
+with `NAND`, the _NAND representation theorem_ directly follows. In this
+case, we can. The `NOT` operation is simply:
+
+$$ \neg x \equiv \neg (x \land x) \equiv x \uparrow x $$
+
+and the `AND` operation is just:
+
+$$
+	\begin{aligned} x \land y &\equiv \neg (\neg(x \land y)) \\ &\equiv \neg (x \uparrow y) \\ &\equiv (x \uparrow y) \uparrow (x \uparrow y) \end{aligned}
+
+
+$$

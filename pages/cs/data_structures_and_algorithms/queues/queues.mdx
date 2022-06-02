@@ -1,0 +1,1208 @@
+# The Queue
+
+In this section, we discuss the **queue** data structure. Like the stack,
+the queue is a logical data structure premised on an foundational operating
+principle—**first-in-first-out (FIFO)**. For example, in the diagram below,
+suppose `A` enters first, then `B`, then `C`, then `D`:
+
+<Queue data={["A", "B", "C", "D"]} />
+
+The first to exit is `A`. The second is `B`. The third is `C`. And the
+fourth is `D`. We call the entities in a queue—e.g., `A`, `B`, `C`, and `D`
+above—**queuers** or **elements**. The name _queue_ is fitting—it's like
+standing in a line at the bank, waiting for the next available teller.
+
+The queue has two special positions, the **front** (denoted below as `f`),
+and the **rear** (denoted below as `r`).
+
+<Queue data={[{ val: "A", ant: "f" }, "B", "C", { val: "D", ant: "r" }]} />
+
+Consistent with a queue in real life, to delete a queuer from the queue, we
+remove the element currently occupying the _front_:
+
+<Queue
+	data={[
+		{ val: "A", ant: "f", focus: "red" },
+		"B",
+		"C",
+		{ val: "D", ant: "r" },
+	]}
+/>
+
+And to insert a queuer into the queue, we append an element to the _rear_:
+
+<Queue
+	data={[
+		{ val: "A", ant: "f" },
+		"B",
+		"C",
+		{ val: "D", ant: "r", focus: "red" },
+	]}
+/>
+
+By convention, inserting a queuer is called **enqueue**, and removing a
+queuer is called **dequeue**.
+
+## Implementations
+
+Like we saw with the stack, there are two kinds of queues: the **bounded
+queue**, implemented with a _static array_, and the **unbounded queue**,
+implemented with a _linked list_. We consider each below.
+
+For both bounded queues and unbounded queues, we want the following
+properties and operations:
+
+- A `length` property, representing the current number of queuers in the
+  queue.
+
+- An `isEmpty()` operation, returning `true` if the queue contains no
+  queuers and `false` if it does.
+
+- An `enqueue()` operation, for inserting a queuer.
+
+- A `dequeue()` operation, for removing a queuer.
+
+- A `peek()` operation, for retrieving the value a queuer holds.
+
+## RP Bounded Queue
+
+Implementing the bounded queue with an array is simple. Below is a queue
+and its array implementation.
+
+<Queue data={[2, 3, 7, 5]} />
+
+<Sequence data={[2, 3, 7, 5]} />
+
+With the static queue, we implement all of the properties mentioned in the
+preceding section, with two additional properties and operations:
+
+- A `capacity` property, representing the maximum number of queuers the
+  queue can hold.
+
+- A `availableSpace()` operation, which returns how much available space
+  there is in the queue.
+
+- An `isFull()` operation, returning `true` if the queue's capacity has
+  been reached; otherwise `false`.
+
+To implement the properties and operations above, we must first answer the
+following question:
+
+> Do we want one pointer for the queue's rear, or two pointers, one for the
+> front and one for the rear?
+
+Generally, with bounded queues, we want two pointers. But, there may be
+situations where a single pointer to the rear suffices. For conciseness, we
+call the single pointer implementation the **rear-pointed (RP) queue**, and
+the two pointer approach the **front-rear-pointed (FRP) queue**. We
+consider both in tandem.
+
+For both the RP approach and the FRP approach, an implementation in C can
+be done with a `struct`. Below is the RP implementation.
+
+```c
+struct Queue {
+	int capacity;
+	int length;
+	int rear;
+	int* Q;
+}
+```
+
+Above, we see the properties examined earlier. The `int` pointer `Q` is a
+pointer to an array in the heap, which is the data structure implementing
+the bounded queue.
+
+## Constructor
+
+Below is a the RP bounded approach's implementation in C:
+
+```c
+struct Queue* newQueue(int maxSize) {
+	struct Queue* queue = malloc(sizeof(struct Queue));
+	(*queue).capacity = maxSize;
+	(*queue).length = 0;
+	(*queue).rear = -1;
+	(*queue).Q = malloc(sizeof(int) * maxSize);
+	return queue;
+}
+```
+
+This is not that different from what we saw with stacks. With the
+constructor in place, we can now consider the various properties and
+methods.
+
+## Destructor
+
+For languages without automatic memory management like C and C++, we'll
+also want a destructor:
+
+```c
+void freeQueue(struct Queue** queue) {
+	free((*(*queue)).Q);
+	free(*queue);
+	*queue = NULL;
+}
+```
+
+## Capacity Guard
+
+Because the bounded queue has maximum number of queuers it can store, we
+need a capacity guard for the other operations to use. Using the C code as
+a base for our pseudocode examples, a capacity guard might look like the
+following:
+
+```rust
+fn isFull(Queue* queue) -> bool:
+	return (*queue).length == (*queue).capacity;
+```
+
+The implementation relies on the queue's properties `length` and capacity.
+If the queue's length equals its capacity, the queue has reached its limit,
+and we can't enqueue any further.
+
+Here's an implementation in C. Note that this relies on the `stdbool.h`
+header file.
+
+```c
+bool isFull(struct Queue* queue) {
+	return (*queue).height == (*queue).capacity;
+}
+```
+
+## Empty Guard
+
+Alongside the capacity guard, we also want an _empty guard_. This allows us
+ensure we aren't dequeuing an empty queue:
+
+```rust
+fn isEmpty(Queue* queue) -> bool:
+	return (*queue).length == 0;
+```
+
+Like the capacity guard, the empty guard relies on the queue's `length`
+property to determine if the queue is empty. If the queue's length is
+${0,}$ then we know that the queue is empty and we should be trying to
+perform operations like dequeuing.
+
+Here's an implementation in C. Again, this relies on the `stdbool.h` header
+file. Of course, we can just return `0` for false and `1` for true. We use
+the `stdbool.h` header file purely for readability and semantics.
+
+```c
+bool isEmpty(struct Queue* queue) {
+	return (*queue).height == 0;
+}
+```
+
+## Space Count
+
+This isn't a necessary operation for bounded queues, but it's a
+nice-to-have. The `availableSpace()` operation returns how many spots in
+the queue we have left for use:
+
+```rust
+fn spaceAvailable(Queue* queue) -> int:
+	return (*queue).capacity - (*queue).height;
+```
+
+The procedure is simple: Compute the difference between the queue's
+capacity and the current height.
+
+With these basic operations and properties implemented, we can now consider
+the core operations for the bounded queue, `enqueue()` and dequeue().
+
+Here's an implementation in C. Not all that different from the pseudocode:
+
+```c
+int availableSpace(struct Queue* queue) {
+	return (*queue).capacity - (*queue).height;
+}
+```
+
+### Enqueuing an RP Bounded Queue
+
+To enqueue with the bounded queue, we must first have a pointer `r`,
+corresponding to the queue's rear. Initially, `r = -1`. To insert a new
+element into the queue— enqueue—we move `r` to the next location (i.e.,
+increment `r`).
+
+For example, suppose we had a static queue of size 5:
+
+<Queue data={["", "", "", "", ""]} />
+
+<Sequence data={["", "", "", "", ""]} />
+
+We begin by moving the pointer `r` to the first index in the array:
+
+<Queue data={["", "", "", "", ""]} />
+
+<Sequence data={[{ val: "", ant: "r" }, "", "", "", ""]} />
+
+Then, we insert the relevant data, say `2`:
+
+<Queue data={[2, "", "", "", ""]} />
+
+<Sequence data={[{ val: 2, ant: "r" }, "", "", "", ""]} />
+
+If we want to add another element, we just increment `r` and continue. In
+pseudocode:
+
+```rust
+fn enqueue(Queue* queue) -> void:
+	if (isFull(queue)):
+		printf("Enqueue prohibited: Queue is full.")
+	else:
+		(*queue).rear++;
+		(*queue).Q[ (*queue).rear ] = data;
+		(*queue).height++;
+```
+
+The enqueue procedure is the same for both the RP bounded queue and FRP
+bounded queue. We just need to increment the `rear` pointer, assign the
+data, and increment the `height` property.
+
+Below is an implementation in C:
+
+```c
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+
+struct Queue {
+	int capacity;
+	int height;
+	int rear;
+	int* Q;
+};
+struct Queue* newQueue(int maxSize) {
+	struct Queue* queue = malloc(sizeof(struct Queue));
+	(*queue).capacity = maxSize;
+	(*queue).height = 0;
+	(*queue).rear = -1;
+	(*queue).Q = malloc(sizeof(int) * maxSize);
+	return queue;
+}
+bool isFull(struct Queue* queue) {
+	return (*queue).height == (*queue).capacity;
+}
+bool isEmpty(struct Queue* queue) {
+	return (*queue).height == 0;
+}
+int availableSpace(struct Queue* queue) {
+	return (*queue).capacity - (*queue).height;
+}
+
+void enqueue(struct Queue* queue, int data) {
+	if (isFull(queue)) {
+		printf("Enqueue prohibitied: Queue is full.\n");
+	} else {
+		(*queue).rear++;
+		(*queue).Q[(*queue).rear] = data;
+		(*queue).height++;
+	}
+}
+```
+
+## Rush-in
+
+As an aside, a useful operation to have with queues is the **rush-in**.
+Essentially, enqueuing multiple elements into the queue with a loop:
+
+```rust
+fn rushIn(Queue* queue, int array[], int arraySize):
+	if (arraySize > availableSpace(queue)):
+		print "Insufficient space to rush into queue.";
+	else if (arraySize < 0):
+		print "Invalid array size: Negative number.";
+	else:
+		for (int i = 0; i < arraySize; i++):
+			enqueue(queue, array[i])
+```
+
+This is where the `availableSpace()` operation comes in handy. If the size
+passed as an argument is greater than the amount of available space, no
+enqueuing is performed.
+
+Below is an implementation in C:
+
+```c
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+
+struct Queue {
+	int capacity;
+	int height;
+	int rear;
+	int* Q;
+};
+struct Queue* newQueue(int maxSize) {
+	struct Queue* queue = malloc(sizeof(struct Queue));
+	(*queue).capacity = maxSize;
+	(*queue).height = 0;
+	(*queue).rear = -1;
+	(*queue).Q = malloc(sizeof(int) * maxSize);
+	return queue;
+}
+bool isFull(struct Queue* queue) {
+	return (*queue).height == (*queue).capacity;
+}
+bool isEmpty(struct Queue* queue) {
+	return (*queue).height == 0;
+}
+int availableSpace(struct Queue* queue) {
+	return (*queue).capacity - (*queue).height;
+}
+void enqueue(struct Queue* queue, int data) {
+	if (isFull(queue)) {
+		printf("Enqueue prohibitied: Queue is full.\n");
+	} else {
+		(*queue).rear++;
+		(*queue).Q[(*queue).rear] = data;
+		(*queue).height++;
+	}
+}
+void rushIn(struct Queue* queue, int dataArray[], int dataArraySize) {
+	if (dataArraySize > availableSpace(queue)) {
+		printf("Insufficient space to rush into queue.\n");
+	}
+	else if (dataArraySize < 0) {
+		printf("Invalid array size: Negative number.\n");
+	}
+	else {
+		for (int i = 0; i < dataArraySize; i++) {
+			enqueue(queue, dataArray[i]);
+		}
+	}
+}
+```
+
+### Dequeuing an RP Bounded Queue
+
+Where the RP and FRP approaches differ is with the `dequeue()` operation.
+With just a single pointer to rear —the RP approach—we must _left shift_
+the array's elements. This is because dequeuing with an array
+implementation effectively means removing the element at index ${0.}$ If
+performed no left shift, then we'd have a gap in the array, we and we do
+not want that. The RP implementation is thus:
+
+```rust
+fn dequeue(Queue* queue) -> void:
+	if (isEmpty(queue)):
+		println "Nothing to dequeue: Queue is empty.";
+	else:
+		for (int i = 0; i < (*queue).height; i++):
+			(*queue).Q[i] = (*queue).Q[i+1];
+		(*queue).rear--;
+```
+
+With the RP approach, dequeuing requires iterating over the array, shifting
+the elements to the left. This takes ${O(n)}$ time. For such a simple data
+structure like the queue, this is generally not desired. For most
+applications, we instead want the FRP approach: have two pointers, one for
+`front` and the other for `rear`.
+
+Here's an implementation of the `dequeue()` function for an RP bounded
+queue:
+
+```c
+void dequeue(struct Queue* queue) {
+	if (isEmpty(queue)) {
+		printf("Nothing to dequeue: Queue is empty.\n");
+	} else {
+		for (int i = 0; i < (*queue).height; i++) {
+			(*queue).Q[i] = (*queue).Q[i+1];
+		}
+		(*queue).rear--;
+		(*queue).height--;
+	}
+}
+```
+
+Testing this function:
+
+```c
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+struct Queue {
+	int capacity;
+	int height;
+	int rear;
+	int* Q;
+};
+struct Queue* newQueue(int maxSize) {
+	struct Queue* queue = malloc(sizeof(struct Queue));
+	(*queue).capacity = maxSize;
+	(*queue).height = 0;
+	(*queue).rear = -1;
+	(*queue).Q = malloc(sizeof(int) * maxSize);
+	return queue;
+}
+bool isFull(struct Queue* queue) {
+	return (*queue).height == (*queue).capacity;
+}
+bool isEmpty(struct Queue* queue) {
+	return (*queue).height == 0;
+}
+int availableSpace(struct Queue* queue) {
+	return (*queue).capacity - (*queue).height;
+}
+void enqueue(struct Queue* queue, int data) {
+	if (isFull(queue)) {
+		printf("Enqueue prohibitied: Queue is full.\n");
+	} else {
+		(*queue).rear++;
+		(*queue).Q[(*queue).rear] = data;
+		(*queue).height++;
+	}
+}
+void dequeue(struct Queue* queue) {
+	if (isEmpty(queue)) {
+		printf("Nothing to dequeue: Queue is empty.\n");
+	} else {
+		for (int i = 0; i < (*queue).height; i++) {
+			(*queue).Q[i] = (*queue).Q[i+1];
+		}
+		(*queue).rear--;
+		(*queue).height--;
+	}
+}
+void rushIn(struct Queue* queue, int dataArray[], int dataArraySize) {
+	if (dataArraySize > availableSpace(queue)) {
+		printf("Insufficient space to rush into queue.\n");
+	}
+	else if (dataArraySize < 0) {
+		printf("Invalid array size: Negative number.\n");
+	}
+	else {
+		for (int i = 0; i < dataArraySize; i++) {
+			enqueue(queue, dataArray[i]);
+		}
+	}
+}
+void printQueue(struct Queue* queue) {
+	struct Queue* p = queue;
+	if (isEmpty(queue)) {
+		printf("Empty queue.\n");
+	} else {
+		printf("|");
+		for (int i = 0; i < (*queue).height; i++) {
+			printf(" %d |", (*p).Q[i]);
+		}
+		printf("\n");
+	}
+}
+int main() {
+	const int size = 3;
+	int arr[] = {1,2,3};
+	struct Queue* queue = newQueue(size);
+	rushIn(queue, arr, 3);
+	printQueue(queue);
+	dequeue(queue);
+	printQueue(queue);
+	return 0;
+}
+```
+
+```bash
+| 1 | 2 | 3 |
+| 2 | 3 |
+```
+
+## Single-use FRP Bounded Queue
+
+With the FRP bounded queue, we have two pointers, `rear` and `front`:
+
+```rust
+struct Queue:
+	int capacity;
+	int length;
+	int rear;
+	int front;
+	{T}* Q;
+	Queue(int size):
+		capacity = size;
+		length = 0;
+		rear = -1;
+		front = -1;
+		Q = allocate(sizeof({T}) * size)
+```
+
+To see why two pointers is useful, let's consider an example. Suppose we
+had the following queue, alongside its array implementation:
+
+<Queue data={[1, 8, 2, { val: 5, ant: "r" }]} />
+
+<Sequence data={[1, 8, 2, { val: 5, ant: "r" }]} />
+
+There are two pointers, `r` (the `rear`) and `f` (the `front`). The pointer
+`f` is not displayed because initially, `f = -1`. Now let's say the first
+queuer is dequeued:
+
+<Queue data={[{ val: "", focus: "red" }, 8, 2, { val: 5, ant: "r" }]} />
+
+<Sequence data={[{ val: "", focus: "red" }, 8, 2, { val: 5, ant: "r" }]} />
+
+As we saw with the RP queue, dequeuing results in an empty space at the
+front of the queue. And with the RP queue, the remedy for this is to shift
+all of the elements to the left, filling the newly emptied position, much
+like how people in a line shift forward.
+
+With people, this is not that big of a deal. A small step forward
+miniscule. For computers, however, having so many queuers perform an
+operation is inefficient. Is there a more efficient way to do this? It
+turns out yes. Instead of having everyone in line at the bank shift towards
+the teller, just have the teller shift towards the next customer:
+
+<Queue
+	data={[{ val: "", focus: "red", ant: "f" }, 8, 2, { val: 5, ant: "r" }]}
+/>
+
+<Sequence
+	data={[{ val: "", focus: "red", ant: "f" }, 8, 2, { val: 5, ant: "r" }]}
+/>
+
+Examining the diagram, we see that the `f` queuer will always be `Q[f+1]`.
+For example, say we start with an empty queue of capacity ${4:}$
+
+<Queue data={["", "", "", ""]} />
+
+<Sequence data={["", "", "", ""]} />
+
+Now say we rush-in two queuers, ${5}$ and ${8:}$
+
+<Sequence data={[5, { val: 8, ant: "r" }, "", ""]} />
+
+<Queue data={[5, { val: 8, ant: "r" }, "", ""]} />
+
+At no point in the rush-in do we increment `f`, which is initially
+`f = -1`. The pointer `f` is incremented only if we dequeue. As such, the
+front element is still `Q[f+1]`, which in this case, is `Q[0]`.
+
+When we dequeue, `f` increments:
+
+<Sequence data={[{ val: 1, ant: "f" }, { val: "", ant: "r" }, ""]} />
+
+<Queue data={[{ val: 1, ant: "f" }, { val: "", ant: "r" }, ""]} />
+
+When we enqueue say, the new queuers ${2}$ and ${9,}$ we get:
+
+<Sequence data={[{ val: 1, ant: "f" }, 8, 2, { val: 9, ant: "r" }]} />
+
+<Queue data={[{ val: 1, ant: "f" }, 8, 2, { val: 9, ant: "r" }]} />
+
+Implementing the `dequeue()` procedure:
+
+```rust
+fn dequeue(Queue* queue) -> void:
+	if (isEmpty(queue)):
+		println "Nothing to dequeue: Queue is empty.";
+	else:
+		(*queue).front++;
+		(*queue).height--;
+```
+
+Examining the procedure above, we see that the algorithm consists entirely
+of basic steps—${O(1)}$ time. Compare this with the RP bounded queue, where
+it took ${O(n)}$ time to dequeue elements.
+
+At this point, we might have a lot of questions. How does this impact all
+of the other operations? What about the gaps? Didn't the RP bounded queue
+employ a left-shift in the first place because of gaps in the array
+implementation? These are all fair questions, and we address them carefully
+in turn.
+
+## Empty Guard
+
+The first question we should address is the empty guard; answers to the
+other questions will build on the answer to this first question. What
+condition should we test for when the FRP bounded queue is empty? Well,
+let's consider an example.
+
+Suppose we have the following queue and its array implementation:
+
+<Sequence data={[{ val: 1, ant: "f" }, 3, 2, { val: 7, ant: "r" }]} />
+
+<Queue data={[{ val: 1, ant: "f" }, 3, 2, { val: 7, ant: "r" }]} />
+
+```rust
+f = 0;
+r = 3
+```
+
+As we can see, we've already dequeued once. If we dequeue again:
+
+<Sequence
+	data={[
+		{ val: "", focus: "red" },
+		{ val: 3, focus: "red", ant: "f" },
+		2,
+		{ val: 7, ant: "r" },
+	]}
+/>
+
+<Queue
+	data={[
+		{ val: "", focus: "red" },
+		{ val: 3, focus: "red", ant: "f" },
+		2,
+		{ val: 7, ant: "r" },
+	]}
+/>
+
+```rust
+f = 1;
+r = 3
+```
+
+And again:
+
+<Sequence
+	data={[
+		{ val: "", focus: "red" },
+		{ val: "", focus: "red" },
+		{ val: 2, focus: "red", ant: "f" },
+		{ val: 7, ant: "r" },
+	]}
+/>
+
+<Queue
+	data={[
+		{ val: "", focus: "red" },
+		{ val: "", focus: "red" },
+		{ val: 2, focus: "red", ant: "f" },
+		{ val: 7, ant: "r" },
+	]}
+/>
+
+```rust
+f = 2;
+r = 3
+```
+
+And dequeuing one more time:
+
+<Sequence
+	data={[
+		{ val: "", focus: "red" },
+		{ val: "", focus: "red" },
+		{ val: 2, focus: "red" },
+		{ val: 7, focus: "red", ant: "f r" },
+	]}
+/>
+
+<Queue
+	data={[
+		{ val: "", focus: "red" },
+		{ val: "", focus: "red" },
+		{ val: 2, focus: "red" },
+		{ val: 7, focus: "red", ant: "f r" },
+	]}
+/>
+
+```rust
+f = 3;
+r = 3
+```
+
+Then, dequeuing one last time:
+
+<Sequence
+	data={[
+		{ val: "", focus: "red" },
+		{ val: "", focus: "red" },
+		{ val: 2, focus: "red" },
+		{ val: 7, focus: "red", ant: "r" },
+	]}
+/>
+
+<Queue
+	data={[
+		{ val: "", focus: "red" },
+		{ val: "", focus: "red" },
+		{ val: 2, focus: "red" },
+		{ val: 7, focus: "red", ant: "r" },
+	]}
+/>
+
+```rust
+fn isEmpty(*Queue queue) -> bool:
+	return (*queue).front == (*queue).rear;
+```
+
+Note that this is all a matter of interpretation. In a language like C, the
+data is more than likely still inside the array. But even if it was, it's
+essentially lost, because the only way we can interact with the queue is
+through the front and rear pointers.
+
+## Capacity Guard
+
+For the capacity guard, we will use the following function:
+
+```rust
+fn isFull(*Queue queue) -> bool:
+	return (*queue).r == capacity - 1;
+```
+
+This corresponds to the fact that if `rear` equals the last index in the
+array, we've reached capacity.
+
+## Enqueue
+
+For enqueuing a queuer, we use the following procedure:
+
+```rust
+fn enqueue(Queue* queue, {T} data):
+	if (isFull(*queue)):
+		print "Queue is full"
+	else:
+		(*queue).rear++;
+		(*queue).Q[(*queue).rear] = data;
+```
+
+Examining this procedure, we see that the dequeue procedure runs in
+constant time—${O(1).}$
+
+## Dequeue
+
+For dequeuing a queuer, we use the following procedure:
+
+```rust
+fn dequeue(Queue* queue) -> {T}:
+	int x = -1;
+	if (isEmpty(*queue)):
+		print "Nothing to dequeue; queue is empty."
+	else:
+		(*queue).front++;
+		x = (*queue).Q[(*queue).front];
+	return x;
+```
+
+Examining this procedure, we see that the dequeue procedure runs in
+constant time—${O(1).}$
+
+## Single-use FRP Drawbacks
+
+If we thought about FRPs carefully, we might have noticed a few drawbacks.
+Suppose we had the following queue:
+
+<Queue data={[2, 4, 8, 1, { val: 3, ant: "r" }]} />
+
+If we dequeue twice, we get:
+
+<Queue
+	data={[
+		{ val: "", focus: "red" },
+		{ val: 4, focus: "red", ant: "f" },
+		8,
+		1,
+		3,
+	]}
+/>
+
+Because of the way we've implemented `isFull()` and `isEmpty()`, we cannot
+reuse the space previously occupied by the dequeued queuer. If dequeued all
+of the elements:
+
+<Queue data={["", "", "", "", { val: "", ant: "r" }]} cname={"all-red"} />
+
+and executed `isEmpty()`, we would get back `true`, since `front > rear`.
+Given this restriction, we call such FRPs **single-use FRP-bounded
+queues**. While single-use FRPs are useful for certain problems, most
+problems would be better served by reusing the freed spaces. To do so, we
+must use either: a _Resetting FRP_ or a _circular queue._
+
+## Resetting FRPs
+
+A **multi-use FRP** is an FRP that reuses a dequeued element's newly
+available space. The multi-use FRP's implementation is, for the most part,
+the same as the single-use FRP, but with **pointer resetting**.
+
+The solution is simple: The moment `isEmpty()` returns `true`,
+re-initialize `front` and `rear` to `-1`. For example, consider the
+following queue:
+
+<Queue data={[2, 4, 8, 1, { val: 3, ant: "r" }]} />
+
+If we dequeued all of the elements:
+
+<Queue data={["", "", "", "", { val: "", ant: "r" }]} cname={"all-red"} />
+
+we immediately reset the pointers `front` and `rear` to `-1`:
+
+<Queue data={["", "", "", "", ""]} />
+
+This allows us to reuse the dequeued element's spaces. Accordinly,
+implementing the resetting FRP is just a matter of writing a new function
+called `reset`:
+
+```rust
+fn reset(Queue* queue) -> void:
+	if (isEmpty(*queue)):
+		(*queue).front = -1;
+		(*queue).rear = -1;
+	else:
+		print "Cannot reset; queue is not empty."
+```
+
+The problem, however, is that there's a catch: We can only reuse the
+dequeued spaces only if the array is empty. This means that in the
+situation:
+
+<Queue
+	data={[
+		{ val: "", focus: "red" },
+		{ val: 4, focus: "red" },
+		8,
+		1,
+		{ val: "r", ant: "r" },
+	]}
+/>
+
+We cannot use the dequeued space, because the queue is not empty. Because
+of this limitation, we want to a **circular queue**.
+
+## Circular Queues
+
+Circular queues are the solution to the problems posed by single-use FRPs
+and resetting FRPs. First, instead of starting `front` and `rear` at `-1`,
+we start them at `0`. For example, suppose we had a queue with a capacity
+of ${6:}$
+
+<Queue data={[{ val: 0, ant: "f r" }, 1, 2, 3, 4, 5]} />
+
+Say we enqueue the value `1`. So the rear pointer `r` increments, and
+initializes the value `1` at index ${1:}$
+
+<Queue
+	data={[{ val: "", ant: "f" }, { val: 1, ant: "r" }, "", "", "", ""]}
+/>
+
+The index that `f` points to, ${0}$ in this case, must be left empty.
+Wherever `f` is pointing, that location must be left empty. Let's say we
+filled the rest of queue spaces:
+
+<Queue
+	data={[{ val: "", ant: "f" }, 1, 5, 8, 9, 3, { val: 3, ant: "r" }]}
+/>
+
+Now let's say we dequeue two queuers:
+
+<Queue
+	data={[
+		{ val: "", focus: "red" },
+		{ val: "", focus: "red" },
+		{ val: "", focus: "red", ant: "f" },
+		8,
+		9,
+		{ val: 3, ant: "r" },
+	]}
+/>
+
+and we want to enqueue the element `2`. For single-use FRPs and resetting
+FRPs, we saw that we cannot enqueue here. For circular queues, however, we
+definitely can: Move `r` back to `0`, and enqueue:
+
+<Queue
+	data={[
+		{ val: 2, ant: "r" },
+		{ val: "", focus: "red" },
+		{ val: "", focus: "red", ant: "f" },
+		8,
+		9,
+		3,
+	]}
+/>
+
+At this point, the queue is _full_. Remember, we cannot use the space `f`
+points to. If we allow `r` to point at this space, then both `f` and `r`
+are equal. And if both `f` and `r` are equal, then the queue is empty.
+
+To insert the element `7`, we simply increment `r` and enqueue:
+
+<Queue
+	data={[
+		2,
+		{ val: 7, ant: "r" },
+		{ val: "", ant: "f", focus: "red" },
+		8,
+		9,
+		3,
+	]}
+/>
+
+Let's consider another example, this time visualizing the circular queue.
+We visualize the circular queue
+
+<Queue
+	data={[
+		2,
+		{ val: 7, ant: "r" },
+		{ val: "", ant: "f", focus: "red" },
+		8,
+		9,
+		3,
+	]}
+/>
+
+as:
+
+<CircularQueue
+	data={[2, { val: 7, ant: "r" }, { val: "", ant: "f" }, 8, 9, 3]}
+/>
+
+Thinking of the circular queue in this way, it's more apparent what we have
+to do to bring `r` back to the first index ${0}$ once it's reached the last
+index—through the modulus operator. Consider the table of values, where
+${r}$ is the value of `rear`, and `s` is the circular queue's capacity:
+
+| ${r}$ | ${(r + 1) \bmod s}$ |
+| ----- | ------------------- |
+| ${0}$ | ${1 \bmod 5 = 1}$   |
+| ${1}$ | ${2 \bmod 5 = 2}$   |
+| ${2}$ | ${3 \bmod 5 = 3}$   |
+| ${3}$ | ${4 \bmod 5 = 4}$   |
+| ${4}$ | ${5 \bmod 5 = 0}$   |
+| ${0}$ | ${1 \bmod 5 = 1}$   |
+| ${1}$ | ${2 \bmod 5 = 2}$   |
+| ${2}$ | ${3 \bmod 5 = 3}$   |
+| ${3}$ | ${4 \bmod 5 = 4}$   |
+| ${4}$ | ${5 \bmod 5 = 0}$   |
+
+Notice how we're going back to ${0}$ once we've reached the inex ${4.}$
+This is precisely what we want.
+
+### Circular Queue: Capacity Guard
+
+Following our previous analysis, the circular queue's capacity guard is
+implemented as such:
+
+```rust
+fn isFull(Queue* q) -> bool:
+	rear = (*q).rear + 1;
+	front = (*q).front;
+	max = (*q).capacity;
+	return rear % max == front;
+```
+
+Examining this procedure, we see that `isFull()` takes ${O(1)}$ time to
+execute.
+
+### Circular Queue: Empty Guard
+
+The empty guard is no different from the FRP's empty guard:
+
+```rust
+fn isEmpty(Queue* q) -> bool:
+	return (*queue).front == (*queue).rear;
+```
+
+Needless to say, this function takes ${O(1)}$ time to execute.
+
+### Circular Queue: Enqueue
+
+To enqueue into a circular queue, we use the following:
+
+```rust
+fn enqueue(Queue* queue, {T} data) -> void:
+	if isFull(*queue):
+		print "Queue is full, enqueue prohibited."
+	else:
+		(*queue).rear = ((*queue).rear + 1) % (*queue).size;
+		(*queue).Q[(*queue).rear] = data;
+```
+
+Again, this procedure has a time complexity of ${O(1).}$ Thus, the circular
+queue's `enqueue()` procedure runs in constant time.
+
+### Circular Queue: Dequeue
+
+The circular queue's dequeue operation appears as such:
+
+```rust
+fn dequeue(Queue* queue) -> {T}:
+	{T} data = NULL;
+	if (isEmpty(queue)):
+		printf "Queue is empty, dequeue prohibited."
+	else:
+		(*queue).front = ((*queue).front + 1) % (*queue).size;
+		data = (*queue).Q[(*queue).front];
+	return data;
+```
+
+This procedure has a time complexity of ${O(1)}$—constant time.
+
+## Linked List Queues
+
+Queues implemented with linked lists are called **linked queues**. Recall
+that the queue is a first-in-first-out data structure. As such, we must
+account for this characteristic when implementing a linked queue.
+
+Consider the following queue:
+
+<Queue data={[{ val: 2, ant: "f" }, 8, 9, { val: 3, ant: "r" }]} />
+
+Implementing this as a linked list, we have:
+
+<LinkedList data={[{ val: 2, ant: "f" }, 8, 9, { val: 3, ant: "r" }]} />
+
+Initially, the front pointer `f` and the rear pointer `r` should be `NULL`.
+Thus, when we create the first node for the queue above, we create the node
+with a pointer `t`, then have the pointers `f` and `r` point to this new
+node:
+
+<LinkedList data={[{ val: 2, ant: "t f r" }]} />
+
+Once we have the first node established, we can begin queuing and
+dequeuing.
+
+## Empty Guard
+
+For the linked list queue, the empty guard is as follows:
+
+```rust
+fn isEmpty(*Queue queue) -> bool:
+	return (*queue).front == NULL;
+```
+
+Notice that we're simply testing if `front` is `NULL`. If it is, then we
+can conclude that the queue is empty.
+
+## Capacity Guard
+
+The capacity guard looks like:
+
+```rust
+fn isFull(Node* n) -> bool:
+	return n == NULL;
+```
+
+Notice that we're testing if a particular node pointer is the null pointer.
+We do so because with linked lists, we can dequeue and enqueue (nodes) as
+much as we want, so long as the pointer returned from allocating space is
+not null. If it is null, then we've run out of heap memory—i.e., the queue
+is full.
+
+### Enqueue
+
+The enqueue procedure:
+
+```rust
+fn enqueue(Queue* queue, {T} data) -> void:
+	Node *t = new Node;
+	if (isFull(t)):
+		print "Queue is full."
+	else:
+		(*t).data = data;
+		if ((*queue).front == NULL):
+			(*queue).front = rear = t;
+		else:
+			(*queue).rear->next = t;
+			(*queue).rear = t;
+```
+
+### Dequeue
+
+The dequeue procedure appears as follows:
+
+```rust
+{T} dequeue(struct Queue* queue):
+	{T} datum = MIN_INT;
+	Node* p;
+		if (isEmpty(queue)):
+			print "Nothing to dequeue; returning MIN_INT";
+		else:
+			p = (*queue).front
+			(*queue).front = (*(*queue).front).next;
+			datum = (*p).data;
+			free(p);
+	return datum;
+```
+
+In this implementation, we return the data bound to the dequeued queuer.
+And as with many of the other procedures, this procedure has a time
+complexity of ${O(1)}$—constant time.
+
+## Deque
+
+The **double-ended queue** (appreviated **deque**, pronounced _deck_), is a
+queue where insertion and deletion can be done on both the front- and
+rear-ends of the queue.
+
+For FRPs, circular queues, and linked-list queues, we've used both front
+and rear pointers. Moreover, to enqueue we've used the rear pointer, and to
+dequeue we've used the rear pointer exclusively. I.e., we can only insert
+and remove queuers from the front of the queue. For the deque, however, we
+can enqueue and dequeue from both ends of the queue.
+
+| **Queue** | insert                       | delete                       |
+| --------- | ---------------------------- | ---------------------------- |
+| `front`   | ${\color{indianred} \times}$ | ${\color{green} \checkmark}$ |
+| `rear`    | ${\color{green} \checkmark}$ | ${\color{indianred} \times}$ |
+
+| **Deque** | insert                       | delete                       |
+| --------- | ---------------------------- | ---------------------------- |
+| `front`   | ${\color{green} \checkmark}$ | ${\color{green} \checkmark}$ |
+| `rear`    | ${\color{green} \checkmark}$ | ${\color{green} \checkmark}$ |
+
+Because of this trait, deques are much more like a deck of cards than they
+are a line of queuers—it's easy to take one card off either end of the
+deck, but harder to extract an individual card from the deck's center.
+
+For example, suppose we had the following deque:
+
+<Queue data={["", "", "", "", ""]} />
+
+Initially, both `f` (the front pointer) and `r` (the rear pointer), are
+`-1`. Let's insert the dequer `3` with the rear pointer:
+
+<Queue data={[{ val: 3, ant: "r" }, "", "", "", ""]} />
+
+Let's insert three more dequers:
+
+<Queue data={[3, 5, 7, { val: 9, ant: "r" }, ""]} />
+
+Now let's delete a dequer using the front pointer:
+
+<Queue data={[{ val: "", ant: "f" }, 5, 7, { val: 9, ant: "r" }, ""]} />
+
+Deleting once more with the front pointer:
+
+<Queue data={["", { val: "", ant: "f" }, 7, { val: 9, ant: "r" }, ""]} />
+
+So far, this doesn't look all that different from what we've seen with
+queues. So what's the difference? We can insert a new dequer with the front
+pointer. We simply use the front pointer to assign the new dequer, followed
+by a decrement of the front pointer's value. Say we wanted to insert the
+dequer `3`:
+
+<Queue data={[{ val: "", ant: "f" }, 3, 7, { val: 9, ant: "r" }, ""]} />
+
+We can insert once more:
+
+<Queue data={[2, 3, 7, { val: 9, ant: "r" }, ""]} />
+
+At this point, the front pointer `f` is `-1`, and we use that as a
+condition indicating that we cannot insert towards the `front` any further.
+
+## Input-restricted Deques
+
+The **input-restricted deque (indeque)** is a deque where insertion can
+only be done with the rear, but deletion may be done on both the front- and
+rear-ends.
+
+## Output-restricted Deques
+
+The **output-restricted deque (outdeque)** is a deque where deletion can
+only be done with the front, but insertion may be done on both the front-
+and rear-ends.
+
+## Priority Queues
+
+A **priority queue** is a queue with priority constraints for enqueuing and
+dequeuing. There are two ways to implement these priority contraints:
+
+1. Establishing a priority criteria, or
+2. assigning priority to particular elements.

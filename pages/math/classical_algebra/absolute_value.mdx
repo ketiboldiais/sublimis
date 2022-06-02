@@ -1,0 +1,79 @@
+# Absolute Value
+
+Let $x$ be a real number. The __absolute value__ of $x$ is the distance between $x$ and the origin. We denote the absolute value of $x$ with the notation: $\lvert x \rvert$
+
+For example, the numbers -8 and 8 are both 8 units from the origin. Thus, $\lvert 8 \rvert = 8$ and $\lvert -8 \rvert = 8$. We often use absolute value in equations:
+
+
+
+$$
+\begin{aligned}
+	5 - \lvert 6 - 7 \rvert = 5 - \lvert -1 \rvert \\
+	&= 5 - 1 \\
+	&= 4
+\end{aligned}
+$$
+
+
+
+Algebraically:
+
+$$
+	\lvert x \rvert = \begin{cases} x &\text{ if } x \geq 0 \\ -x &\text{ if } x < 0 \end{cases}
+$$
+
+
+For example, $\lvert -8 \rvert = -(-8) = 8$. From the definition of absolute value, we can make the following inferences:
+
+> For all real numbers $x$:
+> - $\lvert x \rvert \geq 0$
+> - $x \leq \lvert x \rvert$ and $-x \leq \lvert x \rvert$
+> - ${\lvert x \rvert}^2 = x^2$
+> - $\sqrt{x^2} = \lvert x \rvert$
+
+Additionally:
+
+> For all real numbers $a$ and $b$:
+> - $\lvert ab \rvert = \lvert a \rvert \cdot \lvert b \rvert$
+> - $\lvert \dfrac{a}{b} \rvert = \dfrac{\lvert a \rvert }{\lvert b \rvert }$
+> - $\lvert a + b \rvert \leq \lvert a \rvert + \lvert b \rvert $
+
+
+## Removing Absolute Value Symbols
+
+When we encounter expressions containing absolute values, it's often a good idea to rewrite the expression without the absolute value symbols. For example, consider the expression $\lvert -2 - x^2 \rvert$. Using our algebraic definition above, we can rewrite this expression:
+
+$$
+\begin{aligned}
+	\lvert -2 - x^2 \rvert &= -(-2 - x^2) \\
+	&= 2 + x^2
+\end{aligned}
+$$
+
+The example above reveals useful insight. Suppose that real numbers are points along the real number line. Let $a$ and $b$ be real numbers. Because $a$ and $b$ are points along a line, the distance between $a$ and $b$ is $a - b$. And since the absolute value of a number is only concerned with the distance between a point and the origin, we can infer:
+
+> For real numbers $a$ and $b$, the distance between $a$ and $b$ is, ${\lvert a - b \rvert = \lvert b - a \rvert.}$
+
+
+
+## Absolute Values and Inequalities
+Whenever we see absolute values in inequalities, we should be on high alert. Suppose that ${a \in \mathbb{R},}$ ${u \in \mathbb{R},}$ and ${a > 0.}$ The following rules hold:
+
+> ${\lvert u \rvert < a \iff -a < u < a}$
+> ${\lvert u \rvert < a \iff (u < -a \text{ or } u > a) }$
+
+These rules follow from observing the number line. The statement ${-a < u < a}$ implies that $u$ is somewhere between $-a$ and $a$, which is equivalent to saying that the distance from $u$ to 0 is less than $a$ (which, in mathematical notation, is simply ${\lvert u \rvert < a }$).
+
+When inequalities contain expressions couched between absolute value symbols, the inequality is effectively expressing the expression's distance from 0. For example, suppse ${\lvert x - 3 \rvert < 1. }$ This statement tells us that the distance of ${\lvert x - 3 \rvert }$ from 0 is less than 1. Visually, this appears as:
+
+![Absolute value visualization](https://res.cloudinary.com/sublimis/image/upload/v1653176463/math/inequality_absolute_value_cbkeje.svg)
+
+Because absolute values tell us the distance from 0, the statement above, ${\lvert x - 3 \rvert < 1,}$ allows us to infer:
+
+
+$$
+	-1 < x - 3 < 1
+$$
+
+
+

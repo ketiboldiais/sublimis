@@ -1,0 +1,52 @@
+# Program Counter
+
+
+With RAM, we have full-fledged memory. And now that we have memory, we can store _instructions_. That's a tall order, so before we address that problem, let's tackle a smaller problem: How do we get the computer to remember where it was in a set of instructions?
+
+To understand why this problem should be addressed, suppose we had a robot called _Bap_. Bap is a mechanical chef &mdash; provide a recipe, and Bap executes. Suppose Bap is given the following set of instructions:
+
+
+1. Heat skillet.
+2. Get egg.
+3. Crack egg into skillet.
+4. Wait 4 minutes.
+5. Remove egg and put into plate.
+
+Bap executes the first step and heats the skillet. After a few minutes, we hear the fire alarm go off. Running to the kitchen, we see a cloud of smoke, the robot staring into a blackening plate. What happened? Bap never left the first step; it had no idea which of the steps to execute next. All Bap knows is that there's some instruction with a number next to it.
+
+
+The __program counter (PC)__, or more generally, a __counter__, is a chip that solves this problem. The idea is simple: There's a large screen next to the robot, displaying a number. That number corresponds to the instruction's number. When the screen displays ${0,}$ Bap executes step ${0;}$ screen displays ${1,}$ the robot executes step ${1;}$ screen displays ${2,}$ execute step ${2;}$ and so on. That screen is program counter.
+
+
+Program counters are not limited to just incrementing its current count. In the algorithm above, if the counter ends at `4`, Bap will cook just ${1}$ egg. But what if we wanted Bap to cook a hundred?  Well, we just reset the counter to a particular number after `4`. That is, once the counter reaches `4`, reset it to `2` (not `0`, since the skillet is already heated). In this way, we can get as many fried eggs as we'd like.
+
+
+From our iron chef, we see that the program counter provides a feature we don't have yet: Providing the computer a way to keep track of which instruction should be _fetched_ and _executed_ next. To do so, the PC has three operations:
+
+
+1. reset(): Fetch the first instruction (`PC = 0`).
+2. next(): Fetch the next instruction (`PC++`).
+3. `goto(${n}$)` Fetch the instruction ${n}$ (PC = ${n}$).
+
+The PC's implementation:
+
+```verilog
+module PC(in[16], load, inc, reset);
+
+	input  in[16], load, inc, reset;
+	output out[16];
+
+	PARTS:
+		Mux16(a=in, b=false, sel=reset, out=in1);
+
+		Or(a=load, b=reset, out=sw1);
+		Mux16(a=loopOut, b=in1, sel=sw1, out=registerIn);
+
+		Or(a=sw1, b=inc, out=regload);
+		Register(in=regsterIn, load=registerLoad, out=registerOut, out=out);
+
+		Inc16(in=registerOut, out=inc1);
+		Mux16(a=registerOut, b=inc1, sel=inc, out=loopOut);
+
+endmodule;
+```

@@ -1,0 +1,90 @@
+# Function Returns
+
+Just as functions can take different parameters, functions can also have
+different returns. The default return method is _return-by-value_. The
+function performs a computation, and returns the result. We can, however,
+also perform _return-by-address_ and _return-by-reference_.
+
+## Return-by-address
+
+Suppose we wanted a function to return an array, which we can then use and
+mutate elsewhere. One way to do so is to write a function with
+**return-by-address** &mdash; a function that returns the address of stored
+data:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int* natNumArray(int size) {
+	int *p = new int[size];
+	for (int i = 0; i < size; i++) {
+		p[i] = i+1;
+	}
+	return p;
+}
+
+int main() {
+	int *natNumPTR = natNumArray(5);
+	return 0;
+}
+```
+
+In the code above, we allocated memory in the heap for an `int` array,
+using the function `natNumArray()`. The function returns the resulting
+array's address, and in `main()`, that address is assigned to a pointer
+called `*natNumPTR`. As a result, both `p` in `natNumArray()` and
+`natNumPTR` point to the same address, effectively allowing us to modify
+the newly allocated array.
+
+## Return-by-reference
+
+With return-by-address, we use an explicit pointer. We can instead use an
+implicit pointer with **return-by-reference**. By writing a function as
+return-by-reference, we instruct C++ that the particular reference returns
+a pointer to its return value, rather than the value itself. The end
+result: We can use functions on the left side of an assignment statement,
+rather than the typical right side.
+
+```cpp
+#include <iostream>
+using namespace std;
+
+double& setValues(double vals[], int i) {
+	return vals[i];
+}
+
+int main () {
+	double arr[] = {1.1, 9.8, 3.1, 2.1, 5.7};
+	cout << "Value before change" << endl;
+	for ( int i = 0; i < 5; i++ ) {
+		cout << "\t arr[" << i << "] = ";
+		cout << arr[i] << endl;
+	}
+
+	setValues(arr, 1) = 19.2;
+	setValues(arr, 3) = 58.8;
+
+	cout << "Value after change" << endl;
+	for ( int i = 0; i < 5; i++ ) {
+		cout << "\t arr[" << i << "] = ";
+		cout << arr[i] << endl;
+	}
+	return 0;
+}
+```
+
+```bash
+Value before change
+	arr[0] = 1.1
+	arr[1] = 9.8
+	arr[2] = 3.1
+	arr[3] = 2.1
+	arr[4] = 5.7
+Value after change
+	arr[0] = 1.1
+	arr[1] = 19.2
+	arr[2] = 3.1
+	arr[3] = 58.8
+	arr[4] = 5.7
+```

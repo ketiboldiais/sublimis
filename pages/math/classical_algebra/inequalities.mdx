@@ -1,0 +1,70 @@
+# Inequalities
+
+Inequalities arguably appear more often than equalities in mathematics.
+This is because equality imposes an extraordinarily high burden of proof:
+When we write ${a = b,}$ we are implying that ${a}$ and ${b}$ are the same
+in every possible way. Because of that burden, we often must speak in terms
+of relativity, using the symbols
+${ <, >, \leq, \geq, \nless, \ngtr, \nleq, \ngeq.}$ Let's discuss how each
+of these symbols are used and the propositions they can express.
+
+First, when we write ${a < b,}$ we are stating, ${a}$ is greater than
+${b.}$\_ The same proposition can be written as ${b < a.}$
+
+Second, if ${a < 0,}$ we say that ${a}$ is **negative**. If ${a > 0,}$ we
+say that ${a}$ is **positive**.
+
+Third, the inequality symbols operate similarly to the equal sign: There
+are two sides, and we can manipulate the expression accordingly &mdash; so
+long as the expression remains true. For example, consider the proposition
+${a > b.}$ We can manipulate this expression as such:
+
+$$ \begin{aligned} a &> b \\ a - b &> b - b \\ a - b &> 0 \end{aligned} $$
+
+We see that given the expression ${a > b,}$ it follows that ${a - b}$ is
+positive. This analysis leads to several laws. First, the **Trichotomy
+law**:
+
+> _Trichotomy Law_. For every ${a \in \R,}$ one, and only one, of the
+> following propositions is true: ${a = 0}$ ${a \in \R^{+}}$ >
+> ${-a \in \R^{+}}$
+
+The rule above tells us that every real number ${a}$ can be only one of
+three things: zero, positive, or negative. Those are the only three
+possible states. Nothing else. Additionally, we have the **laws of
+closure**. We can think of these laws as defining the boundaries of
+addition and multiplication. First, the **law of closure under addition**:
+
+> _Closure Under Addition._ If ${a}$ and ${b}$ are in ${R^{+},}$ then
+> ${a + b}$ is in ${R^{+}.}$
+
+And the **law of closure under multiplication**:
+
+> _Closure Under Multiplication._ If ${a}$ and ${b}$ are in ${R^{+},}$ then
+> ${a \cdot b}$ is in ${R^{+}.}$
+
+Complementing the laws above, we have the following definitions:
+
+> _Definition._ Given any two numbers ${a}$ and ${b,}$ the following
+> propositions hold:
+>
+> 1. ${a - b \in \R^{+} \implies a > b}$
+> 2. ${b > a \implies a}$
+> 3. ${(a > b) \lor (a = b) \implies a \geq b}$
+> 4. ${a > 0 \iff a \in \R^{+}}$
+
+As a consequence of the definitions above, we have:
+
+> _Definition_. Given any two numbers ${a}$ and ${b,}$ exactly one of the
+> following propositions is true:
+> * ${a - b = 0,}$ 
+> * ${a - b > 0,}$ xor
+> * ${-(a - b) = b - a > 0}$
+
+Manipulating the above definitions, we have:
+
+> Definition. Given any two numbers ${a}$ and ${b,}$ exactly one of the
+> following propositions is true: ${a = b,}$ ${a > b,}$ xor ${b > a}$
+
+That is to say, given any numbers ${a}$ and ${b,}$ one is less than or
+equal to the other.

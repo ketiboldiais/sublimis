@@ -1,0 +1,330 @@
+# Argument Passing
+
+When functions have parameters without default values, they must be passed
+arguments. In C++, passing arguments into functions can be done in three
+ways: (1) **pass-by-value**, (2) **pass-by-reference**, and (3)
+**pass-by-address**.
+
+## Pass-by-value
+
+To illustrate these differences, let's consider a canonical function in
+programming, `swap()`. Before we write the function, let's recall how the
+function works. Say we have an `int a = 0` and an `int b = 1`. To swap the
+values assigned to the variables, we create a temporary variable, called
+`temp`. Then, we assign to `temp` the variable `a.` Thus, `temp = a = 0.`
+Then, we assign to `a` the variable `b.` Thus, `a = b = 1.` Finally, we
+assign to `b` the variable `temp`: `b = temp = 0`. The end result: `a = 1`
+and `b = 0`. Putting it all together:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main() {
+	int a = 0;
+	int b = 1;
+
+	cout << "Before the swap: " << endl;
+	cout << "x = " << a << endl;
+	cout << "y = " << b << endl;
+
+	// The swap
+	int temp;
+	temp = a;
+	a = b;
+	b = temp;
+
+	cout << "After the swap: " << endl;
+	cout << "x = " << a << endl;
+	cout << "y = " << b << endl;
+
+	return 0;
+}
+```
+
+```bash
+Before the swap:
+x = 0
+y = 1
+After the swap:
+x = 1
+y = 0
+```
+
+Great, it works. Swapping variables, however, is a very common operation.
+Accordingly, we want to place this computation in a function, to be used
+whenever we'd like:
+
+```cpp
+#include <iostream>;
+using namespace std;
+
+void swap(int a, int b) { int temp; temp = a; a = b; b = temp; }
+
+int main() { int a = 0; int b = 1;
+
+    cout << "Before the swap: " << endl;
+    cout << "x = " << a << endl;
+    cout << "y = " << b << endl;
+
+    swap(a, b);
+
+    cout << "After the swap: " << endl;
+    cout << "x = " << a << endl;
+    cout << "y = " << b << endl;
+
+    return 0;
+
+}
+
+```
+
+```bash
+Before the swap:
+x = 0
+y = 1
+After the swap:
+x = 0
+y = 1
+```
+
+Strange. It didn't perform the swap. Why? Because calling functions the way
+we did above, `swap(a, b)`, is by default **pass-by-value**. In
+pass-by-value, the function only receives a{" "} copy of the values passed.
+They are not pass an original. To understand what this implies, recall what
+happens in main memory when we execute a function.
+
+When `main()` is loaded, a stack in main memory is allocated for it. Let's
+call it _stack main_. Inside _stack main_, memory is allocated for
+`int a = 0` and `int b = 1`. Going down the code, we encounter
+`swap(a, b)`. This is a new function, so a new stack is created to
+accomodate its variables. Call it _stack swap_. Inside _stack swap_, memory
+is allocated for `int a`, `int b`, and `temp`. Now, arguments were passed
+into `swap()`, so the memory allocated is for `int a = 0`, `int b = 1`, and
+`temp`.
+
+Inside _swap stack_, the body of `swap()` works as expected. The variables
+do in fact swap. We can see that's true by running the function without
+arguments:
+
+```cpp
+#include <iostream>;
+using namespace std;
+
+void swap(int a = 0, int b = 1) {
+	cout << "Before swap: " << endl;
+	cout << "\t a = " << a << endl; cout << "\t b = " << b << endl;
+
+    // The swap
+    int temp;
+    temp = a;
+    a = b;
+    b = temp;
+
+    cout << "After swap: " << endl;
+    cout << "\t a = " << a << endl;
+    cout << "\t b = " << b << endl;
+
+}
+
+int main() { swap(); return 0; }
+
+```
+
+```bash
+Before swap:
+		a = 0
+		b = 1
+After swap:
+		a = 1
+		b = 0
+```
+
+So what does this all mean? It means that the swap never actually occurs in
+the `main()` function. It only occurs in `swap()`, and once `swap()` is
+done, _stack swap_ is destroyed. There was no effect whatsoever on the
+`int a = 0` and `int b = 1` in _stack main_.
+
+This embodies the concept of pass-by-value. When we simply pass regular
+variables into a function, we only pass copies of the values into the
+function. We never pass the originals.
+
+Call-by-value is what we use when we want the function to simply return a
+result based on the arguments passed. In fact, most of the functions we
+write are computations based on arguments. We generally do not want the
+original values changed &mdash; we want a new result. For example, suppose
+we had a function that computes acceleration:
+
+```cpp
+#include <iostream>;
+using namespace std;
+
+double acceleration(double velocity1, double velocity2, double time) {
+	return (velocity2 - velocity1) / time;
+}
+
+int main() { double v1 = 12.4; double v2 = 14.6; double t = 3.48;
+	cout << "Before function call:" << endl;
+	cout << "v1 = " << v1 << endl;
+	cout << "v2 = " << v2 << endl;
+	cout << "t = " << t << endl;
+
+	double a = acceleration(v1, v2, t);
+
+	cout << "After function call:" << endl;
+	cout << "v1 = " << v1 << endl;
+	cout << "v2 = " << v2 << endl;
+	cout << "t = " << t << endl;
+	cout << "a = " << a << endl;
+
+	return 0;
+}
+
+```
+
+```bash
+Before function call:
+v1 = 12.4
+v2 = 14.6
+t = 3.48
+After function call:
+v1 = 12.4
+v2 = 14.6
+t = 3.48
+a = 0.632184
+```
+
+We obtained a value, but we did not modify the actual arguments, `v1`,
+`v2`, and `t`. In programming, we want to minimize mutation as much as
+possible. Pass-by-value is one means of ensuring that. But what if we do
+want mutation? I.e., what if we truly want to modify the actual arguments,
+like how we intended in `swap()`?
+
+## Pass-by-address
+
+One way to do so is with **pass-by-address**. Pass-by-address is exactly
+what it sounds like. Instead of sending copies of the values to a function,
+we send the address of the values:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+void swap(int *a, int *b) { int temp; temp = *a; *a = *b; *b = temp; }
+
+int main() { int a = 0; int b = 1;
+	cout << "Before the swap: " << endl;
+	cout << "x = " << a << endl;
+	cout << "y = " << b << endl;
+
+	swap(&a, &b);
+
+	cout << "After the swap: " << endl;
+	cout << "x = " << a << endl;
+	cout << "y = " << b << endl;
+
+	return 0;
+}
+
+```
+
+```bash
+Before the swap:
+x = 0
+y = 1
+After the swap:
+x = 1
+y = 0
+```
+
+Now it works. But how? Notice that with the function call `swap()`, we
+passed as arguments `&a` and `&b`. These are the addresses of `a` and `b`
+in `main()`. Then, inside `swap()`, the parameters are `*a` and `*b`. These
+are pointers. Why are they pointers? Because if we want to store memory
+addresses, we must use pointers. Accordingly, inside the body of `swap()`,
+we use pointers to perform the swap. Those pointers always refer to the
+addresses of `a` and `b` in `main()`.
+
+## Pass-by-reference
+
+Recall that we can think of a _reference_ as a nickname, or pseudonym, for
+a variable. That nickname, or pseudonym, can be passed as an argument to a
+function. Passing references as arguments to a function is called
+**pass-by-reference**. For example, using our code above:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+void swap(int &a, int &b) { int temp; temp = a; a = b; b = temp; }
+
+int main() { int a = 0; int b = 1;
+	cout << "Before the swap: " << endl;
+	cout << "x = " << a << endl;
+	cout << "y = " << b << endl;
+
+	swap(a, b);
+
+	cout << "After the swap: " << endl;
+	cout << "x = " << a << endl;
+	cout << "y = " << b << endl;
+
+	return 0;
+}
+
+```
+
+```bash
+Before the swap:
+x = 0
+y = 1
+After the swap:
+x = 1
+y = 0
+```
+
+The same result from passing by address is obtained. This is because we
+employed **pass-by-reference**. When `main()` is memory is allocated for
+its variables, as usual. However, the distinction is when the loader
+encounters `swap(a, b)`. The formal parameters of `a` and `b` are `&a` and
+`&b`.
+
+What happens when these parameters are used? The entire definition for
+`swap()` is &#8220;copied-and-pasted&#8221; into the body of `main()`. In
+other words, `swap()` isn't loaded separately from `main()`. It is loaded
+as a part of `main()`. And because `swap()` is a part of `main()`, `swap()`
+can effectively &#8220;see&#8221;, or has access, to the preceding
+variables inside `main()`. In practice, pass-by-reference is used far more
+often than pass-by-address. Why? Because it's simpler to write and easier
+to read.
+
+## Pass-by-reference v. Pass-by-value
+
+To repeat, the default approach for passing arguments into functions in C++
+is pass-by-value. A fair question is when should we avoid the default
+approach; i.e., pass-by-reference. Answer: It depends.
+
+When we pass-by-value, we pass a copy of the value. This has the benefit of
+avoiding inadvertent mutability. It also leads to code that's easier to
+prove or reason about. The cost, however, is inefficiency. If a function
+takes a large data structure as an argument, it's worth considering whether
+we actually want to pass that argument by value. With pass-by-value, an
+entire copy of that data structure must be made, and this takes up both
+memory and processing power.
+
+If the data structure is particularly large, then it's like that case that
+we want to pass-by-reference. This avoids the computational expense of
+generating a copy of that data structure.
+
+Of course, we should also consider whether we should be passing the entire
+data structure in the first place. If only a part of that data structure is
+needed by a function, we should be passing only part of that data structure
+as an argument. If that part is particularly small, then we should err on
+the side of passing by value.
+
+In general, pass-by-reference is a convenient feature in C++, but it can be
+easily abused. From a big-picture perspective, references should only be
+used when there's some value in the program that every other module in the
+program depends on. Because of that dependancy, it's necessary to change
+that value for everyone else, because those changes impact what everyone
+else does.

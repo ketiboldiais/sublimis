@@ -1,0 +1,126 @@
+# Header Files in C++
+
+Enapsulation. The idea of **eancapsulation** is that user defined types
+have two layers: (1) an _interface_ and (2) an _implementation_. The
+interface is how the world accesses the type, and the implementation is how
+the type operates or works. These two layers are defined in separate files.
+For example, suppose we have a user-defined type called `cube`. The
+interface is kept in a file called `cube.h` (a _header file_), and the
+implementation in a file called `cube.cpp` (a _code file_). Inside
+`cube.h`, we have the following:
+
+```cpp
+// The Cube.h file
+
+#pragma once
+
+class Cube {
+	public:
+	// These are the functions we can use with this type
+		double getVolume();
+		double getSurfaceArea();
+		double getSize();
+
+	private:
+	// This is the data stored by this type
+		double side_;
+
+};
+```
+
+The line `#pragma once` tells the compiler that the following code should
+be used once during compilation. We include this line because our code
+might have a header file that relies on another header file that relies on
+another header file. This raises the danger of a possibly never-ending loop
+of searching for header files. `#pragma once` ensures that loop terminates.
+We call statements like `#pragma once` **include guards**.
+
+Because these materials assume some knowledge of object-oriented
+programming, we address `public` and `private` in brief. The symbols
+`public` and `private` operate the same way as they would in other OOP
+languages like Java &mdash; `public`, anyone and anything has access to the
+variable or method; `private`, the particular variable or method is
+accessible only to the class. In `C++`, if no access modifier is explicitly
+stated, the variable or method is `private` by default.
+
+With the functions and data above, we now need to actually define them in
+our `Cube.cpp` file:
+
+```cpp
+// The Cube.cpp file
+
+#include "Cube.h"
+
+double Cube::getVolume() {
+
+}
+```
+
+The line `#include "Cube.h"` tells the compiler, "Find the file called
+`Cube.h`, and copy it to this file." This is because the compiler must know
+how the interface works to compile `Cube.cpp`. It can only do so if we
+insert `#include "Cube.h"` into the file. Notice how the code in the header
+file corresponds to the code in source code file:
+
+```cpp
+// The Cube.h file
+
+class Cube {
+	public:
+		double getVolume();
+}
+
+// The Cube.cpp file
+#include "Cube.h"
+
+double Cube::getVolume() {
+
+}
+```
+
+Notice the `::`. This is called the **scope resolution operator**. This
+operator says, place `Cube` in front of `getVolume()`. Because
+`getVolume()` is a _member function_ &mdash; i.e., a **method** &mdash; we
+must inform the compiler what class `getVolume()` belongs to. This is done
+with the scope resolution operator, `::`(two colons).
+
+Why do we have to tell the compiler which class this method belongs to?
+Because in `Cube.h`, we might have a function called `getVolume()` in other
+classes that are not `Cube`.
+
+```cpp
+// The Cube.h file
+
+class Cube {
+	public:
+		double getVolume();
+}
+
+class Sphere {
+	public:
+		double getVolum();
+}
+
+
+// The Cube.cpp file
+
+#include "Cube.h"
+
+double Cube::getVolume() {
+
+}
+
+double Sphere::getVolume() {
+
+}
+```
+
+Let's write some `return` statements for `Cube::getVolume()` method.
+
+```cpp
+#include "Cube.h"
+
+double Cube::getVolume() {
+	return side_ * side_ * side_;
+}
+```

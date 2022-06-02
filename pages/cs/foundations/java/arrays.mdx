@@ -1,0 +1,151 @@
+# Arrays
+
+In the preceding sections, the data we used were _single_ data values. These values are represented by single numbers (integers or floats), truth values (true and false), and characters (ASCII or Unicode encodings). What if want to _multiple_ values? After all, data does not just consist of single data values. A single character does not make a novel, nor does a single temperature make a weather forecast. More often than not, our use of data involves multiple data values.
+
+Every piece of text we see on a computer is called a __string__ in computer science. All strings are a sequence of `char` values. And since `char` values are just a unique sequence of numbers, text is just a sequence of numbers to a computer.
+
+The concept of a sequence implies its _elements_ are meaningfully _ordered_. If we scrutinized this fact, we'd realize that there are numerous data that require ordering. DNA, for example, consists of ordered bases. Time series data consists of measurements taken at regular intervals (e.g., temperatures, stock prices, pandemic deaths). Elton John's _Bennie and the Jets_ on Spotify consists of ordered air pressure measurements. All of these are data consisting of multiple data values ordered meaningfully.
+
+## Arrays
+How do we store all of this data? Through __arrays__. A Java array is a variable representing a series of zero or more values of the _same_ type. More specifically, an array is a __data structure__ that places, or arranges, values in order, one after another.
+
+Because arrays place values in order, each value inside an array has a place or position in the array, called its __index__.  That index is broadly referred to as __metadata__ &mdash; data about the relationship between the value stored and the data structure. Metadata is critical to a data structure. For arrays, the metadata is _index_. If we took that metadata away, the array would no longer be ordered &mdash; Bach would sound like white noise and Hemmingway would look like ASCII splatter. Moreover, given that the index tells us what a particular value's position is in the array, we can access a specific value inside the array using its index.
+
+## Declaring Arrays
+ Like any other variable, arrays have a _name_ and a _type_. The difference, however, is the way we declare them. To do so, we include brackets after the type, rather than just the type:
+
+```java
+// This is a single int variable named integer
+int integer; 
+
+// This is an array of integers 
+int[] multipleIntegers;
+
+// A single character
+char letter;
+
+// An array of characters
+char[] word;
+```
+
+## Initializing Arrays
+When an array is merely declared, it is empty. To fill it with values, we must tell Java how many __elements__ &mdash; the individual data values &mdash; it will take. The number of elements an array stores is the array's __length__ &mdash; the _size_ of the array. That size cannot be changed once the array is initialized. Once an array is initialized, it has a set length, and we can access that length with the `.length` property.
+
+```java
+// An array of 8 integers named multipleIntegers
+int[] multipleIntegers = new int[8];
+
+// An array of characters named word
+char[] word;
+// Initialize word to hold 4 characters
+word = new char[4];
+
+System.out.println(multipleIntegers.length);
+System.out.println(word.length);
+```
+```bash
+8
+4
+```
+
+Note the two ways we can use to initialize an array. We can first declare the array, then indicate its size, or, we can write it all in one line. We can also initialize an array by directly assigning values to the array in a single line:
+
+```java
+// An array of integers 0, 1, 2, 3, 4
+int[] integerSequence = { 0, 1, 2, 3, 4 };
+
+// An array of characters 'j','a','v','a'
+char[] word = { 'j', 'a', 'v', 'a' };
+
+System.out.println(integerSequence.length);
+System.out.println(word.length);
+```
+```bash
+5
+4
+```
+
+Observe the difference between Java and many other languages: We assign values to an array with curly braces, `{}`, rather than square brackets. Notice also that we do not explicitly provide a size in the initialization method above. This is because Java will automatically count how many elements are in the assignment when we initialize in this manner, producing the array's `.length` property.
+
+## Accessing Specific Values in an Array
+ Once an array is initialized and values are assigned to it, we can access the individual values in the array with _bracket syntax_. Inside that bracket, we pass the integer representing our sought value's index:
+
+```java
+char[] word = {'j', 'a', 'v', 'a'}; 
+
+System.out.println(word.length);
+System.out.println(word[0]);
+System.out.println(word[1]);
+System.out.println(word[2]);
+System.out.println(word[3]);
+```
+```bash
+4
+j
+a
+v
+a
+```
+
+Notice that the array `word` has a length of `4`, but the last element in the array has an index of `3`. This is because the first element in an array has `index = 0`. In computer science, we almost always count starting from `0` (we say almost always because some programming languages count from 1; e.g., Smalltalk, COBOL, Julia, Matlab, Mathematica, etc.). This means that, if an array has, say, 10 elements, then the first element has an index of 0, and the last element has an index of 9.  Thus, in such an array, an index we pass is valid if, and only if, that index is 0, 9, or an integer in between 0 and 9.
+
+> Given an array of size ${n}$ containing elements, each element has an index ${i,}$ where ${0 \leq i < n.}$ The _first_ element of the array has the index ${i = 0,}$ and the _last_ element of the array has the index ${i = n - 1.}$
+
+Because the array index is just an integer value, we can insert code into the square brackets of a particular array to obtain a value therein, so long as the code returns a nonnegative `int` value and such value is a valid index:
+
+```java
+int[] nums = {0, 1, 2};
+
+system.out.println(nums.length - 1);
+```
+```bash
+2
+```
+
+When we initialize arrays by declaring and assigning values to the array in a single statement, we must be sure to include the square brackets. Failing to do so will lead to an error:
+
+```java
+int oddNumberSequence = {1, 3, 5, 7};
+
+System.out.println(oddNumberSequence[0]);
+```
+```bash
+HelloWorld.java:5: error: illegal initializer for int
+int oddNumberSequence = {1, 3, 5, 7};
+								^
+HelloWorld.java:7: error: array required, but int found
+System.out.println(oddNumberSequence[0]);
+												^
+2 errors
+```
+
+## Replacing Values in an Array
+The square bracket syntax also allows us to replace _existing_ values in an array:
+
+```java
+char[] name = {'j', 'o', 'h', 'n'};
+System.out.println(name[2]);
+
+name[2] = 'a';
+System.out.println(name[2]);
+```
+```bash
+h
+a
+```
+
+## Invalid Indices
+In Java, indices can only be nonnegative integers less than the array's size. If we try to pass an invalid index (an index that does not satisfy the rule stated above), we will get an error:
+
+```java
+// an array of size 4
+int[] primeSequence = {2, 3, 5, 7};
+
+System.out.println(primeSequence[4]);
+```
+```bash
+Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: 4
+		at HelloWorld.main(HelloWorld.java:7)
+```
+
+In programming parlance, this is a __crash__. The program completely failed to execute.

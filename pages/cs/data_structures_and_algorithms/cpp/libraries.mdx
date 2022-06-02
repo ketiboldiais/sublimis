@@ -1,0 +1,209 @@
+# Libraries
+
+A **library** is just a special word for a source code file that groups, or
+gathers, related operations. We can think of it as a package containing
+snippets of code that make our main driver (the source code file containing
+the brunt of our program) easier to produce, test, maintain, and ship.
+
+A C++ library consists of two parts: (1) a **header file**, and (2) an
+**implementation file**. The header file—denoted by the extension
+`.h`—provides all of the function prototypes (e.g., names and types) and
+usage comments. The implementation file, denoted by the extension
+`.cpp`—implements everything in the header file.
+
+Libraries are a means of modularization—they break down and separate source
+code into smaller pieces. For example, consider the following program:
+
+For example, consider the following program:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+double absolute_value(double n) {
+	if (n < 0.0) {
+		return -1.0 * n;
+	} else if (n > 0.0) {
+		return n;
+	} else {
+		return 0;
+	}
+};
+
+double square(double n) {
+	return n * n;
+};
+
+double sqrt(double n) {
+	const double EPSILON = 0.001;
+	double lower, upper, guess;
+	if (n < 1) {
+		lower = n;
+		upper = 1;
+	} else {
+		lower = 1;
+		upper = n;
+	}
+	while ((upper - lower) > EPSILON) {
+		guess = (lower + upper) / 2;
+		if (square(guess) > n) {
+			upper = guess;
+		} else {
+			lower = guess;
+		}
+	}
+	return (lower + upper) / 2;
+};
+
+int main() {
+	double a = 4.0;
+	double b = square(a);
+	double c = sqrt(a);
+	cout << "The number is: " << a << endl;
+	cout << "It's square is: " << b << endl;
+	cout << "It's square root is: " << c << endl;
+	return 0;
+}
+```
+
+In the program above, we have three functions, `absolute_value()`,
+`square()`, and `square_root()`. The main driver, indicated by the function
+`main()`, is fairly simple. It just computes and outputs the square and
+square root of `4.0`. But just look at the size of this thing. It's huge,
+for a relatively simple computation. What we instead should do is "package"
+the functions `absolute_value()`, `square()`, and `square_root()` into a
+library.
+
+The first step is to write all of the function prototypes inside a header
+file. Following best practice, that file should be the name of our library.
+Let's call it `maths.h`:
+
+```cpp
+// maths.h
+double absolute_value(double n);
+double square(double n);
+double sqrt(double n);
+```
+
+Notice `maths.h` only contains the function protoypes. This is intentional.
+A header file represents the **interface**. It should only inform the user
+what the function does; implementation details shouldn't be presented.
+
+Second step: Implement the functions. All the details surrounding the
+interface's implementation (i.e., how the functions in the header file are
+implemented) are placed in a separate source code file. Again following
+best practice, that source code file should have the same name as the
+header file it implements. Thus, we'll call it `maths.cpp`:
+
+```cpp
+// maths.cpp
+#include "maths.h"
+
+double absolute_value(double n) {
+	if (n < 0.0) {
+		return -1.0 * n;
+	} else if (n > 0.0) {
+		return n;
+	} else {
+		return 0;
+	}
+};
+
+double square(double n) {
+	return n * n;
+};
+
+double sqrt(double n) {
+	const double EPSILON = 0.001;
+	double lower, upper, guess;
+	if (n < 1) {
+		lower = n;
+		upper = 1;
+	} else {
+		lower = 1;
+		upper = n;
+	}
+	while ((upper - lower) > EPSILON) {
+		guess = (lower + upper) / 2;
+		if (square(guess) > n) {
+			upper = guess;
+		} else {
+			lower = guess;
+		}
+	}
+	return (lower + upper) / 2;
+};
+```
+
+Notice the `#include maths.h`. This is what effectively tells C++ that
+`maths.cpp` implements `math.h`.
+
+Third step: We include the header file, `maths.h`, inside the main driver
+(a file named `main.cpp`):
+
+```cpp
+// main.cpp
+#include <iostream>
+#include "maths.h"
+using namespace std;
+
+int main() {
+	double a = 4.0;
+	double b = square(a);
+	double c = sqrt(a);
+	cout << "The number is: " << a << endl;
+	cout << "It's square is: " << b << endl;
+	cout << "It's square root is: " << c << endl;
+	return 0;
+}
+```
+
+Notice the `#include "maths.h"`. This effectively dumps all of the contents
+of `maths.h` into the `main.cpp`. Our main driver is now much, much shorter
+and cleaner.
+
+Now, to run this code, we'll need to compile `main.cpp` and `maths.cpp`,
+then link their resulting executables into a single executable.
+
+```bash
+g++ -c maths.cpp
+g++ -c main.cpp
+g++ -o mainProgram main.o maths.o
+./mainProgram
+
+The number is: 4
+It's square is: 16
+It's square root is: 2.00012
+```
+
+We can make the entire compilation and linking process above easier by
+writing a `Makefile`. To do so, we simply create a new file called
+`Makefile` inside our directory, and write the following code inside:
+
+```bash
+CC = g++
+CFLAGS = -Wall -g
+objects = main.o maths.o
+all: $(objects)
+clean:
+	$(RM) *.o all
+main: $(objects)
+	$(CC) $(CFLAGS) -o mainProgram $(objects)
+```
+
+This leads to a much faster and easier compilation and linking process:
+
+```bash
+make
+make main
+./mainProgram
+
+The number is: 4
+It's square is: 16
+It's square root is: 2.00012
+```
+
+Whenever we write `#include ${f}$`, where ${f}$ is some library, in our
+source code file, the underlying process is essentially what's seen above.
+The contents of ${f}$ are dumped into the source code file, where they are
+used and treated as if we wrote them directly into the source code file.

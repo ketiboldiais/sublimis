@@ -1,0 +1,293 @@
+# The Keyword "this"
+
+Right off the bat, here are the key rules behind the `this` keyword in
+JavaScript:
+
+1. `this` is an expression that serves as a reference to some environment.
+2. The value of `this` is determined at runtime.
+3. The default value of `this` is the global object.
+4. When an object method is called, the `this` keyword refers to the object
+   the method was called on.
+5. In strict mode, if a function's body uses the `this` keyword, the `this`
+   is undefined until the function is called.
+6. In an arrow function, the value of `this` is the value of `this` in the
+   arrow function's enclosing context.
+7. In a constructor call, `this` refers to the object being constructed.
+8. In an event handler, `this` refers to the element the event listener is
+   attached to.
+
+A variable declared with `var` in the global scope will be included in the
+`window` object as a property. But, variables declared with `let` and
+`const` will not be included. The `this` keyword is a keyword that
+references the current _execution scope_, and gives an _object_ back as its
+output. Thus, the returned object changes depending on the current
+execution's scope. The execution might have a global scope, or it might
+have some other scope—expression scope, block scope, function scope, etc.
+For example, consider the code below:
+
+```javascript
+function helloWorld() {
+	console.log("Hi");
+	console.log(this);
+}
+helloWorld();
+```
+
+```bash
+Window {
+	window: Window,
+	self: Window,
+	document: document,
+	name: "",
+	location: Location,
+	…
+}
+```
+
+In the code above, our function contains the statement,
+`console.log(this);`. This statement says, "JavaScript, display in the
+console this function's scope." In doing so, we get back an object called
+the `Window`. The window is the global scope in the browser. When we wrote
+the function `helloworld`, we wrote directly into the program, not under
+any other block. When we write functions like this, the functions are
+written in the _global scope_. When a function is written in the _global
+scope_, it becomes a property in the global scope object (in this case, the
+browser's global scope), and as such, we can call it with the usual object
+syntax: `window.functionName()`. The same goes for variables declared with
+`var` directly into the program (not inside any other block scope).
+
+```javascript
+var vector = 3;
+```
+
+By declaring the variable `vector` with the keyword `var` above, the name
+`vector` now becomes a property of the `Window` object, which we can call
+with `window.vector`. But, this rule does not apply to variables declared
+with the keywords `let` and `const`.
+
+# Why is 'this' so useful?
+
+Consider the code below, where we write a function using the `this` keyword
+inside an object:
+
+```javascript
+// An object containing the properties of tree ferns
+const treeFern = {
+	scientificName: "Dicksonia antarctica",
+	genus: "Dicksonia",
+	family: "Dicksoniaceae",
+	Order: "Cyatheales",
+	Class: "Polypodiopsida",
+	Division: "Polypodiophyta",
+	Kingdom: "Plantae",
+	allDetails() {
+		console.log(this);
+	},
+};
+treeFern.allDetails();
+```
+
+```bash
+{
+	scientificName: 'Dicksonia antarctica',
+	genus: 'Dicksonia',
+	family: 'Dicksoniaceae',
+	Order: 'Cyatheales',
+	Class: 'Polypodiopsida',
+	Division: 'Polypodiophyta',
+	Kingdom: 'Plantae',
+	allDetails: [Function: allDetails]
+}
+```
+
+In the example above, we wrote the function `allDetails()` inside the
+object `treeFern`. That function contains the statement
+`console.log(this);`, which tells JavaScript, "Display in the console this
+function's scope." When we call the function with object syntax,
+`treeFern.allDetails()`, we get back that the entire scope of that
+function, the object `treefern`.
+
+An astute observer might notice the immediate utility of the `this`
+keyword: It allows us to use the properties inside an object while writing
+statements inside said object.
+
+```javascript
+// Here is an object of some mathematical functions:
+const mathematician = {
+	firstName: "Renee",
+	lastName: "Descartes",
+	firstNameDisplay() {
+		console.log(this.firstName);
+	},
+};
+mathematician.firstNameDisplay();
+```
+
+```bash
+Renee
+```
+
+A more elaborate example:
+
+```javascript
+const RD = {
+	firstName: "Renee",
+	lastName: "Descartes",
+	notable: "Cartesian plane",
+	details() {
+		console.log(
+			`${this.firstName} ${this.lastName}, notable for the ${this.notable}.`,
+		);
+	},
+};
+RD.details();
+```
+
+```bash
+Renee Descartes, notable for the Cartesian plane.
+```
+
+# Using Destructuring Syntax with 'this'
+
+In the example above, we constantly had to write the `this` keyword. We can
+cut all of that out with the _destructuring syntax_:
+
+```javascript
+const rD = {
+	firstName: "Renee",
+	lastName: "Descartes",
+	notable: "Cartesian plane",
+	details() {
+		const { firstName, lastName, notable } = this;
+		console.log(`${firstName} ${lastName}, notable for the ${notable}.`);
+	},
+};
+rD.details(); // Output: Renee Descartes, notable for the Cartesian plane.
+```
+
+The `this` keyword allows us to write methods that can "see" the other
+properties inside the object.
+
+## Using the 'this' Keyword to Reference Methods
+
+We can use `this` to reference other methods inside an object:
+
+````javascript
+const sR = {
+	first: "Srinivasa",
+	last: "Ramanujan",
+	country: "India",
+	fullName() {
+		return `${this.first} ${this.last}`
+	},
+	summary() {
+		const fullName = this.fullName();
+		return `${fullName} is a mathematician from ${this.country}.`
+	}
+};
+console.log(sR.summary());
+```bash
+Srinivasa Ramanujan is a mathematician from India
+````
+
+## The Value of 'This'
+
+The value of the `this` keyword depends on how we invoke the function that
+uses it. Put simply, the value of the `this` keyword depends on <i>where we
+write it</i> and _how we write it_. To see this crucial point, consider the
+code below:
+
+```javascript
+// Same object from the preceding example.
+const sR = {
+	first: "Srinivasa",
+	last: "Ramanujan",
+	country: "India",
+	fullName() {
+		return `${this.first} ${this.last}`;
+	},
+	summary() {
+		const fullName = this.fullName();
+		return `${fullName} is mathematician from ${this.country}.`;
+	},
+};
+```
+
+Suppose we assign the method `SR.summary()` to a variable:
+
+```javascript
+const summary = sR.summary;
+```
+
+Now suppose we call that function:
+
+```javascript
+console.log(summary());
+```
+
+```bash
+TypeError: this.fullName is not a function
+```
+
+Compare the error above with the following code:
+
+```javascript
+// Same object from the preceding example.
+const sR = {
+	first: "Srinivasa",
+	last: "Ramanujan",
+	country: "India",
+	fullName() {
+		return `${this.first} ${this.last}`;
+	},
+	summary() {
+		console.log(this); // Let's see what the object is
+		const fullName = this.fullName();
+		return `${fullName} is mathematician from ${this.country}.`;
+	},
+};
+const summary = sR.summary;
+console.log(summary());
+```
+
+```bash
+Window {window: Window, self: Window, document: document, name: "", location: Location, …}
+Uncaught TypeError: this.fullName is not a function at summary
+```
+
+In the second example, we see that `this` is referencing the object
+`window`, the browser's global scope. If we instead just used the typical
+object key syntax rather than the variable:
+
+```javascript
+// Same object from the preceding example.
+const sR = {
+	first: "Srinivasa",
+	last: "Ramanujan",
+	country: "India",
+	fullName() {
+		return `${this.first} ${this.last}`;
+	},
+	summary() {
+		console.log(this);
+		const fullName = this.fullName();
+		return `${fullName} is mathematician from ${this.country}.`;
+	},
+};
+console.log(sR.summary());
+```
+
+```bash
+Output:
+{first: "Srinivasa", last: "Ramanujan", country: "India", fullName: ƒ, summary: ƒ}
+Srinivasa Ramanujan is mathematician from India.
+```
+
+Now we see that the value of `this` is the object it's contained in, `sR`,
+rather than the `window` object, the global scope.This shows that the value
+of `this` is determined by the way we invoke the function that uses the
+`this` keyword. One way to think about this: When we explicitly call the
+function with the object syntax, `object.function`, the value of `this` is
+the object itself. But, when we simply just call the function without
+explicitly stating the object, the value of `this` is the global scope
+object (which, in the browser, is the `window` object).

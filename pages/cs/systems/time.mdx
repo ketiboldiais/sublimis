@@ -1,0 +1,125 @@
+# Computer Time
+
+The gates we've implemented so far all execute instantenously. We can
+perform Boolean and arithmetic operations, but the operations occur all at
+once. This is because our implementations have been pure applications of
+**combinatorial logic** &mdash; the logical analysis of _fixed_
+propositions, or propositions whose truth values are predetermined.
+Computers, however, operate on **sequential logic** &mdash; the logical
+analysis of _variable_ propositions, or propositions whose truth values are
+not predetermined. The key difference between these two forms of logic:
+Combinatorial logic does not account for time, or change, but sequential
+logic does. With sequential logic, we're concerned with what happend
+"previously". For computers, the ability to "remember" &mdash; _memory_
+&mdash; is everything. It's what gives the digital calculator an upperhand
+over an abacus.
+
+Once we implement a way for our machine to recall, or remember, we suddenly
+have several features:
+
+1. Hardware components can be reused.
+
+2. State can be saved. This allows us to perform _loops_ &mdash; repeating
+   computations.
+
+3. Imposing speed limits.
+
+The final feature may seem odd, but it's crucial that computers do not
+perform computations faster than it can.
+
+In the real world, _time_ is a continuous scalar &mdash; a line with
+infinitely many points. Computers, however, are finite things, so they can
+only understand discrete values. Thus, we need a way to represent time for
+a computer. To do so, we divide time into discrete, equal-sized blocks.
+
+![Computer time](https://res.cloudinary.com/sublimis/image/upload/v1653171670/cs/computer_time_nauhft.svg)
+
+In computer terms, the length of each block is called a **cycle** &mdash;
+the computer's unit of time. Question: How do we divide time with a
+computer? With a device called a **clock**, or more generally, an
+electronic oscillator. The clock is a circuit that takes direct current
+(DC), and converts it into alternating current (AC) &mdash; `0` and `1`.
+This results in square waves, and each period of the square wave &mdash;
+the time between going from `1` (called a _tick_) to `0` (called a _tock_)
+and back to `1` &mdash; is the length of a block, or a cycle.
+
+![Computer time square wave](https://res.cloudinary.com/sublimis/image/upload/v1653171703/cs/computer_time_square_wave_smveam.svg)
+
+With this clock, we can assign each block a unique integer. The first block
+is `t=1`, the second block is `t=2`, the third block is `t=3`, and so on.
+And within each of these blocks, we can execute some operation with the
+gates we implemented. For example, maybe at `t=1` a logical `AND` is
+performed, then at `t=2` a logical `NOT` is performed, then an `ADD16`,
+etc:
+
+![Sequential functions](https://res.cloudinary.com/sublimis/image/upload/v1653171738/cs/sequential_functions_kjcmig.svg)
+
+Notice what we've accomplished &mdash; sequential operations; perform an
+`AND()`, then a `NOT()`, then an `ADD16()`. Let's iron out some of the
+details.
+
+The first problem with our approach is that the clock takes time to go from
+`0` to `1` (called the **rise time**) and from `1` to `0` (called the
+**fall time**). These are delays.
+
+![Jitter](https://res.cloudinary.com/sublimis/image/upload/v1653171768/cs/jitter_uu5bxa.svg)
+
+The fact is, signals never make instantaneous transitions from `0` to `1`.
+This extends to the logic gates themselves &mdash; it takes time for
+charges to build up and dissipate. This delay, called **propogation
+delay**, slows down the speed at which bits travel from one gate to
+another.
+
+Fortunately, there's a fix: Just make the blocks shorter. In other words,
+instead of defining the cycle as strictly the time it takes to go from `0`
+to `1`, we define the cycle as something shorter than that:
+
+![The actual cycle](https://res.cloudinary.com/sublimis/image/upload/v1653171807/cs/true_cycle_wbpw4f.svg)
+
+By defining the blocks in this way, we leave some time to account for
+delays; i.e., allowing the system to stabilize. In doing so, we do not have
+to concern ourselves with the complexities of delay handling. With this
+notion of time, sequential logic is now more apparent. To repeat, with
+combinatorial logic, we were effectively computing:
+
+$$
+	\texttt{out}(t) = f(\texttt{in}(t))
+$$
+
+In other words, the output of some Boolean function ${f}$ at time ${t}$ is
+the the result of operating on an input fed to the function at time ${t.}$
+This is instantaneous:
+
+![Combinatorial logic](https://res.cloudinary.com/sublimis/image/upload/v1653171855/cs/combinatorial_logic_erwhpm.svg)
+
+With sequential logic, we can now perform the following:
+
+$$
+	\texttt{out}(t) = f(\texttt{in}(t-1))
+$$
+
+I.e., the output of some Boolean function ${f}$ at time ${t}$ is the result
+of operating on an input fed to the function at time ${t-1.}$ I.e.,
+whatever input was fed in the previous cycle:
+
+![Sequential logic](https://res.cloudinary.com/sublimis/image/upload/v1653171907/cs/sequential_logic_lsuphw.svg)
+
+Because of this ability to use the output of the previous cycle, we do not
+necessarily have to output different bit, or bitstream, at each cycle.
+Instead, we can pass a single bit or bitstream through all of the wires,
+modifying that bit or bitstream as it passes through the gates:
+
+![State sequential logic](https://res.cloudinary.com/sublimis/image/upload/v1653171938/cs/state_sequential_rmvfef.svg)
+
+This evidences a key point in computing: Sequential logic is what
+introduces the notion of bits, or more broadly, objects, having a _state_.
+And because states exist, we can perform state-dependent computations:
+
+$$
+	\texttt{state}(t) = f(\texttt{state(t-1)})
+$$
+
+Indeed, it is precisely because sequential logic that we have a common
+dividing factor among programming languages &mdash; mutability (using a
+single object and changing its state) versus non-mutability (producing new
+objects and recalling as needed).

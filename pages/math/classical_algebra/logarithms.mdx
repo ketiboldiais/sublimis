@@ -1,0 +1,57 @@
+# Logarithms
+
+Consider the number 16. How many times can we divide 16 by 2? Let's try it:
+
+$$
+\begin{aligned}
+	16 / 2 &= 8 \\
+	8 / 2 &= 4 \\
+	4 / 2 &= 2 \\
+	2 / 2 &= 1
+\end{aligned}
+$$
+
+Above, we can see that we can divide the number 16 by 2 a total of 4 times.
+This corresponds to:
+
+$$
+\begin{aligned} 2 \cdot 2 \cdot 2 \cdot 2 &= 2^4 \\ &= 16 \end{aligned}
+$$
+
+The answer to "How many times can we divide a number ${n}$ by this constant
+${x?}$" is the **logarithm**. More formally:
+
+> _Definition_. Given ${b = a^x,}$ ${a \neq 1,}$ ${a > 0,}$ and
+> ${b > 0,}$ > ${a^x = b \iff x = \log_{a}b}$
+
+We say that ${x}$ is the logarithm in base ${a}$ of ${b.}$ The logarithm
+provides a way of deducing, and rewriting, the exponent of a number. For
+example:
+
+- ${2^3 = 8 \iff \log_{2}8 = 3}$
+- ${5^2 = 25 \iff \log_{5}25 = 2}$
+- ${10^3 = 1000 \iff \log_{10}1000 = 3}$
+
+Suppose that ${y = a^x.}$ From the definition above, it follows that
+${a =
+\log_{a}y.}$ Then, it follows then that ${x = \log_{a}a^x}$ by
+substitution. We state this as a corollary:
+
+> _Corollary_. ${x = \log_{a}a^x}$
+
+If ${x = a^y,}$ then again from the definition, ${y = \log_{a}x.}$ It
+follows that ${x = a^{\log_{a}x},}$ provided that ${x > 0.}$ We again state
+this as a corollary:
+
+> _Corollary_. ${x = a^{\log_{a}x},}$ where ${x > 0}$
+
+The definition and corollaries above directly lead to the **laws of
+logarithms**:
+
+> _Log Laws_. Where ${A, B \in \N,}$ ${c > 0,}$ and ${c \neq 1,}$
+>
+> $$
+> \begin{aligned} \log_{c}A + \log_{c}B &= \log_{c}(AB) \\[1em]
+> \log_{c}A - \log_{c}B &= \log_{c}\left(\dfrac{A}{B}\right) \\[1em] n
+> \log_{c}A &= \log_{c}(A^n) \end{aligned}
+> $$

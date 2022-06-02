@@ -1,0 +1,1174 @@
+pre {
+	width: auto;
+	height: auto;
+	text-align: left;
+	font-size: 0.8rem;
+	white-space: pre;
+	font-weight: normal;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+	-moz-tab-size: 2;
+	-o-tab-size: 2;
+	tab-size: 2;
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+pre {
+	margin: 0.5em auto;
+	padding: 0.5rem 0.6rem;
+	overflow: auto;
+	box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
+	border-radius: 0.3em !important;
+}
+
+pre.language-java {
+	color: rgb(255, 247, 228);
+	background-color: black;
+}
+code.language-java > .token.comment,
+code.language-java > .token.prolog,
+code.language-java > .token.doctype,
+code.language-java > .token.cdata {
+	color: rgb(134, 112, 124); /* base01 */
+	color: #a89984; /* base1 */
+}
+code.language-java > .token.punctuation {
+	color: rgb(221, 138, 184); /* base01 */
+}
+code.language-java > .token.namespace {
+	opacity: 0.7;
+}
+code.language-java > .token.property,
+code.language-java > .token.tag,
+code.language-java > .token.number,
+code.language-java > .token.constant,
+code.language-java > .token.symbol,
+code.language-java > .token.deleted {
+	color: #ffe590; /* blue */
+}
+code.language-java > .token.boolean,
+code.language-java > .token.class-name {
+	color: #b7ffed;
+}
+code.language-java > .token.selector,
+code.language-java > .token.attr-name,
+code.language-java > .token.string,
+code.language-java > .token.char,
+code.language-java > .token.builtin,
+code.language-java > .token.url,
+code.language-java > .token.inserted {
+	color: #9fff7c;
+}
+code.language-java > .token.entity {
+	color: #657b83; /* base00 */
+	background: #eee8d5; /* base2 */
+}
+code.language-java > .token.atrule,
+code.language-java > .token.attr-value,
+code.language-java > .token.keyword {
+	color: rgb(218, 174, 248); /* green */
+}
+code.language-java > .token.function,
+code.language-java > .token.operator {
+	color: rgb(255, 126, 126);
+}
+code.language-java > .token.regex,
+code.language-java > .token.important,
+code.language-java > .token.variable {
+	color: #cb4b16; /* orange */
+}
+code.language-java > .token.important,
+code.language-java > .token.bold {
+	font-weight: bold;
+}
+code.language-java > .token.italic {
+	font-style: italic;
+}
+code.language-java > .token.entity {
+	cursor: help;
+}
+code.language-java > pre[data-line] {
+	position: relative;
+	padding: 1em 0 1em 3em;
+}
+code.language-java > span.inline-color {
+	display: block;
+	/* To prevent visual glitches again */
+	height: 120%;
+	width: 120%;
+}
+/* Language - Pseudo */
+pre.language-pseudo {
+	padding: 1em 0;
+	color: black;
+	margin: 1% auto;
+	text-align: left;
+	height: fit-content;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	-moz-tab-size: 3;
+	-o-tab-size: 3;
+	tab-size: 3;
+	box-shadow: none;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+pre.language-pseudo code {
+	text-rendering: optimizeLegibility;
+}
+
+/* Language - Java */
+pre.language-java {
+	color: rgb(255, 247, 228); /* base00 */
+}
+:not(pre) > code.language-java,
+pre.language-java {
+	background-color: rgb(21, 31, 66);
+}
+/* Inline code */
+:not(pre) > code.language-java {
+	padding: 0.1em;
+	border-radius: 0.3em;
+}
+
+code.language-java > .token.comment,
+code.language-java > .token.prolog,
+code.language-java > .token.doctype,
+code.language-java > .token.cdata {
+	color: rgb(134, 112, 124); /* base01 */
+	color: #a89984; /* base1 */
+}
+code.language-java > .token.punctuation {
+	color: rgb(221, 138, 184); /* base01 */
+}
+code.language-java > .token.namespace {
+	opacity: 0.7;
+}
+code.language-java > .token.property,
+code.language-java > .token.tag,
+code.language-java > .token.number,
+code.language-java > .token.constant,
+code.language-java > .token.symbol,
+code.language-java > .token.deleted {
+	color: #ffe590; /* blue */
+}
+code.language-java > .token.boolean,
+code.language-java > .token.class-name {
+	color: #b7ffed;
+}
+code.language-java > .token.selector,
+code.language-java > .token.attr-name,
+code.language-java > .token.string,
+code.language-java > .token.char,
+code.language-java > .token.builtin,
+code.language-java > .token.url,
+code.language-java > .token.inserted {
+	color: #9fff7c;
+}
+code.language-java > .token.entity {
+	color: #657b83; /* base00 */
+	background: #eee8d5; /* base2 */
+}
+code.language-java > .token.atrule,
+code.language-java > .token.attr-value,
+code.language-java > .token.keyword {
+	color: rgb(218, 174, 248); /* green */
+}
+code.language-java > .token.function,
+code.language-java > .token.operator {
+	color: rgb(255, 126, 126);
+}
+code.language-java > .token.regex,
+code.language-java > .token.important,
+code.language-java > .token.variable {
+	color: #cb4b16; /* orange */
+}
+code.language-java > .token.important,
+code.language-java > .token.bold {
+	font-weight: bold;
+}
+code.language-java > .token.italic {
+	font-style: italic;
+}
+code.language-java > .token.entity {
+	cursor: help;
+}
+code.language-java > pre[data-line] {
+	position: relative;
+	padding: 1em 0 1em 3em;
+}
+code.language-java > span.inline-color {
+	display: block;
+	/* To prevent visual glitches again */
+	height: 120%;
+	width: 120%;
+}
+/* Language - Bash */
+pre[class="language-bash"] {
+	background: rgb(36, 36, 36);
+	color: white;
+}
+
+.command-line-prompt {
+	border-right: 1px solid rgb(121, 121, 121);
+	display: block;
+	float: left;
+	font-size: 100%;
+	letter-spacing: -1px;
+	margin-right: 0.6em;
+	pointer-events: none;
+
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.command-line-prompt > span:before {
+	color: rgb(126, 207, 192);
+	content: " ";
+	display: block;
+	padding-right: 0.4em;
+}
+
+.command-line-prompt > span[data-user]:before {
+	content: "$";
+}
+/* Language - Lisp */
+code[class="language-scheme"],
+pre[class="language-scheme"] {
+	color: rgb(54, 54, 54); /* base00 */
+}
+
+:not(pre) > code[class="language-scheme"],
+pre[class="language-scheme"] {
+	background-color: rgb(242, 249, 249); /* base3 */
+}
+
+code[class="language-scheme"] > .token.comment {
+	color: rgb(99, 144, 144);
+}
+
+code[class="language-scheme "] > .token.prolog,
+code[class="language-scheme"] > .token.doctype,
+code[class="language-scheme"] > .token.cdata {
+	color: #acc3c3; /* base1 */
+}
+
+code[class="language-scheme"] > .token.punctuation {
+	color: rgb(71, 71, 71);
+}
+
+code[class="language-scheme"] .token.function,
+code[class="language-scheme"] > .token.operator {
+	color: rgb(0, 70, 141);
+}
+
+code[class="language-scheme"] .token.property,
+code[class="language-scheme"] .token.tag,
+code[class="language-scheme"] .token.boolean,
+code[class="language-scheme"] .token.char,
+code[class="language-scheme"] .token.string,
+code[class="language-scheme"] .token.number {
+	color: rgb(59, 120, 207); /* blue */
+}
+
+code[class="language-scheme"] .token.url,
+code[class="language-scheme"] .token.inserted {
+	color: #d75a00; /* cyan */
+}
+
+code[class="language-scheme"] .token.car {
+	color: #82ead9; /* yellow */
+}
+
+code[class="language-scheme"] .token.atrule,
+code[class="language-scheme"] .token.attr-value,
+code[class="language-scheme"] .token.keyword {
+	color: #cd0000; /* green */
+}
+
+code[class="language-scheme"] .token.class-name {
+	color: rgb(206, 149, 250);
+}
+
+code[class="language-scheme"] .token.regex,
+code[class="language-scheme"] .token.important,
+code[class="language-scheme"] .token.variable {
+	color: #cb4b16; /* orange */
+}
+
+code[class="language-scheme"] .token.important,
+code[class="language-scheme"] .token.bold {
+	font-weight: bold;
+}
+code[class="language-scheme"] .token.italic {
+	font-style: italic;
+}
+
+code[class="language-scheme"] .token.entity {
+	cursor: help;
+}
+code[class="language-scheme"] .redText {
+	color: rgb(255, 91, 91);
+}
+
+pre[data-line] {
+	position: relative;
+	padding: 1em 0 1em 3em;
+}
+
+/* Inline code */
+:not(pre) > code[class="language-scheme"] .token {
+	color: white !important;
+}
+:not(pre) > code[class="language-scheme"] {
+	padding: 0.2em;
+	border-radius: 0.3em;
+	display: inline-block;
+	margin: 1px;
+	box-shadow: none;
+}
+
+/* Language - JavaScript */
+pre.language-javascript {
+	color: white;
+	background-color: rgb(32, 32, 32);
+}
+code[class="language-javascript"] > .token.dom {
+	color: rgb(195, 115, 3);
+}
+code[class="language-javascript"] > .token.comment,
+code[class="language-javascript"] > .token.block-comment {
+	color: rgb(163, 163, 163);
+}
+
+code[class="language-javascript"] .token.punctuation {
+	color: white;
+}
+code[class="language-javascript"] .token.interpolation-punctuation {
+	color: gold;
+}
+code[class="language-javascript"] .token.string,
+code[class="language-javascript"] .token.interpolation,
+code[class="language-javascript"] .token.char,
+code[class="language-javascript"] .token.boolean {
+	color: rgb(238, 172, 255);
+}
+code[class="language-javascript"] .token.number {
+	color: rgb(173, 255, 206);
+}
+code[class="language-javascript"] > .token.function {
+	color: rgb(255, 195, 42);
+}
+code[class="language-javascript"] > .token.operator {
+	color: rgb(255, 165, 101);
+}
+
+code[class="language-javascript"] > .token.property {
+	color: rgb(228, 237, 255);
+}
+
+code[class="language-javascript"] > .token.regex,
+code[class="language-javascript"] > .token.class-name,
+code[class="language-javascript"] > .token.symbol {
+	color: rgb(255, 102, 46);
+}
+code[class="language-javascript"] > .token.keyword {
+	color: cyan;
+}
+code[class="language-javascript"] > .token.control-flow {
+	color: greenyellow;
+	font-style: italic;
+}
+code[class="language-javascript"] .token.punctuation.brace-level-1,
+code[class="language-javascript"] .token.punctuation.brace-level-5,
+code[class="language-javascript"] .token.punctuation.brace-level-9 {
+	color: rgb(255, 123, 52);
+	opacity: 1;
+}
+code[class="language-javascript"] > .token.punctuation.brace-level-10,
+code[class="language-javascript"] > .token.punctuation.brace-level-2,
+code[class="language-javascript"] > .token.punctuation.brace-level-6 {
+	color: rgb(16, 255, 175);
+	opacity: 1;
+}
+code[class="language-javascript"] > .token.punctuation.brace-level-11,
+code[class="language-javascript"] > .token.punctuation.brace-level-3,
+code[class="language-javascript"] > .token.punctuation.brace-level-7 {
+	color: rgb(86, 136, 255);
+	opacity: 1;
+}
+code[class="language-javascript"] > .token.punctuation.brace-level-12,
+code[class="language-javascript"] > .token.punctuation.brace-level-4,
+code[class="language-javascript"] > .token.punctuation.brace-level-8 {
+	color: rgb(255, 131, 255);
+	opacity: 1;
+}
+/* Line numbers and buttons for code */
+pre[class*="language-"].line-numbers {
+	position: relative;
+	padding-left: 3.8em;
+	counter-reset: linenumber;
+}
+pre[class*="language-"].line-numbers > code {
+	position: relative;
+	white-space: inherit;
+}
+.line-numbers .line-numbers-rows {
+	position: absolute;
+	pointer-events: none;
+	top: 0;
+	font-size: 100%;
+	left: -4em;
+	width: 3em;
+	letter-spacing: -1px;
+	border-right: 1px solid #999;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+.line-numbers-rows > span {
+	display: block;
+	counter-increment: linenumber;
+}
+.line-numbers-rows > span:before {
+	content: counter(linenumber);
+	color: #999;
+	display: block;
+	padding-right: 0.8em;
+	text-align: right;
+}
+div.code-toolbar {
+	position: relative;
+}
+div.code-toolbar > .toolbar {
+	position: absolute;
+	z-index: 10;
+	top: 0.3em;
+	right: 0.2em;
+	transition: opacity 0.3s ease-in-out;
+	opacity: 0;
+}
+div.code-toolbar:hover > .toolbar {
+	opacity: 1;
+}
+div.code-toolbar:focus-within > .toolbar {
+	opacity: 1;
+}
+div.code-toolbar > .toolbar > .toolbar-item {
+	display: inline-block;
+}
+div.code-toolbar > .toolbar > .toolbar-item > a {
+	cursor: pointer;
+}
+div.code-toolbar > .toolbar > .toolbar-item > button {
+	background: 0 0;
+	margin: 0 3px;
+	border: 0;
+	color: inherit;
+	font: inherit;
+	line-height: normal;
+	overflow: visible;
+	padding: 0;
+}
+div.code-toolbar > .toolbar > .toolbar-item > a,
+div.code-toolbar > .toolbar > .toolbar-item > button,
+div.code-toolbar > .toolbar > .toolbar-item > span {
+	color: #bbb;
+	font-size: 0.8em;
+	padding: 0 0.5em;
+	background: #f5f2f0;
+	background: rgba(224, 224, 224, 0.2);
+	box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.2);
+	border-radius: 0.5em;
+}
+div.code-toolbar > .toolbar > .toolbar-item > a:focus,
+div.code-toolbar > .toolbar > .toolbar-item > a:hover,
+div.code-toolbar > .toolbar > .toolbar-item > button:focus,
+div.code-toolbar > .toolbar > .toolbar-item > button:hover,
+div.code-toolbar > .toolbar > .toolbar-item > span:focus,
+div.code-toolbar > .toolbar > .toolbar-item > span:hover {
+	color: inherit;
+	text-decoration: none;
+}
+/* Language - Ruby */
+code.language-ruby,
+pre.language-ruby {
+	color: rgb(68, 68, 68);
+}
+:not(pre) > code.language-ruby,
+pre.language-ruby {
+	background-color: rgb(255, 241, 241);
+}
+code.language-ruby > .token.comment,
+code.language-ruby > .token.block-comment {
+	color: rgb(163, 163, 163);
+}
+
+code.language-ruby > .token.punctuation {
+	color: rgb(218, 0, 0);
+}
+
+code.language-ruby > .token.string,
+code.language-ruby > .token.char,
+code.language-ruby > .token.boolean,
+code.language-ruby > .token.number {
+	color: rgb(160, 0, 200);
+}
+code.language-ruby > .token.method-definition {
+	color: rgb(31, 135, 0);
+}
+code.language-ruby > .token.operator {
+	color: rgb(65, 109, 255);
+}
+
+code.language-ruby > .token.property {
+	color: rgb(228, 237, 255);
+}
+
+code.language-ruby > .token.regex,
+code.language-ruby > .token.class-name,
+code.language-ruby > .token.symbol {
+	color: rgb(229, 0, 0);
+}
+code.language-ruby > .token.keyword {
+	color: rgb(0, 143, 143);
+}
+code.language-ruby > .token.control-flow {
+	color: rgb(3, 164, 0);
+	font-style: italic;
+}
+/* Language - C */
+pre.language-c {
+	background-color: rgb(43, 43, 43);
+}
+pre.language-c {
+	color: white;
+}
+code.language-c > .token.comment {
+	color: lightgrey;
+}
+code.language-c > .token.prolog,
+code.language-c > .token.doctype,
+code.language-c > .token.cdata {
+	color: cyan; /* base1 */
+}
+code.language-c > .token.punctuation {
+	color: white;
+}
+code.language-c > .token.operator {
+	color: rgb(0, 255, 242);
+}
+code.language-c > .token.property,
+code.language-c > .token.tag,
+code.language-c > .token.boolean,
+code.language-c > .token.number,
+code.language-c > .token.string,
+code.language-c > .token.constant,
+code.language-c > .token.symbol {
+	color: rgb(255, 160, 255);
+}
+code.language-c > .token.selector,
+code.language-c > .token.attr-name,
+code.language-c > .token.char,
+code.language-c > .token.builtin,
+code.language-c > .token.url,
+code.language-c > .token.inserted {
+	color: #f3f3f3; /* cyan */
+}
+code.language-c > .token.entity {
+	color: #657b83; /* base00 */
+	background: #eee8d5; /* base2 */
+}
+code.language-c > .token.atrule,
+code.language-c > .token.attr-value {
+	color: lime;
+}
+code.language-c > .token.keyword,
+code.language-c > .token.directive-hash {
+	color: gold;
+}
+code.language-c > .token.function,
+code.language-c > .token.class-name {
+	color: rgb(255, 115, 115); /* yellow */
+}
+code.language-c > .token.regex,
+code.language-c > .token.important,
+code.language-c > .token.variable {
+	color: orange; /* orange */
+}
+code.language-c > .token.important,
+code.language-c > .token.bold {
+	font-weight: bold;
+}
+code.language-c > .token.italic {
+	font-style: italic;
+}
+code.language-c > .token.entity {
+	cursor: help;
+}
+/* Language - C++ */
+pre.language-cpp {
+	background-color: rgb(32, 13, 40);
+	color: whitesmoke;
+}
+code.language-cpp > .token.comment {
+	color: rgb(130, 130, 130);
+}
+code.language-cpp > .token.prolog,
+code.language-cpp > .token.doctype,
+code.language-cpp > .token.cdata {
+	color: cyan;
+}
+code.language-cpp > .token.operator {
+	color: cyan;
+}
+code.language-cpp > .token.property,
+code.language-cpp > .token.tag,
+code.language-cpp > .token.boolean,
+code.language-cpp > .token.number,
+code.language-cpp > .token.char,
+code.language-cpp > .token.string,
+code.language-cpp > .token.constant,
+code.language-cpp > .token.symbol {
+	color: lime;
+}
+code.language-cpp > .token.selector,
+code.language-cpp > .token.attr-name,
+code.language-cpp > .token.builtin,
+code.language-cpp > .token.url,
+code.language-cpp > .token.inserted {
+	color: #f3f3f3;
+}
+code.language-cpp > .token.atrule,
+code.language-cpp > .token.attr-value {
+	color: var(--codeLimeGreen);
+}
+code.language-cpp > .token.keyword,
+code.language-cpp > .token.directive-hash {
+	color: rgb(231, 187, 255);
+}
+code.language-cpp > .token.function,
+code.language-cpp > .token.class-name,
+code.language-cpp > .token.regex,
+code.language-cpp > .token.important,
+code.language-cpp > .token.variable {
+	color: yellowgreen;
+}
+/* Language - Prolog */
+code[class="language-prolog"] > .token.comment,
+code[class="language-prolog"] > .token.prolog,
+code[class="language-prolog"] > .token.doctype,
+code[class="language-prolog"] > .token.cdata {
+	color: hsl(0, 0%, 47%); /* #777777 */
+}
+
+code[class="language-prolog"] > .token.punctuation {
+	opacity: 0.7;
+}
+
+code[class="language-prolog"] > .token.namespace {
+	opacity: 0.7;
+}
+
+code[class="language-prolog"] > .token.tag,
+code[class="language-prolog"] > .token.boolean,
+code[class="language-prolog"] > .token.number,
+code[class="language-prolog"] > .token.deleted {
+	color: hsl(14, 58%, 55%); /* #CF6A4C */
+}
+
+code[class="language-prolog"] > .token.keyword,
+code[class="language-prolog"] > .token.property,
+code[class="language-prolog"] > .token.selector,
+code[class="language-prolog"] > .token.constant,
+code[class="language-prolog"] > .token.symbol,
+code[class="language-prolog"] > .token.builtin {
+	color: hsl(53, 89%, 79%); /* #F9EE98 */
+}
+
+code[class="language-prolog"] > .token.attr-name,
+code[class="language-prolog"] > .token.attr-value,
+code[class="language-prolog"] > .token.string,
+code[class="language-prolog"] > .token.char,
+code[class="language-prolog"] > .token.operator,
+code[class="language-prolog"] > .token.entity,
+code[class="language-prolog"] > .token.url,
+code[class="language-prolog"] > .language-css .token.string,
+code[class="language-prolog"] > .style .token.string,
+code[class="language-prolog"] > .token.variable,
+code[class="language-prolog"] > .token.inserted {
+	color: hsl(76, 21%, 52%); /* #8F9D6A */
+}
+
+code[class="language-prolog"] > .token.atrule {
+	color: hsl(218, 22%, 55%); /* #7587A6 */
+}
+
+code[class="language-prolog"] > .token.regex,
+code[class="language-prolog"] > .token.important {
+	color: hsl(42, 75%, 65%); /* #E9C062 */
+}
+
+code[class="language-prolog"] > .token.important,
+code[class="language-prolog"] > .token.bold {
+	font-weight: bold;
+}
+code[class="language-prolog"] > .token.italic {
+	font-style: italic;
+}
+
+code[class="language-prolog"] > .token.entity {
+	cursor: help;
+}
+
+code[class="language-prolog"] > pre[data-line] {
+	padding: 1em 0 1em 3em;
+	position: relative;
+}
+
+/* Markup */
+code[class="language-prolog"] > .language-markup .token.tag,
+code[class="language-prolog"] > .language-markup .token.attr-name,
+code[class="language-prolog"] > .language-markup .token.punctuation {
+	color: hsl(33, 33%, 52%); /* #AC885B */
+}
+/* Language - Swift */
+code.language-swift,
+pre.language-swift {
+	color: rgb(39, 39, 39); /* base00 */
+	background-color: rgb(255, 255, 255);
+}
+
+/* Keywords */
+code.language-swift > .token.comment,
+code.language-swift > .token.block-comment,
+code.language-swift > .token.prolog,
+code.language-swift > .token.doctype,
+code.language-swift > .token.cdata {
+	color: rgb(109, 127, 141);
+}
+
+code.language-swift > .token.operator {
+	color: rgb(0, 103, 221);
+}
+
+code.language-swift > .token.punctuation {
+	color: rgb(39, 39, 39);
+}
+
+code.language-swift > .token.builtin {
+	color: rgb(35, 111, 116);
+}
+
+code.language-swift > .token.property,
+code.language-swift > .token.tag,
+code.language-swift > .token.boolean,
+code.language-swift > .token.number,
+code.language-swift > .token.function-name,
+code.language-swift > .token.constant,
+code.language-swift > .token.symbol,
+code.language-swift > .token.string,
+code.language-swift > .token.char,
+code.language-swift > .token.deleted {
+	color: rgb(230, 19, 19);
+}
+
+code.language-swift > .token.selector,
+code.language-swift > .token.attr-name,
+code.language-swift > .token.function,
+code.language-swift > .token.inserted {
+	color: rgb(93, 0, 178);
+}
+
+code.language-swift > .token.entity,
+code.language-swift > .token.url,
+code.language-swift > .token.variable {
+	color: #0f854e;
+}
+
+code.language-swift > .token.atrule,
+code.language-swift > .token.attr-value,
+code.language-swift > .token.keyword,
+code.language-swift > .token.class-name {
+	color: rgb(192, 0, 163);
+}
+
+code.language-swift > .token.regex,
+code.language-swift > .token.important {
+	color: rgb(255, 221, 158);
+}
+
+code.language-swift > .language-css .token.string,
+code.language-swift > .style .token.string {
+	color: #a67f59;
+	background: rgba(255, 255, 255, 0.5);
+}
+
+code.language-swift > .token.important {
+	font-weight: normal;
+}
+
+code.language-swift > .token.bold {
+	font-weight: bold;
+}
+code.language-swift > .token.italic {
+	font-style: italic;
+}
+
+code.language-swift > .token.entity {
+	cursor: help;
+}
+
+code.language-swift > .token.namespace {
+	opacity: 0.7;
+}
+/* Language - Python */
+code.language-python,
+pre.language-python {
+	color: white;
+}
+
+:not(pre) > code.language-python,
+pre.language-python {
+	background: rgb(28, 41, 53);
+}
+
+code.language-python > .token.comment,
+code.language-python > .token.triple-quoted-string.string,
+code.language-python > .token.block-comment,
+code.language-python > .token.prolog,
+code.language-python > .token.doctype,
+code.language-python > .token.cdata {
+	color: rgb(112, 136, 136);
+}
+
+code.language-python > .token.punctuation {
+	color: rgb(255, 255, 255);
+}
+
+code.language-python > .token.tag,
+code.language-python > .token.attr-name,
+code.language-python > .token.namespace,
+code.language-python > .token.deleted {
+	color: #e2777a;
+}
+
+code.language-python > .token.function-name {
+	color: #70f7e0;
+}
+
+code.language-python > .token.boolean,
+code.language-python > .token.number,
+code.language-python > .token.function {
+	color: rgb(255, 118, 111);
+}
+
+code.language-python > .token.property,
+code.language-python > .token.class-name,
+code.language-python > .token.constant,
+code.language-python > .token.symbol {
+	color: #2cf8ff;
+}
+
+code.language-python > .token.selector,
+code.language-python > .token.important,
+code.language-python > .token.atrule,
+code.language-python > .token.keyword {
+	color: #feb1ff;
+}
+
+code.language-python > .token.builtin {
+	color: rgb(139, 255, 211);
+}
+code.language-python > .token.string-interpolation {
+	color: #f8c555;
+}
+code.language-python > .token.string-interpolation > .token.interpolation {
+	color: rgb(255, 245, 187);
+}
+
+code.language-python > .token.string,
+code.language-python > .token.char,
+code.language-python > .token.attr-value,
+code.language-python > .token.regex,
+code.language-python > .token.variable {
+	color: #ffdf9b;
+}
+
+code.language-python > .token.operator,
+code.language-python > .token.entity,
+code.language-python > .token.url {
+	color: #6fe7e5;
+}
+
+code.language-python > .token.important,
+code.language-python > .token.bold {
+	font-weight: bold;
+}
+code.language-python > .token.italic {
+	font-style: italic;
+}
+
+code.language-python > .token.entity {
+	cursor: help;
+}
+
+code.language-python > .token.inserted {
+	color: green;
+}
+/* Language - SML */
+code.language-sml,
+pre.language-sml {
+	color: var(--codeWhite);
+}
+
+:not(pre) > code.language-sml,
+pre.language-sml {
+	background: var(--codePurpleBG);
+}
+
+code.language-sml > .token.comment,
+code.language-sml > .token.triple-quoted-string.string,
+code.language-sml > .token.block-comment,
+code.language-sml > .token.prolog,
+code.language-sml > .token.doctype,
+code.language-sml > .token.cdata {
+	color: var(--commentLavender);
+}
+
+code.language-sml > .token.punctuation {
+	color: var(--punctuationLavender);
+}
+
+code.language-sml > .token.tag,
+code.language-sml > .token.attr-name,
+code.language-sml > .token.namespace,
+code.language-sml > .token.deleted {
+	color: #ff5056;
+}
+
+code.language-sml > .token.function-name,
+code.language-sml > .token.function {
+	color: rgb(236, 218, 159);
+}
+
+code.language-sml > .token.number {
+	color: rgb(255, 157, 0);
+}
+
+code.language-sml > .token.boolean,
+code.language-sml > .token.property,
+code.language-sml > .token.constant,
+code.language-sml > .token.symbol {
+	color: rgb(119, 255, 153);
+}
+
+code.language-sml > .token.class-name {
+	color: rgb(255, 146, 255);
+}
+
+code.language-sml > .token.selector,
+code.language-sml > .token.important,
+code.language-sml > .token.atrule,
+code.language-sml > .token.keyword {
+	color: rgb(64, 215, 226);
+}
+
+code.language-sml > .token.builtin {
+	color: rgb(167, 228, 110);
+}
+code.language-sml > .token.string-interpolation {
+	color: #f8c555;
+}
+code.language-sml > .token.string-interpolation > .token.interpolation {
+	color: rgb(255, 245, 187);
+}
+
+code.language-sml > .token.string,
+code.language-sml > .token.char,
+code.language-sml > .token.attr-value,
+code.language-sml > .token.regex,
+code.language-sml > .token.variable {
+	color: #f8c555;
+}
+
+code.language-sml > .token.operator,
+code.language-sml > .token.entity,
+code.language-sml > .token.url {
+	color: rgb(247, 97, 92);
+}
+
+code.language-sml > .token.important,
+code.language-sml > .token.bold {
+	font-weight: bold;
+}
+code.language-sml > .token.italic {
+	font-style: italic;
+}
+
+code.language-sml > .token.entity {
+	cursor: help;
+}
+
+code.language-sml > .token.inserted {
+	color: green;
+}
+/* Language - Haskell */
+pre.language-haskell,
+pre.language-haskell code {
+	color: var(--HaskellPrimary);
+	background-color: var(--HaskellBackground);
+}
+
+code.language-haskell > .token.comment,
+code.language-haskell > .token.block-comment,
+code.language-haskell > .token.prolog,
+code.language-haskell > .token.doctype,
+code.language-haskell > .token.cdata {
+	color: var(--HaskellComment);
+}
+
+code.language-haskell > .token.punctuation {
+	color: var(--HaskellPrimary);
+}
+code.language-haskell > .token.hvariable {
+	color: var(--HaskellFunctionName);
+}
+code.language-haskell > .token.tag,
+code.language-haskell > .token.attr-name,
+code.language-haskell > .token.namespace,
+code.language-haskell > .token.deleted {
+	color: var(--HaskellPrimary);
+}
+
+code.language-haskell > .token.function-name {
+	color: var(--HaskellFunction);
+}
+
+code.language-haskell > .token.boolean,
+code.language-haskell > .token.string,
+code.language-haskell > .token.char,
+code.language-haskell > .token.number,
+code.language-haskell > .token.function {
+	color: var(--HaskellLiteral);
+}
+
+code.language-haskell > .token.property,
+code.language-haskell > .token.class-name,
+code.language-haskell > .token.constant,
+code.language-haskell > .token.symbol {
+	color: var(--HaskellPrimary);
+}
+
+code.language-haskell > .token.selector,
+code.language-haskell > .token.operator,
+code.language-haskell > .token.important,
+code.language-haskell > .token.atrule,
+code.language-haskell > .token.keyword {
+	color: var(--HaskellKeyword);
+}
+
+code.language-haskell > .token.string-interpolation {
+	color: #f8c555;
+}
+code.language-haskell
+	> .token.string-interpolation
+	> .token.interpolation {
+	color: rgb(255, 245, 187);
+}
+
+code.language-haskell > .token.attr-value,
+code.language-haskell > .token.regex,
+code.language-haskell > .token.variable {
+	color: rgb(199, 255, 145);
+}
+
+code.language-haskell > .token.entity,
+code.language-haskell > .token.url {
+	color: #6fe7e5;
+}
+
+code.language-haskell > .token.important,
+code.language-haskell > .token.bold {
+	font-weight: bold;
+}
+code.language-haskell > .token.italic {
+	font-style: italic;
+}
+
+code.language-haskell > .token.entity {
+	cursor: help;
+}
+
+code.language-haskell > .token.inserted {
+	color: green;
+}
+/* Language - Rust */
+pre.language-rust,
+pre.language-rust code {
+	color: black;
+	background-color: white;
+}
+code.language-rust > .token.comment {
+	color: rgb(132, 175, 192);
+}
+/* Language - HTML */
+pre.language-html {
+	background-color: white;
+	color: var(--textColor);
+}
+code.language-html > .token.comment,
+code.language-html > .token.doctype {
+	color: rgb(145, 145, 145);
+}
+code.language-html > .token.tag {
+	color: rgb(0, 92, 157);
+}
+code.language-html > .token.tag .token.punctuation {
+	color: tomato;
+}
+
+/* Language - Verilog */
+pre.language-verilog {
+	background-color: #1e3163;
+}
+pre.language-verilog code {
+	color: white;
+}
+code.language-verilog .token.keyword-module,
+code.language-verilog .token.keyword-endmodule {
+	color: tomato;
+}
+code.language-verilog .token.keyword-input {
+	color: rgb(255, 245, 158);
+}
+code.language-verilog .token.keyword-output {
+	color: rgb(255, 191, 131);
+}
+code.language-verilog .token.comment {
+	color: rgb(156, 190, 212);
+}
+code.language-verilog .token.operator {
+	color: gold;
+}
+code.language-verilog .token.punctuation {
+	color: greenyellow;
+}
+code.language-verilog .token.number {
+	color: var(--codeBrightBlue);
+}
+code.language-verilog .token.function {
+	color: #f7aeff;
+}

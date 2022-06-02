@@ -1,0 +1,196 @@
+
+# RAM
+
+RAM is a chip the computer uses to store a program's instructions, and the data those instructions operate on. This is a very high-level overview. To understand what this means, let's see how the RAM is built. To do so, let's review how registers work.
+
+As we saw earlier, we can arrange ${w}$ binary cells to form an ${w}$-bit register. Knowing that, we can now forget about the register's implementation details and just think of it as a single chip:
+
+![Multibit register](https://res.cloudinary.com/sublimis/image/upload/v1653172496/cs/multibit_register_xcnxhj.svg)
+
+In the diagram above, the register consumes its inputs with a ${w}$-bit bus, and produces with a ${w}$-bit bus of outputs. The register has a __width__, ${w,}$ which is the number of binary cells comprising the register. As we'll see in later sections, because we never actually work with bitstreams directly when we're programming in a high-level language (at that level of abstraction, we're working with registers indirectly), the register's width is also called the __word size__.
+
+Alongside the word size, the register also has a __state__ &mdash; the current sequence of outputs in each of the register's ${w}$ binary cells. Because those outputs can be given meaning, the register's state can also be defined as the current _value_ being expressed by the register. Or even more abstractly, the current _data_ stored in the register.
+
+As we saw with the register's implementation, with the use of a `load` bit, there are two actions we can perform: (1) access, or in computer science terms, __read__, the data currently stored in the register, or (2) change, or __write__, the data inside the register. To read the register, we simply set the `load` bit to `0`.
+
+```verilog
+// Read the register
+set out = 0;
+```
+To write the register:
+```verilog
+// Write the register
+set in   = v;
+set load = 1;
+```
+
+where `v` is the new value we want the register to store. So we have a single register. Implementing a ${16}$-bit register in HDL is just a matter of wiring together ${16}$ binary cells:
+
+```verilog
+module Register (in[16], load, out[16]);
+
+	input in[16], load;
+	output out[16];
+
+	PARTS:
+		Bit(in=in[0],  load=load,  out=out[0]);
+		Bit(in=in[1],  load=load,  out=out[1]);
+		Bit(in=in[2],  load=load,  out=out[2]);
+		Bit(in=in[3],  load=load,  out=out[3]);
+		Bit(in=in[4],  load=load,  out=out[4]);
+		Bit(in=in[5],  load=load,  out=out[5]);
+		Bit(in=in[6],  load=load,  out=out[6]);
+		Bit(in=in[7],  load=load,  out=out[7]);
+		Bit(in=in[8],  load=load,  out=out[8]);
+		Bit(in=in[9],  load=load,  out=out[9]);
+		Bit(in=in[10], load=load,  out=out[10]);
+		Bit(in=in[11], load=load,  out=out[11]);
+		Bit(in=in[12], load=load,  out=out[12]);
+		Bit(in=in[13], load=load,  out=out[13]);
+		Bit(in=in[14], load=load,  out=out[14]);
+		Bit(in=in[15], load=load,  out=out[15]);
+
+endmodule
+```
+
+Where does the RAM come in? Well, RAM is just a chip that encapsulates a _stack_ of these registers:
+
+![RAM Registers](https://res.cloudinary.com/sublimis/image/upload/v1653172550/cs/ram_registers_x3haed.svg)
+
+In the schematic above, we see that the RAM consists of a stack of registers. If there are ${n}$ registers, we say that the RAM constitutes ${n}$-register memory, or, in short, RAM${n.}$ Thus, for an ${8}$ register RAM, we have RAM8, and for a ${64}$ register RAM, we have RAM64.
+
+
+The RAM has ${5}$ pins: four pins for inputs, and one pin for output.
+The four pins:
+
+
+1. An `in` pin to feed new data into some register.
+2. A `load` pin to toggle between reading and writing some register.
+3. A `clock` pin to feed the clock's output.
+4. And an `address` pin to feed an address.
+
+
+Wait. What address? Well, since the registers are stacked, they inherently have order. The topmost register can be interpreted as the first register, and the bottommost register can be interpreted as the last register. And because they have an inherent order, each register has a _unique_ place among the other registers.
+
+Thus, by address, we mean a particular bitstream that, when passed to some computation, produces a partricular register's place in the stack.  This is demonstrated by the diagram: Notice that all of the inputs are fed into a dashed box labeled _direct access logic_.
+
+This box represents the RAM's separate internal logic. It's not really a chip (hence the dashed box); it's the algorithm underlying the RAM's mechanism. So what does this direct access logic do? It takes the address passed and determines which register we're referring to. Once it makes that determination, it either reads or writes the data inside that particular register, depending on the `load` bit. If the `load` bit is `0`, it sends the bits passed to `in` to the correct register. And if we want to read a particular register's data, we simply pass that register's address to the RAM. The RAM identifies the address, and its `out` becomes the final `out`.
+
+```verilog
+/* 
+*
+* Let: 
+*   S ≔ state of the selected register
+*   α ≔ unique some address
+*   𝑣 ≔ some value
+*
+*/
+
+// To read:
+set(address) = α
+set(in)      = 𝑣
+
+// To write:
+set(address) = α
+set(in)      = 𝑣
+set(load)    = 1
+
+if load ≡ 1 then {
+	S   = in
+	out = S      // from the next cycle onward
+}
+else out = S
+```
+
+Again, registers do not have hardcoded addresses. It's pure logic. We think of them as having addresses because once we take a step back and abstract away the implementation details, they truly seem to have addresses. So what do these addresses look like? They're just unique bitstreams. For example, suppose we have a RAM8. This RAM consists of ${8}$ registers. To give them unique addresses, we just need ${3}$ bits, since ${3}$ bits produces eight unique bitstreams. With RAM4, that's four registers, so we need ${2}$ bits, since ${2^2 = 4.}$ Based on this analysis, we have the following proposition.
+
+
+> _Definition: Minimum Address Width_.  Given a RAM${n,}$ where ${n}$ is the number of registers in the RAM, the number of ${k}$ bits needed to assign unique addresses to each register is:
+> $$
+>		k = \log_{2}n
+> $$
+
+
+In the diagram above, we indicate this proposition by denoting the `address` input as a bus of ${k}$ width. Before doing so, we should state some implications of this design
+approach:
+
+
+1. Given a sequence of ${n}$ addressable registers, the addresses are ${0}$ to ${n-1.}$
+
+2. At any given point in time, only <em>one</em> register in the RAM is selected.
+
+So what does the implementation look like? It turns out that all we need is an ${8}$-way demultiplexor and an ${8}$-way demultiplexor:
+
+![RAM schematic](https://res.cloudinary.com/sublimis/image/upload/v1653172719/cs/ram_detail_vqs8vl.svg)
+
+Recall that with an ${n}$-way demultiplexor, we feed some input into the multiplexor, and depending on the sequence of `sel` lines, it selects one, and only one, of its ${n}$ output pins to output from.  The same goes for the ${n}$-way multiplexor; depending on the sequence of its `sel` lines, it selects one, and only one, of its ${n}$ input pins to take input from. Thus, in the schematic above, the `sel` line is actually a ${3}$-bit bus. That bus takes an _address_, and it's fed to both the 8-way multiplexor and 8-way demultiplexor as `sel` inputs. Depending on the particular sequence of bits passed to it, both gates select the corresponding register. In HDL:
+
+```verilog
+module RAM8(in[16], load, address[3]);
+
+	input  in[16], load, address[3];
+	output out[16];
+
+	PARTS:
+		DMux8Way(
+			in=load, 
+			sel=address, 
+			a=load0, b=load1, c=load2, d=load3, 
+			e=load4, f=load5, g=load6, h=load7
+		);
+
+		Register(in=in, load=load0, out=out0);
+		Register(in=in, load=load1, out=out1);
+		Register(in=in, load=load2, out=out2);
+		Register(in=in, load=load3, out=out3);
+		Register(in=in, load=load4, out=out4);
+		Register(in=in, load=load5, out=out5);
+		Register(in=in, load=load6, out=out6);
+		Register(in=in, load=load7, out=out7);
+
+		Mux8Way16(
+			a=out0, b=out1, c=out2, 
+			d=out3, e=out4, f=out5, 
+			g=out6, h=out7, 
+			sel=address, 
+			out=out
+		);
+
+endmodule
+```
+
+Examining this implementation, we see that implementing larger RAM chips is almost trivial. A RAM64 chip is just a stack of ${8}$ RAM8 chips. Thus, we again employ an ${8}$-way demultiplexor and an ${8}$-way multiplexor, only this time we're wiring RAM8 chips instead of RAM64 chips. And since a RAM64 chip requires ${6}$ bits to form unique addresses, we use ${3}$ bits to access the ${8}$ RAM8 chips, and ${3}$ bits to access the registers inside each ${8}$ RAM8 chip:
+
+```verilog
+module RAM64(in[16], load, address[6], out[16])
+		input  in[16], load, address[6];
+		output out[16];
+
+	PARTS:
+		DMux8Way(
+			in=load, 
+			sel=address[3..5], 
+			a=load0, b=load1, c=load2, d=load3, 
+			e=load4, f=load5, g=load6, h=load7
+		);
+
+		RAM8(in=in, load=load0, address=address[0..2], out=out0);
+		RAM8(in=in, load=load1, address=address[0..2], out=out1);
+		RAM8(in=in, load=load2, address=address[0..2], out=out2);
+		RAM8(in=in, load=load3, address=address[0..2], out=out3);
+		RAM8(in=in, load=load4, address=address[0..2], out=out4);
+		RAM8(in=in, load=load5, address=address[0..2], out=out5);
+		RAM8(in=in, load=load6, address=address[0..2], out=out6);
+		RAM8(in=in, load=load7, address=address[0..2], out=out7);
+
+		Mux8Way16(
+			a=out0, b=out1, c=out2, d=out3, 
+			e=out4, f=out5, g=out6, h=out7, 
+			sel=address[3..5], 
+			out=out
+		);
+
+endmodule
+```
+
+We now have RAM. This is really quite remarkable. We went from fire signals to computer memory.

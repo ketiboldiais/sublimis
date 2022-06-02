@@ -1,0 +1,567 @@
+import Tab from "@components/Tab/Tab";
+
+# Heaps
+
+The notes below concern the **heap** data structure and its variants.
+Importantly, everything that applies to trees applies to heaps.
+
+## Binary Heap
+
+The most basic and common variant of the heap data structure is the
+**binary heap**. There are two subvariants &mdash; the **min binary heap**
+(**minBH**, the tree to the left), and the **max binary heap** (**maxBH**,
+the tree to the right).
+
+<BinaryTree
+	data={[
+		[1, [2, 3]],
+		[2, [17, 19]],
+		[3, [36, 7]],
+		[17, [25, 80]],
+	]}
+/>
+
+<BinaryTree
+	data={[
+		[100, [19, 36]],
+		[19, [17, 3]],
+		[17, [2, 7]],
+		[36, [25, 1]],
+	]}
+/>
+
+In a **maxBH**, the parent nodes are _always greater_ than the child nodes.
+The inverse is true for the **minBH** &mdash; the parent nodes are _always
+smaller_ than the child nodes. As their names imply, for both the maxBH and
+minBH, each node can have at most two children.
+
+There are two key differences between binary heaps and binary search trees.
+First, there is no inherent order; all that matters are the parent-child
+relationships. An informal way to think about it: Binary heaps answer who
+gets on the lifeboat first when the ship sinks. In minBH, it's the children
+&mdash; a child is always worth more than its parent. And in maxBH, it's
+the parents &mdash; a parent is always worth more than its child.
+
+Second, binary heaps are as compact as possible. Each generation is filled
+as much as possible before moving to the next generation, with left
+children filled out first. This requirement's purpose is to use space
+efficiently.
+
+An important point to note about the binary heaps. Consider the following
+maxBH:
+
+<BinaryTree
+	data={[
+		[90, [21, 34]],
+		[21, [11, 3]],
+		[11, [2, 7]],
+		[34, [25, 1]],
+	]}
+/>
+
+The two nodes, `n(21)` and `n(34)`, are not necessarily the largest numbers
+in the entire maxBH. Notice the node `n(25)`. Again, this stems from the
+fact that there's no inherent order. We're just looking at the parent-child
+relationships.
+
+## Representing Heaps
+
+Consider the following maxBH:
+
+<BinaryTree
+	data={[
+		[90, [19, 36]],
+		[19, [17, 12]],
+		[36, [25, 5]],
+		[17, [9, 15]],
+		[12, [6, 11]],
+		[25, [13, 8]],
+		[5, [1, 4]],
+	]}
+/>
+
+If we performed a breadth-first traversal of this tree, storing each
+visited node's value in an array, we would get the following:
+
+<Sequence data={[90, 19, 36, 17, 12, 25, 5, 9, 15, 6, 11, 13, 8, 1, 4]} />
+
+Notice the relationship between the index of each node and the indices of
+its children:
+
+<Sequence
+	data={[
+		{ val: 90, focus: "red" },
+		{ val: 19, focus: "fire" },
+		{ val: 36, focus: "fire" },
+		17,
+		12,
+		25,
+		5,
+		9,
+		15,
+		6,
+		11,
+		13,
+		8,
+		1,
+		4,
+	]}
+/>
+
+<Sequence
+	data={[
+		90,
+		{ val: 19, focus: "red" },
+		36,
+		{ val: 17, focus: "fire" },
+		{ val: 12, focus: "fire" },
+		25,
+		5,
+		9,
+		15,
+		6,
+		11,
+		13,
+		8,
+		1,
+		4,
+	]}
+/>
+
+<Sequence
+	data={[
+		90,
+		19,
+		{ val: 36, focus: "red" },
+		17,
+		12,
+		{ val: 25, focus: "fire" },
+		{ val: 5, focus: "fire" },
+		9,
+		15,
+		6,
+		11,
+		13,
+		8,
+		1,
+		4,
+	]}
+/>
+
+<Sequence
+	data={[
+		90,
+		19,
+		36,
+		{ val: 17, focus: "red" },
+		12,
+		25,
+		5,
+		{ val: 9, focus: "fire" },
+		{ val: 15, focus: "fire" },
+		6,
+		11,
+		13,
+		8,
+		1,
+		4,
+	]}
+/>
+
+<Sequence
+	data={[
+		90,
+		19,
+		36,
+		17,
+		{ val: 12, focus: "red" },
+		25,
+		5,
+		9,
+		15,
+		{ val: 6, focus: "fire" },
+		{ val: 11, focus: "fire" },
+		13,
+		8,
+		1,
+		4,
+	]}
+/>
+
+<Sequence
+	data={[
+		90,
+		19,
+		36,
+		17,
+		12,
+		{ val: 25, focus: "red" },
+		5,
+		9,
+		15,
+		6,
+		11,
+		{ val: 13, focus: "fire" },
+		{ val: 8, focus: "fire" },
+		1,
+		4,
+	]}
+/>
+
+<Sequence
+	data={[
+		90,
+		19,
+		36,
+		17,
+		12,
+		25,
+		{ val: 5, focus: "red" },
+		9,
+		15,
+		6,
+		11,
+		13,
+		8,
+		{ val: 1, focus: "fire" },
+		{ val: 4, focus: "fire" },
+	]}
+/>
+
+Examining these arrays, we would can see that, given a node ${n}$ with
+index ${i_n,}$ its left-child has the index ${\ell}$ and its right child
+has the index ${r,}$ yielded by the formulas:
+
+$$
+	\begin{aligned} \ell &= 2i_n + 1 \\[1em] r &= 2i_n + 2 = 2(i_n + 1) \end{aligned}
+$$
+
+We can draw additional observations from these formulas. First, the
+left-child of a node has the form:
+
+<figure>$$ 2n + 1 $$</figure>
+
+where ${n \in \Z^{+}.}$ From number theory, this implies that the number
+will always be odd. Accordingly, the left child of a given node in a binary
+heap will always have an odd number index when placed in an array via
+breadth-first traveral. Second, we see that the index of a given node's
+right-child has the form:
+
+<figure>$$ 2(n+1) $$</figure>
+
+where ${n \in \Z^{+}.}$ Given that ${n}$ is a positive integer, the closure
+property of the positive integers implies that the index can be expressed
+as:
+
+<figure>$$ 2k $$</figure>
+
+where ${k \in \Z^{+}.}$ And again from number theory, this implies that the
+right-child's index will always be an even number. Accordingly, the
+right-child of a given node in a binary heap will always have an even
+number index when placed in an array via breadth-first traversal.
+
+Following these inferences, if we're given the breadth-first traversal
+sequence of a binary heap, we can determine the parent of a given node
+${n}$ with the following lemma:
+
+> _Lemma_. Let ${n}$ be an element with the index ${i}$ in the
+> breadth-first traversal sequence of some binary heap. The index of the
+> parent of ${n,}$ denoted ${p,}$ is given by the following formula:
+
+> $$
+> 	  p = \begin{cases} \dfrac{i-1}{2} ~~~~ i \in \Z_{\text{odd}} \\[2em] \dfrac{i}{2} - 1 ~~~~ i \in \Z_{\text{even}} \end{cases}
+> $$
+
+Examining these two formulas, we see that the only difference between the
+two is when to decrement by ${1.}$ For odd indices, we decrement then
+divide by two, and for even indices, we divide by two then decrement by
+${1.}$ This set of conditions is encapsulated in the floor function.
+Accordingly, we can generalize the formula:
+
+> _Lemma_. Let ${n}$ be an element with the index ${i}$ in the
+> breadth-first traversal sequence of some binary heap. The index of the
+> parent of ${n,}$ denoted ${p,}$ is given by the following formula:
+>
+> $$
+> 	 p = \left\lfloor \dfrac{n-1}{2} \right\rfloor
+> $$
+
+Just to verify that this formula is correct, let's look at the original
+sequence again alongside the tree:
+
+<Sequence data={[90, 19, 36, 17, 12, 25, 5, 9, 15, 6, 11, 13, 8, 1, 4]} />
+
+<BinaryTree
+	data={[
+		[90, [19, 36]],
+		[19, [17, 12]],
+		[36, [25, 5]],
+		[17, [9, 15]],
+		[12, [6, 11]],
+		[25, [13, 8]],
+		[5, [1, 4]],
+	]}
+/>
+
+For the node `n(15)`, the index of its parent is:
+
+$$
+	p = \left\lfloor \dfrac{8-1}{2} \right\rfloor = \left\lfloor 3.5 \right\rfloor = 3
+$$
+
+The node at index ${3}$ is `n(17)`. Examining the tree, we see that the
+`n(17)` is, in fact, the parent of `n(15)`.
+
+## Implementing maxBH
+
+Implementing maxBH is fairly straightforward:
+
+```rust
+class MaxBinaryHeap {
+	constructor:
+		nodes = [];
+	methods:
+		insert(newNode) {
+			append(this->nodes, newNode);
+			let newNodeIndex = lengthOf(this->nodes) - 1;
+			let parentIndex = ⌊((newNodeIndex - 1) / 2)⌋; // floor
+			while (this->nodes[parentIndex] &lt; this->nodes[index]) {
+				swapArrayElements(this->nodes, parentIndex, newNodeIndex);
+				newNodeIndex = parentIndex;
+			}
+		}
+}
+```
+
+This procedure uses the process of _bubbling up_. When we insert a new node
+to the binary heap, we continue swapping the new node with the node at the
+parent index until we reach a point where the node at the parent index is
+greater than the new node's value.
+
+```javascript
+import swap from "../../../../utilities/swap.js";
+import floor from "../../../../utilities/floor.js";
+import append from "../../../../utilities/append.js";
+
+
+class MaxBinaryHeap {
+	constructor() {
+		this.values = [];
+	}
+	bubbleUp(val) {
+		append(this.values, val);
+		let index = this.values.length - 1;
+		let parentIndex = floor((index - 1) / 2);
+		while (this.values[parentIndex] < this.values[index]) {
+			swap(this.values, parentIndex, index);
+			index = parentIndex;
+		}
+		return this;
+	}
+```
+
+## Removing from a Heap
+
+The heap's root is the most commonly removed, or replaced, node:
+
+<BinaryTree
+	data={[
+		[{ val: 41, parent: "", focus: "blue" }, [39, 33]],
+		[39, [18, 27]],
+		[33, [12, null]],
+	]}
+/>
+
+<Sequence data={[41, 39, 33, 18, 27, 12]} />
+
+Recall that with max binary heap, the largest element is always at the top.
+Accordingly, when we remove from a max binary heap, we always the next
+largest element to rise to the top.
+
+To illustrate, suppose we removed the top most node:
+
+<BinaryTree
+	data={[
+		[{ val: 41, parent: "", focus: "deleted" }, [39, 33]],
+		[39, [18, 27]],
+		[33, [12, null]],
+	]}
+/>
+
+<Sequence data={[{ val: 41, focus: "deleted" }, 39, 33, 18, 27, 12]} />
+
+The next step is to take the smallest element, and place it as the root. In
+this case, that's the node containing 12:
+
+<BinaryTree
+	data={[
+		[{ val: 12, parent: "", focus: "blue" }, [39, 33]],
+		[39, [18, 27]],
+	]}
+/>
+
+<Sequence data={[{ val: 12, focus: "blue" }, 39, 33, 18, 27]} />
+
+Next, we perform a procedure called ~down-bubbling~.[^names_note] We
+compare the current root against its children. In this case, the node
+containing 39, and the node containing 33:
+
+<BinaryTree
+	data={[
+		[
+			{ val: 12, parent: "", focus: "blue" },
+			[
+				{ val: 39, focus: "green" },
+				{ val: 33, focus: "green" },
+			],
+		],
+		[39, [18, 27]],
+	]}
+/>
+<Sequence
+	data={[
+		{ val: 12, focus: "blue" },
+		{ val: 39, focus: "green" },
+		{ val: 33, focus: "green" },
+		18,
+		27,
+	]}
+/>
+
+Comparing these two children, we take whichever is larger, and swap it with
+the current root. Here, the larger child is 39, so we swap 12 into 39's
+position:
+
+<BinaryTree
+	data={[
+		[
+			{ val: 39, parent: "", focus: "blue" },
+			[{ val: 12, focus: "green" }, 33],
+		],
+		[12, [18, 27]],
+	]}
+/>
+<Sequence
+	data={[
+		{ val: 39, focus: "blue" },
+		{ val: 12, focus: "green" },
+		33,
+		18,
+		27,
+	]}
+/>
+
+Now that 12 is in a new position, we compare 12 against its new children —
+18 and 27. 27 is larger, so we swap:
+
+<BinaryTree
+	data={[
+		[
+			{ val: 39, parent: "", focus: "blue" },
+			[{ val: 27, focus: "green" }, 33],
+		],
+		[27, [18, { val: 12, focus: "green", radialMark: true }]],
+	]}
+/>
+
+<Sequence
+	data={[
+		{ val: 39, focus: "blue" },
+		{ val: 27, focus: "green" },
+		33,
+		18,
+		{ val: 12, focus: "green" },
+	]}
+/>
+
+Notice that 12 has sunk down to its correct place. Our tree is complete.
+The procedure is as follows:
+
+1. Go to the first value in the values array.
+2. Swap the first value with the last value in the array.
+3. Save the last value in some variable ${v.}$
+4. Remove the last item.
+5. Begin bubble-down:
+   1. Let the parent index ${i}$ start at 0 (the root).
+   2. Compute the index of the root's left-child.
+      $$
+      	2(i + 1)
+      $$
+   3. Compute the index of the root's right-child.
+      $$
+      	2(i + 2)
+      $$
+   4. If the left- or right-child is greater than the root, swap.
+   5. If both the left- and right-child are greater, swap the largest
+      child.
+   6. If neither the left- nor the right-children are greater, go to
+      step 6.
+   7. The index of the child swapped is now the new parent index.
+6. Return the old root, earlier stored in some variable ${v.}$
+
+[^names_note]:
+    This procedure is also called: _percolate-down_, _sift-down_, _trickle
+    down_, _heapify-down_, _cascade-down_, or _extract-min/max_.
+
+### Implementation
+
+
+
+<Tab>
+<section className="JavaScript">
+
+Here's a JavaScript implementation. First, we'll write a `bubbleDown()`
+method:
+
+```javascript
+bubbleDown() {
+	let idx = 0;
+	const length = this.values.length;
+	const element = this.values[0];
+	let swap = null;
+	let leftChild, rightChild;
+	let leftChildIndex, rightChildIndex;
+	while (true) {
+		leftChildIndex = 2 * idx + 1;
+		rightChildIndex = 2 * idx + 2;
+
+		if (leftChildIndex < length) {
+			leftChild = this.values[leftChildIndex];
+			if (leftChild > element) {
+				swap = leftChildIndex;
+			}
+		}
+
+		if (rightChildIndex < length) {
+			rightChild = this.values[righChildIndex];
+			if (
+				(swap===null && rightChild > element) ||
+				(swap !== null && rightChild > leftChild)) {
+					swap = rightChildIndex;
+				}
+		}
+
+		if (swap === null) break;
+		this.values[idx] = this.values[swap];
+		this.values[swap] = element;
+		idx = swap;
+	}
+}
+
+```
+
+Once we have the `bubbleDown()` method, all we have to do is write an
+`extractMax()` method:
+
+```javascript
+extractMax() {
+	const max = this.values[0];
+	const end = this.values.pop();
+	this.values[0] = end;
+	this.bubbleDown();
+	return max;
+}
+```
+
+</section>
+</Tab>

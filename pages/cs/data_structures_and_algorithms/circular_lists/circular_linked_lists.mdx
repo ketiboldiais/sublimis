@@ -1,0 +1,468 @@
+# Circular Linked Lists
+
+Having examined loop checks, we now turn to _circular linked lists_.
+Circular linked lists implement the abstract data type of a **circular
+list**. Most notably, the data structure has the defining characterstic of
+its foot pointing to its head. This in turn implies that the circular
+linked list contains no null pointers (i.e., all the nodes in the linked
+list have nonnull next pointers). For example, consider the linked list:
+
+<CircularList data={[8, 2, 9, 6, 3, 7]} />
+
+In the linked list above, the foot node, colored red, points to the head
+node, colored green. Because circular linked lists are connected in a loop,
+there is no "first node." To ensure we have some starting point for our
+algorithms, we generally maintain a `head` pointer to some node in the
+list. In the linked list above, we've opted for ${(n \mid 8)}$ as the head.
+
+Question: Why do we need circular lists? In other words, what are the use
+cases for a circular list? It turns out there are several:
+
+- Keeping track of whose turn it is in a particular process. For example,
+  in a game of poker—or more generally, any game with multiple
+  players—there's usually a set order for players to act. Circular lists
+  allow us to ensure the order of actions remains correct.
+
+- Circular lists allow us to implement round **round robin algorithms**.
+  These are algorithms that allocate time or other resources alternately
+  between actors. For example, in a timesharing environment, the operating
+  system allocates slices of CPU time between present users in a specified
+  order.
+
+- Circular lists can be used to implement repetitive procedures on a finite
+  set of objects. For example, an audio player's feature of repeating a
+  particular playlist.
+
+All of the algorithms we've discussed so far can be applied to circular
+linked lists, with a few modifications. Before we examine these
+modifications, we must delve a little deeper into the properties of
+circular linked lists.
+
+First, a circular linked list with only one node has the following
+property: The lone node points to itself. This is where we encounter a
+problem. If the circular linked list contains no nodes, then the pointer
+`head` is NULL. And if the `head` pointer is NULL, how do we determine if a
+particular linked list is circular? The answer is, we cannot. There's no
+way to prove that a particular linked list is circular if the list is
+empty. Accordingly, we adopt the following axiom with respect to circular
+linked lists:
+
+> An empty list is a circular linked list.
+
+Because of the axiom above, a circular linked list is has a special
+necessary condition: It does not contain null pointers. Because of this
+condition, a variety of linked lists qualify as circular linked lists. For
+example, consider this linked list:
+
+<CircularList name={"h"} data={[1, 2, 3, 4, 5, 6]} />
+
+In the circular list above, there are in fact only four nodes. The node `h`
+is a pointer to the "first node" in the list, in this case, the node
+${(n \mid 6).}$ From this observation, we have two ways to implement
+circular linked lists:
+
+1. Designate a node in the list as the head, and have the foot point to
+   that node, or
+
+2. create a node called head, that is not itself a node in the list, and
+   have the foot point to the head's pointee.
+
+The more common approach is the option (1) above. Either or, there's not
+much of a difference, other than the additional memory needed to allocate a
+new node `head` in option (2).
+
+## Traversing a Circular List
+
+Consider the following linked list:
+
+<LinkedList data={["head", 1, 4, 5, 2]} />
+
+As we saw previously, we can iterate on this linked list because the foot's
+next pointer is NULL. This property of linear linked lists provides a guard
+clause for stopping a loop. But with the circular linked list, we have no
+such pointer:
+
+<CircularList data={[1, 4, 5, 2]} width={200} />
+
+The question then is, how do we stop a loop on a circular linked list? The
+answer: We rely on the `h` pointer, and a second pointer, `p`, for
+iterating over the list. First, both `h` and `p` point to the same node:
+
+<CircularList
+	data={[{ val: 1, ant: "h p" }, 4, 5, 2]}
+	width={200}
+/>
+
+Then, we begin iterating. The pointer `p` will move, while the pointer `h`
+remains as is; `p` continues so long as it does not point to `h`'s pointee.
+The first iteration:
+
+<CircularList
+	data={[{ val: 1, ant: "h" }, { val: 4, ant: "p" }, 5, 2]}
+	width={200}
+/>
+
+Then the second:
+
+<CircularList
+	data={[{ val: 1, ant: "h" }, 4, { val: 5, ant: "p" }, 2]}
+	width={200}
+/>
+
+Then the third:
+
+<CircularList
+	data={[{ val: 1, ant: "h" }, 4, 5, { val: 2, ant: "p" }]}
+	width={200}
+/>
+
+And on the fourth, we're back at `h`'s pointee:
+
+<CircularList
+	data={[{ val: 1, ant: "h p" }, 4, 5, 2]}
+	width={200}
+/>
+
+Based on this analysis, we can implement the procedure as follows:
+
+```rust
+fn print(Node* list) -> void:
+	do:
+		print(p->data);
+		p = p->next;
+		while (p != head);
+```
+
+Notice how we're using a do-while-loop. This is because the test condition
+is `p != head`. If we used the standard while-loop, the test condition
+would be false to start with, so we'd never commence the iteration. By
+using a do-while-loop, we execute the block at least once, which moves the
+pointer `p` forward. This starts the iteration.
+
+### Recursive Implementation.
+
+Alternatively, we can print the circular linked list with a recursive
+approach. In pseudocode:
+
+```rust
+fn display(Node *p) -> void:
+	static int flag = 0;
+	if (p != head OR flag == 0):
+		flag = 1;
+		print(p->data);
+		display(p->next);
+	flag = 0;
+```
+
+Let's go over how this procedure works. First, like the iterative approach,
+the pointer `p` points to `head`'s pointee. Each time the recursive
+`display()` calls itself, `p`'s next pointee is passed as an argument. As
+the calls are made, `p` moves along the circular linked list, printing its
+pointee's data field value. At some point, `p` will reach `head`'s pointee
+again. In that scenario, we must provide `display()` a way to determine if
+it's at `head`'s pointee a second time.
+
+This is done by using the variable `flag`. Initially, `flag` is set to `0`.
+However, inside the if-block, `flag` is set to `1`. On the first call,
+`flag = 0`, so the if-block's guard clause, an or-condition, is satisfied.
+This executes the if-block.
+
+Inside the if-block, `flag` is set to `1`, and `p`'s pointee's data is
+printed. Then, we make the second call, a recursive call. In this second
+call, `flag = 1`, but `p != head`. As such, the if-block's guard clause is
+again satisfied, and we proceed, making the third call.
+
+This process continues until we've made it back to `head`'s pointee. At
+this point, `p == head`, and `flag == 1`. This violates the if-block's
+guard clause, so we stop. The function call has finished.
+
+In the implementation above, noticed that we declared `flag` has a _static
+variable_. With each recursive call, a new instance of `flag` and the
+pointer `p` is created in the stack. Thus, for each recursive call, `flag`
+is set to `0`. This is not what we want—if `flag` is `0` for each recursive
+call, we never reach the case where the if-block's guard clause is
+violated. To remedy this, we must have an instance of `flag` that all
+subsequent calls use. This is ensured by declaring `flag` as a static
+variable. And because `flag` is a static variable, we must set it `0` once
+we've finished calling `display()` as a whole.
+
+## Circular List Insertion
+
+Now that we know how to iterate over a circular linked list, we consider
+circular list insertion. Consider the following circular linked list:
+
+<CircularList data={[1, 4, 3, 5, 2]} />
+
+Suppose each node in the linked list, and each space between the nodes, has
+an index:
+
+<CircularList data={[1, 4, 3, 5, 2]} isIndexed={true} indexLinks={true} />
+
+Recall that with linear linked lists, we had two cases: Inserting before
+the first node, or inserting at any other given position. Similarly for
+circular linked lists, we have two cases:
+
+1. Inserting before `head`, or
+2. inserting before any other given position.
+
+Let's consider the second case, inserting before a position other than the
+head.
+
+### Inserting Into any Given Position
+
+Say we wanted to insert at the index ${4}$ the node ${(n \mid 8),}$ called
+`t`.
+
+<CircularList data={[1, 4, 3, 5, 2]} isIndexed={true} indexLinks={true} />
+
+To insert at ${4,}$ we need a pointer to the node just before it,
+${(n \mid 5).}$ Thus, we start with a pointer at `head`,
+
+<CircularList
+	data={[{ val: 1, ant: "p" }, 4, 3, 5, 2]}
+	isIndexed={true}
+	indexLinks={true}
+/>
+
+then move it three times to ${(n \mid 5):}$
+
+<CircularList data={[1, 4, 3, { val: 5, ant: "p" }, 2]} />
+
+Once we have the pointer `p` in place, we can have `t`'s next pointer point
+to `p`'s next pointee.
+
+<CircularList
+	data={[1, 4, 3, { val: 5, ant: "p" }, { val: 2, ant: "t" }]}
+/>
+
+Then, we have `p`'s current pointee point to `t`:
+
+In pseudocode:
+
+```rust
+	fn insert(Node* head, int d, int position) -> void:
+		Node* p = head;
+		for (int i = 0; i < position - 1; i++):
+			p = p->next;
+		Node* t = new Node(d);
+		t->next = p->next;
+		p->next = t;
+```
+
+The time complexity of inserting into any given position depends on two
+cases. First, inserting into the position immediately after the head is the
+best case scenario. In this case, the for-loop never executes, and we
+simply perform the remaining basic operations. As such, the time complexity
+in the best case scenario is ${O(1).}$
+
+Second, inserting after the last node is the worst case scenario. In that
+situation, we must iterate over ${n - 1}$ nodes for `p` to reach the node
+immediately before `head` (the "last node"). Hence, inserting after the
+last node has a time complexity of ${O(n).}$
+
+### Prepending a Circular List
+
+Say we had the following circular linked list:
+
+<CircularList name={"h"} data={[1, 4, 3, 5, 2]} />
+
+Suppose we wanted to insert just before head. To do so, we create a new
+node `t` with some data, and have it point to `h`'s pointee:
+
+<CircularList name={"h"} data={[{ val: 1, ant: "t" }, 4, 3, 5, 2]} />
+
+Once `t` is linked, we must have the foot point to `t`:
+
+<CircularList name={"h"} data={["t", { val: 1, ant: "t" }, 4, 3, 5, 2]} />
+
+Because of this step, we must manipulate the foot. Accordingly, we need a
+third pointer, `p`, to iterate over the list until `p->next == head`. Once
+that condition is reached, we have a pointer `p` pointing to the foot:
+
+<CircularList
+	name={"h"}
+	data={["t", { val: 1, ant: "t" }, 4, 3, 5, { val: 2, ant: "p" }]}
+/>
+
+Once we have `p` properly position at the foot, we have `p->next` point to
+the new node `t`.
+
+Now here's a question: Should we have the head pointer `h` point to this
+new node `t`? We could, but there isn't any reason to do so. The notions of
+"first," "last," "head," and "foot" are purely abstractions to aid us in
+thinking about circular linked lists. There is no "first" or "last" node in
+a circular list. Accordingly, we refrain from changing the head pointer
+because it's an unnecessary additional operation.
+
+Implementing the procedure in pseudocode:
+
+```rust
+prepend(Node* head, int newData) -> void:
+	Node* t = new Node();
+	t->data = newData;
+	t->next = head;
+	Node* p = head;
+	while (p->next != head):
+		p = p->next;
+	p->next = t;
+	head = t;
+```
+
+### General Insertion
+
+Now that we've covered the two cases, we can implement a more general
+function for insertion. Note that the code does not include a guard against
+invalid position values. When implementing the procedure above, it's
+imperative that we provide a guard. If the user passed an index of say,
+${-1,}$ we would enter an infinite loop, forever traversing the circular
+list.
+
+The time complexity for this procedure is no different from what we saw
+earlier. In the best case scenario, we're inserting immediately after
+`head`'s pointee. In the worst case scenario, we're inserting immediately
+before `head`'s pointee. In the former we have a time complexity of
+${O(1),}$ and in the latter we have a time complexity of ${O(n).}$
+
+```rust
+fn insert(int position, int newData) -> void:
+	Node* t;
+	Node* p;
+	if (position == 0):
+		t = new Node();
+		t->data = newData;
+		if (head == NULL):
+			head = t;
+			head->next = head;
+		else:
+			p = head;
+			while (p -> next != head):
+				p = p->next;
+		p->next = t;
+		t->next = head;
+		head = t;
+	else:
+		p = head;
+		for (int i = 0; i < position - 1; i++):
+			p = p->next;
+		t = new Node();
+		t->data = x;
+		t->next = p->next;
+		p->next = t;
+```
+
+## Deleting Circular List Nodes
+
+Alongside insertion, we next consider how to delete nodes in a circular
+list. Like insertion, there are two cases of deletion:
+
+1. Deleting the `head`'s pointee node, or
+2. deleting a node at any other given position.
+
+Suppose we had the linked list below, and we want to delete the node
+containing `9`. Call it the _delete target_. To delete this node, we must
+have a pointer to the node immediately before the delete target, and a
+pointer to the delete target itself:
+
+<CircularList
+	data={[4, 3, { val: 7, ant: "t" }, { val: 9, ant: "d" }, 5, 8]}
+/>
+
+The pseudocode representation is presented below. Notice that this is
+substantially the same as deleting from a linear linked list.
+
+```rust
+fn delete(int position) -> void:
+	Node* t = head;
+	Node* d;
+	for (i = 0; i < position - 2; i++):
+		t = t->next;
+	d = t->next;
+	t -> next = d->next;
+	delete d;
+```
+
+Why is it `position - 2`? Because we start the pointer `t` at head (which
+we're pretending has an index of `1`), and we want to stop it just before
+the delete target. In this case, we're trying to delete the fourth node, so
+`position = 4`. Thus, the for-loop's guard clause is `i < 4 - 2 = 2.` At
+`i = 0`, the condition is satisfied, so we move `t` to the second node, and
+increment `i`. At `i = 1`, the condition is again satisfied, so we move `t`
+to the third node, and increment. At `i = 2`, the for-loop's guard clause
+is not satisfied, so we break. This leaves `t` at the correct position.
+
+Once we've position `t`, we initialize the second pointer, `d`, to `t`'s
+next pointee. This places `d` on the fourth node, the delete target. Once
+that is done, we assign as `t`'s next pointee the next pointee of `d`. In
+this case, `t`'s next pointee becomes the fifth node. Then we free the
+memory allocated for `d`'s pointee, the delete target.
+
+### Deleting the Circular List's Head
+
+What if we want to delete the head? Consider the following linked list:
+
+<CircularList data={[1, 8, 3, 5, 2, 7]} />
+
+To delete the head, colored green, we must perform the following: (1) the
+node just after the head must become the new head, then (2) the foot's next
+pointee must point to the new head.
+
+This procedure is done by first moving a pointer `p` to the foot.
+
+<CircularList data={[1, 8, 3, 5, 2, { val: 7, ant: "p" }]} />
+
+Once there, we use `p` to change the foot's next pointee to the current
+`head`'s next pointee:
+
+<CircularList data={[{ val: 8, ant: 1 }, 3, 5, 2, { val: 7, ant: "p" }]} />
+
+This effectively separates the current head from the circular list, while
+still maintaining a link. As such, all that's left to do is to delete
+`head` and make `p`'s next pointee, the former second node, as the `head`:
+
+<CircularList data={[8, 3, 5, 2, 7]} />
+
+The procedure in pseudocode:
+
+```rust
+fn deleteHead(Node* head) -> void:
+	Node* p = head;
+	while (p->next != head):
+		p = p -> next;
+	p->next = head->next;
+	delete head;
+	head = p->next;
+```
+
+### General Deletion
+
+As we saw with insertion, we can implement deletion into a single general
+function:
+
+```rust
+fn delete(Node* head, int position) -> void:
+	Node* p;
+	Node* q;
+	if (position == 1):
+		p = head;
+		while (p->next != head):
+			p = p->next;
+		if (p == head):
+			delete head;
+			head = NULL;
+		else:
+			p->next = head->next;
+			delete head;
+			head = p->next;
+	else:
+		p = head;
+		for (int i = 0; i < position - 2; i++):
+			p = p->next;
+		q = p->next;
+		delete q;
+```
+
+The time complexity for deleting on a circular linked list depends on where
+we're deleting. If we're deleting the second node—the node immediately
+after the current head—then `position = 2`, and the steps executed are all
+basic. This yields a time complexity of ${O(1).}$ For all other positions,
+however, our time complexity is ${O(n).}$

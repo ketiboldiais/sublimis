@@ -1,0 +1,58 @@
+# Bitwise Operators
+
+The bitwise operators are interesting, but not often used operators in C++.
+They are operators that allow us to manipulate data at the bit-level,
+rather than one the entire value. The operators are the following:
+
+## Bitwise `&`
+
+Given bit1 and bit2, bit1 & bit2 are 1 if, and only if, both bits are 1.
+Otherwise, bit1 & bit2 are 0. For example, using the bitwise operator `&`:
+
+```cpp
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+	int x = 1;
+	int y = 2;
+	int z = x & y;
+	cout << z << endl;
+	return 0;
+}
+```
+
+```bash
+0
+```
+
+Why is it 0? Because of the following:
+
+$$
+	0 1 \\
+	1 0
+$$
+
+The `&` operator will pair each bit in `x` with each bit in `y`. In this
+case, `1 & 0` and `0 & 1`. Now, recall the rule: `bit1 & bit2` are 1 if,
+and only if, both values are 1. Otherwise, `bit1 & bit2` are 0. Thus,
+`x & y` evaluates to `00`, the integer 0 in the decimal system.
+
+## Bitwise `|`
+
+Bitwise OR; if either bit1 or bit2 is 1, then bit1 | bit2 is 1.
+
+## Bitwise `^`
+
+Bitwise XOR; if bit1 or bit2 is 1, but not both bit1 and bit2 are 1, then
+bit1 ^ bit2 is 1. If both bit1 and bit2 is 0, then bit1 | bit2 is 1. If
+both bit1 and bit2 is 1, then bit1 | bit2 is 0.
+
+## Bitwise `~`
+Bitwise NOT; if bit1 is 1, then ~bit1 is 0, and vice versa.
+
+## Bitwise `<<`
+Bitwise left shift.
+
+## Bitwise `>>`
+Bitwise right shift.

@@ -1,0 +1,134 @@
+# Introduction
+
+When we create a new project in XCode, we are automatically given several files and directories. Supposing the appplication's name is `foo`, we have: (1) `fooApp.swift`; (2) `ContentView.swift`; (3) a directory called `Assets.xcassets`; (4) `Info.plist`; (5) a directory called `Preview Content`; and (6) a directory called `Products`. All of these files and directories are nested under an application icon named `foo`.
+
+First, if we click on the icon `foo`, we can see a variety of preferences. We can modify these preferences as needed. These changes are directly then reflected in the `Info.plist` file. For most projects, these high-level modifications are handled through the pane presented in the `foo` application icon, rather than through `Info.plist`. Of course, we are free to modify `Info.plist`.
+
+Next, if we click on the `fooApp.swift` file, we see the following content:
+
+```swift
+import SwiftUI
+
+@main
+struct fooApp: App {
+		var body: some Scene {
+				WindowGroup {
+						ContentView()
+				}
+		}
+}
+```
+
+
+Generally, we make very few changes to this file. What we should look familiar is the `@main` symbol. This is similar to a `main()` function, as found in languages like Java and C. Ignoring the other parts of the code, we can see that inside the `struct` is something that says `ContentView`. For those familiar with object-oriented programming, this is an instance of `ContentView`. For those unfamiliar with object-oriented programming, the line `ContentView()` indicates some object, or thing, called `ContentView`. What is `ContentView`? To find out, we look at the next file, `ContentView.swift`.
+
+Inside the `ContentView.swift` file, we can see the following code:
+
+```swift
+import SwiftUI
+
+struct ContentView: View {
+		var body: some View {
+				Text("Hello, world!")
+						.padding()
+		}
+}
+
+struct ContentView_Previews: PreviewProvider {
+		static var previews: some View {
+				ContentView()
+		}
+}
+```
+
+There's a lot going on in this code, so let's take it slowly. First, we have the line `import SwiftUI`. This tells Swift to use a package (source code outside our file) called `SwiftUI`.
+
+Second, at the very bottom of the file, we see the code:
+
+```swift
+struct ContentView_Previews: PreviewProvider {
+	static var previews: some View {
+			ContentView()
+	}
+}
+```
+
+This block of code generates the previews we see in the simulator to the right.
+
+Further down, we have the code `struct ContentView: View { ... }` (the ellipses indicating content). This tells Swift to create a `struct` named `ContentView` of type `View` (more on the `View` type later). Roughly speaking, a `struct`, short for &#8220;structure&#8221;, is a collection of variables. Inside the `struct`, we have the following code:
+
+
+```swift
+var body: some View {
+	Text("Hello, world!")
+			.padding()
+}
+```
+
+
+This block of code creates a variable called `body`, with a type called `some View`. Why do we write `some View`? Because inside these block of code, there will be multiple `View` objects, and each of those `View` objects may be certain type of the type `View`. We can also place functions inside the `struct`:
+
+```swift
+
+struct ContentView: View {
+		var body: some View {
+				Text("Hello, world!")
+						.padding()
+		}
+
+		func functionName() {
+
+		}
+}
+```
+
+This looks an awful lot like object-oriented programming. But, do not confuse a `struct` with a `class`. They are two very different things. For starters, there is no notion of inheritance with a `struct`. In fact, using a `struct` in Swift is more closely related to functional programming rather than OOP. Most of the underlying code in a Swift application &mdash; the user interface and the implementation &mdash; is written with a functional programming approach. When we connect all the various modules (e.g., connecting the user interface to its underlying logic), we use an object-oriented programming approach.
+
+If `body` is some variable, then what are the braces following `some View {}`. These braces indicate a function. As we stated earlier, a large chunk of an application's code is done in functional programming. This means we will see functions throughout Swift code. In fact, the code inside the braces contains an implicit `return` symbol:
+
+```swift
+	var body: some View {
+			return Text("Hello, world!")
+	}
+```
+
+Indeed, placing a `return` in the example code, the code will still compile. Swift merely hides the `return` statement as a matter of syntactic sugar. The fact that the code above is a function reveals another insight: The variable `body` is not actually stored in memory. Instead, it is bound to a value that is calculated when the function (the code inside the braces) is executed. In other words, `body` has no value unless it is specifically referenced. Only when it is referenced does Swift evaluate the variable, which is done by executing the code inside the braces.
+
+Inside that function, we have the line `Text("Hello, world!")`. A `Text()` is another kind of `View`, and more broadly, it is a `struct`. In fact, in the SwiftUI library, there's more than likely some code that looks like:
+
+```swift
+struct Text: View {
+	var body: some View {
+		// various statements
+	}
+}
+```
+
+This harkens back to a previous point on why we must write `some View`. Inside the function, there are more than likely various kinds of `View`s, and writing `some View` effectively tells the Swift compiler, "Heads up, there are some `View`s coming." By giving Swift this heads up, when the function inside the braces is executed, Swift can replace the `some View` with a `Text` type.
+
+```swift
+var body: text {
+		return Text("Hello, world!")
+}
+```
+
+Notice that we can add padding to the `Text("Hello, world!")`:
+
+```swift
+var body: text {
+		return Text("Hello, world!")
+			.padding(.all)
+}
+```
+
+The code above can be rewritten as:
+
+```swift
+var body: text {
+		return Text("Hello, world!").padding(.all)
+}
+```
+
+Putting the two lines together, this should look familiar to those coming from object-oriented programming. This is, in fact, a function call (we avoid using the word method for now because `Text()` is a `struct`, not a class). The `.padding()` function is a function available to any `struct` that behaves like a `View`. In this case, `.padding()` is an argument &mdash; all sides.
+
+By calling the function `.padding()` on the `Text() struct`, we receive a new entity that behaves like a `View`.

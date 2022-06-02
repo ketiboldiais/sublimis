@@ -1,0 +1,84 @@
+# Value v. Reference Semantics
+
+In languages like `C++` and Java, when variables are passed as parameters,
+the values bound to those values are copied. For example:
+
+```cpp
+	void swap(int a, int b) {
+		int temp = a;
+		a = b;
+		b = temp;
+	}
+	int main() {
+		int x = 17;
+		int y = 35;
+		cout << "x = " << x << ", y = " << y << endl;
+		swap(x, y);
+		cout << "x = " << x << ", y = " << y << endl;
+		return 0;
+	}
+```
+
+```bash
+	x = 17, y = 35
+	x = 17, y = 35
+```
+
+No swap occurs because we are passing _copies_ of values into the
+variables. In other words, `x` and `y` always remain `17` and `35`
+respectively because only copies of those values were passed into the
+function. Any computation done in `swap()` was done on copies of those
+values, so there no effect on `x` and `y`, the originals.
+
+This phenomenon, called _pass-by-value_, is not the only behavior in `C++`.
+There is also _pass-by-reference_, which relies on _reference semantics_.
+Here is an example using reference semantics:
+
+```cpp
+	void swap(int& a, int& b) {
+		int temp = a;
+		a = b;
+		b = temp;
+	}
+	int main() {
+		int x = 17;
+		int y = 35
+		cout << "x = " << x << ", y = " << y << endl;
+		swap(x, y);
+		cout << "x = " << x << ", y = " << y << endl;
+	}
+```
+
+```bash
+	x = 17, y = 35
+	x = 35, y = 17
+```
+
+Notice the use of the ampersand, `&`. This tells `C++` that we want a
+_reference_ to the value. Because we are using a reference rather than a
+copy, changes to the parameter will affect the variable passed
+in.[^referencenote] <sup></sup>
+
+[^referencenote]:
+    Passing by reference is usually best to avoid. With more reference
+    values, it becomes more difficult to reason about code, and when that
+    difficulty increases, the more difficult it is to debug. In some
+    languages like Ruby, there are naming conventions in place to ensure
+    reference or mutable values are physically visible. Although `C++` has
+    no such conventions, it is recommended to follow some sort of
+    convention denoting which variables employ reference semantics. Or
+    better yet, avoid using reference semantics as much as possible. There
+    are situations of course where referance semantics are necessary. I.e.,
+    very large objects (e.g., massive data structures), should likely be
+    passed as references. There is a balance, but for run-of-the-mill code,
+    we generally want to avoid passing by reference.
+
+Another point for concern with reference values is when we use reference
+variables as parameters to functions. In `C++`, reference parameters can
+only take variables as arguments. In other words, we can never pass a
+literal to a reference parameter (after all, the whole point of reference
+semantics is to _refer_ to something). Having said all these negatives, we
+should acknowledge the benefits of reference parameters: (1) We have a way
+of &#8220;returning&#8221; more than one value with functions, and (2) we
+have a way of avoiding making bulky copies of large objects when passing
+them as arguments.

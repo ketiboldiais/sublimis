@@ -1,0 +1,273 @@
+# BST Generation via Traversal
+
+Earlier, we saw that we can generate a binary search tree by iteratively
+calling the `insert()` function. We can, however, also generate a BST
+through preorder-traversal (or postorder-traversal). Moreover, unlike the
+previous sections where we saw how we needed an additional
+inorder-traversal sequence, we can generate a binary search tree with
+preorder- or postorder-traversal alone. Let's start with
+preorder-traversal.
+
+We're given the following preorder-traversal sequence:
+
+<Sequence
+	data={[
+		{ val: 30 },
+		{ val: 20 },
+		{ val: 10 },
+		{ val: 15 },
+		{ val: 25 },
+		{ val: 40 },
+		{ val: 50 },
+		{ val: 45 },
+	]}
+/>
+
+Alongside this array, we also need an auxiliary data structure, a stack:
+
+<Stack data={["", "", ""]} />
+
+With the sequence and the stack, we can begin. We start by focusing on the
+first element of the sequence. In this case, `pre[0]=30`. We create a node
+and have two pointers point to it, the `root` pointer, and a temporary
+pointer `p`:
+
+<Sequence
+	data={[
+		{ val: 30, focus: "red" },
+		{ val: 20 },
+		{ val: 10 },
+		{ val: 15 },
+		{ val: 25 },
+		{ val: 40 },
+		{ val: 50 },
+		{ val: 45 },
+	]}
+/>
+
+<Tree data={[{ child: "30", parent: "", ant: "p root" }]} />
+
+<Stack data={["", "", ""]} />
+
+Now we focus on the next element, `pre[1]=20`. We make a check:
+`pre[0] < 30`. True. Because it's true, we perform the following steps:
+
+1. Create a new node with a temporary pointer `t`.
+2. Make `p`'s left-child pointer point to the new node.
+3. Push the address of `p`'s pointee into the stack.
+4. Move `p` to the newly created node.
+
+Thus, we have:
+
+<Sequence
+	data={[
+		{ val: 30, focus: "red" },
+		{ val: 20, focus: "red" },
+		{ val: 10 },
+		{ val: 15 },
+		{ val: 25 },
+		{ val: 40 },
+		{ val: 50 },
+		{ val: 45 },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "30", parent: "", pointer: "root" },
+		{ child: "20", parent: "30", pointer: "t,p" },
+		{ child: "10", parent: "30", display: "none" },
+	]}
+/>
+
+<Stack data={[{ val: "" }, { val: "" }, { val: "ad(30)" }]} />
+
+Now we move to the next element in the sequence, `pre[2]=10`. We perform
+the check again: `pre[2] < 20`. True. Again, we create a new node with a
+temporary pointer `t`, make `p`'s left-child pointer to the new node, push
+the address of `p`'s pointee into the stack, and move `p` to the newly
+created node:
+
+<Sequence
+	data={[
+		{ val: 30, focus: "red" },
+		{ val: 20, focus: "red" },
+		{ val: 10, focus: "red" },
+		{ val: 15 },
+		{ val: 25 },
+		{ val: 40 },
+		{ val: 50 },
+		{ val: 45 },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "30", parent: "", pointer: "root" },
+		{ child: "20", parent: "30" },
+		{ child: "a", parent: "30", display: "none" },
+		{ child: "10", parent: "20", pointer: "t,p" },
+		{ child: "b", parent: "20", display: "none" },
+	]}
+/>
+
+<Stack data={[{ val: "" }, { val: "ad(20)" }, { val: "ad(30)" }]} />
+
+Move the next element, `pre[3]=15`. Check: `pre[3] < 10`. False. So,
+`node(15)` should be the right-child of `node(10)`. But not so fast. We
+have to be careful here. Suppose `pre[3]` was `28` instead. If that were
+the case, then blindly attaching `node(28)` as the right-child of
+`node(10)` would cause a problem &mdash; `28` is greater than `25`, and any
+node greater than `25` should be in `node(25)`'s right-subtree, not its
+left. Accordingly, we have two possibilities when `node(i) < node(i-1)`
+(i.e., when the node we're about to insert has a value less than the node
+we just inserted):
+
+1. `node(i-1) < node(i) < stackTop(node)`
+2. `node(i-1) < stackTop(node) < node(i)`
+
+The first case is when the node we're about to insert has a value greater
+than the node we just inserted, but less than the value of the node at the
+stack's topframe. (The node at the stack's topframe is the node we inserted
+just before the last node we inserted). If the first case is true, then we
+proceed to inserting the new node as the right-child. In this case, it is,
+so we perform the following:
+
+1. Create a new node as the pointee of `t.`
+2. Make `p`'s right-child point to `t`.
+3. Set `p`'s new pointee as `t`.
+
+Importantly, we <em>do not</em> push `p` onto the stack. Why don't we push
+`p`? Because if we pushed `p` onto the stack, then the stack's topmost
+frame would contain the address of `Node(10)`. But we don't need that
+address in there. The stack's sole purpose is to keep track of which nodes
+could still have children. The moment we assign a right-child to a node,
+there are no other possible children the node can have, because the
+sequence we're given is the inorder traversal sequence &mdash; there are no
+left-children for a particular node once we've been given its right-child.
+
+That said, performing the above results in:
+
+<Sequence
+	data={[
+		{ val: 30, focus: "red" },
+		{ val: 20, focus: "red" },
+		{ val: 10, focus: "red" },
+		{ val: 15, focus: "red" },
+		{ val: 25 },
+		{ val: 40 },
+		{ val: 50 },
+		{ val: 45 },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "30", parent: "", pointer: "root" },
+		{ child: "20", parent: "30" },
+		{ child: "a", parent: "30", display: "none" },
+		{ child: "10", parent: "20" },
+		{ child: "b", parent: "20", display: "none" },
+		{ child: "c", parent: "10", display: "none" },
+		{ child: "15", parent: "10", pointer: "t,p" },
+	]}
+/>
+
+<Stack data={[{ val: "" }, { val: "ad(20)" }, { val: "ad(30)" }]} />
+
+Now we go to the next element &mdash; `pre[4]=25`. Check once more:
+`pre[4] < 15`. False. We've hit another false case, so we make the
+additional check we saw earlier. Is `pre[4] > (*p).data`? I.e., is
+`25 > 15`? Yes. Check the second possibility: Is `pre[4] < stackTop(node)`?
+No, `25 &nlt; 20`.
+
+Here, the second case is true. So, we pop the stack, and move `p` to that
+address `node(20)`. Then we must compare again: `25 < 20`? False. Once more
+we make a check: Is `pre[4] < stackTop(node)`? Yes. `25 < 30.` Now we can
+continue the normal course &mdash; attach `node(25)` as the right-child of
+`node(20)`, with `p` pointing to the new node:
+
+<Sequence
+	data={[
+		{ val: 30, focus: "red" },
+		{ val: 20, focus: "red" },
+		{ val: 10, focus: "red" },
+		{ val: 15, focus: "red" },
+		{ val: 25, focus: "red" },
+		{ val: 40 },
+		{ val: 50 },
+		{ val: 45 },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "30", parent: "", pointer: "root" },
+		{ child: "20", parent: "30" },
+		{ child: "a", parent: "30", display: "none" },
+		{ child: "10", parent: "20" },
+		{ child: "25", parent: "20", pointer: "t,p" },
+		{ child: "c", parent: "10", display: "none" },
+		{ child: "15", parent: "10" },
+	]}
+/>
+
+<Stack data={[{ val: "" }, { val: "" }, { val: "ad(30)" }]} />
+
+Next: `pre[5]=40`. First check: `pre[5] < (*p).data`. False; `40 &nlt; 25.`
+Second check: `pre[5] > (*p).data`. True. Third check: Is
+`pre[5] < peek(stack)->data` False. So, we have to pop the stack.
+`p = pop(stack)`. Now `p` points to `node(30)`, and we go through checks
+again. This results in:
+
+<Sequence
+	data={[
+		{ val: 30, focus: "red" },
+		{ val: 20, focus: "red" },
+		{ val: 10, focus: "red" },
+		{ val: 15, focus: "red" },
+		{ val: 25, focus: "red" },
+		{ val: 40, focus: "red" },
+		{ val: 50 },
+		{ val: 45 },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "30", parent: "", pointer: "root" },
+		{ child: "20", parent: "30" },
+		{ child: "40", parent: "30" },
+		{ child: "10", parent: "20" },
+		{ child: "25", parent: "20", pointer: "t,p" },
+		{ child: "c", parent: "10", display: "none" },
+		{ child: "15", parent: "10" },
+	]}
+/>
+
+<Stack data={[{ val: "" }, { val: "" }, { val: "" }]} />
+
+The process continues for the remaining elements. The algorithm:
+
+```rust
+fn createPre(int pre[], int n):
+	Stack _stack = newStack(5);
+	Node *t;
+	int i = 0;
+	root = newNode();
+	(*root).data = pre[i];
+	i++;
+	Node* p = root;
+	while (i < n):
+		if (pre[i] < (*p).data):
+			t = newNode(pre[i++]);
+			(*p).left_child = t;
+			push(_stack, p);
+			p = t;
+		else if ((pre[i] > (*p).data) && (pre[i] < peek(stack)->data)):
+			t = newNode(pre[i++]);
+			(*p).right_child = t;
+			p = t;
+		else:
+			p = pop(stack);
+```

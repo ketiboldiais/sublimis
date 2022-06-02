@@ -1,0 +1,200 @@
+# MVVM
+
+The **MVVM (Model-View-ViewModel) architecture** is a way of organizing —
+or more generally, a design paradigm — an application's code. MVVM starts
+with the premise that applications consist of two core parts:
+
+<FlowChart
+	data={`
+	model[label="Model",width=0.3];
+	view[label="View",width=0.3];
+	viewModel[label="ViewModel",width=0.3];
+	system[label="iOS",width=0.3];
+
+    view->system[dir=both];
+
+    subgraph cluster {
+    	viewModel->view[dir=both];
+    	viewModel->model[dir=both];
+    	label="Application";
+    		fontsize=8;
+    };
+
+`} width={350} height={250} />
+
+The **View** is where all of our user-interface (i.e., frontend) code
+lives. The **Model** is where all of our logic (i.e., backend) code lives.
+The **ViewModel** serves as a liason betwen the View and the model, binding
+the View to the Model.
+
+## The Model
+
+The Model is completely UI-independent. Under MVVM, no UI code is ever
+placed in the model. For example, we would never import `SwiftUI` into a
+model source code file.
+
+The only code we should see in the model is code that relates to:
+
+1. data, or
+2. logic
+
+One way to think about this: If another developer wanted to know what our
+application does, they would first look at the source code files inside our
+`Model` directory.
+
+For example, consider a Chess game app. The `Model` would contain code
+about the following:
+
+- Verifying that move is valid
+- Calculating how many points have accumulated
+- Keeping track of which pieces are still on the board
+- Storing the amount of time elapsed
+
+Importantly, the model is the _single source of truth_ for our
+application's data. No other part of the application, outside the model,
+keeps data. This is a strict principle under MVVM. Other parts of the
+application are not even permitted to store that data inside a local
+variable.
+
+By ensuring that there's one, and only one, truth source, we don't have to
+worry about two different versions of the truth. This prevents situations
+like our Chess game's UI showing that the time elapsed is an hour while our
+model says it's only been five minutes.
+
+## The View
+
+The View is where all of our UI code is placed. If another developer wanted
+to know how our application looks the way it does — e.g., buttons with
+shadows, a list view, colors, etc. — they would look inside the `View`
+directory.
+
+Using our chess game app again, the `View` would contain code about:
+
+- what a particular piece looks like
+- the board's alternating square colors
+- what the point board looks like
+
+As mentioned earlier, the View cannot contain data. That's the Model's
+prerogative. But wait. Isn't the View in charge of showing data like the
+scoreboard or time? Yes, it is. For the View to render the current score or
+time, it needs that data. And to get that data, it must **ask** for it.
+
+Because the View never holds data, it is always a current state reflection
+of the model. At no point does it show data other than what the model
+currently holds.
+
+<FlowChart
+	data={`
+	model[label="Model",width=0.3];
+	view[label="View",width=0.3];
+
+    model->view[label="data flow", fontsize=8];
+
+`} rankdir="LR" height={100} width={220} />
+
+In other words, the data the View receives is ~read-only~. This means that
+the View has no _state_. If there ever is a state (indicated by the use of
+`@State`) inside the View, it's purely for self-management.
+
+For example, perhaps our Chess game has various _themes_ — when one player
+gets closer to a checkmate, their pieces start glowing. That's a particular
+theme, and the View must use an `@State` to toggle it.
+
+But, the data indicating that a player is getting closer to a checkmate
+lives entirely in the model. Thus, the `@State` used to toggle the theme is
+purely transient. Any `@State` variables we see in the View don't store any
+data about the player approaching a checkmate.
+
+### The Body Variable & the View
+
+Recall the starting template of a Swift application:
+
+```swift
+import SwiftUI
+
+struct ContentView: View {
+    var body: some View {
+        Text("Hello, world!")
+            .padding()
+    }
+}
+```
+
+The `body` var reflects the current state of the model, and it's the point
+of contact between iOS and our application. iOS will not look anywhere else
+for what to do. Additionally, iOS can ask for the value of that `body`
+variable at any time. Now, we know that Views are immutable. This means
+that there's no other way to change a View — how our application looks —
+without changing the `body` variable's value. Thus, every change we want to
+render in the UI must be done by reconstructing the `body` variable anew.
+
+Because of this fact, frontend code in SwiftUI is declarative. This, does,
+however, pose a challenge. If some data changes in the model, everything in
+the View that depends on the changed data must return their `body`
+variable.
+
+How do we get those `body` variables? Well, we could impose a rule: If a
+change occurs in the model, all Views must return their `body` variables.
+This would ensure we get the `body` variables, but it's horribly
+inefficient. Some of those Views almost certainly do not render differently
+because of the model's change. Thus, what we really want is a rule that
+only asks for a `body` variable from a View that actually depends on the
+changed data.
+
+This is the problem that MVVM solves. The whole idea behind MVVM is to
+ensure the following:
+
+1. Separting the application's Model and View,
+2. establishing a one-way connection from the Model to the View, and
+3. ensuring that only Views impacted by a change in the Model are rebuilt.
+
+This is done by the **ViewModel**.
+
+## The ViewModel
+
+<FlowChart
+	data={`
+	graph[pad="0.3",nodesep="1",ranksep="1"];
+	model[label="Model",width=0.3];
+	view[label="View",width=0.3];
+	viewModel[label="ViewModel",width=0.3];
+
+    model->viewModel[label="data change",fontsize=8];
+    viewModel->model[label="modify Model",fontsize=8];
+    viewModel->view[label="announce change",fontsize=8];
+    view->viewModel[label="user intent",fontsize=8];
+
+`} rankdir="LR" width={580} height={160}/>
+
+The ViewModel has several duties job:
+
+1. **Binding**. The ViewModel binds the Model to the View, such that
+   changes to the Model cause the View to react and get rebuilt.
+2. **Interpreting**. For some applications, our Model might provide SQL or
+   network data. These forms of data can be complicated, and we don't want
+   our Views performing data processing to render. Accordingly, the
+   ViewModel can serve as a system for wrangling the data it receives from
+   the model into a simpler format for the Views.
+3. **Gatekeeping**. The ViewModel also serves as a guard. It ensures that
+   access to the model — requests for data or indications that data inside
+   the model should change — is proper.
+4. **Tracking**. Ancilliary to the three roles above, the ViewModel must
+   also track all of the changes in the model.
+
+Because of the ViewModel's role, if the View ever needs data, it must send
+its request to the ViewModel. If the model should change based on user
+input, the View must send that input to the ViewModel.
+
+From Role (4), the ViewModel has two behaviors: (a) It notices changes in
+the model, and (b) it _publishes_ the fact that something has changed. Any
+View interested in that change can listen to these publications. This is
+similar to the _observer pattern_ in object-oriented programming. The Views
+are all _subscribed_ to the ViewModel, and the ViewModel is constantly
+_observing_ the Model.
+
+This pattern is followed because the ViewModel should not have special
+connections to its subscribers. It doesn't serve any one View — it serves
+both the Model and the Views as a whole. It's up to the Views to subscribe
+to the ViewModel. If a View (a) doesn't need data from the model or (b)
+doesn't need to send data to the model, it doesn't subscribe. If it does
+either of those two things, it subscribes.

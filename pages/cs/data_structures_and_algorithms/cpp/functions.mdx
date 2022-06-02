@@ -1,0 +1,280 @@
+> Key Points
+>
+> - Pass-by-value: The parameter copies a value, changes to the value only
+>   affect the local copy. Benefit: Avoids mutability and unexpected
+>   changes. Cost: Creating new copies, resulting in more memory and
+>   processing power usage.
+
+> - Pass-by-reference: The parameter passes a reference to the original
+>   value, changes to the value can affect the original value. Benefits:
+>   More efficient, since no copies are made. Cost: More difficult to
+>   reason about what the code is doing.
+
+In the simplest terms, a function is a piece of code that performs a
+specific task. It takes inputs, called **arguments**, and returns an
+output, called a **return value**. There are many ways to think about
+functions. For now, we can think of functions as ways to _modularize_ our
+code. If we have a particular computation that must be performed over and
+over again, that computation would be best capsulated as a function. For
+example, consider this code that prints out an array:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main() { int arr[]{1, 2, 3, 4}; int sizeOfArr = sizeof(arr) /
+sizeof(int); for (int i = 0; i < sizeOfArr; i++) { cout << arr[i] << " "; }
+cout << endl; return 0; }
+
+```
+
+If we had multiple arrays, we would have to write that `for` loop multiple
+times.
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main() {
+	int arr1[]{1, 2, 3, 4};
+	int arr2[]{5, 6, 7, 8};
+	int sizeOfArr1 = sizeof(arr1) / sizeof(int);
+	int sizeOfArr2 = sizeof(arr2) / sizeof(int);
+	for (int i = 0; i < sizeOfArr1; i++) {
+		cout << arr1[i] << " ";
+	}
+	cout << endl;
+	for (int i = 0; i < sizeOfArr2; i++) {
+		cout << arr2[i] << " ";
+	}
+	cout << endl;
+	return 0;
+}
+```
+
+It would be much cleaner if we just wrote a function:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+void printIntArr(int arr[], int length);
+
+int main() { int arr1[]{1, 2, 3, 4}; int arr2[]{5, 6, 7, 8}; int
+sizeOf_arr1 = sizeof(arr1) / sizeof(int); int sizeOf_arr2 = sizeof(arr2) /
+sizeof(int); printIntArr(arr1, sizeOf_arr1); printIntArr(arr2,
+sizeOf_arr2); return 0; }
+
+void printIntArr(int arr[], int length) { for (int i = 0; i < length; i++)
+{ cout << arr[i] << " "; } cout << endl; }
+
+```
+
+It may look like there's not much of a difference, but we have effectively
+modularized our code, allowing us to call it whenever we'd like, for
+however many arrays we want, without having to write `for` loops over and
+over. To clean the code up a bit more, we can use a macro (don't worry
+about this for now, we will expore macros in later sections):
+
+```cpp
+#include <iostream>
+using namespace std;
+#define SIZEOF(a) sizeof(a)/sizeof(*a)
+
+void printIntArr(int arr[], int length);
+
+int main() { int arr1[]{1, 2, 3, 4}; int arr2[]{5, 6, 7, 8};
+printIntArr(arr1, SIZEOF(arr1)); printIntArr(arr2, SIZEOF(arr2)); return 0;
+}
+
+void printIntArr(int arr[], int length) { for (int i = 0; i < length; i++)
+{ cout << arr[i] << " "; } cout << endl; }
+
+```
+
+Erring on the side of functions when writing code is a hallmark of the
+programming paradigm **functional programming**. The benefits of functional
+programming is modularized code, and it is the exact opposite of
+**monolithic programming** &mdash; writing all of our code in a single
+area, such as `main()`. If we wrote all of our code in `main()`, then we
+take on several risks. First, suppose our program spanned several thousand
+lies (not at all unusual). If we so happen to encounter a bug, we would
+have to weave through several thousand lines trying to pinpoint the
+problem. With modularized code, we can more quickly find the source by
+examining each module separately. Moreover, modularized code avoids
+cross-contamination by isolating pieces of code.
+
+Second, our program required performing a computation in a for loop, or a
+computation in a function, or a computation in a function in a function
+(again, not at all unusual). Without using functions, we would have to copy
+and paste the computation's code everywhere it's needed. This is (1) not
+productive and (2) almost assuredly will cause bugs (think about how many
+times you've copied and pasted and missed a character; one character is all
+it takes in programming).
+
+In `C++`, the order in which we write functions matters. Any call to a
+function must be made after the function is implemented. For example, the
+following will not work:
+
+```cpp
+int main() {
+	double a = circleArea(2.0);
+	return 0;
+}
+double circleArea(double r) {
+	double pi = 3.14;
+	double area = 2 * pi * r;
+	return area;
+}
+```
+
+```bash
+error: ‘circleArea’ was not declared in this scope
+```
+
+The correct syntax:
+
+```cpp
+double circleArea(double r) {
+	double pi = 3.14;
+	double area = 2 * pi * r;
+	return area;
+}
+int main() {
+	double a = circleArea(2.0);
+	return 0;
+}
+```
+
+Most programmers, however, do not like having these implementations before
+the `main()` function. The `main()` function is where all of the primary
+source code lies, so we usually want to see that as soon as possible. To do
+so, we include **function prototypes** before `main()`. This prototype
+serves as sort of a "heads up" to the compiler about an upcoming function.
+It takes the form:
+
+`${t_r}$ ${f}$(${t_0 \space p_0, \ldots, t_n \space p_n}$)`
+
+${t_r}$ represents the function's _return type_ (the type of the function's
+output). ${f}$ is the function's _name_. ${t_0, \ldots, t_n}$ are the types
+of the function's parameters. ${p_0,
+\ldots, p_n}$ are the parameter. Notice
+that just like variables, the parameters in a `C++` function must have
+explicitly declared types.
+
+Thus, we can rewrite the erroneous example above as:
+
+```cpp
+double circleArea(double r);
+
+int main() {
+	double a = circleArea(2.0);
+	return 0;
+}
+double circleArea(double r) {
+	double pi = 3.14;
+	double area = 2 * pi * r;
+	return area;
+}
+```
+
+Obviously, a program can have numerous functions, in which case we might
+have hundreds, if not thousands, of function protoypes. This is when we
+start writing functions in separate files, and `include` them in our
+primary source code file. These files are called **header files**, and we
+discuss them in more detail in a later section.
+
+Some functions do not explicitly return a value. What is the return type
+for these functions? It is `void`:
+
+`void `${f}$(${t_0 \space p_0, \ldots, t_n \space p_n}$`)`
+
+The keyword `void` only applies to return types. We cannot have a `void`
+parameter, and we cannot have `void` variables.
+
+The above syntax is for function protoypes. When we actually implement the
+function, we use the following syntax:
+
+```
+rt f(p0, p0, ..., tn pn) {
+	tv v;
+	statements;
+	return v;
+}
+```
+
+In the syntax above, ${r_t}$ is the return type of the function, ${f}$ is
+the name of the function, ${t_n}$ are the types for the parameters, ${p_n}$
+are the parameters, ${t_v}$ is the return type for the variable that will
+store the return, and ${v}$ is the variable that will store the return. For
+example:
+
+```cpp
+double Average(double a, double b) {
+	double sum = a + b;
+	return sum / 2;
+}
+
+int main() { double mid = average(10.2, 11.8); cout << mid << endl; return
+0; }
+
+```
+
+One quirk of `C++` is that order absolutely matters. All of our actual
+source code is located in the `main` function, so any function that is
+called inside `main` must be defined before `main`. More generally, a
+function must always be defined before it is called.
+
+In the code above, the `average()` function is called the **callee
+function** &mdash; it is the function that is called. The `main()` function
+is called the **caller function** &mdash; the function that calls.
+
+In the function `average()`, we have `double a` and `double b`. These are
+the _parameters_ of `average()`. The variables `a` and `b` exist only
+inside the function `average()`. They exist nowhere else but the
+`average()` function. Likewise, the variable `mid` exists only inside the
+`main()` function. This means that `average()` has no access to `mid`, and
+`main()` has no access to `a` and `b`.
+
+Default Values. In `C++`, we can set default values for function
+parameters. For example:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int increment(int a, int b=1) {
+	int result = a + b;
+	return result;
+}
+
+int main() {
+	int a = increment(1);
+	int b = increment(1, 2);
+	cout&lt;&lt;a&lt;&lt;endl;
+	cout&lt;&lt;b;
+
+	return 0;
+}
+```
+
+```bash
+2
+3
+```
+
+## Why use functions?
+
+Functions are more than just a way of reusing code. They are the building
+blocks for _procedural decomposition_ &mdash; breaking down a program into
+smaller and smaller pieces. In a good `C++` program, the `main()` function
+is the overarching function that calls _helper functions_. We should think
+of `main()` as a function akin to the conductor of a gargantuan orchestra;
+it simply drives, or directs, the order in which the helper functions are
+called.
+
+The helper functions should meet several criteria: (1) The helper function
+performs one, and only one, coherent task. (2) The function does not do too
+large a share of the work. (3) The function is not overly reliant on other
+functions. And (4) the function stores data in the narrowest scope
+possible.

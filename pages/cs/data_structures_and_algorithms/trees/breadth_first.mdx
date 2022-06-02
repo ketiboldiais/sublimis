@@ -1,0 +1,128 @@
+# Breadth-first Traversal
+
+In <b>breadth-first traversal</b> (also called _level-order traversal_ or
+_generational traversal_), we traverse the tree generation by generation,
+from left to right. For example, for the binary tree below, we start at the
+first generation, which has only one node, the root `n(a).`
+
+<Tree
+	data={[
+		{ child: "a", parent: "", focus: "red", ant: 1 },
+		{ child: "b", parent: "a" },
+		{ child: "c", parent: "a" },
+	]}
+	containerHeight={20}
+/>
+
+Then we start at the next generation, visiting from the left:
+
+<Tree
+	data={[
+		{ child: "a", parent: "", ant: 1 },
+		{ child: "b", parent: "a", focus: "red", ant: 2 },
+		{ child: "c", parent: "a" },
+	]}
+	containerHeight={20}
+/>
+
+to the right:
+
+<Tree
+	data={[
+		{ child: "a", parent: "", ant: 1 },
+		{ child: "b", parent: "a", ant: 2 },
+		{ child: "c", parent: "a", focus: "red", ant: 3 },
+	]}
+	containerHeight={20}
+/>
+
+Hence, for generational traversal, we have the traversal sequence
+${(n_a, n_b, n_c).}$ For a left-skewed tree, we have the traversal sequence
+${(n_a, n_b).}$
+
+<Tree
+	data={[
+		{ child: "a", parent: "", ant: 1 },
+		{ child: "b", parent: "a", ant: 2 },
+		{ child: "c", parent: "a", display: "none" },
+	]}
+	containerHeight={20}
+/>
+
+And for a right-skewed tree, we have the traversal sequence ${(n_a,
+n_c).}$
+
+<Tree
+	data={[
+		{ child: "a", parent: "", ant: 1 },
+		{ child: "b", parent: "a", display: "none" },
+		{ child: "c", parent: "a", ant: 2 },
+	]}
+	containerHeight={20}
+/>
+
+## Implementation
+
+<p>Consider the following tree (edge labels are pointer values):</p>
+
+<Tree
+	data={[
+		{ child: "8", parent: "" },
+		{ child: "3", parent: "8", edgeName: "0x1" },
+		{ child: "9", parent: "8", edgeName: "0x2" },
+		{ child: "7", parent: "3", edgeName: "0x3" },
+		{ child: "10", parent: "3", display: "none" },
+		{ child: "6", parent: "9", edgeName: "0x4" },
+		{ child: "12", parent: "6", display: "none" },
+		{ child: "2", parent: "6", edgeName: "0x5" },
+		{ child: "4", parent: "9", edgeName: "0x6" },
+		{ child: "5", parent: "7", edgeName: "0x7" },
+		{ child: "11", parent: "7", display: "none" },
+	]}
+/>
+
+<p>
+	In level-order traversal, we traverse the tree's nodes level by level.
+	Thus, for the tree above, we have the traversal:
+</p>
+
+<figure>$$ \lang 8, 3, 9, 7, 6, 4, 5, 2 \rang $$</figure>
+
+<p>
+	As with the other traversal methods, we can implement level-order
+	traversal the tree by making use of queue.
+</p>
+
+```rust
+fn levelOrder(Node* root) -> void:
+	Queue qeueue = newQueue();
+	print((*root).data)
+	enqueue(qeueue, root);
+	while (!isEmpty(q)):
+		root = dequeue(qeueue);
+		if ((*root).leftChild):
+			print((*(*root).leftChild).data);
+			enqueue(queue, (*root).leftChild);
+		if ((*root).rightChild):
+			print((*(*root).rightChild).data);
+			enqueue(queue, (*root).rightChild);
+```
+
+Here's a line by line summary of the code above:
+
+1. Declare the function.
+2. Create a new empty queue.
+3. Print the root's data. This is the first node in the tree, the root
+   node.
+4. Enqueue root to the queue.
+5. As long as the queue is not empty, execute the following instructions.
+   If the queue is empty, END.
+6. Dequeue the queue, and make root the dequeued value (a node).
+7. If the dequeued node has a left child, execute the instructions below.
+   Otherwise, go to instruction 9.
+8. Print the dequeued node's data.
+9. Enqueue the left child of the dequeued node to the queue.
+10. If the dequeued node has a right child, execute the instructions below.
+    Otherwise, go back to instruction 4.
+11. Print the dequeued node's data. Enqueue the right child of the dequeued
+    node to the queue.

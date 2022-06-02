@@ -1,0 +1,296 @@
+## Multiplication
+
+Multiplication is simply repeated addition. Accordingly, we can think of
+multiplication as an even faster method of counting. For example,
+${2 \cdot 2}$ is just another way of saying "Move 2 positions 2 times
+forward, from the origin." This leads to 4. Similarly,
+${2 \cdot \texttt{-}3}$ is equivalent to, "Move 2 positions 3 timees
+backward, from the origin." This leads to ${\texttt{-}6.}$ This reveals
+that whenever we write the expression ${a \cdot b,}$ there's an implicit
+${(a \cdot b) + 0.}$ Whenever we multiply integers, the following rule
+holds true:
+
+> _Closure Property of Multiplication_. The product of two integers is an
+> integer.
+
+## Laws of Multiplication
+
+Like addition, there are several laws of multiplication. These are
+equivalent to the laws of addition with just a few differences.
+
+### Commutative Law of Multiplication.
+
+The commutative law of multiplication states that we the order in which we
+multiply two real numbers ${a}$ and ${b}$ doesn't affect the result. In
+other words, we can freely move terms around and arrive at the same
+product.[^mnemonic]
+
+[^mnemonic]:
+    A helpful mnemonic for the commutative law: "Factors freely flow."
+
+> _Commutative Property of Multiplication._ >
+> ${a \cdot b = b \cdot a = (a)(b) = (b)(a)}$
+
+### Reciprocal Law of Multiplication
+
+What is the result of ${2 \cdot \frac{1}{2}?}$ Clearly, it is ${1.}$ How
+about ${3 \cdot \frac{1}{3}?}$ It's also ${1.}$ Indeed,
+${n \cdot \dfrac{1}{n}}$ will always return ${1,}$ where ${n}$ is a real
+number. We call this the _reciprocal law of multiplication_:
+
+> _Reciprocal Law of Multiplication._ Given any ${n \neq 0,}$ there exists
+> a number ${n^{-1} = \dfrac{1}{n}}$ such that:
+> $$n \cdot n^{-1} = n^{-1} \cdot n = 1$$
+
+While we haven't covered exponents yet, the notation ${n^{\texttt{-}1}}$ is
+the same as the expression ${\dfrac{1}{n}}$. We call the number
+${n^{\texttt{-}1}}$ the **reciprocal** or the **multiplicative inverse** of
+the number ${n.}$ The law above tells us that multiplying a real number by
+its reciprocal always yields the number ${1,}$ as long as that real number
+isn't ${0.}$ Why not ${0?}$ Because if ${n = 0,}$ then we would have the
+reciprocal ${\dfrac{1}{0}.}$ And for our purposes, division by ${0}$ is
+always _undefined_.
+
+### Associative Law of Multiplication.
+
+The associative law of multiplication tells us that we can group factors
+however way we'd like, and still arrive at the same
+product.[^assocmnemonic]
+
+[^assocmnemonic]:
+    A helpful mnemonic for the associative law: "Factors freely faction."
+
+> _Associative Property of Multiplication._ ${ (ab)c = a(bc)}$
+
+The laws of commutativity and associativity apply whether ${ a }$, ${ b }$,
+and ${ c }$ are negative, positive, or 0.
+
+### Multiplication by Zero.
+
+A man goes to a café and asks the barista for a Bombón. The barista asks,
+"How many tablespoons of sugar would you like?" The man replies,
+"Zero."[^kantfootnote]
+
+Question: How many table spoons of sugar would the man get? Very clearly
+zero! Zero of something is zero. We state this property of multiplication
+formally:
+
+> _Zero Property of Multiplication._ Given any real number ${a,}$ >
+> ${0 \cdot a = 0}$
+
+[^kantfootnote]:
+    As an aside, the coffee example above is a play on the philosopher
+    Slavoj Zizek's joke:
+
+        A man comes into a restaurant. He sits down at the table and he says, “Waiter, bring me a cup of coffee without cream.” Five minutes later, the waiter comes back and says, “I'm sorry, sir, we have no cream. Can it be without milk?”
+
+    Zizek's joke is an attempt at revitilizing Hegelian logic through an
+    alternative reading. The idea is that the existence of a negation can
+    be just as significant and worthy of consideration as the negation
+    itself. In other words, when we encounter the proposition "coffee
+    without cream", it's just as important to consider the possibility that
+    what's being expressed is not "coffee _without cream_", but rather
+    "coffee _without_".
+
+    This idea has its roots in Kant's essay _An Attempt to Introduce the
+    Concept of Negative Magnitudes of Philosophy._ There, Kant presented a
+    thought experiment: Two equal forces start at zero. One moves five feet
+    to the right, the other moves five feet to the left. Is the zero
+    resulting from their movement different from the zero they started at?
+    Kant argued yes, they are different. The "zero" resulting from the two
+    forces cancelling one another is different from the zero before any
+    force moved. The ${+5}$ and the ${-5}$ have in themselves a ${0,}$ in
+    that ${+5}$ means "Move 5 to the right from ${0}$" and ${-5}$ means
+    "Move 5 to the left from ${0.}$" That inherent ${0}$ never went
+    anywhere. It's always been there.
+
+    Hegel took this several steps further by arguing that the zero we get
+    from ${5 + (-5)}$ is not only different, but that the process of
+    negation alters the very thing we're negating. ${5 + (-5)}$ results in
+    a non-being ${0,}$ from a process that starts with a being, the origin
+    ${0.}$ This is the act of _negation_, and its result is different from
+    zero, which represents nothingness. In Hegel's view, nothingness is
+    always there. It requires no action by another to "be". In contrast,
+    negation &mdash; the act of ${(5) + (-5)}$ &mdash; requires an action
+    by another.
+
+    Hegel's arguments on negation (and logic in general), no doubt had an
+    impact on mathematical logic. In particular, Hegel's formulation of the
+    _absolute_ (a concept that follows from his work on negations) is
+    contemporaneous with the concept of _absolute value_, a topic to be
+    discussed in later sections.
+
+    The zero property of multiplication may seem straightforward, but it
+    leads a particularly useful fact to keep in mind. The equation
+    ${a \cdot b = a \cdot c}$ does not immediately imply that ${b = c.}$
+    Why? Because if ${a = 0,}$ then either ${b}$ or ${c}$ could be any real
+    number and ${b \neq c.}$ Never assume that ${ab = ac}$ implies
+    ${b = c}$ without first verifying, or stating explicitly, that
+    ${a \neq 0.}$
+
+    Additionally, if we know that ${a \cdot b = 0,}$ then we have three
+    possibilities: (1) ${a = 0,}$ (2) ${b = 0,}$ or (3) ${a = 0}$ and
+    ${b = 0.}$
+
+### Identity Property of Multiplication.
+
+Ayuri is about to walk to a smoke shop to buy some flavored tobacco. She
+asks her roommate Elena, "Do you want any flavored tobacco?" looking for
+flavored tobacco. Elena responds, "I do need some flavored tobacco." "What
+would you like?" Ayuri asks. Elena answers, "Surprise me." At the smoke
+shop, Ayuri asks the shopkeeper what flavors of tobacco the shop has. The
+shopkeeper says, "There are 100 flavors &mdash; tobacco, mint, mango, lemon
+... " enumerating each. After several minutes, Ayuri responds, "One of
+each!" Ayuri returns home with a heavy bag, greeted by her roommate Elena
+with, "Good grief, how many did you buy?" Ayuri stares, "100 I think.".
+
+The computation above is governed by the **identity law of
+multiplication**. More formally:
+
+> _Identity Law of Multiplication._ Given ${a \in \R,}$ then:
+> ${1 \cdot a = a.}$
+
+The above rules allow us to perform elaborate simplifications:
+
+$$
+\begin{aligned}
+	(2a)(5b) &= 2(a(5b)) ~\text{by associativity}\\
+	&= 2(5a)b ~\text{by commutativity}\\
+	&= ( 2 \cdot 5 )ab ~\text{by associativity}\\
+	&= 10ab
+\end{aligned}
+$$
+
+The above example represents a useful technique when handling expressions
+involving multiple factors: group all of the integers into a single
+multiplication expression, and all of the variables elsewhere.
+
+1. Numbers consisting entirely of the digit "8" are added, resulting in the
+   sum 1000. What are these numbers?
+
+   First, assume the following:
+
+   $$
+   \begin{matrix}
+   	\begin{alignedat}{8}
+   		\ldots 8 \\\ldots \\ + \space \ldots 8 \\ \hline 1000
+   	\end{alignedat}
+   \end{matrix}
+   $$
+
+   What we know: Each number ends with an 8. Since the sum is 1000, the sum
+   of the last digit, an 8, is 0.
+
+2. How many 8s do we need to arrive at a sum where the last digit is 0?
+
+   At least five 8s, since $8 \times 5 = 40$. Thus, we have:
+
+   $$
+   \begin{matrix}
+   	\begin{alignedat}{8} \ldots 8 \\ \ldots 8 \\ \ldots 8 \\ \ldots 8 \\ + \space \ldots 8 \\ \hline 1000
+   	\end{alignedat}
+   \end{matrix}
+   $$
+
+   Now note that there is a 4 that must be carried to the next place. To
+   keep the sum's digits 0, we need a sum of 8s and a 4 that returns the
+   last digit 0. We know that $8 + 8 + 4 = 20$. Further, we need one more 8
+   to get a 10:
+
+   $$
+   \begin{matrix} \begin{alignedat}{8} 8 \\ 8 \\ 8 \\ 88 \\ + \space 888 \\ \hline 1000 \end{alignedat} \end{matrix}
+   $$
+
+   Thus, the numbers are 8, 8, 8, 88, and 888.
+
+3. Suppose the following:
+
+   $$
+   \begin{matrix} \begin{align*} AAA \\ + \space BBB \\ \hline AAAC
+   \end{align*} \end{matrix}
+   $$
+
+   The ${As}$ denote some digit, the ${Bs}$ denote another digit, and
+   ${Cs}$ denotes a third digit. What are these digits?
+
+   To start, we are looking for a number where $A + B = nC$, where $n$ and
+   $C$ are digits. Furthermore, $A + B + n = mA$, where $m$ and $A$ are
+   digits. Then, $m + A + B = AAA$. Next, we note that $A + B$ must result
+   in a two digit number. Second, we further note that $A$ appears in the
+   thousands position of the result ($AAAC$). Because $A$ appears in the
+   thousands place, no other digit can be carried over into the thousands
+   place.
+
+   There is only one number for $B$ that can satisfy these conditions
+   &mdash; 9.
+
+   $$
+   \begin{align*}
+    111 \\ + \space 999 \\ \hline 1110
+   \end{align*}
+   $$
+
+4. Daniel claims that he can multiply any three-digit number by 1001
+   instantly. If his friend, Helga, says to him, "715" he gives the answer
+   immediately. Compute his answer and explain Daniel's secret.
+
+   First, $715 \times 1001 = 715715$. We can see this with the
+   multiplication algorithm:
+
+   $$
+   \begin{array}{cc} & & & 1 & 0 & 0 & 1 \\ \times & & & & 7 & 1 & 5
+   \\ \hline & & & 5 & 0 & 0 & 5 \\ & & 1 & 0 & 0 & 1 \\ + & 7 & 0 & 0
+   & 7 \\ \hline & 7 & 1 & 5 & 7 & 1 & 5 \end{array}
+   $$
+
+   Under the multiplication algorithm, Daniel simply takes the three
+   digits, ABC, and performs the following:
+
+   $C00C$ $B00B$ $A00A$
+
+   Then, he adds the numbers, shifting one place to the left on each line:
+
+   $$
+   \begin{array}{cc} & & & C & 0 & 0 & C \\ & & B & 0 & 0 & B \\ + &
+   A & 0 & 0 & A \\ \hline & A & B & C & A & B & C \end{array}
+   $$
+
+   The result then is $ABCABC$, a repetition of the digits $ABC$. Note
+   further that there are two 0s, and the digits are repeated twice.
+
+5. Compute $1010101010 \times 57$.
+
+   The multiplication algorithm tells us that we are simply shifting the
+   number 57 over and over, but, with an added 0, since the the first place
+   does not shift:
+
+   $$
+   \begin{array}{cc} & 01 & 01 & 01 & 01 & 01 & 01 \\ & & & & & & 57
+   \\ \hline & & 57 & 57 & 57 & 57 & 57
+   \end{array}
+   $$
+
+   Thus, the product is 5757575757.
+
+6. Compute $10001 \times 1020304050$.
+
+   Solution We can compute this with the following:
+
+   $$
+   \begin{array}{cc} & & & 10 & 20 & 30 & 40 & 50 \\ \times & & & &
+   & 01 & 00 & 01 \\ \hline & & & 10 & 20 & 30 & 40 & 50 \\ & & 00 & 00
+   & 00 & 00 & 00 & 00 \\ + & 10 & 20 & 30 & 40 & 50 \\ \hline & 10 &
+   20 & 40 & 60 & 80 & 40 & 50 \end{array}
+   $$
+
+   Thus, the product is 10204060804050.
+
+7. Compute $11111 \times 1111$. Rewriting the expression with the
+   multiplication algorithm:
+
+   $$
+   \begin{array}{cc} & & & & 1 & 1 & 1 & 1 & 1 \\ \times & & & & & 1
+   & 1 & 1 & 1 \\ \hline & & & & 1 & 1 & 1 & 1 & 1 \\ & & & 1 & 1 & 1 &
+   1 & 1 \\ & & 1 & 1 & 1 & 1 & 1 \\ + & 1 & 1 & 1 & 1 & 1 \\ \hline &
+   1 & 2 & 3 & 4 & 4 & 3 & 2 & 1 \end{array}
+   $$

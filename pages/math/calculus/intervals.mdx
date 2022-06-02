@@ -1,0 +1,139 @@
+# Invervals
+
+An **interval** $I$ is a special kind of set. It is a subset of
+${\mathbb{R}}$ with the property: If ${s \in I,}$ ${t \in I,}$ and
+${s < x < t,}$ then ${x \in I.}$ In other words, an interval is simply a
+set of real numbers with two explicit members, called **endpoints**, with
+the added property that every number between the two endpoints is also an
+element of the set. Because there are infinitely many real numbers between
+two different real numbers, intervals with distinct endpoints have
+infinitely many members.
+
+Intervals can be restricted to include or exclude its endpoints. If the
+interval excludes its endpoints, we say that the interval is an **open
+interval**. If the interval includes its endpoints, we say that the
+interval is an **open interval**.
+
+Because of the special place intervals have in continuous mathematics, they
+have two different forms of notation: interval notation, and set notation.
+The table below lists some common intervals in both interval and set
+notation.
+
+| Interval Notation        | Set Notation                               |
+| ------------------------ | ------------------------------------------ |
+| ${[a, b]}$               | ${\{x \in \mathbb{R} : a \leq x \leq b\}}$ |
+| ${(a,b)}$                | ${\{x \in \mathbb{R} : a < x < b\}}$       |
+| ${[a, b)}$               | ${\{ x \in \mathbb{R} : a \leq x < b \}}$  |
+| ${(a, b]}$               | ${\{ x \in \mathbb{R} : a < x \leq b \}}$  |
+| ${(a, + \infty)}$        | ${\{ x \in \mathbb{R} : x > a \}}$         |
+| ${[a, + \infty)}$        | ${\{ x \in \mathbb{R} : x \geq a \}}$      |
+| ${(- \infty, b)}$        | ${\{ x \in \mathbb{R} : x < b \}}$         |
+| ${(- \infty, b]}$        | ${\{ x \in \mathbb{R} : x \leq b \}}$      |
+| ${(- \infty, + \infty)}$ | ${\mathbb{R}}$                             |
+
+To graphically indicate that an interval includes its endpoints, we color
+in the the dot marking the endpoint. To indicate exclusion, we leave the
+mark unfilled.
+
+Suppose the interval ${(a, b) \in \mathbb{R}^2,}$ and ${a < b.}$ Now
+suppose there is a number ${\lambda \in [0,1].}$ Since ${a < b}$, we can
+infer ${a - b < 0.}$ We know that
+${\lambda{a} + (1 - \lambda){b} = b + \lambda{(a-b)}}$ (simplifying this
+expression will yield ${0 = 0}$.) Since ${a - b < 0,}$ we can solve for
+$b$: ${b = b + 0(a - b) \leq b + 1(a - b) = a.}$
+
+Now suppose there is a number ${x \in [a,b],}$ and that
+${x = \lambda{a} + (1 - \lambda){b}.}$ Solving for ${\lambda,}$ we obtain
+${\lambda = \dfrac{x - b}{b - a}.}$ Given that ${0 \leq x - b \leq b - a,}$
+it is evident that ${0 \leq \lambda \leq 1.}$
+
+Thus, we can infer the following rule:
+
+> _Lemma_. Given the open interval ${(a,b) \in \mathbb{R^2}}$ and
+> ${a < b,}$ every number of the form ${\lambda{a} + (1 - \lambda)b,}$ >
+> ${\lambda \in [0,1]}$ belongs to the interval ${[a,b].}$ Conversely, if
+> ${x \in [a,b],}$ then we can find a ${\lambda \in [0,1]}$ such that
+> ${x = \lambda{a} + (1 - \lambda){b}.}$
+
+## Neighborhoods
+
+Suppose ${a \in \mathbb{R}.}$ The set $\mathcal{N}_a$ is a **neighborhood**
+of $a$ if: There exists an open inteval $I$ centered at $a$ such that
+${I \subseteq \mathcal{N}_a.}$ I.e., $\mathcal{N} _a$ is a neighborhood of
+$a$ if there exists a ${\delta > 0}$ such that the open interval
+${(a - \delta, a + \delta) \subseteq \mathcal{N}_a.}$
+
+If $\mathcal{N}_a$ is a neighborhood of $a$, then the notation
+${\mathcal{N}_a \setminus \{ a \}}$ signifies the **deleted neighborhood**
+of $a$. This implies that ${\mathcal{N}_a}$ is a neighborhood of $a$ if $a$
+has neighbors left and right.
+
+For example, consider the following intervals:
+
+<Plot
+	geo={[
+		{ type: "line", start: [-10, 5], end: [10, 5] },
+		{ type: "line", start: [-5, 5], end: [5, 5], class: 'red'},
+		{ type: "line", start: [-10, 3], end: [10, 3] },
+		{ type: "line", start: [0, 3], end: [5, 3], class: 'red'},
+		{ type: "line", start: [-10, 1], end: [10, 1] },
+		{ type: "line", start: [-5, 1], end: [0, 1], class: 'red'},
+		{ type: "point", xy: [-5, 5] },
+		{ type: "point", xy: [5, 5] },
+		{ type: "point", xy: [5, 3] },
+		{ type: "point", xy: [-5, 1] },
+		{ type: "point", xy: [0, 3] },
+		{ type: "point", xy: [0, 5] },
+		{ type: "point", xy: [0, 1] },
+		{ type: "label", id: "a", xy: [0.25, 6.3],fontSize:0.8},
+		{ type: "label", id: "a", xy: [0.25, 4.3],fontSize:0.8},
+		{ type: "label", id: "a", xy: [0.25, 2.3],fontSize:0.8},
+		{ type: "label", id: "a+\\delta", xy: [5.2, 4.3], w: 30,fontSize:0.8},
+		{ type: "label", id: "a+\\delta", xy: [5.2, 6.3], w: 30,fontSize:0.8},
+		{ type: "label", id: "a-\\delta", xy: [-6.5, 6.3], w: 30,fontSize:0.8},
+		{ type: "label", id: "a-\\delta", xy: [-6.5, 2.3], w: 30,fontSize:0.8},
+	]}
+	id="interval1"
+	noTicks={true}
+	noAxes={true}
+	margins={[0, 0, 100, 0]}
+	containerHeight={"50%"}
+	height={400}
+	width={400}
+/>
+
+The first interval demarcates the neighborhood of $a$. The second
+interval demarcates the _sinistral neighborhood_ of $a$. Finally, the
+third interval demarcates the _dextral neighborhood_ of $a$.
+
+More formally:
+
+> _Lemma_. Let ${a \in \mathbb{R}.}$ The set ${V \subseteq \mathbb{R}}$ is
+> a **dextral neighborhood** (right-hand) of $a$ if there exists a
+> ${\delta > 0}$ such that ${[a, a + \delta) \subseteq V.}$ The set
+> ${V' \subseteq \mathbb{R}}$ is a **sinistral neighborhood** (left-hand)
+> of $a$ if there exists a ${\delta' > 0}$ such that
+> ${(a - \delta', a] \subseteq V'.}$
+
+In sum, neighborhoods are open intervals centered at a particular real
+number $a.$ They can be large or small. The intervals ${(-1000, 1000)}$,
+${(-0.00001, 0.00001)}$, and ${(-\pi, \pi)}$ are all neighborhoods of the
+real number 0. Moreover, we can restrict our discussion to certain sections
+of the neighborhood: the sinistral (left-hand) and dextral (right-hand)
+neighborhoods. For example, the interval ${(-100, 0]}$ is the sinistral
+neighborhood of 0, and the interval ${[0, 100)}$ is the dextral
+neighborhood of 0.
+
+A neighborhood is free to include or exclude its _reference point_. Thus,
+where ${a \in \mathbb{R},}$ the ${\delta \text{-neighborhood} }$ of $a$ is
+defined as
+${U_{\delta}(a) = \{ x \in \mathbb{R} : \lvert x - a \rvert < \delta \}.}$
+This particular set is simply called the neighborhood of $a$, and the
+variable ${U_{\delta}(a)}$ is equivalent to ${\mathcal{N}_a}$. If, however,
+we were to exclude the reference point $a$, then we obtain what is called a
+**reduced neighborhood**&mdash;the set
+${P_{\delta}(a) = \{ x \in \mathbb{R} : 0 < \lvert x - a \rvert < \delta \}.}$
+
+Thus, the difference between a _neighborhood of $a$_ and a _reduced
+neighborhood of $a$_ is that the reduced neighborhood of $a$ excludes the
+reference point $a$, whereas the neighborhood of $a$ includes $a$.

@@ -1,0 +1,115 @@
+# Distributivity
+
+With the rules thus far, we can make even further inferences. We know that
+if ${ a + b = 0 }$, then ${ a = -b }$ and ${ b = -a }$. Thus, if
+${ a + b = 0 }$, then it must be true that ${ (a + b) + (-a - b) = 0 }$,
+since ${ a + b = 0 }$ and ${ -a - b = 0 }$. If ${ (a + b) + (-a-b) = 0 }$,
+then it follows that ${ a + b - a -b = 0 }$. Rearranging the equation, we
+have ${ a - a + b - b = 0 }$. Rearranging again, we have:
+${ -(a + b) = -a + (-b) }$. This yields the following inference:
+
+$$
+-(a + b) = -a - b
+$$
+
+Note that we should always be vigilant about distributing a minus sign to a
+sum involving negative numbers: ${ -(-a) = a }$. To ensure that vigilance,
+we should make the following rules clear:
+
+> _Lemma_. If ${ a }$ and ${ b }$ are positive integers, then ${ a + b }$
+> is a positive integer.
+
+> _Lemma_. If ${ a }$ and ${ b }$ are negative integers, then ${ a + b }$
+> is a negative integer.
+
+We can see that these rules are true with a simple proof. Let ${ a = -n }$
+and ${ b = -m }$, where ${ m }$ and ${ n }$ are positive. It follows then
+that ${ a + b = -n - m = -(n + m) }$. Since ${ n }$ and ${ m }$ are
+positive, ${ n + m }$ is positive. Since ${ n + m }$ is positive, it
+follows that ${ a + b }$ is negative, because ${ n + m }$ is positive only
+if ${ a + b }$ is negative.
+
+This analysis hints at another law, the **distributive property.** Stated
+formally:
+
+> _Distributive Property_. If ${a, b, c \in \R,}$ then:
+> ${a(b + c) = ab + ac}$
+
+With the distribute property, we have another way of proving that
+${a \cdot 0 = 0:}$
+
+$$
+\begin{aligned} (a \cdot 0) + (a \cdot 0) &= a \cdot (0 + 0) \\ &= a
+\cdot 0 \end{aligned}
+$$
+
+The distributive property is also what leads to what at first appears to be
+a mysterious rule: The product of two negative numbers is a positive
+number. First, we start by proving that ${(-a)(b) = -(a \cdot b):}$
+
+$$
+\begin{aligned} (-a)(b) + (a)(b) &= ((-a) + a)(b) \\ &= (0)(b) \\ &= 0
+\end{aligned}
+$$
+
+Because ${(-a)(b) = -(a \cdot b),}$ we can make the following inferences.
+First, the factor ${(-a)(b) = -(ab).}$ Adding ${-(ab)}$ to both sides:
+
+$$
+\begin{aligned} (-a)(-b) + (-(ab)) &= (-a)(-b) + (-ab) \\ &= (-a) \cdot
+((-b) + b) \\ &= (-a) \cdot 0 \\ &= 0 \end{aligned}
+$$
+
+Adding ${(a)(b)}$ to both sides:
+
+$$
+(-a)(-b) = (a)(b)
+$$
+
+Multiplying ${37 \cdot 25 \cdot 4,}$ we get:
+
+$$
+\begin{aligned}
+	37 \cdot 25 \cdot 4 &= 37 \cdot (25 \cdot 4)
+	&= 37 \cdot (100) \\
+	&= 3700 \\
+\end{aligned}
+$$
+
+Anoter example: Multiply ${125 \cdot 37 \cdot 8}$
+
+$$
+\begin{aligned}
+	125 \cdot 37 \cdot 8 = (25 \cdot 5 \cdot 4 \cdot 2) \cdot 37 \\
+	= (100 \cdot 10) \cdot 37 \\
+	= (1000) \cdot 37 \\
+	= 37000
+\end{aligned}
+$$
+
+## Multiplication Algorithm
+The law of distributivity is what leads to the
+multiplication algorithm we're all farmiliar with from elementary school.
+The multiplication algorithm allows us to compute large numbers without the
+need for memorization. For example, ${17 \times 38}$:
+
+$$
+\begin{array}{cc} & \space & 1 & 7 & \\ & \times & 3 & 8 & \\ \hline &
+1 & 3 & 6 & \\ + & 5 & 1 \\ \hline & 6 & 4 & 6 & \end{array}
+$$
+
+Similarly:
+
+$$
+\begin{array}{cc} & \space & 3 & 8 & \\ & \times & 1 & 7 & \\ \hline &
+2 & 6 & 6 & \\ + & 3 & 8 \\ \hline & 6 & 4 & 6 & \end{array}
+$$
+
+The algorithm above is really an embodiment of applying the distributive
+property:
+
+$$
+\begin{aligned} 17 \times 38 &= 17 \times (3 \times 10 + 8) \\ &= (17
+\times 3 \times 10) + (17 \times 8) \\ &= 510 + 136 \\ &= 646
+\end{aligned}
+$$

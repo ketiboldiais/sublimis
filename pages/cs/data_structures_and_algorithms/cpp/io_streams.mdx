@@ -1,0 +1,624 @@
+# I/O Streams
+
+In the code examples we've seen thus far, we've used `cout` and `cin` for
+user output and input through the console. We can also read and write files
+in C++. File and user input/output are all examples of a **stream**—an
+object that represents data flowing in and out of a source code program.
+With a stream, we can direct data from one program to another, or more
+generally, from one source to a different source. Mathematically, a stream
+is akin to an _infinite sequence_—a sequence of 1s and 0s that does not end
+unless user input or output is explicitly terminated.
+
+Streams are much more abstract than we might think. These are all examples
+of streams: Typing on a keyboard and text is written to a file; text is
+written to a file and we see it displayed on the monitor; text is outputted
+from one file and saved in another; downloading data from a server (e.g.,
+_streaming_ a video); a program accessing data from a web API; these are
+all streams.
+
+The examples cited are all instances of **I/O streams** (input/output
+streams). In programming parlance, the act of obtaining, or getting, data
+from a source is called **reading** (i.e., "reading _from_ a file"). This
+is the input part of the acronym I/O. The act of sending data to a source
+is called **writing**. (i.e., "writing _to_ a file"). This is the output
+part of I/O.
+
+There are different kinds of I/O streams, depending on what the sources or
+destinations are. For example, streams between files are called **file I/O
+streams**. Streams from the keyboard to a program are called **keyboard
+streams**. Streams from a program to the monitor (or console), are called
+**console streams**.
+
+C++ provides a built-in class for general I/O—`ios`. From `ios`, there are
+two classes: `istream` (for input streams) and `ostream` (for output
+streams).
+
+For file I/O, we have `ifstream` (input file stream) and `ofstream` (output
+file stream). For keyboard streams, we have `cin` and for console streams,
+there's `cout`. Yes, the symbols we've been using, `cin` and `cout`, are
+actually streams. More specifically, `cin` and `cout` are objects of type
+`istream` and `ostream` respectively. Putting this all together:
+
+```
+		ios
+		├── istream
+		│   ├── ifstream
+		│   └── cin
+		│
+		└── ostream
+				├── ofstream
+				└── cout
+```
+
+We've seen how to use `cin` and `cout`, so let's now turn to files.
+
+## File Handling
+
+### Writing to a File.
+
+To begin, this is the directory hierarchy we're working with:
+
+```bash
+	.
+	└── StreamDemo
+			├── main.cpp
+			└── output.txt
+```
+
+Per usual, `main.cpp` is our main driver. The file `output.txt` is
+currently empty. Inside `main.cpp` we write the following:
+
+```cpp
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main() {
+	ofstream outfile("output.txt");
+	return 0;
+}
+```
+
+Several things to note: First, we wrote `#include <fstream>`. This tells
+C++ to include `fstream`, the class for file streams. The `fstream` class
+itself has two child classes, `ifstream` and `ostream`. When we write
+`ofstream outfile("output.txt")`, we are creating an instance of `ofstream`
+named `outfile`. By creating that instance, we can _write_ data into
+`output.txt`.
+
+To write data to `output.txt`, we simply use our familiar `cout`:
+
+```cpp
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main() {
+	ofstream outfile("output.txt");
+	outfile << "Hello!" << endl;
+	return 0;
+}
+```
+
+Let's compile and execute the program, and `cat` the contents of
+`output.txt` (`cat` is a bash command to display the contents of a file):
+
+```bash
+make main
+./main
+cat output.txt
+
+Hello!
+```
+
+We can confirm this by opening the `output.txt`: It contains the single
+line `Hello!`. Importantly, once we are done using `output.txt`, we _must_
+close it:
+
+```cpp
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main() {
+	ofstream outfile("output.txt");
+	outfile << "Hello!" << endl;
+	outfile.close();
+	return 0;
+}
+```
+
+Why should we close the file? Because without closing the file, the
+operating system concludes that a program is still using the file. If we
+have that file saved on some drive, the operating system will not allow us
+to eject the drive, since a program is still using a file inside the drive
+(we've likely seen this when we click the eject button for a software
+installer or a thumb drive and the computer won't allow us—there's a file
+in there still in use; it follows then that we can fix that by terminating
+whatever program is using that file).
+
+A word of caution: If `output.txt` already contains content, using the code
+above will replace all of the content in `output.txt` with the content we
+write to it. For example, suppose `output.txt` contains the following
+content:
+
+```bash
+cat output.txt
+
+Hello, world!
+```
+
+If we run the same program above and `cat` the contents of `output.txt`:
+
+```bash
+make main
+./main
+cat output.txt
+
+Hello!
+```
+
+The original content, `Hello, world!`, is no longer there. It's been
+_overwritten_ by the output of executing `main.o`. If we want the output
+stream _not_ to perform this default behavior, we can include the **flag**
+`ios::app` into `ofstream outfile()`. For example, suppose `output.txt`
+contains the string `Hello!`, and we want `main` to simply insert a new
+string, `Goodbye!`. To do so, we write:
+
+```cpp
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main() {
+	ofstream outfile("output.txt", ios::app);
+	outfile << "Goodbye!" << endl;
+	outfile.close();
+	return 0;
+}
+```
+
+```bash
+make main
+./main
+cat output.txt
+
+Hello!
+Goodbye!
+```
+
+## Reading from a File.
+
+Now let's consider how to _read_ data from a file. The procedure for
+setting up a file input stream is the same as setting up a file output
+stream; the difference being we use the class `ifstream` instead. Like
+`ofstream`, `ifstream` is a child of `fstream`, so we have to include
+`fstream`.
+
+We'll rename our file `output.txt` to `input.txt`, and write inside of it
+the following:
+
+```bash
+cat input.txt
+
+2.99
+3.62
+1.87
+```
+
+Inside `main.cpp`, we have the following:
+
+```cpp
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main() {
+	ifstream infile;
+	infile.open("input.txt");
+	return 0;
+}
+```
+
+Notice that things look a little different for `ifstream` than `ofstream`.
+Here, we created an object called `infile`, of type `ifstream`. This is an
+instance of the `ifstream` class, with the identifier, or name, `infile`.
+Then, on the next line, we wrote `infile.open("input.txt")`. This is a call
+to a member function of `ifstream`, called `open()`, which performs the
+operation of opening the file `input.txt`. Note what this means: The file
+`input.txt` must already exist. If it doesn't, then there's nothing for
+`open()` to open, and our program risks crashing. Accordingly, it is
+always, _always_, best practice to check if the file exists:
+
+```cpp
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main() {
+	ifstream infile;
+	infile.open("foo.txt");
+	if (!infile.is_open()) {
+		cout << "File does not exist" << endl;
+	}
+	return 0;
+}
+```
+
+```bash
+File does not exist
+```
+
+In the code above, we checked if `infile` had a stream associated with it
+(i.e., whether `open()` could in fact open a file). In this case, we tried
+opening a file called `foo.txt`, a file that doesn't exist, resulting in
+the custom error message displayed. If we instead used `input.txt`, the
+file that does exist:
+
+```cpp
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main() {
+	ifstream infile;
+	infile.open("input.txt");
+	if (!infile.is_open()) {
+		cout << "File does not exist" << endl;
+	} else {
+		cout << "File successfully opened" << endl;
+	}
+	return 0;
+}
+```
+
+```bash
+File successfully opened
+```
+
+That in mind, we want to make sure that reading is done only if a file
+exists:
+
+```cpp
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main() {
+	ifstream infile;
+	infile.open("input.txt");
+	if (!infile.is_open()) {
+		cout << "File could not be opened" << endl;
+	} else {
+		// Code to execute if the file can be opened
+	}
+	return 0;
+}
+```
+
+With this guard in place, we can proceed to storing the values inside
+`input.txt` into variables in our `main` program, and average them:
+
+```cpp
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main() {
+	ifstream infile;
+	infile.open("input.txt");
+	double price1, price2, price3;
+	if (!infile.is_open()) {
+		cout << "File could not be opened" << endl;
+	}
+	else {
+		infile >> price1;
+		infile >> price2;
+		infile >> price3;
+	}
+	double average = (price1 + price2 + price3) / 3.0;
+	cout << average << endl;
+	return 0;
+}
+```
+
+```bash
+2.82667
+```
+
+Very cool. We can shorten our code a bit more, and we should close the file
+once we're done:
+
+```cpp
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main() {
+	ifstream infile("input.txt");
+	double price1, price2, price3;
+	if (!infile.is_open()) {
+		cout << "File could not be opened" << endl;
+	}
+	else {
+		infile >> price1 >> price2 >> price3;
+		infile.close();
+	}
+	double average = (price1 + price2 + price3) / 3.0;
+	cout << average << endl;
+	return 0;
+}
+```
+
+## Arguments for `fstream`
+
+In the examples above, notice that both `ifstream()` and `ofstream()` took
+strings as arguments. Accordingly, we can store file names in variables,
+and pass such variables into `ifstream()` or `ofstream()`:
+
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+int main() {
+	string readFile = "input.txt";
+	ifstream infile(readFile);
+	double price1, price2, price3;
+	if (!infile.is_open()) {
+		cout << "File could not be opened" << endl;
+	}
+	else {
+		infile >> price1 >> price2 >> price3;
+		infile.close();
+	}
+	double average = (price1 + price2 + price3) / 3.0;
+	cout << average << endl;
+	return 0;
+}
+
+```
+
+In older versions of C++, the `fstream` classes could only take traditional
+C-style strings as arguments (i.e., `char` arrays). After C++11, however,
+this limitation was removed, and we can now use the `string` class.
+
+The ability to store file names in variables is particularly useful. With
+this ability, we can ask the user what file to open on the directory, to be
+read or written by the program.
+
+## Challenges to Reading Files
+
+There are several challenges and potential bug sources whenever we read
+files. The first problem is determining how much data to read, or more
+generally, when to stop reading data. There are common techniques for
+handling this problem.
+
+## Specifying the Number of Records.
+
+By specifying the number of records, we mean indicating how many data items
+should be read in. With this technique, we essentially specify the number
+of data items that should be read, say some integer ${n.}$ The program
+should read only ${n}$ data items; once ${n}$ is reached, the program
+should stop reading.
+
+For example, suppose our `input.txt` file contained the following data:
+
+```bash
+2.99
+3.62
+1.87
+3.59
+4.22
+2.11
+3.84
+```
+
+These are 7 data items. Let's say we wanted to only store the first 3
+pieces of data in a vector:
+
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+using namespace std;
+
+int main() {
+	vector<double> prices;
+
+	string readFile = "input.txt";
+	ifstream infile(readFile);
+
+	if (!infile.is_open()) {
+		cout << "File could not be opened" << endl;
+	}
+	else {
+		for (int i = 0; i < 3; i++) {
+			double price;
+			infile >> price;
+			prices.push_back(price);
+		}
+		infile.close();
+	}
+
+	for (int i = 0; i < prices.size(); i++) {
+		cout << prices[i] << endl;
+	}
+
+	return 0;
+}
+```
+
+```bash
+2.99
+3.62
+1.87
+```
+
+In the code above, we wrote a for-loop that runs for a total of 3
+iterations. At each iteration, we read each line into `price` (mutating
+`price` at each iteration), and appending that value of `price` to the
+vector `prices`. The output works as expected, where only the first three
+prices are displayed.
+
+## Sentinel Expression.
+
+With this approach, we specify a particular expression, or value, to
+trigger a stop to the reading. For example, continuing with our original
+`input.txt`, suppose we wanted our program to stop reading if it encounters
+the value `4.22` (the program should not read `4.22` and everything
+thereafter):
+
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+using namespace std;
+
+int main() {
+	vector<double> prices;
+
+	string readFile = "input.txt";
+	ifstream infile(readFile);
+
+	if (!infile.is_open()) {
+		cout << "File could not be opened" << endl;
+	}
+	else {
+		while (!infile.eof()) {
+			double price;
+			infile >> price;
+			if (price == 4.22) {
+				break;
+			} else {
+				prices.push_back(price);
+			}
+		}
+		infile.close();
+	}
+
+	for (int i = 0; i < prices.size(); i++) {
+		cout << prices[i] << endl;
+	}
+
+	return 0;
+}
+```
+
+```bash
+2.99
+3.62
+1.87
+3.59
+```
+
+In the example above, we used a member function, `.eof()` ("end of file").
+This function returns true if the end of the file is reached, otherwise
+false. Used in the while-loop, we effectively told C++, continue reading
+the lines unless you encounter the value `4.22`. In that case, stop. Of
+course, if we wanted to also include `4.22`, we simply move
+`infile >> price` into the `else` block.
+
+Needless to say, the sentinel value approach only works if we have some
+idea of the data we're working with.
+
+## Detect the End of the File.
+
+The final approach is hinted at by the previous. Here, we simply continue
+reading data until we reach the end of the file. To do so, we merely test
+for the condition with `.eof()`:
+
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+using namespace std;
+
+int main() {
+	vector<double> prices;
+
+	string readFile = "input.txt";
+	ifstream infile(readFile);
+
+	if (!infile.is_open()) {
+		cout << "File could not be opened" << endl;
+	}
+	else {
+		while (!infile.eof()) {
+			double price;
+			infile >> price;
+			prices.push_back(price);
+		}
+		infile.close();
+	}
+
+	for (int i = 0; i < prices.size(); i++) {
+		cout << prices[i] << endl;
+	}
+
+	return 0;
+}
+```
+
+## Stream State
+
+Using `.eof()` is a good point to discuss **stream states**. Every stream
+has a state. Whenever we read files, we can think of the stream as akin to
+pumping water from a well. There are several things that might happen when
+draw that water: We could be trying to (1) pump water when the well's gone
+dry, (2) pump infected water; (3) not have any pipe to the well; or (4)
+pumping good, clean water from a filled well. The same idea extends to
+stream states.
+
+Every stream has four bits keeping track of the stream's state. The
+**eofbit**, represented by `eof()`, is true we're trying to read past the
+end of the file. The **badbit**, represented by `bad()`, is true when we
+read corrupted data (e.g., trying to store a string into an `int`
+variable). The **failbit**, represented by `fail()`, is true when a file is
+not open (maybe the file doesn't exist or we simply didn't open it). And
+the **goodbit**, represented by `good()`, is true when all of the previous
+bits are false.
+
+Knowing these facts, we can use `good()` to cover all of the possible
+problems that might occur when we're reading files. This leads to more
+concise code (of course, at the cost of not knowing what caused a problem):
+
+```cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+using namespace std;
+
+int main() {
+	vector<double> prices;
+
+	string readFile = "input.txt";
+	ifstream infile(readFile);
+
+	while (infile.good()) {
+		double price;
+		infile >> price;
+		prices.push_back(price);
+	}
+
+	infile.close();
+
+	for (int i = 0; i < prices.size(); i++) {
+		cout << prices[i] << endl;
+	}
+
+	return 0;
+}
+```
+
+## Streams at a Lower Level
+
+To reduce complexity, we described streams as being akin to pipes from one
+source to the next. This was inaccurate. For a slightly more accurate
+description of what's really going on with streams, let's look at things at
+a lower level. Consider `cin`, the object for keyboard streams.

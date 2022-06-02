@@ -1,0 +1,1188 @@
+# Algorithms on Strings
+
++ [Algorithms on Strings](#algorithms-on-strings)
+	+ [Characters](#characters)
+	+ [Strings](#strings)
+	+ [Finding the Length of a String](#finding-the-length-of-a-string)
+	+ [Letter-casing Algorithms](#letter-casing-algorithms)
+	+ [Case Toggling](#case-toggling)
+	+ [Phone Counting](#phone-counting)
+	+ [Vowel Counter](#vowel-counter)
+	+ [Consonant Counter.](#consonant-counter)
+	+ [Word Counter](#word-counter)
+	+ [String Validations](#string-validations)
+	+ [String Reversal](#string-reversal)
+	+ [String Equality](#string-equality)
+	+ [Lexical Comparison](#lexical-comparison)
+	+ [Palindrome Verification](#palindrome-verification)
+
+In this section, we present several useful algorithms for strings. As we
+know, a **character set** is the set of character codes a language can
+process. Because computers only understand zeroes and ones, each character
+in the set is assigned an integer value, which can be represented in zeroes
+and ones. This process is called **encoding**—transforming information from
+one format into another.
+
+In the early days of computing, the only characters necessary for
+computation were unaccented English characters (along with constructs like
+the linefeed, bell, and whitespace). All of these symbols—128 in
+total—formed the character set _ASCII_ (American Standard Code for
+Information Interchange).
+
+Because there were 128 ASCII characters, the integers from 0 to 127 were
+used to represent each character. Because the highest possible integer
+representation is 127—in binary, ${111~1111_{[2]}}$—seven bits were
+sufficient for representing all 128 characters. However, by the time ASCII
+was developed, the smallest possible unit in computer memory a user could
+reference was a byte (eight bits). Accordingly, ASCII characters—in C and
+C++, `char` values—take up 1 byte of memory. Because of this allocation,
+ASCII's users and developers found themselves with an additional bit. And
+with eight bits, the integers 128$ to 255 were available for mapping—users
+now had access to 256 possible characters.
+
+The result was a lost-in-translation situation of painful magnitude.
+Governments, companies, independent developers, and users were coming up
+with their own ways of using the extra bit (i.e., the other 128 available
+integers). Documents, code, and data sent from one entity to the next could
+not be read because of conflicting standards. One user might use `132` to
+represent `&szlig;`, the other used it for `&pi;`—`2&pi;r` became
+`2&szlig;r` and `gro&szlig;` became `gro&pi;`.
+
+Responding to the discord, IBM introduced **code pages**—systems mapping
+values to characters in an encoding system. In IBM's code pages, the
+integers 0 through 127 were always mapped to the ASCII characters, and the
+integers 128 to 255 (called the **extended codes**) were mapped to some
+language variation of the user's choice. For example, with code page 437,
+the extended codes were mapped to characters specific to IBM computers:
+diactritics (accented letters), icons, and system-specific symbols. For
+code page 737, the extended codes mapped to Greek letters, and for code
+page 826, the extended codes mapped to Turkish letters. With multiple code
+pages, users could simply swap code pages as needed. The mathematician
+might work predominantly with the Greek letter code page, but when reading
+a German paper, she could switch to the German code page. All 256
+characters (the 128 original ASCII characters and the 128 additional
+characters from a code page) constitute an **extended ASCII character
+set**.
+
+Because every ASCII encoding requires exactly 1 byte, we say that ASCII
+uses a **fixed-width encoding system**. This is a good point to clarify an
+important distinction: There's a difference between the character set
+(ASCII set) and the character set's **encoding system** (ASCII encoding).
+The encoding system is the way the characters in the set are represented in
+memory. In extended ASCII, characters are encoded as eight-bit character
+codes, as we stated earlier.
+
+As the internet grew, consumers recognized that eight bits, 256 characters,
+were insufficient. And rightly so—the average Chinese user demands about
+7000 characters for expressive use (from roughly 50000 possible
+characters). As exchanging text between systems—rather than entire systems
+or parts of the systems themselves—became prevalent, a paradigm shift in
+the encoding community occured. Rather than thinking of a character as a
+symbol with one, specified representation in computer memory, we think of a
+character as a concept that can be represented in multiple ways. In
+practice, we call the former paradigm a **fixed-width encoding system**,
+and the latter a **variable-width encoding system**.
+
+For example, the letter `A` in ASCII encoding employs the former paradigm.
+It is always represented as:
+
+$$
+	\texttt{A} \to \texttt{0100 0001}
+$$
+
+Under the new paradigm, we map each character to a concept. That concept,
+called a **code point**, can then be deciphered by the computer in whatever
+way it sees fit (using more bits or bytes as necessary):[^hexnumbernote]
+
+$$
+	\texttt{A} \to \texttt{U+0001}
+$$
+
+[^hexnumbernote]: The number `0001` is a hexadecimal number.
+
+The character set employing this new paradigm is called
+**Unicode**.[^unicodenote] Above, the symbol `U+0001` is a code point. The
+code point is simply a number associated with a particular idea. That idea
+could be a letter, a mathematical symbol, a numeral, whitespace, tab, or an
+emoji. How that number is deciphered and stored as bits is up to the
+computer. As of the time of this writing, Unicode (now at version 14.0) has
+144_697 ideas mapped, with 1_112_064 code points in reserve.
+
+[^unicodenote]:
+    The name "Unicode" is a morphological blending of _unique_, _unified_,
+    _universal_, and _encoding_.
+
+This entire discussion reveals a critical point when working with strings:
+There's no such thing as "plain text." Instructing a computer to change
+some `int` value to "plain text" is akin to asking the bureau de change,
+"Convert these dollars to currency." The only way a computer can separate
+`1` from `"1"` or understand that we're asking for the character `&phi;` is
+if we explicitly provide the encoding encoding system to use. And it's
+considered best practice to explicitly define encoding whenever possible
+because there are multiple encoding systems:
+
+1. In _ASCII_, the characters are encoded as a sequence of 7 bits. This is
+   a fixed-width encoding system, so only 128 characters can be
+   represented. The characters mapped to the integers 0 to 31 are
+   non-printable characters, while the characters from 32 to 127 comprise
+   the printable characters often called "plain text."
+
+2. Like ASCII, _Extended ASCII_ is a fixed-width encoding system, but with
+   mappings for the additional 128 characters (really, all characters
+   beyond the original 128). The name "extended ASCII" is informal. This is
+   just ASCII, but with characters encoded as a sequence of 8 bits and the
+   user providing some additional encodings (whether that's through a
+   personal code page or another system, like Unicode) for additional
+   numbers.
+
+3. _OEM Code Pages_ or _IBM Code Pages_ are fixed-width encoding systems
+   for the additional 128 characters resulting from the unused eighth bit
+   in ASCII. As such, characters in this encoding system are encoded as a
+   sequence of 8 bits. There are multitudes of code pages, mapping the
+   additional 128 characters to various symbols depending on language,
+   field, country, or computer system.
+
+4. The _ANSI Code Pages_ are Microsoft's equivalent to the IBM and OEM code
+   pages, so characters here are also encoded as a fixed-width sequence of
+   8 bits. Contrary to popular belief, these pages were never standardized
+   by ANSI (the _American National Standards Institute_, a private
+   non-profit aimed at standardization). Microsoft intended to standardize
+   one of their pages through ANSI and prepended to draft's title "ANSI",
+   but no such standardization occurred.
+
+5. _UTF-8_, _UTF-16_, and _UTF-32_ are the most common systems used to
+   convert Unicode code points to bits. Remember, Unicode is a system
+   mapping concepts to code points; this process is distinct from
+   converting the code points to bits. For example, the smiley face emoji
+   (a concept) is mapped to a specific code point:
+	$$
+		😊 ~~~\to~~ \texttt{U+1F60A}
+	$$
+
+The number `U+1F60A` is a code point. The letter `U` stands for _Unicode_
+and the number `1F60A` is a hexadecimal number. To convert this code point
+into bits, the computer system looks for the encoding system we've defined.
+In Unicode, these systems are called **Unicode Translation Formats** (hence
+"UTF"). Importantly, the number following UTF (e.g., the 8 in UTF-8) does
+not specify how many bits the code point is translated into. Instead, it
+specifies the _size_ of each code unit from translating the hexadecimal
+number. Thus, in UTF-8, the Unicode code point (the magic number `1F60A`)
+is stored in memory as a sequence of 8-bits. Hence, every code point `0` to
+`7f` (0 to 127 in decimal—the ASCII characters) is stored in exactly 1
+byte. Code points beyond that are stored using 2, 3, or 4 bytes. Similarly,
+in UTF-32, the code units resulting from translating the code point are
+stored as sequences of 32 bits, and for UTF-16, a sequence of 16 bits.
+
+Note how we said that UTF-8, UTF-16, and UTF-32 are the most common
+options. We say this because Unicode can be encoded through a wide variety
+of encoding systems: UTF-7, UCS, UCS-2 (now obsolete), ASCII, and many
+others. These other encoding systems continue to exist because the
+operations of other standards necessitate their use. For example, the
+standard for URL encoding is set by RFC 1738, which effectively provides
+that only a subset of the original ASCII characters can be used: We can't
+use non-printable characters and we can't use any of these characters:
+
+|      |     |     |     |     |     |              |
+| ---- | --- | --- | --- | --- | --- | ------------ |
+| `""` | `<` | `>` | `#` | `{` | `}` | `sp` (space) |
+| `\|` | `^` | `\` | `~` | `[` | `]` | `\``         |
+
+If any of the characters above are used directly (i.e., maybe our directory
+name has a space, resulting in a space in the URL), an encoding algorithm
+is used:
+
+1. Find the ISO 8859-1 code point for the illegal character.
+2. Convert the code point to two hexadecimal characters.
+3. Append a percentage sign, `%`, to the front of the two hex characters.
+
+For example, the single whitespace character is an illegal character under
+RFC 1738. Applying the algorithm above, the whitespace is replaced with a
+`%20`. Thus, when we see a `%20` in a URL, we immediately know that
+whoever, or whatever, created that URL included a whitespace, inadvertently
+or otherwise. Similar algorithms exist for when we use characters that
+cannot be encoded. The _replacement character_ &thinsp; � &thinsp; is often
+used to replace characters that cannot be encoded.
+
+In sum, whenever we work with strings, it's important to always keep the
+encoding system in the back of our minds. This can be particularly helpful
+when analyzing and designing string algorithms:
+
+<table>
+	<thead>
+		<tr>
+			<th>Encoding System</th>
+			<th>Lengths</th>
+			<th>Memory Consumption</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>_ASCII_</td>
+			<td>A sequence of 7 bits.</td>
+			<td>Constant memory consumption; essentially 1 byte.</td>
+		</tr>
+		<tr>
+			<td>_"Extended ASCII"_</td>
+			<td>A sequence of 8 bits.</td>
+			<td>Constant memory consumption: 1 byte.</td>
+		</tr>
+		<tr>
+			<td>_UTF-7_</td>
+			<td>A sequence of 7 bits.</td>
+			<td>Constant memory consumption; essentially 1 byte.</td>
+		</tr>
+		<tr>
+			<td>_IBM/OEM Code Maps_</td>
+			<td>A sequence of 8 bits.</td>
+			<td>Constant memory consumption: 1 byte.</td>
+		</tr>
+		<tr>
+			<td>_ANSI Code Maps_</td>
+			<td>A sequence of 8 bits.</td>
+			<td>Constant memory consumption: 1 byte.</td>
+		</tr>
+		<tr>
+			<td>_ISO 8859_</td>
+			<td>A sequence of 8 bits.</td>
+			<td>Constant memory consumption: 1 byte.</td>
+		</tr>
+		<tr>
+			<td>_UTF-8_</td>
+			<td>Each code unit is a sequence of 8 bits.</td>
+			<td>
+				Variable memory consumption; a character can take up 1, 2, 3, or 4
+				bytes. At a minimum, a character is 1 byte.
+			</td>
+		</tr>
+		<tr>
+			<td>_UTF-16_</td>
+			<td>
+				Each code unit is a sequence of 16 bits. The smallest possible
+				memory consumption is 2 bytes, the largest is 4 bytes.
+			</td>
+			<td>
+				Variable memory consumption; a character can take up 2, 3, or 4
+				bytes. At a minimum, a character is 2 bytes.
+			</td>
+		</tr>
+		<tr>
+			<td>_UTF-32_</td>
+			<td>A sequence of 32 bits.</td>
+			<td>Constant memory consumption: 4 bytes.</td>
+		</tr>
+		<tr>
+			<td>_UCS-2_ (obsolete)</td>
+			<td>A sequence of 16 bits.</td>
+			<td>Constant memory consumption: 2 bytes.</td>
+		</tr>
+		<tr>
+			<td>_UCS-4_ (obsolete)</td>
+			<td>A sequence of 32 bits.</td>
+			<td>Constant memory consumption: 4 bytes.</td>
+		</tr>
+	</tbody>
+</table>
+
+To simplify our algorithms, we will be working almost exclusively with
+ASCII, where every character takes up 1 byte of memory. This will allow us
+to explore some of the limitations of such algorithms when a different
+encoding system is used. Because the original ASCII characters are widely
+used, it's helpful to memorize the following facts:
+
+1. The uppercase letters `A` through `Z` are mapped to the integers in the
+   range ${[65, 90].}$
+
+2. The lower case letters `a` through `z` are mapped to the integers in the
+   range ${[97, 122].}$
+
+3. The uppercase letters come "before" the lower case letters in terms of
+   their integer equivalents.
+
+4. The numerals `0` through `9` are mapped to the integers in the range
+   ${[48, 57].}$
+
+5. The ranges of integers ${[32, 47],}$ ${[58, 64],}$ ${[91, 96],}$ and
+   ${[123, 127]}$ map to special characters like `()` and `/`.
+
+6. The range of integers ${[0, 31]}$ map to _control characters_ (these are
+   non-printable characters).
+
+7. The integer ${32}$ is mapped to whitespace.
+
+8. The integer ${10}$ is mapped to linefeed (i.e., the result of hitting
+   enter on the keyboard; a new line).
+
+## Characters
+
+In some languages, there is distinction between characters and strings.
+However, because there is a distinction in C and C++, we briefly revisit
+it.
+
+In C, a `char` value is an ASCII character, and it takes up exactly 1 byte.
+Because we restrict ourselves to the original ASCII characters, of the 8
+bits in the byte, only 7 of those bits are used. Those 7 bits constitute
+some integer—the character's ASCII code. For example, for the character `A`
+is actually the integer `65`, stored in memory as:
+
+$$
+	\large \texttt{0100 0001}
+$$
+
+We can see this is the case with the following code:
+
+```c
+int main() {
+	char temp = 'A';
+	printf("temp = %c", temp);
+	printf("temp = %d", temp);
+}
+```
+
+```bash
+temp = A
+temp = 65
+```
+
+Similarly, when we use `cout` in C++, the compiler knows that the variable
+`temp` is a `char` variable, and outputs to the console a string rather
+than the integer values. If we wanted to output the integer values, we must
+cast the `char` value to an `int`.
+
+## Strings
+
+Before we consider the implementation details underyling strings, we should
+get some formal definitions out of the way. First, what is a string? The
+formal definition:
+
+> Definition: String. A _string_ ${S}$ is an ordered list of characters
+> placed contiguously from left to right.
+
+Short as it may be, the definition above imposes a few restrictions: (1)
+Strings have an _order_, and (2) each character is ordered, or written,
+from left to right. The first restriction implies that a string like
+`'abc'` is not the same as the string `'bca'`. There is a certain order.
+The second restriction implies that we're only concerned with strings where
+reading and writting is done from left to right. As such, this covers
+strings representing words in English and many of the other Western
+languages, but excludes East Asian languages like Chinese and Japanese.
+
+In C, an array of `char` values is a **string**. In C++, this type of
+string is called a **C string** (as we know, the other string type is
+class-implemented, but we will limit ourselves to C strings for now). Thus,
+when we write:
+
+```c
+int main() {
+	char word[5];
+}
+```
+
+we declare an array called `word` whose values are `char`s. In other words,
+a string of size ${5.}$ We can then initialize the string:
+
+```c
+int main() {
+	char w[5];
+	w = {'h', 'e', 'l', 'l', 'o'};
+}
+```
+
+Visually:
+
+<Sequence data={[`h`, `e`, `l`, `l`, `o`]} />
+
+We can also create strings without explicitly providing a size:
+
+```c
+int main() {
+	char w[] = {'h', 'e', 'l', 'l', 'o'};
+}
+```
+
+Or even avoid using characters all together:
+
+```c
+int main() {
+	char w[] = {104, 101, 108, 108, 111};
+}
+```
+
+Now, if we wrote:
+
+```c
+int main() {
+	char w[5] = {'h', 'e'};
+}
+```
+
+We would have the following in memory:
+
+<Sequence data={[`h`, `e`, 0, 0, 0]} />
+
+If we initialize only some of the elements in the array with `char` values,
+the remaining uninitialized spaces are effectively zero. Because C strings
+are arrays of `char` values, we have the following observation:
+
+> Given an array of `char` values with a size ${S,}$ if ${n}$ elements are
+> initialized and ${n < S,}$ the resulting string has a length
+> ${\ell < S.}$
+
+Given the fact above, we have a problem: How do we know where a string
+terminates? We can't rely on the size of the array, because it isn't
+guaranteed that the string ends there. The solution in C and C++ is to use
+a control character `NUL`.[^nullnote] Visually, it is represented as
+`'\0'`, and it has the ASCII code `0`. Note that that is difference between
+the ASCII `NUL`, the ASCII `0`, and the literal `0`:
+
+[^nullnote]:
+    The NUL character is an example of a **string terminator** or **string
+    delimiter**. Effectively, a character that's used to denote the end of
+    a string. This means that the character just before the string
+    terminator is the last character in the string.
+
+```c
+int main {
+	char ascii_NUL = '\0';
+	char zero = '0';
+	int zero = 0;
+}
+```
+
+The character zero is represented in hexadecimal as `0x30`, and the
+character NUL is represented in hexadecimal as `0x00`. The NUL character,
+as an `int`, is `0`. The zero character, as an `int`, is `30`.
+
+Accordingly, the partially initialized character array we saw is actually
+implemented as:
+
+<Sequence data={["h", "e", "\0", 0, 0]} />
+
+Note that this implementation behavior is not universal. In languages like
+Java, the length of string is built into the string itself. But in
+languages like C, the length is determined only if, and only after, the
+string delimiter is found. As such, C strings are formed only if we include
+a `\0` as the last element in the array:
+
+```c
+int main() {
+	char w[5] = {'h', 'e', '\0'};
+}
+```
+
+Without the string delimiter, the `char` array is just an array of `char`
+values. Once we include the delimiter, the `char` array is interpreted as a
+string. We can, of course, omit the size:
+
+```c
+int main() {
+	char w[] = {'h', 'e', '\0'};
+}
+```
+
+When we write the above code, there are several things to keep in mind:
+
+1. The size of the array is 3.
+2. The length of the array is 3.
+3. The length of the _string_ is 2.
+
+The most common way to initialize a C string, however, is the following:
+
+```c
+int main() {
+	char w[] = "hello";
+}
+```
+
+When we use double quotes, the C compiler automatically includes the string
+delimiter after the last character. Thus, when we see this code, the
+previous analysis applies. The size of the array is 6. The length of the
+array is 6. The length of the string is 5.
+
+## Finding the Length of a String
+
+The first algorithm we consider is the **string-length algorithm**.
+Although this algorithm is simple, it is fundamental to the implementations
+of many string algorithms. Consider the following string:
+
+```c
+int main() {
+	char S[] = "welcome";
+}
+```
+
+In memory, this string is implemented as:
+
+<Sequence data={["w", "e", "l", "c", "o", "m", "e", "\0"]} />
+
+To find the length of this string, we simply iterate until we reach the NUL
+character (the string delimiter, `\0`). Thus, whichever index we stop at is
+the length of the string:
+
+```rust
+stringLength(char[] S):
+	let int i = 0
+	while (S[i] != '\0'):
+		i++
+	return i
+```
+
+Because we must traverse the array, if there are ${n}$ elements, we must
+perform the non-equality comparison ${n}$ times. Accordingly, this
+algorithm has time complexity of ${O(n)}$—linear time.
+
+## Letter-casing Algorithms
+
+The next algorithm we consider is changing all the letters in a string to
+the another case. For example, given the following string:
+
+```c
+int main() {
+	char S[] = "warning";
+}
+```
+
+We want to output:
+
+```bash
+WARNING
+```
+
+Alternatively, if the string is `"WARNING"`, we want to output `"warning"`.
+This procedure is called **letter casing**.[^lettercasingnote] The simplest
+letter casing algorithm comes from two helpful facts in the ASCII table:
+
+[^lettercasingnote]:
+    Two asides: First, letter casing is distinct from _capitalization_. We
+    do not capitalize letters; we capitalize _words_. When we capitalize a
+    word, we _uppercase_ the first letter, and ensure the rest of the
+    word's letters are _lowercase_. Second, the terms "uppercase" and
+    "lowercase" stem from the original printing press. The _majuscule
+    letters_ (what we informally call uppercase letters), were kept in the
+    top drawer of the press (the "upper case"), while the _minuscule
+    letters_ (the lowercase letters), were kept in the drawer below (the
+    "lower case").
+
+1. The uppercase letters `A` through `Z` are mapped to the integers 65
+   through 90 respectively.
+
+2. The lowercase letters `a` through `z` are mapped to the integers 97
+   through 122 respectively.
+
+Because there are exactly 26 letters, these ranges consist of 26
+consecutive integers. And because they are consecutive, the difference
+between a letter's uppercase and its lowercase is constant:
+
+$$
+	\begin{aligned} &\texttt{a} - \texttt{A} = 97 - 65 = 32 \\ &\texttt{b} - \texttt{B} = 98 - 66 = 32 \\ &\texttt{c} - \texttt{C} = 99 - 67 = 32 \\ &\vdots \\ &\texttt{y} - \texttt{Y} = 121 - 89 = 32 \\ &\texttt{z} - \texttt{Z} = 122 - 90 = 32 \end{aligned}
+$$
+
+Thus, if we want all of the lowercase letters in a string to be uppercase,
+we must _subtract_ 32 to each lowercase letter. If we want to all of the
+uppercase letters in a string to be lowercase, we must _add_ 32 to each
+uppercase letter. Stating this explicitly, where ${s_i}$ is some letter:
+
+1. Uppercase to lowercase    &rightarrow;    ${s_i + 32}$
+
+2. Lowercase to uppercase    &rightarrow;    ${s_i - 32}$
+
+Implementing the algorithm for lower-casing:
+
+```rust
+lowerCase(char S[]):
+	for (int i = 0; S[i] != '\0'; i++):
+		S[i] = S[i] + 32;
+	return S;
+```
+
+And for upper-casing:
+
+```rust
+upperCase(char S[]):
+	for (int i = 0; S[i] != '\0'; i++):
+		S[i] = S[i] - 32;
+	return S;
+```
+
+Importantly, for both of the algorithms above, we make the following
+assumptions:
+
+1. The `char` array `S` is comprised entirely of English letters.
+
+2. The `char` array `S` is comprised of either all uppercase letters or all
+   lower case letters, but not both.
+
+## Case Toggling
+
+Keeping the first assumption—the `char` array `S` is comprised entirely of
+English letters—we consider an algorithm that performs the following:
+
+1. Uppercase all lowercase letters.
+2. Lowercase all uppercase letters.
+
+The procedure above is called **case toggling**, and an algorithm for
+performing the procedure is called a **case toggler**. For example, suppose
+we had the following string:
+
+```c
+char S[] = "wElCome";
+```
+
+In memory, this string appears as:
+
+<Sequence data={["w", "E", "l", "C", "o", "m", "e", "\0"]} />
+
+We can see that some of the letters are in uppercase, others lowercase.
+Case toggling results in:
+
+```bash
+WeLcOME
+```
+
+The case toggler uses the same fact we employed before. If it's a lowercase
+letter, we subtract 32, and if it's an uppercase letter, we add 32. The
+additional implementation detail, however, is that we need tests for the
+two possibilities: (1) the lowercase letter, and (2) the uppercase letter.
+To construct these tests, we draw on the property common to all lowercase
+letters, and the property common to all uppercase letters:
+
+1. A lowercase letter is one of the integers in the range ${[97, 122].}$
+
+2. An uppercase letter is one of the integers in the range ${[65, 90].}$
+
+Relying on these facts, we have the following:
+
+```rust
+caseToggle(char S[]):
+	for (int i = 0; S[i] != '\0'; i++):
+		if (97 <= S[i] AND S[i] <= 122):
+			S[i] -= 32;
+		else if (65 <= S[i] AND S[i] <= 90):
+			S[i] += 32;
+	return S;
+```
+
+Importantly, the test conditions above ensure that the increment 32 or
+decrement 32 only occur if the element in the array is an English letter.
+If there are special symbols like `+`, `&`, or whitespace, no change
+occurs.
+
+An alternative implementation is to use an old ASCII trick. The idea is to
+take advantage of the binary representations of the letters:
+
+```rust
+	a = 01100001    A = 01000001
+	b = 01100010    B = 01000010
+	c = 01100011    C = 01000011
+	d = 01100100    D = 01000100
+	e = 01100101    E = 01000101
+	f = 01100110    F = 01000110
+	g = 01100111    G = 01000111
+	h = 01101000    H = 01001000
+	i = 01101001    I = 01001001
+	j = 01101010    J = 01001010
+	k = 01101011    K = 01001011
+	l = 01101100    L = 01001100
+	m = 01101101    M = 01001101
+	n = 01101110    N = 01001110
+	o = 01101111    O = 01001111
+	p = 01110000    P = 01010000
+	q = 01110001    Q = 01010001
+	r = 01110010    R = 01010010
+	s = 01110011    S = 01010011
+	t = 01110100    T = 01010100
+	u = 01110101    U = 01010101
+	v = 01110110    V = 01010110
+	w = 01110111    W = 01010111
+	x = 01111000    X = 01011000
+	y = 01111001    Y = 01011001
+	z = 01111010    Z = 01011010
+```
+
+Do we notice a pattern? The fifth bit is `1` for lowercase letters, and `0`
+for uppercase letters. Hence, to switch from upper to lowercase or from
+lower or uppercase, all we have to do is toggle this bit. We can do so with
+the bitwise XOR operator. All that's left is to ensure the `char` value is
+within the range of letters:
+
+```rust
+caseToggle(char S[]):
+	for (int i = 0; S[i] != '\0'; i++):
+		if ((65 <= S[i] AND S[i] <= 90) OR (97 <= S[i] AND S[i] <= 122)):
+				S[i] ^= 32;
+	return S;
+```
+
+## Phone Counting
+
+In linguistics, vowels and consonants are more broadly called **phones**.
+Algorithms that count vowels or consonants are called **phone counters**.
+Let's consider some algorithms that count vowels or consonants.
+
+Setting aside linguistic technicalities for now, the set of vowels has a
+cardinality of five:
+
+$$
+	V = \{ a,~e,~i,~o,~u \}
+$$
+
+For the samples below, we will use the following string:
+
+```c
+	char S[] = "How are you";
+```
+
+## Vowel Counter
+
+We want to determine how many vowels are in this string. To do so, we need
+a **vowel counter**—an algorithm for counting the vowels in a string. In
+this case, there are five vowels, and the remaining are consonants.
+Visualizing the string's implementation in memory:
+
+<Sequence
+	data={["H", "o", "w", " ", "a", "r", "e", " ", "y", "o", "u", "\0"]}
+/>
+
+To count the number of vowels, we will iterate through the string. The
+first difficulty we encounter with this algorithm concerns the test
+conditions. The brute-force implementation is to check each of the ten
+possible test cases (there are five vowels, and they can be uppercase or
+lowercase):
+
+```rust
+vowelCount(char S[]):
+	int vowelCount = 0;
+	for (int i = 0; S[i] != '\0'; i++):
+		if (
+			S[i] = 'a' OR
+			S[i] = 'e' OR
+			S[i] = 'i' OR
+			S[i] = 'o' OR
+			S[i] = 'u' OR
+			S[i] = 'A' OR
+			S[i] = 'E' OR
+			S[i] = 'I' OR
+			S[i] = 'O' OR
+			S[i] = 'U' OR
+		): vowelCount++
+	return vowelCount
+```
+
+## Consonant Counter.
+
+To implement the consonant counter, we rely on the fact that we can count
+the vowels. However, we must account for the fact that something that is
+not a vowel may or may not be a consonant. For a non-vowel to be a
+consonant, it must be within the range of English letters. Otherwise, it
+could be a control character or a special character.
+
+```rust
+consonantCount(char S[]):
+	int consonantCount = 0;
+	for (int i = 0; S[i] != '\0'; i++):
+		if (
+			S[i] = 'a' OR
+			S[i] = 'e' OR
+			S[i] = 'i' OR
+			S[i] = 'o' OR
+			S[i] = 'u' OR
+			S[i] = 'A' OR
+			S[i] = 'E' OR
+			S[i] = 'I' OR
+			S[i] = 'O' OR
+			S[i] = 'U' OR
+		): continue
+		else if (
+			65 <= S[i] AND S[i] <= 90 OR
+			97 <= S[i] AND S[i] <= 122
+		): consonantCount++;
+	return consonantCount
+```
+
+With consonant counters and vowel counters, we cannot avoid having to test
+the individual cases, at least where the string can contain anything other
+than letters. While there are a few optimizations we can make, they are
+essentially negligible; we still have to test the cases, and we still have
+to iterate. There are some very minor, negligible improvements we can make.
+
+First, the vowel counter. If we're processing actual words, one helpful
+fact from linguistics is that the most common vowels, from least to most,
+are the following:
+
+$$
+	v = \lang e, a, i, o, u \rang
+$$
+
+Furthermore, we're much more likely to encounter lowercase letters than
+uppercase letters. Thus, the minute improvement we can make to the vowel
+counter is changing the order of the test cases:
+
+```rust
+vowelCount(char S[]):
+	int vowelCount = 0;
+	for (int i = 0; S[i] != '\0'; i++):
+		if (
+			S[i] = 'e' OR
+			S[i] = 'a' OR
+			S[i] = 'i' OR
+			S[i] = 'o' OR
+			S[i] = 'u' OR
+			S[i] = 'E' OR
+			S[i] = 'A' OR
+			S[i] = 'I' OR
+			S[i] = 'O' OR
+			S[i] = 'U' OR
+		): vowelCount++
+	return vowelCount
+```
+
+For the consonant counter, one modification we can make is to move the
+letter range conditions to the very beginning. Since lowercase letters are
+more likely to occur than uppercase letters, we'll test for those first,
+relying on the short-circuiting of the OR statement.
+
+```rust
+consonantCount(char S[]):
+	int consonantCount = 0;
+	for (int i = 0; S[i] != '\0'; i++):
+		if (
+			(97 <= S[i] AND S[i] <= 122) OR
+			(65 <= S[i] AND S[i] <= 90):
+				if (
+					S[i] = 'e' OR
+					S[i] = 'a' OR
+					S[i] = 'i' OR
+					S[i] = 'o' OR
+					S[i] = 'u' OR
+					S[i] = 'E' OR
+					S[i] = 'A' OR
+					S[i] = 'I' OR
+					S[i] = 'O' OR
+					S[i] = 'U' OR
+				): continue
+				else: constantCount++
+	return consonantCount
+```
+
+## Word Counter
+
+Word count is a metric we encounter frequently. Word limits, word minimums,
+mean word count—these are properties that all rely on counting words.
+Consider this short sentence from the New York case _Stambovsky v. Ackley_,
+169 A.D.2d 254 (N.Y. App. Div. 1991):[^ackleynote]
+
+[^ackleynote]:
+    Known as the "Ghostbusters ruling," _Stambovsky_ is a staple reading in
+    U.S. contracts courses. The case concerned a buyer, Stambovsky, asking
+    the court to rescind her contract purchasing a home from the seller,
+    Ackley. Ackley failed to disclose that the home was haunted, despite
+    perpetuating to locals the existence of poltergeists on the premises.
+    The court found that Ackley was obligated to inform Stambovsky (a
+    non-local) of the haunting and rescinded the contract.
+
+```c
+char S[] = "As a matter of law, the house is haunted."
+```
+
+To count the number of words in this sentence, we rely on the premise that
+each word is separated by a space:
+
+`As &#9248; a &#9248; matter &#9248; of &#9248; law, &#9248; the &#9248; house &#9248; is &#9248; haunted.`
+
+Examining the above, we see that before and after each space is a word.
+Thus, all we must do is create a counter, and increment it whenever we
+encounter a space character. More explicitly:
+
+1. Let ${w}$ be the number of words in the string ${S.}$
+   1. Iterate over each character in the string, from ${i = 0}$ to
+      ${i = n,}$ where ${n}$ is the size of ${S.}$
+2. If ${S_i \neq \text{NUL},}$ proceed. Else, go to step 6.
+3. If ${S_i}$ is a space:
+   1. Increment ${w.}$
+   2. Increment ${i.}$
+   3. Return to step 3.
+4. Else:
+   1. Increment ${i.}$
+   2. Return to step ${3.}$
+5. Return ${w + 1.}$ ${\blacksquare}$
+
+Implementing this algorithm:
+
+```rust
+wordCount(char S[]):
+	int nWords = 1
+	for (int i = 0; S[i] != '\0'; i++):
+		if (A[i] == ' '):
+			nWords++
+	return nWords + 1
+```
+
+The algorithm above has several limitations. For one, it doesn't address
+the possibility of a string containing consecutive spaces. The consecutive
+space, when encountered, would be counted as a word. Fortunately, the patch
+is simple—ensure that the previous element is _not_ a space character:
+
+```rust
+wordCount(char S[]):
+	int nWords = 1
+	for (int i = 0; S[i] != '\0'; i++):
+		if ((A[i] == ' ') AND (A[i--] != ' ')):
+			nWords++
+	return nWords + 1
+```
+
+## String Validations
+
+The process of **string validation** is to compare a string against a set
+criteria, and determining whether the string is compliant. For example, a
+website might not permit usernames with special symbols like `*` and `%`.
+Alternatively, a service may require such special symbols in the password,
+alongside digits and uppercase letters. To ensure compliance, we subject to
+a given string to a **string validator**.
+
+Our simple string validator, `isValidString()`, will return `true` if the
+string argument satisfies our criteria, and `false` otherwise. Suppose we
+had the following string:
+
+```c
+char S[] = "Ben?123";
+```
+
+Further suppose that the only valid characters are letters and numerals.
+Thus, we see that the eroteme (the question mark), is an invalid character,
+so our algorithm should return `false`. Using the following facts from the
+ASCII table:
+
+1. Numerals are mapped to the integers ${48}$ through ${57.}$
+2. Uppercase letters mapped to the integers ${65}$ through ${90.}$
+3. Lowercase letters mapped to the integers ${97}$ through ${122.}$
+
+we have a criteria. If a character is not within any of the ranges above,
+it is invalid. Thus:
+
+1. Suppose ${S}$ is a string.
+2. Let ${\ell}$ be the length of the string.
+3. Let ${i \in \lang 0, 1, 2, \ldots, \ell \rang,}$ starting at ${i = 0.}$
+4. If ${i < \ell,}$ perform the operations below. Otherwise, go to step 5.
+5. If:
+
+   1. ${48 \nleq S_i \nleq 57,}$ and
+   2. ${65 \nleq S_i \nleq 90,}$ and
+   3. ${97 \nleq S_i \nleq 122}$
+      - return false. End. ${\blacksquare}$
+
+6. Otherwise, increment ${i}$ and go to step 4.
+7. Return true. End. ${\blacksquare}$
+
+Implementing in pseudocode:
+
+```rust
+isValidString(char S[]):
+	for (int i = 0; S[i] != '\0'; i++):
+		if (
+			!(48 <= S[i] && S[i] <= 57) AND
+			!(65 <= S[i] && S[i] <= 90) AND
+			!(97 <= S[i] && S[i] <= 122)
+		): return false
+	return true;
+```
+
+## String Reversal
+
+When searching for a particular string, it can be a good idea to search for
+the string's reversal. For example, the strings:
+
+1. `"studied"`
+2. `"hurried"`
+3. `"madam"`
+4. `"12/09/21"`
+5. `"110101"`
+
+would have the reversals:
+
+1. `"deiduts"`
+2. `"deirruh"`
+3. `"madam"`
+4. `"12/90/21"`
+5. `"101011"`
+
+Notice that by reversing the first two strings, we now have the three
+common letters towards the beginning and the different letters towards the
+end. For the third string, we have a _palindrome_—a sequence of characters
+that reads the same way forward and backward. In the fourth string, we see
+what appears to be a date format in reverse. The fifth string is
+specifically called a **bitstring**—a character sequence of ones and
+zeroes. The original string is the decimal number 53, and its reversal
+is 43. In many situations, working with the string's reversal rather than
+the original string can simplify a problem considerably.
+
+To implement the string reversal algorithm, let's use the following string:
+
+```rust
+char S[] = "python";
+```
+
+The simplest approach is to create another array, then copy the elements in
+the original string, from last to first, into the new array, from first to
+last:
+
+```c
+reversedString(char S[]):
+	int SLength = stringLength(s);
+	int R = new char[SLength];
+	int i = SLength;
+	for (int j = 0; i >= 0; i--, j++) {
+		B[j] = A[i];
+	}
+	return R;
+```
+
+Note that we could've computed the length with the loop:
+
+```rust
+	for (int i = 0; i != '\0'; i++) {
+		i = i - 1
+	}
+```
+
+In C and C++, C-strings are immutable by default. To ensure mutability, we
+must use the syntax:
+
+```c
+char S[] = "python";
+```
+
+Assuming the string argument is mutable, we can employ perform a string
+reversal with a `swap()` function. The procedure:
+
+1. Let ${S}$ be a string of length ${\ell.}$
+2. Suppose ${i = 0}$ and ${j = \ell.}$
+3. If ${i < \ell,}$ perform the procedure below. Otherwise, go to step 4.
+   1. Swap ${S_i}$ and ${S_j.}$
+   2. Increment ${i}$ and decrement ${j.}$
+   3. Return to step 3.
+4. Return ${S.}$
+
+Implementing in pseudocode:
+
+```rust
+stringReverse(char S[]):
+	int j = S.length();
+	int i;
+	for (i = 0; i < j; i++, j--):
+		_swap(S[i], S[j]);_
+	return S;
+```
+
+Above, we used a separate `swap()` function. If a separate `swap()`
+function is not desired, we could instead write:
+
+```rust
+stringReverse(char S[]):
+	char temp;
+	int i;
+	int j = S.length();
+	for (i = 0; i < j; i++, j--):
+		temp = A[i];
+		A[i] = A[j];
+		A[j] = temp;
+	return S;
+```
+
+## String Equality
+
+Suppose we seek to determine whether two strings are _equal_. Two strings
+${S_1}$ and ${S_2}$ are equal iff every character in ${S_1}$ is a character
+of ${S_2,}$ and every character of ${S_2}$ is a character of ${S_1.}$ For
+example, these strings are equal:
+
+|          |          |
+| -------- | -------- |
+| `"read"` | `"read"` |
+
+and these strings are not:
+
+|          |          |
+| -------- | -------- |
+| `"read"` | `"reed"` |
+
+To determine if two strings are equal, we iterate through both strings
+checking for equality. The algorithm:
+
+1. Let ${S_1}$ and ${S_2}$ both be strings.
+2. Suppose ${i \in \Z^{+}}$ and ${j = \Z^{+},}$ where both ${i}$ and ${j}$
+   are initially ${0.}$
+3. If both ${S_i}$ and ${S_j}$ are not NUL, perform the procedure below.
+   Otherwise, go to step 4.
+4. If ${S_i \neq S_j,}$ return false. ${\blacksquare}$
+5. Otherwise, increment ${i,}$ increment ${j,}$ and go to step 3.
+6. Return true. ${\blacksquare}$
+
+Implementing the procedure in pseudocode:
+
+```rust
+isEqual(char S[], char T[]):
+	int i = 0;
+	int j = 0;
+	while (S[i] != '\0') AND (T[j] != '\0'):
+		if (S[i] != T[j]): break;
+		else:
+			i++;
+			j++;
+	if S[i] == T[j]: return true;
+	else: return false;
+```
+
+## Lexical Comparison
+
+Alphabetical order is more generally called **lexicographical order** or
+**lexical order**. The word "apple" lexically precedes (comes before) the
+word "banana", and the word "papaya" lexically succeeds (comes after)
+"mango."
+
+Our algorithm for determining string equality allows us to easily perform
+lexical comparisons:
+
+```rust
+isAlphaOrdered(char S[], char T[]):
+	int i = 0
+	int j = 0
+	char A[] = lowerCase(duplicate(S))
+	char B[] = lowerCase(duplicate(T))
+	while (S[i] != '\0') AND (T[j] != '\0'):
+		if (S[i] != T[j]): break;
+		else:
+			i++
+			j++
+	if S[i] == T[j]: print "Equal strings"
+	if S[i] < T[j]: print "S is before T"
+	else: print "T is before S"
+```
+
+Notice how we're making the lowercase duplicates of both strings `S` and
+`T`. This way, we don't run into issues comparing the different values of
+uppercase and lowercase letters in the ASCII table.
+
+## Palindrome Verification
+
+A **palindrome** is a sequence of characters that, when read forward, reads
+the same backward. For example, all of the following strings are the same
+read forward and backward:
+
+|           |             |                 |
+| --------- | ----------- | --------------- |
+| `"civic"` | `"racecar"` | `"11/11/11"`    |
+| `"1:1"`   | `"3.3"`     | `"9 &times; 9"` |
+
+The algorithm for verifying whether a given string is a palindrome:
+
+1. Suppose ${S}$ is a string of length ${\ell,}$ of uniform case.
+2. Let ${\lang i \in \N \mid i < \ell \rang.}$
+3. Let ${\lang j \in \N \mid 0 < j \leq \ell \rang.}$
+4. Suppose ${i}$ is initially ${0,}$ and ${j}$ is initially ${\ell.}$
+5. If ${i < j,}$ perform steps (a) xor (b). Otherwise, go to step (4).
+   1. If ${S_i = S_{j}:}$
+      1. Increment ${i}$
+      2. Decrement ${j.}$
+      3. Return to step (5).
+   2. Else, return false. ${\blacksquare}$
+6. Return true. ${\blacksquare}$

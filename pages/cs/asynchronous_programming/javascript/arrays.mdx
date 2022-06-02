@@ -1,0 +1,544 @@
+# Arrays
+
+Arrays are the simplest _data structure_; they are a collection of values,
+where _order matters_. Examples of an array include: list of comments on a
+post, a collection of levels in a game, or a playlist of songs. Every value
+can be collected and placed in an order. The resulting ordered collection
+is called an _array_. Arrays can also collect and order other arrays.
+
+To create an array in JavaScript, we use square brackets `[]`. Here is an
+empty array:
+
+```javascript
+let special_numbers = [];
+```
+
+An array of strings:
+
+```javascript
+let colors = ["red", "orange", "blue", "green"];
+```
+
+An array of numbers:
+
+```javascript
+let primes = [1, 3, 5, 7, 11];
+```
+
+A mixed array:
+
+```javascript
+let randomStuff = [true, 68, "bird", null];
+```
+
+## Indices in an Array
+
+The values in an array are **indexed**, meaning that each value in the
+array has an **index**, or position within the array, starting from 0. So,
+for example:
+
+```javascript
+let colors = ["red", "orange", "yellow", "blue"];
+colors[0]; // returns 'red'
+colors[1]; // returns 'orange'
+colors[2]; // returns 'yellow'
+colors[3]; // returns 'blue'
+```
+
+## Array Length
+
+Much like how they can be applied to strings and variables, we can find the
+length of an array (how many values it holds) with the `.length` method.
+
+```javascript
+let colors = ["red", "orange", "yellow", "blue"];
+colors.length; // Returns 4, the array named _colors_ contains 4 values.
+```
+
+If we want to get the last value in an array:
+
+```javascript
+let colors = ["red", "orange", "yellow", "blue"];
+colors[colors.length - 1]; // returns 'blue';
+```
+
+This works because colors.length returns a number value. That number value
+is 4, the number of values in the array. Subtract 1, and you have the
+number 3. So, the code is telling JavaScript, get the value with index of 3
+in the array of colors (the index of 3 is the last item in the array.)
+
+## Modifying Arrays
+
+Say that we've set an array. We can change the values inside that array by
+going back and manually changing them, but that would be horribly
+inefficient (and you likely do no want to do that for a very large
+program). Instead of manually changing the values in the array, we can use
+their indices:
+
+```javascript
+let colors = ["red", "blue", "green"];
+colors[0] = "purple";
+colors[1] = "violet";
+colors[2] = "black";
+// The above will change the array _colors_ to the following:
+colors = ["purple", "violet", "black"];
+```
+
+We can also use methods to change the values in an array:
+
+```javascript
+// Here is our initial shopping list
+shoppingList = ["Bud Light", "Merlot", "Vodka", "Tequila"];
+
+// Guest called, wants Cabernet, not Merlot:
+shoppingList[1] = "Cabernet";
+
+// Another guest called, wants Rum, not Tequila:
+shoppingList[shoppingList.length - 1] = "Rum";
+
+// Yet another guest called, requesting Tequila to be added
+shoppingList[shoppingList.length] = "Tequila";
+
+console.log(shoppingList);
+```
+
+```bash
+['Bud Light', 'Cabernet', 'Vodka', 'Rum', 'Tequila']
+```
+
+## Appending
+
+The `push()` method adds one or more elements to the end of an array, and
+returns the new length of the array.
+
+```javascript
+let vectors = ["w", "x", "y"];
+vectors.push("z");
+console.log(vectors);
+```
+
+```bash
+	['w', 'x', 'y', 'z']
+```
+
+## Removing
+
+The `pop()` method removes a value at the end of an array.
+
+```javascript
+let procedures = ["w", "x", "y", "z"];
+procedures.pop("z");
+console.log(procedures);
+```
+
+```bash
+['w', 'x', 'y']
+```
+
+## Shifting
+
+The `shift()` method removes a value from the start of an array:
+
+```javascript
+let procedures = ["w", "x", "y", "z"];
+procedures.shift("w");
+console.log(procedures);
+```
+
+```bash
+['x', 'y', 'z']
+```
+
+## Unshifting
+
+The `unshift()` method adds a value to the start of an array:
+
+```javascript
+let procedures = ["w", "x", "y", "z"];
+procedures.unshift("v");
+console.log(procedures);
+```
+
+```bash
+['v', 'w', 'x', 'y', 'z']
+```
+
+## Concatenating
+
+The `concat()` method creates a new array from merging two arrays; there is
+no change to the original.
+
+```javascript
+let x = ["a", "b", "c"];
+let y = ["d", "e", "f"];
+let xAndy = x.concat(y);
+console.log(xAndy);
+```
+
+```bash
+['a', 'b', 'c', 'd', 'e', 'f']
+```
+
+When using the `concat()` method, order matters. So, for example, suppose
+you have the following:
+
+```javascript
+array1.concat(array2).concat(array3);
+```
+
+```rust
+[array1_values, array2_values, array3_values]
+```
+
+## Includes
+
+The `includes()` method is a Boolean method—it returns either true or
+false. If the value is found in the array, the method returns true. If the
+value is not found in the array, the method returns false.
+
+```javascript
+let subjects = ["math", "physics", "cs", "chemistry"];
+subjects.includes("physics"); // true
+```
+
+The `includes()` method can also take a number as a second argument. The
+number passed in represents the _starting index_ for JavaScript's search.
+By passing in a number $x$, we essentially ask JavaScript: "Is the value
+contained in the part of the array starting from index $x$? For example:
+
+```javascript
+let var_Array = ['w', 'x', 'y', 'z'];
+var_Array.includes('w', var.Array.length / 2); // false
+```
+
+In the code above, we are actually asking: JavaScript, is this true or
+false: The value `'w'` is inside the array, and, more specifically, in the
+part of the array starting from `i = 2`. This returns false, since `'w'` is
+in the first half of the array, starting from `i = 0`.
+
+# indexOf()
+
+The `indexOf()` method works in the same way with arrays as it does with
+strings. In other words, the `indexOf()` method finds the index of a value
+in the array. If the method finds the value, it returns its index (an
+integer $x$, where $x \geq 0$). If the method does not find the value, it
+returns -1. Like the `includes()` method, we can pass through a second
+argument, an integer, into the method's arguments, to specify where the
+method should operate.
+
+```javascript
+let frequencies = ["1Mhz", "3Mhz", "7Mhz", "15Mhz"];
+
+frequencies.indexOf("1Mhz");
+// This returns 0, the index of '1Mhz'
+
+frequencies.indexOf("3Mhz", frequencies.length / 2);
+// This returns -1, because we told JavaScript to only search for '3Mhz' in the part of the array starting from index = 2, and there is no such value in that part of the array.
+
+frequencies.indexOf("7Mhz", frequencies.length / 2);
+// This returns 2. We told JavaScript, "Search for '7Mhz' in the part of the array starting from index = 2. JavaScript found the value, and returned its index, 2."
+```
+
+## Reversing
+
+The `reverse()` method changes the original array by reversing the order of
+its values. Note that the `reverse()` method changes the original array;
+once applied, the original array is replaced by the new array resulting
+from the method.
+
+```javascript
+let arr = [1, 2, 3, 4, 5];
+arr.reverse();
+/*
+This changes the original array into:
+arr = [5, 4, 3, 2, 1]
+*/
+```
+
+## Joining
+
+The `join()` method takes all the values in an array, and combines them
+into a single string, as originally ordered. Remember, the return from a
+`join()` method is a string. Thus, if you us the `join()` method with an
+array of numbers, the result is a string of those numbers.
+
+```javascript
+let letters = ["q", "u", "a", "d", "r", "a", "t", "i", "c"];
+
+letters.join("");
+// This returns a single string, joined with an empty string: 'quadratic'
+
+letters.join("-");
+// This returns a single string, joined with the string '-': 'q-u-a-d-r-a-t-i-c'
+
+letters.reverse().join("");
+// This reverses the array _letters_, and returns a single string, joined with an empty string: 'citardauq'
+```
+
+## Sub-arrays
+
+Like the `slice()` method applied to strings, the `slice()` method applied
+to arrays takes a portion of an array, and creates a new array with that
+portion, without changing or affecting the original array. The `slice()`
+method usually takes two arguments:
+
+1. The starting index in the original array to start the slice; and
+2. The end index in the original array (but, in the slice, it does not
+   include the value with the end index).
+
+If no numbers are passed into the `.slice()` method, then an entire copy of
+the array is made. So, for example:
+
+```javascript
+let sets = ["A", "B", "C", "D", "E"];
+let slicedSets = sets.slice(1, 3);
+/* We've created a new array called _slicedSets_:
+slicedSets = ['B', 'C']
+*/
+```
+
+By passing a negative number, say $-x$ into the `slice()` method, we
+essentially tell JavaScript: "For this array, slice the portion starting
+$x$ from the last index." For example:
+
+```javascript
+let sets = ["A", "B", "C", "D", "E"];
+let subSet = sets.slice(-2);
+/*
+This code says, make a slice starting 2 from the last index (here, the last index is 5, so the slice starts at 3). This will include the last index.
+
+So, the resulting array:
+subset = ['C', 'D', 'E']
+*/
+```
+
+If 2 negative numbers are passed as arguments into the `slice()` method,
+say $-x$ and $-y$, then the slice starts at $x$ index from the last index
+of the array, and the slice ends at $y$ index from the last index of the
+array. Illustration:
+
+```javascript
+let sets = ["A", "B", "C", "D", "E"];
+let subSet = sets.slice(-3, -1);
+/*
+Here, we tell JavaScript, start the slice at the index 3 units from the last index (in this case, index = 2), and end the slice 1 unit from the last index (index = 4).
+
+Thus:
+subSet = ['C', 'D']
+*/
+```
+
+## Splicing
+
+The `splice()` method can either remove, replace, or add new values in an
+array. `splice()` is primarily used for changes to the middle of an array,
+since changes to the beginning or end of an array are usually handled with
+`push()`, `pop()`, `shift()`, and `unshift()`. Splice can take at least
+three different values:
+
+1. the start index (an integer)
+2. the specific value we want to delete
+3. the specific value we want to insert
+
+So, for example:
+
+```javascript
+let vectors = ["velocity", "acceleration", "momentum"];
+vectors.splice(1, 0, "weight");
+/*
+In the above code, we changed the original array vectors to the following: 
+vectors = ['velocity', 'weight', 'acceleration', 'momentum']
+*/
+```
+
+The `splice()` method changes the original array. I.e., once applied, the
+original array is no more---it is now the modified, spliced array.
+
+## Sorting
+
+The `sort()` method sorts the elements of an array in place, and returns
+the sorted array. The sort order can be alphabetic, numeric, ascending, or
+descending. By default, `sort()` sorts an array's elements as strings in
+alphabetic and ascending order. To sort the string elements of an array
+alphabetically:
+
+```javascript
+let shapes = ["square", "circle", "triangle", "pentagon", "rhombus"];
+shapes.sort();
+/* 
+This returns a sorted array: 
+['circle', 'pentagon', 'rhombus', 'square', 'triangle']
+*/
+```
+
+## Reference Types
+
+When a variable is declared and assigned a primitive type value, a **value
+type variable** is created. Once a _value type variable_ is created,
+JavaScript stores it in memory, and more specifically, JavaScript _stores
+the variable's assigned value_. This is not the case for variables declared
+and assigned an array.
+
+Arrays are too large and take up memory unnecessarily. Instead of storing
+the array, JavaScript stores the array's **reference**. An array's
+_reference_ is a string of numbers, akin to a memory address. This has a
+significant impact on the way `const` works with arrays.
+
+Because assigning an array to a variable does not actually store the array
+in the variable (it stores the array's reference), we can change the
+elements within an array, even if we assign the array to a variable
+declared with `const`.This is because once an array is created and stored
+in a variable, its reference never changes.
+
+As such, because the variable declared and assigned with `const` is storing
+a reference (which never changes), rather than the actual array itself, the
+array can be changed later down the program.
+
+This also means that if you declare a variable with `const` and assign an
+array to it, you cannot change that reference later (i.e., assigning to the
+variable an entirely new array). Because of this behavior, it is almost
+always the case that `const` should be used for arrays, unless there is a
+reason for needing a variable to point to different arrays (in which case,
+`let` should be used).
+
+## Nested Arrays
+
+It is perfectly fine to have arrays containing arrays (but, before nesting
+an array, consider whether there is an alternative or better data
+structure).
+
+```javascript
+/*
+Here is an array containing three arrays.
+*/
+const courses = [
+	["mechanics", "E & M", "thermodynamics"],
+	["calculus", "differential equations", "real analysis"],
+	["algorithms", "data structures", "operating systems"],
+];
+```
+
+To access the elements of a nested array, we can perform the following:
+
+```javascript
+const arr1 = [
+	[1, 3, 5, 9],
+	[3, 2, 9, 10],
+	[11, 3, 6, 9],
+];
+// Suppose we want the third element of the second array:
+arr1[1][2];
+/*
+This returns 9.
+[1] tells JavaScript, look at the element with index of 1---in this case, the second array.
+[2] tells JavaScript, inside that array, look at the element with index of 2---in this case, the number 9.
+*/
+```
+
+## Other Ways to Implement Arrays
+
+Recall that arrays are an _ordered collection_ data structure. In terms of
+datatype, arrays are objects. Now we're adding another trait: As objects,
+arrays behave like iterables &mdash; a particular kind of object. But, not
+every iterable is an array. For example, NodeList, String, Map, and Set are
+all iterables. Objects of these types are iterables, and we can iterate
+through them with a for-of loop. But, objects of type NodeList are not
+arrays. They are _array-like objects_, in that they have a length property,
+and use indices for accessing.
+
+To better understand the differences between an array and an array-like
+object, let's revisit arrays. Recall the method for creating arrays we're
+familiar with:
+
+```javascript
+const arr = [1];
+```
+
+No surprises here. This statement creates a singleton, an array with only
+one element. It's also the most common way to create an array. But it turns
+out the above statement isn't the only way:
+
+```javascript
+const arr = Array(1);
+const arr = new Array(1);
+const arr = Array.of(1);
+const arr = Array.from(1);
+```
+
+Although each of the statements above creates an array, they all do so
+differently. To see these differences, we revisit the `length` property of
+an array. We know that when we create an array in JavaScript the way we
+usually do (with square brackets) we create an array whose length can grow
+and shrink:
+
+```javascript
+let arr = [1, 2, 3];
+console.log(arr);
+console.log(arr.length);
+```
+
+```bash
+[1, 2, 3]
+3
+```
+
+When use the `Array()` function, we get the same result:
+
+```javascript
+let arr = Array(1, 2, 3);
+console.log(arr);
+console.log(arr.length);
+```
+
+```bash
+[1, 2, 3]
+3
+```
+
+The same goes for `new Array()`:
+
+```javascript
+let arr = new Array(1, 2, 3);
+console.log(arr);
+console.log(arr.length);
+```
+
+```bash
+[1, 2, 3]
+3
+```
+
+Now notice what happens when we pass a single argument:
+
+```javascript
+let arr1 = [1];
+let arr2 = Array(1);
+let arr3 = new Array(1);
+console.log(arr1);
+console.log(arr1.length);
+console.log(arr2);
+console.log(arr2.length);
+console.log(arr3);
+console.log(arr3.length);
+```
+
+```bash
+[1]
+1
+[empty]
+1
+[empty]
+1
+```
+
+When we use the square bracket syntax for initialization (`arr1`), we get
+an array as expected. But, using `Array()` or `new Array()`, we get an
+empty array with a length of `1`. What's happening here?
+
+We're seeing this behavior because `Array()` is a function that returns a
+static array if only one argument is passed to it. Both `Array()` and
+`new Array()` are essentially the same. The only difference is that
+`Array()` is a function, while `new Array()` is a constructor. Either or,
+passing only one argument is interpreted as the resulting array's length.
+Passing multiple arguments, the values are interpeted as the resulting
+array's elements.

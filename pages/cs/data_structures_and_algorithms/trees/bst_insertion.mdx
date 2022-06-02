@@ -1,0 +1,108 @@
+# Inserting into a Binary Search Tree
+
+We're given the following tree:
+
+<Tree
+	data={[
+		{ child: "30", parent: "" },
+		{ child: "15", parent: "30" },
+		{ child: "50", parent: "30" },
+		{ child: "10", parent: "15" },
+		{ child: "20", parent: "15" },
+		{ child: "40", parent: "50" },
+		{ child: "60", parent: "50" },
+	]}
+/>
+
+The challenge:
+
+> Insert a node containing the value `38` if, and only if, the tree does
+> not contain the value `38`.
+
+Now that we know how to search a binary tree, this problem isn't that
+complicated. All we have to do is search the binary tree for the value
+`38`. If the value `38` doesn't exist, we insert the node at the position
+that resulted in `root = NULL`.
+
+Searching for the value `38`, we end up at the `node(40)`. The point where
+`root = NULL` is when we assigned `root` the value `node(40).left_child`,
+which does not exist. Thus, the value `38` must be inserited as the
+left-child of `node(40)`.
+
+To implement the algorithm, we can use a tail pointer, call it `t`, and a
+driver pointer, `d`. As long as `d` moves, `t` follows. When `d` reaches
+the leaf `node(40)`, `t` is at `node(50)`. Because `38 ≠ 40`, `t` moves to
+the left-child of `40`, which is `NULL`. All that's left to do is refer to
+`d`'s left-child &mdash; pointed at by `t` &mdash; to create and insert the
+new node `node(38)`. The procedure:
+
+```rust
+Insert(BST tree, TYPE data):
+	let newNode = new Node(data)
+	if (tree->root is null):
+		tree->root = newNode
+	else
+		let d = tree->root
+		let t = null
+		while (d isnt null):
+			t = d
+			if (newNode->data === d->data):
+				return tree
+			else if (newNode->data < d->data):
+				d = d->left
+			else:
+				d = d->right
+		if (newNode->data < t->data):
+			t->left = newNode
+		else:
+			t->right = newNode
+	return tree
+```
+
+Here's an implementation in JavaScript:
+
+```javascript
+insert(val) {
+	let newNode = new Node(val);
+	if (this.root === null) {
+		this.root = newNode;
+	} else {
+		let d = this.root;
+		let t = null;
+		while (d !== null) {
+			t = d;
+			if (val === d.data) {
+				return this;
+			} else if (val < d.data) {
+				d = d.left;
+			} else {
+				d = d.right;
+			}
+		}
+		if (val < t.data) {
+			t.left = newNode;
+		} else {
+			t.right = newNode;
+		}
+	}
+	return this;
+}
+```
+
+## Recursive Approach
+
+We can also implement this recursively:
+
+```rust
+Node* insert(Node* p, int key):
+	Node *t;
+	if (p == NULL):
+		t = new Node(key);
+		return t;
+	if (key < (*p).data):
+		(*p).left_child = insert((*p).left_child, key);
+	else if (key > (*p).data)
+		(*p).right_child = insert((*p).right_child, key);
+	return t;
+
+```

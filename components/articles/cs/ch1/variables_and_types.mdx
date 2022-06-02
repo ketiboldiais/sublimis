@@ -1,0 +1,151 @@
+# Variables & Types in Java
+
+Programs need data. To give our programs that data, they must be stored
+somewhere in memory. But before we store any data in Java, we must tell
+Java beforehand that you are going to store data. To do so, we need
+variables — an entity that holds a data type value. In Java, every variable
+has a name and a data type.
+
+```java
+char c;
+int num;
+boolean isPresent;
+```
+
+In the example above, there are comments, denoted by two forward slashes
+(//). Every other statement is called a declaration. The left side is the
+variable's type, and the right side the variable's name. Simply put,
+variable declaration is the act of creating a variable.
+
+In programming, a comment is a statement ignored by the compiler. Because
+they're ignored by the compiler, we can use them to annotate our code.
+Comments are valuable in programming. They tell readers what a particular
+statement means or does. But, they also take up space and too many comments
+can clutter a program, making it unreadable.
+
+Comments should be concise and descriptive. They should not be simply
+identical to the actual code (since that would simply be a waste of space).
+
+A brief note on terminology: There are different kinds of variables in
+Java. Variables that store primitive type values are called primitive
+variables (or, primitive constants). Variables that store objects are
+called object references. With an object reference, the variable doesn't
+actually hold the object — it instead holds a reference to the object.
+
+## Constants
+
+Variables fall into two categories: (1) variables, and (2) constants. In
+languages like Java, the values we store in a variable can be mutated.
+Accordingly, the term variable, on its own, usually implies that the value
+stored in the variable can be mutated (again, in the context of Java; some
+languages do not permit such mutation). When we use the term constant,
+however, we are referring to a variable whose stored value cannot be
+changed.
+
+Data comes in many forms. The "Call me Ishmael" and "WARNING" are textual
+data. The number of users visiting this page is numeric data. These data
+all take a different form, and there are things we can and cannot do with
+them. We can add 4 and 7, but we cannot divide "love" by "children" (at
+least not logically). Because of this fact, Java (and many other
+programming languages) classify data by type.
+
+While a program runs, and while a file is open, it is stored in a hardware
+component called the RAM ("Random Access Memory"). When you install
+programs and save files (and they are not running or open), they are stored
+in a different hardware component, the hard drive (or hard disk or solid
+state disk; or a CD; or a USB; devices that store data, other than RAM).
+Devices like hard drives do not require electricity to store data. RAM,
+however, does. It is much faster than a hard drive, because it is a purely
+electronic device — unlike hard drives, there are no moving parts. With
+RAM, we have the ability to very quickly open files and execute programs,
+because everything is electric. This is why we lose data when our computer
+suddenly dies midway through writing a Word Document or a C program. The
+data is stored in RAM, and without electricity coming from the computer's
+power source, everything is lost.
+
+At a very high level overview, the RAM can be understood as:
+
+Whenever we declare a variable in Java, we must explicitly state the
+variable's type. This is an instruction to the compiler that the particular
+variable will store a value of a particular type. We will see later why
+Java's designers decided to implement this feature.
+
+Now, once we declare a variable to be of a particular type, that variable's
+type can never change. For example, when write int x; the variable x will
+always store some value of type int. That value may change later, but the
+variable's type int can never be changed to double or char. Because of this
+trait — the prohibition of changing a variable's type after declaration —
+Java is described as a statically-typed language (i.e., the language's
+types are “static”).
+
+Whenever we compile Java source code, the javac compiler will check all of
+our source code to ensure we are complying with Java's type-checking rules.
+Because type checking is done at compile time, we say that Java employs a
+static type checking system.
+
+With few exceptions relating to scope — in Java, once you have declared a
+variable name of a particular type, you cannot redeclare it later down the
+program:
+
+Even if the last example worked, it would be a stark example of dirty code,
+poor programming hygiene. How will our future selves or other coders tell
+the two apart?
+
+In Java, there are eight primitive data types. All other data in Java is
+represented by some combination of these eight primitive types. The types
+fall into four broad categories:
+
+A helpful way to think about types is to imagine them as cups. They hold
+something. For example, at a coffee shop, drinks can be ordered in various
+sizes. Suppose the sizes are small, short, tall, grande, gigante, and
+monstruoso. Some of the drink sizes are specific to certain drinks. Maybe
+the monstruouso size is only available for lemonade or water — it would be
+too costly to serve high quality coffee at such a size. The same idea
+extends to types. As we'll see, an int is 32 bits, a long is 64 bits, a
+char is 16 bits, and so on.
+
+## Integer Type
+
+Integers are the whole numbers and their negative counterparts (e.g., 0, 5,
+-11, 27, etc.). In Java, these numbers can be represented by any one of
+these four types:
+
+1. byte
+2. short
+3. int
+4. long
+
+We will later discuss why there are 4 different types. For now, let's
+review some representation. As we know, the computer doesn't actually know
+what 2 or 17 are — the computer only understands 1s and 0s. As such,
+integers, written in Hindu-Arabic numerals, must be translated to binary
+form for the computer to process.
+
+### Two's Complement
+
+With the natural numbers, we can convert these easily. The number ${2}$ is
+${10}$ in binary, and ${17}$ is ${10001}$. But how do we deal with negative
+integers?
+
+Let's consider the data type byte. As its name implies, a byte can only
+hold 8 bits. With 8 bits, we can represent ${2^n}$ unique bit patterns,
+starting from ${00000000}$​ (0 in decimal) through ${01111111}$ ​(127 in
+decimal). Hang on. Why is is there 0 there? Shouldn't it be ${01111111}$​
+(128)? That 0 is called the sign bit. If the number is positive, the sign
+bit is 0, and if it's negative, the sign bit is 1.
+
+The next question, however, is how does the computer store negative
+integers? For example, if we wrote -5, how does the computer go from this
+literal to binary? The answer is through two's-complement. The idea is
+fairly straightforward. The number 5 is stored in a byte, so we work our
+way to -5. First, we represent the number 5 in binary:
+
+$$ 11111010 $$
+
+Then, we add 1 to the one's-complement:
+
+$$
+11111010 \\
++00000001 \\
+11111011
+$$

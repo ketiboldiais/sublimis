@@ -1,0 +1,178 @@
+# Friend Functions
+
+In mathematics, we often have symbols that can apply to different values.
+For example, ${1 + 2}$ and ${1.4 + 4.2}$ both mean addition, regardless of
+the fact that ${1,2 \in \Z^{+}}$ and ${1.4 + 4.2 \in \mathbb{Q}.}$ The
+values belong to different sets, but the ${+}$ works nevertheless.
+Mathematics could have gone a different route, using different symbols for
+addition, depending on which set the terms belonged to.
+
+Other symbols, however, can have different meanings depending on the terms
+used. For example, most people would recognize the ${\times}$ symbol in
+${A \times B}$ as indicating multiplication. However, if ${A}$ and ${B}$
+were vectors—an object with magnitude and direction—then the ${A \times B}$
+is a cross product. This yields two very different computations:
+${A \times B = AB,}$ and ${A \times B = ||A|| \space ||B|| \sin \theta n.}$
+
+The same phenomon occurs in programming. The operators `+`, `-`, `*`, and
+`/` perform on both `int` and `double`.
+
+C++ allows us to extend this overloading by permitting us to define what a
+symbol like `+` does in a given set of conditions. Maybe we want
+`"tiger" + "lion"` to evaluate to `"liger"`. This would be an example of
+we, the programmers, overloading an operator in C++. Let's consider an
+example.
+
+In mathematics, ${\sqrt{-1} = i.}$ We call ${i}$ the _imaginary unit_,
+which is defined by the property ${i^2 = -1.}$ Every real number can be
+written as a complex number of the form ${a + bi,}$ where ${a}$ is the real
+component and ${bi}$ is the complex component. For example, the real number
+${4}$ can be written as ${4 - bi,}$ where ${b = 0.}$ Complex numbers can be
+added and subtracted, performing the computations on each part separately.
+For example, ${(4 + 3i) - (2 + 8i) = 6 + 11i.}$
+
+Suppose we had the following class:
+
+```cpp
+#include <iostream>
+class ComplexNumber {
+	private:
+		int real_component;
+		int imaginary_component;
+	public:
+		ComplexNumber(int r = 0, int i = 0) {
+			real_component = r;
+			imaginary_component = i;
+		}
+};
+```
+
+With the class above, we can create instances of `ComplexNumber`. Next,
+let's include a method for adding complex numbers:
+
+```cpp
+#include <iostream>
+class ComplexNumber {
+	private:
+		int realPart;
+		int imaginaryPart;
+	public:
+		ComplexNumber(int r = 0, int i = 0) {
+			realPart = r;
+			imaginaryPart = i;
+		}
+		ComplexNumber add(ComplexNumber val) {
+			ComplexNumber temp;
+			temp.realPart = realPart + val.realPart;
+			temp.imaginaryPart = imaginaryPart + val.imaginaryPart;
+			return temp;
+		}
+};
+```
+
+Let's add a print method to the class and test:
+
+```cpp
+#include <iostream>
+class ComplexNumber {
+	private:
+		int realPart;
+		int imaginaryPart;
+	public:
+		ComplexNumber(int r = 0, int i = 0) {
+			realPart = r;
+			imaginaryPart = i;
+		}
+		ComplexNumber add(ComplexNumber val) {
+			ComplexNumber temp;
+			temp.realPart = realPart + val.realPart;
+			temp.imaginaryPart = imaginaryPart + val.imaginaryPart;
+			return temp;
+		}
+		void print() {
+			std::cout << realPart << " + " << imaginaryPart << "i" << std::endl;
+		}
+};
+
+int main() {
+	ComplexNumber x = ComplexNumber(2, 3);
+	ComplexNumber y = ComplexNumber(5, 8);
+	ComplexNumber z = x.add(y);
+	z.print();
+	return 0;
+}
+```
+
+```bash
+7 + 11i
+```
+
+Although the code above works, it would be much more accurate if we could
+just use the `+` symbol. This is where operator overloading comes in:
+
+```cpp
+#include <iostream>
+class ComplexNumber {
+	private:
+		int realPart;
+		int imaginaryPart;
+	public:
+		ComplexNumber(int r = 0, int i = 0) {
+			realPart = r;
+			imaginaryPart = i;
+		}
+		ComplexNumber operator+(ComplexNumber val) {
+			ComplexNumber temp;
+			temp.realPart = realPart + val.realPart;
+			temp.imaginaryPart = imaginaryPart + val.imaginaryPart;
+			return temp;
+		}
+		void print() {
+			std::cout << realPart << " + " << imaginaryPart << "i" << std::endl;
+		}
+};
+
+int main() {
+	ComplexNumber x = ComplexNumber(3, 8);
+	ComplexNumber y = ComplexNumber(9, 5);
+	ComplexNumber z = x + y;
+	z.print();
+	return 0;
+}
+```
+
+```bash
+12 + 13i
+```
+
+Notice the use of `operator+`. This is the syntax for overloading operators
+in C++. C++ allows us to overload the following operators:
+
+|       |         |       |         |          |            |
+| ----- | ------- | ----- | ------- | -------- | ---------- |
+| `+`   | `-`     | `*`   | `/`     | `%`      | `^`        |
+| `&`   | `\|`    | `~`   | `!`     | `,`      | `=`        |
+| `<`   | `>`     | `<=`  | `>=`    | `++`     | `--`       |
+| `<<`  | `>>`    | `==`  | `!=`    | `&&`     | `\|\|`     |
+| `+=`  | `-=`    | `/=`  | `%=`    | `^=`     | `&=`       |
+| `\|=` | `\*=`   | `<<=` | `>>=`   | `[]`     | `()`       |
+| `\_>` | `\_>\*` | `new` | `new[]` | `delete` | `delete[]` |
+
+The following operators _cannot_ be overloaded:
+
+|      |        |
+| ---- | ------ |
+| `::` | ` .\*` |
+| `.`  | `?:`   |
+
+A word of caution on overloading: It's very easy to get carried away
+creating new meanings for the symbols above. Overloading is more a matter
+of aesthetic and style than anything else. Done poorly, overloading can
+lead to poor readability. If we ever catch ourselves overloading an
+operator and following it with a comment defining what the operator means,
+stop. Operators should be overloaded only if they are intuitive. And by
+intuitive, we mean immediately deducible. The example above is intuitive
+because it follows the laws of mathematics. It would not be intuitive to
+use `++` on a string. What happens when you increment a string? If we ever
+find ourselves asking that question, we've ventured into the land of bad
+heuristics.

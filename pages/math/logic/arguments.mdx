@@ -1,0 +1,472 @@
+# Arguments
+
+An **argument** is a sequence of propositions leading to a conclusion.
+Needless to say, arguments are the building blocks of mathematics, so their
+careful study is indispensable to any budding mathematician. Arguments have
+strict terminology that we must always keep in mind when we evaluate them.
+
+## Arguments: Form v. Substance.
+
+**Logic** is the study of systematically evaluating arguments for _internal
+cogency_. There are numerous standards for internal cogency, but the
+standard we are most often concerned with in mathematics is **logical
+validity**. Consider the argument synonymous with introductory logic texts:
+
+1. All men are mortal.
+2. Socrates is a man.
+3. Socrates is mortal.
+
+From the argument, we can ask two questions:
+
+1. Are the **premises** true?
+2. What is the _quality_ of the **inference steps** from the premises to
+   the conclusion?
+
+These two questions evidence a distinction: Asking whether an argument
+starts from true premises is different from asking how the argument moves
+from one proposition to the next. True, we generally want our arguments to
+satisfy both conditions. Nevertheless, they are two separate questions
+requiring different knowledge. Whether premises are true is an issue of
+_substance_ &mdash; the question is determined by reference to data or
+known facts. Thus, the issue is within the expert's domain. If the argument
+concerns economics, then whether the premises are true is answered by the
+economist. If physics, the physicist, and if mathematics, the
+mathematician. On the other hand, **internal cogency** &mdash; an
+argument's movement, or flow, from one proposition to the next &mdash; is
+an issue of _form_. It concerns both the expert and the logician.
+
+## Deduction v. Induction.
+
+The argument in the preceding example is described as **deductively
+valid**. Now consider this argument:
+
+1. My doctor has never poisoned anyone.
+2. The medicine I've been prescribed is a routine prescription.
+3. My doctor will not poison me.
+
+Notice the difference between this argument and the preceding one. It does
+not share the same &#8220;air-tight&#8221; quality. There is nothing
+&#8220;wrong&#8221; with the argument, but it's internal cogency is
+different. When we extrapolate from past data to arrive at conclusions
+about the future, we engage in **inductive reasoning**. Inductive arguments
+can have _inductively strong_ conclusions (it his highly probable that,
+assuming the premises are true, the conclusion is true) or _inductively
+weak_ conclusions (it is unlikely that, assuming the premises are true, the
+conclusion is true). Inductive reasoning is the kind of reasoning we use
+daily. Time management, decisions concerning our relationships with others,
+whether to buy something now or later, these all involve inductions.
+Inductive reasoning is a difficult and complex area of logic, and we can
+only study it meaningfully if we have a good grasp of deductive reasoning.
+Accordingly, we will relegate our discussion to deductive reasoning for
+now.
+
+### Argument Form
+
+All arguments have an **argument form** &mdash; the sequence of
+_propositional forms_. All propositions in an argument and all
+propositional forms in an argument form, except for the very last, are
+called **premises**. Every premise relies on either one or more
+**assumptions**, propositions treated as true without further proof, and
+are themselves premises in an argument. Premises may be **explicit**
+&mdash; stated clearly to the audience, or **implicit** &mdash; unstated.
+All premises lead to a final proposition or propositional form called the
+**conclusion**.
+
+Implicit premises are often the best place to find weaknesses and problems
+in arguments. However, before we even assess an argument's premises, we
+must consider the argument's **validity**. Whether an argument is _valid_
+depends on _argument form_. An argument is valid if, and only if, no matter
+what propositions are substituted for the proposition variables in the
+argument's premises, if the argument's premises are _all true_, then the
+conclusion _is also true_. If an argument satisfies this requirement, then
+the argument is **valid**; otherwise, the argument is **invalid**.
+
+The core requirement for validity is: If the argument's premises are all
+true, then the argument's conclusion must follow by logical form alone.
+Notice what this means. It is logically impossible for a valid argument to
+have all true premises and a false conclusion. When an argument is valid
+and its premises are true, we say that the conclusion's truth is
+**inferred** or **deduced** from the truth of the premises. If a conclusion
+does not necessarily follow from the premises being true (i.e., the
+premises are all true but the conclusion is false or the conclusion could
+be true _or_ false), then the conclusion is not validly deduced.
+
+We can test for an argument's validity procedurally:
+
+1. Identify all of the argument's assumptions.
+2. Identify all of the argument's premises.
+3. Identify the argument's conclusion.
+4. Identify all logical connectives linking each proposition (this
+   constructs the argument's form).
+5. Construct a truth table:
+   1. Enumerate the truth values for the assumptions.
+   2. Enumerate the truth values for the premises.
+   3. Enumerate the truth values for the conclusion.
+6. Evaluate the truth values for the logical connectives between the
+   propositions in (a) through (c).
+7. If a row in the truth table shows all of the premises are true, that row
+   is called the **critical row**.
+8. If there is a critical row where the conclusion is false, then it is
+   _possible_ for an argument of the given form to have true premises and a
+   false conclusion, so the argument form is **invalid**.
+9. Else, if the conclusion of every critical row is true, then the argument
+   form is **valid**.
+
+## Modus Ponens.
+
+An argument form composed of two premises and a conclusion is called a
+**syllogism**. The first premise is called the **major premise**, and the
+second the **minor premise**. A syllogism we are likely all familiar with
+is **modus ponens**:
+
+1. ${a \implies b}$
+2. $a$
+3. $b$
+
+The Latin phrase _modus ponens_ means &#8220;method of affirming,&#8221;
+drawn directly to the fact that the conclusion affirms the conditional. We
+can see that _modus ponens_ is a valid argument form with a truth table:
+
+| $a$ | $b$ | ${a \implies b}$ | $a$ | $b$ |
+| --- | --- | ---------------- | --- | --- |
+| T   | T   | T                | T   | T   |
+| T   | F   | F                | T   |     |
+| F   | T   | T                | F   |     |
+| F   | F   | T                | F   |     |
+
+## Modus Tollens.
+
+Another syllogism is **modus tollens**:
+
+1. ${p \implies q}$
+2. ${\neg q}$
+3. ${\neg p}$
+
+The phrase _modus tollens_ is Latin for &#8220;method of denying,&#8221;
+describing the argument's form of denying the necessary condition. A truth
+table demonstrates _modus tollens_ as a valid argument form:
+
+| $p$ | $q$ | ${p \implies q}$ | ${\neg q}$ | ${\neg p}$ |
+| --- | --- | ---------------- | ---------- | ---------- |
+| T   | T   | T                | F          |            |
+| T   | F   | F                | T          |            |
+| F   | T   | T                | F          |            |
+| F   | F   | T                | T          | T          |
+
+## Generalization
+
+Valid argument forms are called **rules of inference**. Thus, argument
+forms like _modus ponens_ and _modus tollens_ are rules of inference. One
+rule of inference is **generalization**:
+
+1. ${p}$
+2. ${p \lor q}$
+
+Similarly:
+
+1. ${q}$
+2. ${p \lor q}$
+
+Generalization allows us to infer that, if $p$ is true, then any
+proposition logically connected to $p$ with an OR is true. For example,
+suppose that the proposition "Apples are red" is true. From generalization,
+we can conclude that, more generally, "Apples are red or apples are green"
+is true.
+
+| $p$ | $q$ | ${p \lor q}$ |
+| --- | --- | ------------ |
+| T   | T   | T            |
+| T   | F   | T            |
+| F   | T   | T            |
+| F   | F   |              |
+
+As an example: Suppose we are counting the number of seeding plants in our
+green house. We reach plant $x$, and find that it is labeled, "dicot." We
+can then conclude:
+
+1. $x$ is a dicot
+2. (_more generally_) $x$ is a dicot OR $x$ is a monocot
+
+Knowing that seeding plants includes dicots and monocots, we tally $x$.
+
+## Specialization.
+
+Another rule of inference is **specialization**. Specialization takes the
+following argument form:
+
+1. ${p \land q}$
+2. $p$
+
+Similarly,
+
+1. ${p \land q}$
+2. $q$
+
+A truth table demonstrates specialization's validity:
+
+| $p$ | $q$ | ${p \land q}$ | $p$ | $q$ |
+| --- | --- | ------------- | --- | --- |
+| T   | T   | T             | T   | T   |
+| T   | F   | F             |     |     |
+| F   | T   | F             |     |     |
+| F   | F   | F             |     |     |
+
+For example, suppose we are told the following proposition is true:
+&#8220;Ada is a computer scientist and a mathematician.&#8221; With
+specialization, we can validly argue:
+
+1. Ada is a computer scientist and Ada is a mathematician.
+2. (_in particular_) Ada is a computer scientist.
+
+Generalization and specialization are often the first steps to reaching new
+mathematical results. Not every fact is relevant in mathematical inquiry,
+but neither do we always have enough facts. Generalization and
+specialization allow us to expand or shrink the pool of "givens," tailoring
+known facts to fit into the hypotheses of known theorems.
+
+## Elimination
+
+**Elimination** is another rule of inference used extensively in
+mathematics. It takes the following form:
+
+1. ${p \lor q}$
+2. ${\neg q}$
+3. ${p}$
+
+Similiarly:
+
+1. ${p \lor q}$
+2. ${\neg p}$
+3. ${q}$
+
+Elimination provides that given the compound proposition $x$, consisting of
+an $n$ number of propositions all linked with an OR, if we prove that all
+of the component propositions are false except one component proposition
+$y$, it must be the case that $y$ is true. This is effectively the strategy
+of eliminating all possible cases to prove that a particular case is true.
+
+| $p$ | $q$ | ${p \lor q}$ | ${\neg p}$ | ${\neg q}$ | $p$ | $q$ |
+| --- | --- | ------------ | ---------- | ---------- | --- | --- |
+| T   | T   | T            | F          | F          |     |     |
+| T   | F   | T            | F          | T          | T   |     |
+| F   | T   | T            | T          | F          |     | T   |
+| F   | F   | F            | T          | T          |     |     |
+
+For example: Suppose we are told that, ${x - 3 = 0}$ OR ${x + 2 = 0.}$ Then
+we are told that ${x \neq -2.}$ Elimination applies:
+
+1. ${(x - 3 = 0) \lor (x + 2 = 0)}$
+2. ${x \neq -2}$
+3. ${(x \neq -2) \implies \bot(x + 2 = 0)}$
+4. ${x - 3 = 0}$
+
+## Transitivity
+
+A frequent argument in mathematics is a chain of if-then statements. We
+find that one fact is true, which implies that a second a fact is true,
+which implies a third fact is true. **Transitivity** is the rule of
+inference that allows us to conclude, "Because the first fact is true, this
+third fact is true." The rule takes the form:
+
+1. ${p \implies q}$
+2. ${q \implies r}$
+3. ${p \implies r}$
+
+## Proof-by-Division-into-Cases.
+
+The rule of inference **proof-by-division-into-cases** takes the form:
+
+1. ${p \lor q}$
+2. ${p \implies r}$
+3. ${q \implies r}$
+4. ${r}$
+
+Proof-by-division-into-cases is particularly useful when we know that one
+proposition or another proposition is true. If we show that, either or, a
+certain conclusion follows, then such a conclusion must be true. For
+example:
+
+1. $x$ is positive or $x$ is negative.
+2. If $x$ is positive, then ${x^2 > 0.}$
+3. If $x$ is negative, then ${x^2 > 0.}$
+4. ${x^2 > 0.}$
+
+### Fallacies
+
+An error in deductive reasoning is called a **fallacy**. A fallacy
+automatically results in an invalid argument, greatly reducing the
+argument's strength and credibility. As with valid arguments, we can spot
+fallacies by finding at least one critical row where all the argument's
+premises are true and the conclusion is false. Alternatively, we can
+identify fallacies by **analogizing** &mdash; we find an argument $A$ of
+the same form, then show that argument $A$ has true premises and a false
+conclusion (remember, the standard of validity applies to all arguments;
+validity pertains to _form_, not _substance_). In the next sections, we
+identify several common fallacies.
+
+### The Converse Error
+
+Consider the following argument:
+
+1. If Loki is a man, then Loki is human.
+2. Loki is human.
+3. Loki is a man.
+
+This is an invalid argument. The fact that Loki is human does not preclude
+Loki being a woman or of non-binary identification. The fallacy in the
+argument above is called a converse error &mdash; concluding that the
+sufficient condition is true because the necessary condition is true. The
+converse error takes the form:
+
+1. ${p \implies q}$
+2. ${q}$
+3. ${p}$
+
+The converse error is also called _affirming the consequent_.
+
+### The Inverse Error.
+
+Here's another invalid argument:
+
+1. If Romulus's mother is a wolf, then a wolf suckled Romulus.
+2. Romulus's mother is not a wolf.
+3. A wolf did not suckle Romulus.
+
+This argument is invalid because a wolf could very well have suckled
+Romulus even if Romulus's mother was not a wolf. Indeed, both Romulus and
+Remus were suckled by a she-wolf (unusual, but possible*). The error here
+is called an **inverse error**. The inverse error is also called \_denying
+the antecedent*.
+
+### Valid Arguments with False Premises and a False Conclusion
+
+The fact that an argument rests on false premises and results in a false
+conclusion does not prevent the argument from being valid. For example,
+this argument is deductively valid:
+
+1. The city of Versailles is the capital of France.
+2. If a city is a country's capital, then it is the country's largest city.
+3. Versailles is France's largest city.
+
+The premises above are all false. Paris is the capital of france, and there
+are numerous countries where the largest city is not the capital (e.g.,
+Washington D.C. is the United States's capital, but it dwarfs in comparison
+to New York City by any metric). The conclusion is also false &mdash;
+Versailles is small compared to Paris, Arles, Marseille, or Toulouse.
+
+Nevertheless, the argument is deductively valid. It is a simple exercise of
+_modus ponens_. Again, validity concerns form, not susbstance.
+
+### Valid Arguments with Falses Premises and a True Conclusion
+
+Similarly, the fact that an argument rests on false premises and results in
+a true conclusion does not prevent the argument from being valid. Here's a
+valid argument:
+
+1. If an organism is a moth, then the organism is a human.
+2. Brad Pitt is an organism that is a moth.
+3. Brad Pitt is a human.
+
+The premises above are all false. Moths are not humans, and Brad Pitt is
+certainly not a moth. But, the conclusion is true &mdash; Brad Pitt is a
+human. But, like the previous example, this is another simple exercise of
+_modus ponens_, a valid argument form.
+
+### Invalid Arguments with True Premises and a True Conclusion
+
+The fact that an argument rests on true premises and results in a true
+conclusion does not prevent the argument from being invalid. For example:
+
+1. If an animal is a reptile, then the animal is cold-blooded.
+2. Crocodiles are cold-blooded animals.
+3. Crocodiles are reptiles.
+
+The above argument's premises and conclusion are all true. However, the
+argument is invalid because it commits a converse error &mdash; concluding
+that the sufficient condition is true because the necessary condition is
+true.
+
+## Sound Arguments
+
+If an argument satisfies these two conditions:
+
+1. The argument is valid; and
+2. all of the argument's premises are true
+
+then we say that the argument is **sound**. More generally, the property of
+_soundness_ results when an argument satisifies the relevant standards of
+_form_ and _substance_. Soundness is the standard for obtaining new
+mathematical results. Validity is the bare minimum. This is because there
+are three different possibilities for valid arguments:
+
+1. true premises and a true conclusion
+2. false premise(s) and a true conclusion
+3. false premise(s) and a false conclusion
+
+Soundness ensures that only the first possibility occurs with valid
+argument forms: We accept a conclusion as fact in mathematics **only if**
+the argument producing that conclusion is **sound**.
+
+## Contradiction
+
+The principle of **contradiction** is a cornerstone of mathematics. It is
+at the very heart of the method of _proof by contradiction_. Suppose $p$ is
+a proposition we wish to deduce. We can prove that $p$ is true with the
+following argument form:
+
+1. Suppose that $p$ is false.
+2. If $p$ is false, then there is a logical contradiction.
+3. $p$ is false.
+4. $p$ must be true.
+5. $p$ is true
+
+The critical step in this argument is the second premise: That there is a
+logical contradiction if $p$ is false. For this premise to be true, $p$
+being false must contradict the **data** &mdash; what we know as facts.
+This rule of inference is called the **contradiction rule**. Symbolically:
+
+1. ${\neg p \implies \bot}$
+2. ${\neg p}$
+3. ${p}$
+
+The contradiction rule can be proved with a truth table:
+
+| ${p}$ | ${\neg p}$ | ${\bot}$ | ${\neg p \implies \bot}$ | ${p}$ |
+| ----- | ---------- | -------- | ------------------------ | ----- |
+| T     | F          | F        | T                        | T     |
+| T     | F          | F        | F                        |       |
+
+**Eliminating possible cases.** The contradiction rule also allows us to
+narrow down possible cases by way of a powerful rule: If an assumption
+leads to a contradiction, then that assumption must be false.
+
+As an example of how useful this rule is, consider the following problem
+presented by the logician Raymond Smullyan:
+
+- There exists an island with two types of inhabitants:
+  1.  Knights who always tell the truth; and
+  2.  Knaves who always lie.
+- On visiting the island, you are approached by two natives, $A$ and $B$,
+  who state:
+
+  - $A$: $B$ is a knight.
+  - $B$: $A$ and I are of opposite type.
+
+- What are $A$ and $B$?
+
+First, we observe that there are four possibilites:
+
+1. $A$ is a knight and $B$ is a knight.
+2. $A$ is a knight and $B$ is a knave.
+3. $A$ is a knave and $B$ is a knight.
+4. $A$ is a knave and $B$ is a knave.
+
+Next, suppose that $A$ is a knight. If $A$ is a knight, then $A$ always
+tells the truth. Thus, $B$ is a knight. But, if $B$ is a knight, then $B$
+always tells the truth, so $A$ is a knave. This is a contradiction. Thus,
+$A$ cannot be a knight. $A$ must be a knave.
+
+If $A$ is a knave, then $A$ always tells lies. Thus, $B$ is not a knight.
+$B$ is therefore a knave. And since $B$ is a knave, $B$ always tells lies,
+so $A$ and $B$ are not of opposite type. Accordingly, both $A$ and $B$ are
+knaves.

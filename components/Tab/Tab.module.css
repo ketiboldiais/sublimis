@@ -1,0 +1,25 @@
+.tab {
+	margin: 1em 0; 
+}
+
+.tabContent {
+	min-height: 100px;
+}
+
+.tabNav {
+	display: flex;
+	margin: 0;
+	padding-left: 0;
+	list-style: none;
+}
+.tabNav li {
+	margin-right: 1em;
+	padding: 2px;
+}
+.tabNav li:hover {
+	cursor: pointer;
+}
+
+.active {
+	border-bottom: 2px solid firebrick;
+}

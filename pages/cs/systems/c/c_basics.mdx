@@ -1,0 +1,534 @@
+# The C Language
+
+Nodding to tradition, here is our introductory C program:
+
+```c
+#include <stdio.h>
+int main() {
+	// Prints hello world
+	printf("Hello, world\n");
+	return 0;
+}
+```
+
+The program we've written above is called a **source program**, and it's
+stored in a **source file** (in the example above, the source program is
+stored in a file named `Hello.c`). The entire program is a collection of
+bytes, which are chunks of 8 bits. Every bit has a **state**, which can be
+only one of two values: 0 or 1. Accordingly, every program, across all
+languages, is a sequence of 0s and 1s.
+
+Every character in the source program above is represented by unique
+integer, as proscribed by the ASCII standard (or, in most modern standards,
+UNICODE). For example, the character `#` is represented by the integer 35,
+`i` by 105, `\n` by 10, and whitespace (denoted `SP`) by 32. The program
+also contains a _comment_, the text preceded by two forward slashes, `//`.
+By appending `//` to a line of text, we instruct the compiler to ignore the
+text. For comments spanning multiple lines, we use `/* */`.
+
+Files like `Hello.c` are called _text files_ &mdash; files that consist
+exclusively of ASCII characters. All other files are called _binary files_.
+For reasons we will see later, this is a helpful distinction to keep in
+mind.
+
+## Basic Operators
+
+C provides the typical primitive operators we would expect from a
+programming language: Addition, subtraction, multiplication, division, and
+the remainder operation.
+
+```c
+#include <stdio.h>
+
+int main() {
+	// addition
+	int sum = 12 + 10;
+	printf("12 + 10 = %i\n", sum);
+
+	// subtraction
+	int difference = 12 - 10;
+	printf("12 - 10 = %i\n", difference);
+
+	// multiplication
+	int product = 12 * 12;
+	printf("12 * 12 = %i\n", product);
+
+	// division
+	int quotient = 20 / 10;
+	printf("20 / 10 = %i\n", quotient);
+
+	// remainder operation
+	int remainder = 15 % 2;
+	printf("15 %% 2 = %i\n", remainder);
+
+	return 0;
+}
+```
+
+```bash
+12 + 10 = 22
+12 - 10 = 2
+12 * 10 = 144
+20 / 10 = 2
+15 % 2 = 1
+```
+
+Because C is a relatively old language, the API of native operators is
+fairly small. The most important operators are presented in the table
+below.
+
+|   symbol   | operation                                                                                        |
+| :--------: | ------------------------------------------------------------------------------------------------ |
+|    `+`     | Add                                                                                              |
+|    `-`     | Subtract                                                                                         |
+|    `*`     | Multiply                                                                                         |
+|    `/`     | Divide                                                                                           |
+|    `%`     | Remainder operator                                                                               |
+|    `++`    | Increment                                                                                        |
+|    `--`    | Decrement                                                                                        |
+|    `==`    | Equal                                                                                            |
+|    `!=`    | Not equal                                                                                        |
+|    `>`     | Greater than                                                                                     |
+|    `<`     | Less than                                                                                        |
+|    `>=`    | Greater than or equal to                                                                         |
+|    `<=`    | Less than or equal to                                                                            |
+|    `&&`    | Logical and                                                                                      |
+|   `\|\|`   | Logical or                                                                                       |
+|    `!`     | Logical not                                                                                      |
+|   `? :`    | Logical ternary                                                                                  |
+|    `&`     | Bitwise and                                                                                      |
+|    `\|`    | Bitwise or                                                                                       |
+|    `^`     | Bitwise xor                                                                                      |
+|    `~`     | Bitwise one's complement                                                                         |
+|    `<<`    | Bitwise shift left                                                                               |
+|    `>>`    | Bitwise shift right                                                                              |
+| `sizeof()` | Get the size of                                                                                  |
+|   `A[]`    | Array subscript, where `A` is an array identifier                                                |
+|    `&`     | The address of                                                                                   |
+|    `*`     | The value of                                                                                     |
+|    `->`    | Structure dereference                                                                            |
+|   `S.x`    | Structure reference, where `S` is some structure and `x` is some field within the structure `S`. |
+|    `=`     | Assign equal                                                                                     |
+|    `+=`    | Assign plus-equal                                                                                |
+|    `-=`    | Assign minus-equal                                                                               |
+|    `*=`    | Assign multiply-equal                                                                            |
+|    `/=`    | Assign divide-equal                                                                              |
+|    `%=`    | Assign modulus-equal                                                                             |
+|   `<<=`    | Assign shift-left-equal                                                                          |
+|    `>=`    | Assign shift-right-equal                                                                         |
+|    `&=`    | Assign and-equal                                                                                 |
+|    `^=`    | Assign xor-equal                                                                                 |
+|    `=`     | Assign or-equal                                                                                  |
+
+## Variables
+
+In the ancient Greek saga _The Twelve Labors_, the Greek demigod Hercules
+travels throught the far reaches of the Greco-Roman world, completing
+various tasks. As remarkable and brave Hercules is, he does not complete
+these tasks alone. Throught the saga, he obtains information and assistance
+from various persons. In the first task, killing the Nemean lion, a boy
+provides Hercules some data: If he slew the Nemean lion and returned alive
+within 30 days, the town would sacrifice a lion to Zeus, but if he did not,
+the boy would sacrifice himself. In the eleventh task, when Hercules must
+steal three golden apples from the Garden of the Hesperides, Hercules
+abducts the Old Man of the Sea and compels him to reveal the location of
+the garden.
+
+Variables in C are akin to the minor characters of the Herculean saga. They
+hold information, and that information can be one of two things: (1) A
+literal value, or (2) an address. The C programmer, however, is much more
+powerful than Hercules &mdash; she can create these lesser characters at
+her bidding. This is done through **variable declaration** and
+**assignment**, which can both be done simultaneously in a process called
+**variable initialization**:
+
+```c
+#include <stdio.h>
+int main() {
+	int x; // variable declaration
+	x = 2; // variable assignment
+	int y = 3; // variable initialization
+	return 0;
+}
+```
+
+To initialize a variable in C, we employ the following syntax:
+
+```c
+t n = val
+```
+
+Where ${t}$ is a data type, ${n}$ is the variable's name, and ${val}$ is
+the data we assign to ${n}$
+
+## Data Types
+
+C is a statically- and explicitly-typed language. In the context of
+variables, this means we must explicitly state what type of data a
+particular variable will hold. In C, there several primitive data types
+(data types built in to the language). We provide an explicit data type in
+C to instruct the compiler how much memory should be allocated in memory
+for the data. How much memory a data type takes, however, depends on the
+compiler, or more generally, on the system architecture (i.e., 32b compiler
+vs. 64b compiler).
+
+Examining the table below, it's helpful recall the units of computer
+memory. One byte (denoted ${1~\text{B}}$) is made of eight bits (denoted
+${8~\text{b}}$). And a single bit is one of two values: ${0}$ or ${1.}$ An
+**unsigned 8-bit variable** is a variable that can take on values between
+${0}$ and ${2^8 - 1 = 255.}$ A **signed 8-bit variable** can take on values
+between ${\texttt{-}127}$ and ${\texttt{+}127.}$ Thus, when a variable is
+_signed_, half of its total range is spread below zero, the other half
+above zero.
+
+1. `char`
+   - Single textual characters
+   - 1B
+   - Has a value range of ${[-128, 127]}$ or ${[0, 255]}$
+2. `unsigned char`
+   - Single textual characters
+   - 1B
+   - Has a value range of ${[0, 255]}$
+3. `signed char`
+   - Single textual characters
+   - 1B
+   - Has a value range of ${[-128, 127]}$
+4. `int`
+   - Integers
+   - 2B on a 32-bit compiler, 4B on a 64-bit.
+   - On a 32-bit compiler, ${[-32768, \space 32767].}$ And on a 64-bit
+     compiler, ${[-2147483648, \space 2147483647].}$
+5. `unsigned int`
+   - Positive integers
+   - On a 32-bit compiler, 2B, and on a 64-bit compiler, 4B.
+   - On a 32-bit compiler, ${[0, \space 65535],}$ and on a 64-bit compiler,
+     ${[0, \space 4294967295].}$
+6. `short`
+   - Short integers
+   - 2B
+   - ${[-32768, 32767]}$
+7. `unsigned short`
+   - Short positive integers
+   - 2B
+   - ${[0, 65535]}$
+8. `long`
+   - long integers
+   - On a 32-bit compiler, 4B, and on a 64-bit compiler, 8B.
+   - ${[-9223372036854775808, 9223372036854775807]}$
+9. `unsigned long`
+   - long positve integers
+   - 8B
+   - ${[0, 18446744073709551615]}$
+10. `float`
+    - floating-point numbers (numbers with a decimal point) 4B
+    - ${[1.2 \times 10^{-38}, 3.4 \times 10^{38}]}$ (6 decimal places)
+11. `double`
+    - double-precision floating point numbers
+    - 8B
+    - ${[2.3 \times 10^{-308}, 1.7 \times 10^{308}]}$ (15 decimal places)
+12. `long double`
+    - floating point numbers
+    - 10B
+    - ${[3.4 \times 10^{-4932}, 1.1 \times 10^{4932}]}$ (19 decimal places)
+
+Of note, C does not have a built-in data type for Boolean values. Instead,
+any nonzero value is equivalent to `true`, and 0 is equivalent to `false`.
+Because of this approach, the result of applying a relational or logical
+operator is always a ${0}$ (false) or a ${1}$ (true). We can, however,
+include the header file `<stdboo.h>`, in which case the data type `bool` is
+provided.
+
+```c
+#include <stdbool.h>
+int main() {
+	bool x = true;
+	bool y = false;
+}
+```
+
+## Machine Size Test
+
+We can determine the memory allocations for a given machine by running the
+code below:
+
+```c
+	#include <stdio.h>
+
+	int main(int argc, char *argv[]) {
+		printf("a char is %ld bytes\n", sizeof(char));
+		printf("an int is %ld bytes\n", sizeof(int));
+		printf("an float is %ld bytes\n", sizeof(float));
+		printf("a double is %ld bytes\n", sizeof(double));
+		printf("a short int is %ld bytes\n", sizeof(short int));
+		printf("a long int is %ld bytes\n", sizeof(long int));
+		printf("a long double is %ld bytes\n", sizeof(long double));
+
+		return 0;
+	}
+```
+
+```bash
+	a char is 1 bytes
+	an int is 4 bytes
+	an float is 4 bytes
+	a double is 8 bytes
+	a short int is 2 bytes
+	a long int is 8 bytes
+	a long double is 16 bytes
+```
+
+## Binary & Hexadecimal
+
+As we know, there are three number systems we use in computing:
+
+1. decimal
+2. binary
+3. hexadecimal
+
+In decimal, we use the number ${10}$ as a base, corresponding to ${10}$
+digits:
+
+<figure>$$ \{ 0,1,2,3,4,5,6,7,8,9 \} $$</figure>
+
+In binary, we use the number ${2}$ as a base, corresponding to ${2}$ digits
+for representation:
+
+<figure>$$ \{ 0,1 \} $$</figure>
+
+For computers, each binary place is called a **bit**. There are ${8}$ bits
+in a byte. Although standard C does not define binary constants, GNU C,
+clang, and other popular compilers allow us to denote binary numbers with
+the modern `0b` or `0B` prefixes:
+
+```c
+#include <stdio.h>
+
+int main() {
+	int x = 0b01;
+	int y = 0b10;
+	int z = x + y;
+	printf("%d + %d = %d \n", x, y, z);
+	return 0;
+}
+```
+
+```bash
+1 + 2 = 3
+```
+
+Because we're limited to two digits, binary numbers can quickly grow too
+long for practical use. This is worsened by the fact that the numbers we
+need to interact with hardware on modern computers are big, big numbers.
+Accordingly, we have an even more concise way of expressing numbers:
+hexadecimal. In hex, we use a base of ${16:}$
+
+<figure>$$ \{ 0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F \} $$</figure>
+
+In terms of computer memory, ${2}$ hex digits make one byte (8 bits). A
+single hex digit (${4}$ bits, or half a byte) is called a
+_nibble_.[^nibblenote] Like binary numbers, most modern compilers allow us
+to write hexadecimal numbers by prepending the prefix `0x`:
+
+[^nibblenote]: Also spelled "nybble."
+
+```c
+#include <stdio.h>
+
+int main() {
+	int x = 0xA57;
+	int y = 0xB85;
+	int z = x + y;
+	printf("%d + %d = %d \n", x, y, z);
+	return 0;
+}
+```
+
+```bash
+2647 + 2949 = 5596
+```
+
+In Assembly, hex numbers are often indicated by `$` prefix.
+
+## Casting
+
+Consider the following code:
+
+```c
+#include <stdio.h>
+
+int main() {
+	double n = 3;
+	double m = 2;
+	int result = n / m;
+	printf("result = %d\n", result);
+	return 0;
+}
+```
+
+We would expect the value of `result` to be ${1.5.}$ But notice the output:
+
+```bash
+1
+```
+
+In C, operations performed on arguments of the same type ${t}$ will output
+a return of type ${t.}$ An `int` times an `int` is an `int`, a `float`
+divided by a `float` is a `float`. However, if we assign a value of type
+`double` to a variable of type `int`, we will **implicitly cast** the
+`double` value to an `int`. This is what we're seeing above. To get back
+${1.5,}$ we must ensure `result` is of type `double`:
+
+```c
+#include <stdio.h>
+
+int main() {
+	double n = 3;
+	double m = 2;
+	double result = n / m;
+	printf("result = %f\n", result);
+	return 0;
+}
+```
+
+```bash
+result = 1.500000
+```
+
+## Loops
+
+Loops in C are very much like other languages. Here is the for-loop:
+
+```c
+#include <stdio.h>
+int main() {
+	int SUM = 0;
+	for (int i = 0; i < 5; i++) {
+		SUM += i;
+	}
+	printf("Sum from 0 to 5 = %i\n", SUM);
+	return 0;
+}
+```
+
+```bash
+Sum from 0 to 5 = 10
+```
+
+And here is the while-loop:
+
+```c
+#include <stdio.h>
+int main() {
+	int SUM = 0;
+	int count = 0;
+	while (count < 5) {
+		SUM += count;
+		count++;
+	}
+	printf("Sum from 0 to 5 = %i\n", SUM);
+	return 0;
+}
+```
+
+```bash
+Sum from 0 to 5 = 10
+```
+
+## Symbolic Constants
+
+When writing programs, we want to avoid writing magic numbers. This is
+particularly true for C programs, since we aren't afforded the same level
+of safety as we would in languages like Java. Remember, C is a low-level
+language. Magic numbers reduce readability, and readability is paramount in
+C programming &mdash; we don't have nearly as much syntactic sugar or
+idioms as other languages, so C programs tend to be verbose and longer. And
+the longer the program, the more valuable is readability.
+
+Suppose we want to sum the ages 12 through 30. We could use the same
+summing procedure above:
+
+```c
+#include <stdio.h>
+int main() {
+	int sum = 0;
+	for (int i = 12; i <= 30; i++) {
+		sum += i;
+	}
+	printf("age sum = %i\n", sum);
+	return 0;
+}
+```
+
+```bash
+age sum = 399
+```
+
+The problem, however, is that the code isn't very readable. Why 12? Why 30?
+To make it more readable, we want to use **symbolic constants**:
+
+```c
+#include <stdio.h>
+
+#define YOUNGEST_AGE 12
+#define OLDEST_AGE 30
+
+int main() {
+	int sum_of_ages = 0;
+	for (int age = YOUNGEST_AGE; age <= OLDEST_AGE; age++) {
+		sum_of_ages += age;
+	}
+	printf("age sum = %i\n", sum_of_ages);
+	return 0;
+}
+```
+
+```bash
+age sum = 399
+```
+
+Symbolic constants are essentially symbols for specified values. Wherever
+the C compiler encounters a symbolic constant, it will replace it with the
+value we've specified. In this case, `YOUNGEST_AGE` is replaced with `12`,
+and `OLDEST_AGE` is replaced with 30.
+
+## Streams
+
+C provides constructs for **streams**. Such streams include, for example,
+user and file I/O. Each construct is presented.
+
+### User Input
+
+Recall that when we obtain input from a user, we _read_ data from the user.
+For example, suppose we wanted to write a program that averages two grades.
+We could do so with the following:
+
+```c
+#include <stdlib>
+
+int main() {
+	int grade1 = 90;
+	int grade2 = 85;
+	int average = (grade1 + grade2) / 2;
+	printf("average: %d\n", average);
+	return 0;
+}
+```
+
+The program above works fine, but it isn't _general_ &mdash; the program
+only works for a specific set of inputs. A more general program would be
+that one works for any arbitrary set of inputs. One way to implement such a
+program would be to read data from the user:
+
+```c
+#include <stdlib>
+
+int main() {
+	int grade1;
+	int grade2;
+	scanf("%d", &grade1);
+	scanf("%d", &grade2);
+	int average = (grade1 + grade2) / 2;
+	printf("average: %d\n", average);
+	return 0;
+}
+```

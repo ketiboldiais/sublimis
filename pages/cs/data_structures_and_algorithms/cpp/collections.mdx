@@ -1,0 +1,655 @@
+# Collections
+
+Below, we investigate the basic constructs provided by C++ for user-defined
+data types: enums, classes, structs, and many others. Understanding these
+constructs is critical, as they are the basic building blocks of
+object-oriented programming.
+
+## Arrays
+
+Arrays are the simplest data structure. Physically, arrays occupy a
+contiguous region of memory in the computer. We can initialize an array in
+C++ with the following:
+
+```cpp
+int main() {
+	int x[5] = { 1, 2, 3, 4, 5 };
+	cout << x << endl;
+	return 0;
+}
+```
+
+```bash
+0x7ffeeb1462d0
+```
+
+The line above declares a variable `arr`, which will store an `int` array
+of size 10. In other words, an array that can _only_ take 10 values of type
+`int`.
+
+The output we see above is a _memory address_. Specifically, it's the
+memory address for where the array begins. This evidences the fact that an
+array, physically, is a contiguous region in memory.
+
+We can access individual elements in the array with square-bracket syntax:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+
+int main() {
+	int x[5] = { 1, 2, 3, 4, 5 };
+	cout << x[0] << endl;
+	cout << x[1] << endl;
+	cout << x[2] << endl;
+	cout << x[3] << endl;
+	cout << x[4] << endl;
+	return 0;
+}
+```
+
+```bash
+1
+2
+3
+4
+5
+```
+
+Notice that like most other languages, C++ indexes its arrays starting
+from 0. This means that if we start a loop at 0 and use ${i}$ as a counter,
+then the last element in the array is ${n-1,}$ where ${n}$ is the size of
+the array. E.g., the size of the array above is 5, but the last element's
+index is 4. This is point where many beginning programmers make mistakes,
+most commonly seen in a _fence post problem_ &mdash; going one unit beyond
+the limit. This can lead to frustrating bugs like an out-of-bounds error:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+
+int main() {
+	int x[5] = { 1, 2, 3, 4, 5 };
+	cout << x[5] << endl;
+	return 0;
+}
+```
+
+```bash
+main.cpp:7:10: warning: array index 5 is past the end of the array (which contains 5 elements) [-Warray-bounds]
+		cout << x[5] << endl;
+						^ ~
+main.cpp:6:2: note: array 'x' declared here
+				int x[5] = { 1, 2, 3, 4, 5 };
+				^
+1 warning generated.
+```
+
+Let's print out all the elements in the array:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+
+int main() {
+	int x[5] = { 1, 2, 3, 4, 5 };
+	size_t LengthOfx = sizeof x / sizeof x[0];
+	for (int i = 0; i < LengthOfx; i++) {
+		cout << x[i] << endl;
+	}
+	return 0;
+}
+```
+
+```bash
+1
+2
+3
+4
+5
+```
+
+Above, we used the `sizeof` operator to obtain the array's length. The
+`sizeof` operator is a built-in operator that returns the number of bytes
+allocated to a particular variable. Thus, when we call `sizeof x`, we are
+asking for the number of bytes for the _entire_ array. To obtain the actual
+length of the array, we need to divide that number by the number of bytes
+for each element in the array.
+
+Alternatively, starting with C++11, we can use a **range-based
+loop**:[^loopnote]
+
+[^loopnote]: The range-based loop is also called a **for-each loop**.
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main() { int x[5] = { 1, 2, 3, 4, 5 }; cout << "[ "; for (auto i : x)
+cout << i << ", "; cout << "]" << endl; return 0; }
+
+```
+
+```bash
+[ 1, 2, 3, 4, 5, ]
+```
+
+Note that the code above was compiled with the following `make` file:
+
+```bash
+CXX=g++
+CXXFLAGS=-g -Wall -MMD -std=c++20
+clean:
+	$(RM) *.o *.d output
+```
+
+The `auto` keyword is used to infer the type of an array. We could've used
+`int` just as well.
+
+## Grids; Matrices
+
+A **grid**, or **matrix**, is an abstraction of a **multidimensional
+array**. A multidimensional array is simply an array whose elements are
+themselves arrays. For example, a 2-dimensional array is an array whose
+elements arrays. A 3-dimensional array is an array whose elements are
+2-dimensional arrays. And a 4-dimensional array is an array whose elements
+are 3-dimensional array arrays. We can visualize these multi-dimensional
+arrays as such:
+
+![A multidimensional array, visualized as a cube.](https://res.cloudinary.com/sublimis/image/upload/v1652735103/cs/multi_dimensional_array_y67oib.svg)
+
+For example, here is a 2-dimensional array:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main(int argc, char \*argv[]) {
+	int a[3][3] = &lcub;{0, 1, 2}, {3, 4, 5}, {6, 7, 8}&rcub;;
+
+	cout << "i a[i][j]" << endl;
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			cout << i << " " << a[i][j] << endl;
+		}
+	}
+
+	return 0;
+}
+
+```
+
+```bash
+i a[i][j]
+0 0
+0 1
+0 2
+1 3
+1 4
+1 5
+2 6
+2 7
+2 8
+```
+
+Notice how we must use a nested for loop to target each element in the
+nested array.
+
+## Pointers & Grids.
+
+### Exercises
+
+Because of how important arrays are in computer science, it's critical that
+we are comfortable with using them. Below are some exercises.
+
+Given the array: `[3, 9, 11, 23, 14, 10, 34, 18, 27]`, compute the sum of
+all the elements.
+
+**Solution** Here is one possible solution:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+
+int main() {
+	int arr[] = { 3, 9, 11, 23, 14, 10, 34, 18, 27 };
+	int sum = 0;
+	for(int i:arr)
+		sum += i;
+	cout << (int)sum << endl;
+	return 0;
+}
+```
+
+```bash
+149
+```
+
+-Given the same array above, return the maximum.
+
+**Solution**
+
+```cpp
+#include <iostream>
+using namespace std;
+
+
+int main() {
+	int arr[] = { 3, 9, 11, 23, 14, 10, 34, 18, 27 };
+	size_t LengthOfArr = sizeof(arr) / sizeof(arr[0]);
+	int max = arr[0];
+	for (int i = 0; i < LengthOfArr; i++) {
+		if (arr[i] > max) {
+			max = arr[i];
+		}
+	}
+	cout << (int)max << endl;
+	return 0;
+}
+```
+
+```bash
+34
+```
+
+-Given the same array, return the minimum.
+
+**Solution**
+
+```cpp
+	#include <iostream>
+	using namespace std;
+
+
+	int main() {
+		int arr[] = { 3, 9, 11, 23, 14, 10, 34, 18, 27 };
+		size_t LengthOfArr = sizeof(arr) / sizeof(arr[0]);
+		int max = arr[0];
+		for (int i = 0; i < LengthOfArr; i++) {
+			if (arr[i] < max) {
+				max = arr[i];
+			}
+		}
+		cout << (int)max << endl;
+		return 0;
+	}
+```
+
+```bash
+	3
+```
+
+Given the array above, determine (i.e., return true, or 1) if the element
+67 is in the array; otherwise false (0).
+
+**Solution**
+
+```cpp
+#include <iostream>
+using namespace std;
+
+
+int main() {
+	int arr[] = { 3, 9, 11, 23, 14, 10, 34, 18, 27 };
+	size_t LengthOfArr = sizeof(arr) / sizeof(arr[0]);
+	int queryElement = 67;
+	bool result = false;
+	for (int i = 0; i < LengthOfArr; i++)
+	{
+		if (arr[i] == queryElement) {
+			result = true;
+		}
+	}
+	cout << result << endl;
+	return 0;
+}
+```
+
+```bash
+0
+```
+
+The last exercise above is an example of a **linear search** algorithm. We
+are searching for a particular element. Given very large arrays, we can
+suspect that this is a grossly inefficient algorithm. Why? Because the
+computer must check, one by one, whether the value exists. In this case,
+the number 67 doesn't exist in the array. The computer had to go through
+all of the elements to make that determination!
+
+## Vectors
+
+As we can likely tell, arrays in C++ are restrictive and somewhat
+dangerous. They are examples of _static lists_ &mdash; an indexed list of
+elements with a _fixed_ size. We cannot delete elements, nor can we insert
+elements (at least not without the use of pointers). We can resize them,
+but it's a long and unwieldy process. Perhaps worst of all, C++ allows us
+to index out of the array's bounds. Contrast this with a language like
+Python, which provides _dynamic lists_ &mdash; lists that can grow and
+shrink as needed. For most tasks involving an array-based data structure,
+that's what we want &mdash; a dynamic list.
+
+Through the standard library, C++ provides dynamic lists. Where Python
+simply calls them a list, C++ opts for **vectors**. To use vectors in our
+program, we will have to use a preprocessor: `#include <vector>. Example:`
+
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+	vector<int> arrNums {22, 48, 92, 44};
+	cout << arrNums[1] << endl;
+	arrNums[1] = 14;
+	cout << arrNums[1] << endl;
+}
+```
+
+```bash
+48
+14
+```
+
+Notice that we can using the usual indexing methods. More importantly, we
+can mutate the array. Vectors in C++ also come with a variety of member
+functions. Some of the most common ones:
+
+| Member Function    | Description                                                 | Comment                                                |
+| ------------------ | ----------------------------------------------------------- | ------------------------------------------------------ |
+| `v.push_back(val)` | Appends the value ${val}$ to the end of the vector ${v.}$   |
+| `v.clear()`        | Removes all elements in the vector ${v.}$                   |
+| `v[i]`             | Returns the value at index ${i}$                            | Alternative syntax: `v.get(i)`                         |
+| `v.insert(i, val)` | Inserts the element ${val}$ just before index ${i}$         | Operation shifts the subsequent elements to the right. |
+| `v.empty()`        | Returns true if ${v}$ contains no elements; else false.     |
+| `v.erase(i)`       | Removes _and_ returns the value at index ${i.}$             | Operation shifts subsequent elements to the left.      |
+| `v[i] = val`       | Replaces the element at index ${i}$ with the value ${val.}$ | Alternative syntax: `v.assign(i, val)`                 |
+| `v.size()`         | Returns the number of elements in the vector.               |                                                        |
+
+Vectors in C++ are implemented via templates.[^templatenote] Accordingly,
+we can create vectors with elements of any established type, so long as we
+specify it in the angle brackets. E.g., `vector<double>`, or
+`vector<std::string>`.
+
+[^templatenote]:
+    For more information on templates,
+    [_See_ Function Templates](cpp_function_templates).
+
+## When should we use a vector?
+
+The vector type represents an indexed, linear, and homogenous collection.
+Accordingly, we want to use a vector whenever we're dealing with a
+homogenous list. For example, a list of prices, names, an order of true or
+false values, or even an ordered list of ordered lists (although, we'll see
+that we might want to use a better data structure for lists of the lists,
+the _grid_).
+
+Vectors are useful because they provide several features: (1) We can obtain
+the list's size; (2) we can safely access the list (i.e., if we go out of
+bounds, we'll get an error); (3) storage is automatically handled (i.e., it
+grows and shrinks without us having to do anything); (4) we can insert and
+remove; and (5) we can produce deep-copies on assignment, as well as pass-
+and return-by-value.
+
+## Enumerations
+
+Enumerations are what we use to represent a range of _discrete_ values. An
+example most commonly cited is the range of months in a year: January,
+February, March, April, May, etc. are all discrete months. There are,
+however, numerous other examples of enumerations: letter grades, traffic
+lights, the planets, zodiac signs, days of the week, and many more.
+
+Here's an example of an enumeration (an enum) in C++:
+
+```cpp
+enum class LetterGrade {
+	A,
+	B,
+	C,
+	D,
+	F
+}
+```
+
+Writing the above, we've created a new data type called `LetterGrade`. This
+means we can use it as we would base types:
+
+```cpp
+enum class LetterGrade {
+	A,
+	B,
+	C,
+	D,
+	F
+}
+LetterGrade johnsGrade = {LetterGrade::A}
+```
+
+Notice the syntax for initialization. We explicitly state the type, as we
+would any other variable. But in initializing the value, we again state the
+type alongside double colons `::`. Each of `A`, `B`, `C`, `D`, and `F` are
+called **enumerators**.
+
+Notice what happens when we cast a `LetterGrade` value into an `int`:
+
+```cpp
+#include <iostream>
+
+enum class LetterGrade {
+	A,
+	B,
+	C,
+	D,
+	F
+};
+
+int main() {
+	LetterGrade johnsGrade{LetterGrade::A};
+	std::cout << "John's grade: " << static_cast<int>(johnsGrade) << std::endl;
+	return 0;
+}
+```
+
+```bash
+John's grade: 0
+```
+
+In C++, enums are actually a range of integers under the hood. By default,
+the enumerators start at 0 and increment by 1, all the way up to however
+many enumerators we've specified. These integers are called **raw values**.
+We can change the default behavior by setting an initial raw value:
+
+```cpp
+#include <iostream>
+
+enum class LetterGrade {
+	A = 1,
+	B,
+	C,
+	D,
+	F
+};
+
+int main() {
+	LetterGrade johnsGrade{LetterGrade::A};
+	std::cout << "John's grade: " << static_cast<int>(johnsGrade) << std::endl;
+	return 0;
+}
+```
+
+With this modification, we see the following:
+
+```cpp
+#include <iostream>
+
+enum class LetterGrade {
+	A = 1,
+	B,
+	C,
+	D,
+	F
+};
+
+int main() {
+	LetterGrade johnsGrade{LetterGrade::A};
+	std::cout << "John's grade: " << static_cast<int>(johnsGrade) << std::endl;
+	return 0;
+}
+```
+
+```bash
+John's grade: 1
+```
+
+We aren't limited to just positive integers. We can change them to
+negatives as well:
+
+```cpp
+#include <iostream>
+
+enum class LetterGrade {
+	A = -1,
+	B,
+	C,
+	D,
+	F
+};
+
+int main() {
+	LetterGrade johnsGrade{LetterGrade::A};
+	LetterGrade bobsGrade{LetterGrade::B};
+	LetterGrade iansGrade{LetterGrade::C};
+	LetterGrade zanesGrade{LetterGrade::D};
+	LetterGrade heathersGrade{LetterGrade::F};
+	std::cout << "John's grade: " << static_cast<int>(johnsGrade) << std::endl;
+	std::cout << "Bob's grade: " << static_cast<int>(bobsGrade) << std::endl;
+	std::cout << "Ian's grade: " << static_cast<int>(iansGrade) << std::endl;
+	std::cout << "Zane's grade: " << static_cast<int>(zanesGrade) << std::endl;
+	std::cout << "Heather's grade: " << static_cast<int>(heathersGrade) << std::endl;
+	return 0;
+}
+```
+
+```bash
+John's grade: -1
+Bob's grade: 0
+Ian's grade: 1
+Zane's grade: 2
+Heather's grade: 3
+```
+
+## Size of an Enum.
+
+Because enumerators are inherently `int`s, the size of an enumerator will
+be the size of an `int`, as determined by the compiler. Thus, if the
+compiler employs a size of 4 bytes for `int`, then each enumerator has a
+size of 4 bytes.
+
+We can, however, change an enumerator's internal representation. In other
+words, we aren't limited to `int`:
+
+```cpp
+enum class ErrorMessages: unsigned char {
+	0,
+	1,
+	2,
+	3
+};
+```
+
+Above, we tell `C++` that each of the values above are represented as
+`unsigned char`. This means that we are limited to a numeric range of 0
+to 255.
+
+### Use Cases
+
+Enums are useful for when we have a discrete set of categories for values.
+One use case we see in the real world is an application's set of possible
+options. For example:
+
+```cpp
+enum class UserOptions {
+	New,
+	Open,
+	Save,
+	SaveAs,
+	Close,
+	Export
+};
+```
+
+## Structs
+
+C++ also supports **record types**, which we can define with the keyword
+`struct`. For example:
+
+```cpp
+struct Coordinate_2D {
+	double x;
+	double y;
+};
+```
+
+defines a new record type called `Coordinate_2D`. Having defined the record
+type, we can then use it in our source code:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+struct Coordinate_2D {
+	double x;
+	double y;
+};
+
+int main() {
+	Coordinate_2D point1;
+	point1.x = 1.1;
+	point1.y = 2.7;
+	cout << point1.x << endl;
+	cout << point1.y << endl;
+	return 0;
+}
+```
+
+```bash
+1.1
+2.7
+```
+
+## Type Synonyms
+
+Like many other languages, C++ provides the ability to implement _type
+synonyms_ (other languages might call these _type aliases_). For those
+unfamiliar, a type synonym is simply another name for an existing type.
+Type synonyms are particularly useful for readability:
+
+```cpp
+typedef int wholeNumber
+```
+
+The type definition above creates another name for `int`, called
+`wholeNumber`. Every line of code thereafter, we can use `wholeNumber` just
+as we would `int`.
+
+```cpp
+#include <iostream>
+using namespace std;
+
+typedef unsigned int naturalNumber;
+
+int main() {
+	naturalNumber x = 7;
+	naturalNumber y = 2;
+	naturalNumber z = x + y;
+	cout << z << endl;
+	return 0;
+}
+```
+
+```bash
+9
+```

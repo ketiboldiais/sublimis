@@ -1,0 +1,54 @@
+# The Cartesian Plane
+
+Continuous mathematics depends heavily on graphs. One way to represent
+graphs is through the Cartesian plane:
+
+<Plot geo={[
+	{type:'label', xy: [4,5], id: '\\R^+ \\times \\R^+', fontSize:0.9,w:60},
+	{type:'label', xy: [-7,5], id: '\\R^- \\times \\R^+', fontSize:0.9,w:60},
+	{type:'label', xy: [-7,-4], id: '\\R^- \\times \\R^-', fontSize:0.9,w:60},
+	{type:'label', xy: [4,-4], id: '\\R^+ \\times \\R^-', fontSize:0.9,w:60},
+]}/>
+
+The Cartesian plane consists of two perpendicular real number lines. The
+point where the lines intersect is 0, and is called the **origin**. The
+horizontal number line is usually called the x-axis, and the vertical
+number line the $y$-axis. On the $x$-axis, all points to the right of
+the origin represent the positive real numbers, and all points to the left
+of the origin represent the negative real numbers. On the $y$-axis, all
+points above the origin reprepresent the positive real numbers, and all
+points below the origin represent the negative real numbers.
+
+A point on the Cartesian plane is represented by an **ordered pair**, of
+the form ${ x, y }$, where ${ x }$ is a point on the $x$-axis, and ${ y }$
+is a point on the $y$-axis. For example:
+
+<Plot geo={[
+	{type: 'point', xy: [2,2]},
+	{type: 'label', xy: [2,2],id:'(2,2)'},
+	{type: 'point', xy: [3,5]},
+	{type: 'label', xy: [3,5],id:'(3,5)'},
+	{type: 'point', xy: [-7,4]},
+	{type: 'label', xy: [-7,4],id:'(-7,4)'},
+	{type: 'point', xy: [-8,1]},
+	{type: 'label', xy: [-8,1],id:'(-8,1)'},
+	{type: 'point', xy: [-4,-4]},
+	{type: 'label', xy: [-4,-4],id:'(-4,-4)'},
+	{type: 'point', xy: [2,-8]},
+	{type: 'label', xy: [2,-8],id:'(2,-8)'},
+	{type: 'point', xy: [8,-3]},
+	{type: 'label', xy: [8,-3],id:'(8,-3)'},
+]}
+	
+/>
+
+Each of the points in the diagram above are **Cartesian coordinates**, or
+simply _coordinates_. The $x$-coordinate is formally called the
+**abscissa** of the point, and the $y$-coordinate the **ordinate**. When we
+refer to coordinates generally, or in the abstract, we write:
+
+$$
+	P(x,y)
+$$
+
+The notation above is read "the point ${ (x,y) }$."

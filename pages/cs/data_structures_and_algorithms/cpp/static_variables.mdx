@@ -1,0 +1,106 @@
+# Static Variables
+
+Static variables are often a source of confusion for beginning programmers.
+In part, this is due to being overloaded with too many details all at once.
+Consider this issue, we study static variables by first considering a
+relatable problem. Consider the following code:
+
+```cpp
+#include <iostream>
+	using namespace std;
+
+	int x = 1;
+
+	void func1() {
+		x++;
+		cout << x << endl;
+	}
+
+	int main() {
+		func1();
+		func1();
+		func1();
+		return 0;
+	}
+```
+
+```bash
+1
+2
+3
+```
+
+In the code above, we have a global variable, `int x = 1`. We then have a
+function, `func1()`, which increments the global variable, `x` by `1`.
+Thus, when we go into `main()`, each call to `func1()` results in an
+increment of `x`.
+
+Now, suppose we don't want that `x` to be a global variable. There are many
+reasons for why might not want `x` to be a global variable (in fact, we
+generally do not want global variables). Perhaps `x` is a variable that
+should only be mutated by `func1()`; no other function or module should be
+able to touch it. How do we achieve this? Well, why not just place `x`
+inside the body of `func1()`? Let's try that:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+void func1() {
+	int x = 0;
+	x++;
+	cout << x << endl;
+}
+
+int main() {
+	func1();
+	func1();
+	func1();
+	return 0;
+}
+```
+
+```bash
+1
+1
+1
+```
+
+Nope, that didn't work. Remember: After a function has finished executing,
+the stack where its variables are allocated is popped off. Thus, we never
+see `1 2 3` because each function call starts with `int x = 0`. Static
+variables are intended to address this problem:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+void func1() {
+	static int x = 0;
+	x++;
+	cout << x << endl;
+}
+
+int main() {
+	func1();
+	func1();
+	func1();
+	return 0;
+}
+```
+
+```bash
+1
+2
+3
+```
+
+By appending the `static` keyword to `int x = 0`, we've ensured that `x` is
+treated as a static variable of the function `func1()`. This effectively
+makes `x` a variable akin to being &#8220;global&#8221; to `func1()`. Thus,
+for every call to `func1()`, `func1()` uses the current value of `x`.
+
+Like global variables, static variables exist in memory so long as our
+program runs. The different: Static variables are only accessible to their
+respective modules. In this case, `x` is only accessible to `func1()`;
+nowhere else.

@@ -1,0 +1,122 @@
+# Digital Signals
+
+Before we get to a functioning computer, we must assemble its components.
+Before we assemble its components, we must understand Boolean logic from
+the computer's perspective. And before we understand the computer's
+perspective, we must understand what _bits_ are. And to understand what
+bits are, we must study **signals**.
+
+## What's a Signal?
+
+If we look at the Great Wall of China, we see that it's not just some
+massive, vertical wall. It has considerable thickness for people to travel
+along the wall. Every few meters or so, there's a large tower.
+
+These large, protruding structures are called _beacon towers_. They were
+used for storing supplies and sheltering soldiers. But more importantly,
+they were used to transmit messages. When a sentinel saw intruders
+approaching during the day, the soldier would set smoke (if the threat
+occurred during the day) or light a fire (if the threat occurred at night).
+The sentinel in the neighboring tower would see the signal and perform the
+same, that tower's neighboring tower would see the signal and do the same,
+and that tower's neighbor, etc.
+
+The message transmitted was simple: Smoke or fire, there was an intruder;
+else, just another day along the wall. This was a fairly limited form of
+communication. More complicated messages like
+
+"Running low on water at tower ${5}$" had to be delivered by messenger.
+Nevertheless, China's beacon towers present a straightforward introduction
+to the notion of a _signal_.
+
+Mathematically, a **signal** is just a function ${s(t).}$ What separates it
+from other functions, however, is what it represents: The variation of some
+_physical quantity_ with respect to some parameter, most commonly _time_.
+Because it measure some physical quantity, the key characteristic of a
+signal is that its range is an _interval_ &mdash; a set consisting of real
+numbers between some real number ${a}$ and a real number ${b.}$
+
+For example, for the soldiers along the Great Wall, the signal can be
+mathematically modeled as:
+
+$$
+	s(\text{beacon}) = \begin{cases} \text{intruder}~~~~~~~~~~\text{if}~~~\text{beacon} \in \{ \text{fire, smoke} \} \\ \text{no intruder}~~~~~\text{else} \end{cases}
+$$
+
+We can write this more abstractly. Denote ${\text{beacon}}$ as ${b,}$ the
+existence of a fire or smoke as ${1,}$ and the nonexistence of a fire or
+smoke as ${0:}$
+
+$$
+	s(b) = \begin{cases} \exists(\text{intruder}) ~~~ b=1 \\ \nexists(\text{intruder}) ~~~b=0 \end{cases}
+$$
+
+From this definition of a signal, we can see that many kinds of functions
+qualify as signals. For example, if we took temperature readings on a
+particular from ${8}$AM to ${8}$PM and found that the trendline resembled a
+graph ${2t^2,}$ the function ${T(t) = 2t^2}$ constitutes a signal. Plug in
+a time, and we get back a _variation_ of the temperature. This is the
+defining characteristic of a signal: it's a function that returns some
+_object_ &mdash; perhaps a number, or the fact that an intruder is
+approaching &mdash; from an interval.
+
+For electronics, e.g., a computer, a signal is a function representing some
+variation in a measurement of electricity with respect to time. That
+measurement could be electrical voltage or a pulse of current. For our
+purposes, we'll think of the measure in terms of current pulses, but
+really, it doesn't matter. The important point is that the measurement is
+one among a finite set of possible measurements.
+
+## Analog versus Digital
+
+The terms _analog_ and _digital_ refer to the signal's codomain. For
+example, the sine function, ${y = \sin(x),}$ is an **analog signal**. Its
+codomain is the interval ${\{ y \in \R \mid -1 \leq y \leq 1 \}.}$ We
+classify it as an analog signal because it can output infinitely many
+signals &mdash; there are infinitely many real numbers between ${-1}$ and
+${1.}$
+
+<Plot functions={[{ f: (x) => Math.sin(x), color: "firebrick" }]} />
+
+A **digital signal**, however, restricts the codomain to a subset of the
+analog signal's codomain. For example, consider the function:
+
+$$
+	s(t) = \dfrac{\sin(2 \pi f t)}{2\lvert \sin(2 \pi f t) \rvert } + \dfrac{1}{2}
+$$
+
+Where ${f,}$ the _frequency_, is ${1,}$ and ${t}$ is the time. This
+function results in a **square wave** whose graph appears as:
+
+<Plot
+	functions={[
+		{
+			f: (x) =>
+				Math.sin(Math.PI * x) / (2 * Math.abs(Math.sin(Math.PI * x))) +
+				0.5,
+			color: "#29C7AC",
+		},
+	]}
+	domain={[-5, 5]}
+	range={[-5, 5]}
+	precision={1000}
+	strokeWidth={2}
+/>
+
+Notice that we've now restricted the codomain even further: The signal can
+only be ${0}$ or ${1.}$ This is a key feature of digital signals, and it is
+what's used by electronic devices to make the measurements of electricity
+we mentioned earlier. Interpreting the graph above, the ${y}$-axis is the
+electrical measurement &mdash; perhaps volts (units of voltage) or amperes
+(units of electric current) &mdash; and the ${x}$-axis is time.
+
+In essence, restricting the domain means we're restricting the number of
+possible outputs. And by restricting the number of possible outputs to just
+two &mdash; ${0}$ or ${1}$ &mdash; we enter a world where pretty much
+everything is black and white, true or false. This greatly reduces
+complexity, because now we can model everything with a switch
+
+This single switch is called a **bit**. Using enough of these bits, we can
+implement Boolean and arithmetic operations. And from these basic
+operations, we can emulate _memory_, all the way up to a full-fledged,
+functioning computer.

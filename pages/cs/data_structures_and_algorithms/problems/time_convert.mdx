@@ -1,0 +1,90 @@
+import Tab from "@components/Tab/Tab";
+
+# Converting to 24-hour Time
+
+The problem statement:
+
+> Given a time in 12-hour AM/PM format (a string value), convert the time
+> to 24-hour time (a string value). Assume that all input times are valid.
+
+Note that 12:00:00AM on a 12-hour clock is 00:00:00 on a 24-hour clock, and
+12:00:00PM on a 12-hour clock is 24:00:00 on a 24-hour clock.
+
+## Example
+
+Suppose the time given is:
+
+$$
+	s = ``12:01:00\text{PM}"
+$$
+
+The output should be:
+
+$$
+	s = ``12:01:00"
+$$
+
+If the time given is:
+
+$$
+	s = ``12:01:00\text{AM}"
+$$
+
+The output should be:
+
+$$
+	s = ``00:01:00"
+$$
+
+## Solution
+
+<Tab>
+<section className="JavaScript">
+
+Here's a solution in JavaScript.
+
+```javascript
+const toMilitaryTime = (timeString) => {
+	const hour = parseInt(`${timeString[0]}${timeString[1]}`);
+	const minutes = `${timeString[3]}${timeString[4]}`;
+	const seconds = `${timeString[6]}${timeString[7]}`;
+	const phase = `${timeString[8]}${timeString[9]}`;
+	let militaryHour;
+
+	if (phase === 'AM') {
+		militaryHour = `${hour % 12}`;
+		if (militaryHour.length === 2) {
+			return `${militaryHour}:${minutes}:${seconds}`
+		} else {
+			return `0${militaryHour}:${minutes}:${seconds}`
+		}
+	}
+
+	else if (phase === 'PM') {
+		militaryHour = `${12 + (hour % 12)}`
+		if (militaryHour.length === 2) {
+			return `${militaryHour}:${minutes}:${seconds}`;
+		} else {
+			return `0${militaryHour}:${minutes}:${seconds}`;
+		}
+	}
+
+	else {
+		console.log("Improper time input. Expected: hh:mm:ssAM or hh:mm:ssPM");
+	}
+}
+const time1 = '03:01:00PM';
+const time2 = '05:01:00AM';
+const time1Mil = toMilitaryTime(time1);
+const time2Mil = toMilitaryTime(time2);
+console.log(time1Mil);
+console.log(time2Mil);
+```
+```bash
+15:01:00	
+05:01:00
+```
+
+</section>
+</Tab>
+

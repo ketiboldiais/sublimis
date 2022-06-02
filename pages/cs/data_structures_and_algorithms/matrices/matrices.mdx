@@ -1,0 +1,934 @@
+<Metadata
+	title={"Matrices"}
+	description={"Matrices and grid data structures in C++."}
+	keywords={
+		"Matrices matrix, grid, multidimensional arrays, data structures and algorithms."
+	}
+/>
+
+# Matrices & Tensors
+
+- [Matrices & Tensors](#matrices--tensors)
+  - [Static Matrices](#static-matrices)
+  - [Dynamic Matrices](#dynamic-matrices)
+  - [Addressing Matrices](#addressing-matrices)
+    - [Row-major Ordering](#row-major-ordering)
+    - [Column-major Ordering](#column-major-ordering)
+  - [Tensors](#tensors)
+    - [Tensor Addressing](#tensor-addressing)
+    - [Tensors: Row-major Ordering](#tensors-row-major-ordering)
+    - [Tensors: Column-major Ordering](#tensors-column-major-ordering)
+    - [General Formula for Addressing](#general-formula-for-addressing)
+  - [Time Complexity for Translation](#time-complexity-for-translation)
+    - [Horner's Method](#horners-method)
+  - [Special Matrices](#special-matrices)
+    - [Diagonal Matrix](#diagonal-matrix)
+    - [Lower Triangular Matrix](#lower-triangular-matrix)
+
+Following lists, the next simplest data structure we explore is the
+**matrix** or **grid**. In the simplest case, the matrix is a data
+structure that consists of _rows_ and _columns_. Each row in the matrix is
+a list, and each column is itself a list. This corresponds to the fact the
+simplest matrix is a 2-dimensional array. Like lists, there are both
+**static matrices** and **dynamic matrices**.
+
+## Static Matrices
+
+The _static matrix_ is a matrix of fixed size. We can implement the static
+matrix with a 2-dimensional array:
+
+```cpp
+int main() {
+	int M[3][4];
+
+		return 0;
+	}
+```
+
+The implementation above represents a matrix of 3 rows and 4 columns. In
+other words, a ${3 \times 4}$ matrix. Visually:
+
+<Matrix
+	data={[
+		[0, 0, 0, 0],
+		[0, 0, 0, 0],
+		[0, 0, 0, 0],
+	]}
+	width={300}
+	height={270}
+/>
+
+Note, however, that in memory, this is really an array where each element
+contains an array. However, because of indices, we can treat the square
+bracket indexing as ${M[r][c],}$ where ${M}$ is an array, ${r}$ is a row
+number (an integer and the index of an element in the array), and ${c}$ is
+a column number (an integer and the index of the element inside an element
+in the array).
+
+Suppose we initialized the array:
+
+```cpp
+int main() {
+	int M[3][4] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+	return 0;
+}
+```
+
+This generates the matrix below (the mathematical notation to the left and
+the visual representation used in this section to the right):
+
+<Matrix
+	data={[
+		[1, 2, 3],
+		[4, 5, 6],
+		[7, 8, 9],
+	]}
+/>
+
+In mathematical notation:
+
+$$
+	M = \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9
+	\end{bmatrix}
+$$
+
+## Dynamic Matrices
+
+A **dynamic matrix** is a matrix whose size can be changed. We can
+implement the dynamic matrix with 2-dimensional _dynamic arrays_. This is
+done by first creating an array of pointers, then having each pointer
+element point to an array created in the heap. For example, we can
+visualize a dynamic ${3 \times 3}$ matrix as such:
+
+![Visualizing the matrix with respect to the heap. There are two rectangles, one for the stack, and one for the heap. The stack contains a column of squares, and the heap contains a row of squares. Each square in the stack has a pointer—an arrowed line—pointing to the first square in the heap.](https://res.cloudinary.com/sublimis/image/upload/v1652813208/cs/matrix_inside_the_heap.svg)
+
+The implementation is straightforward:
+
+```cpp
+int main() {
+	int *A[3];
+	A[0] = new int[3];
+	A[1] = new int[3];
+	A[2] = new int[3];
+
+		return 0;
+	}
+```
+
+With the implementation above, however, only the array's columns are
+dynamic. We can, however, make the entire matrix dynamic (i.e., both the
+rows and columns are dynamic), by having both the rows and the columns in
+the heap. This is done with _double pointers_.
+
+```cpp
+int main() {
+	int **M = new int*[3];
+	M[0] = new int[3];
+	M[1] = new int[3];
+	M[2] = new int[3];
+
+	return 0;
+}
+```
+
+As we can likely tell, accessing each of the elements in a matrix can be
+done through nested loops. The outter loop iterates through the rows,
+whilst the inner loop iterates through the columns.
+
+## Addressing Matrices
+
+As with any array, an initialized multidimensional array must be stored
+somehow in memory. This in turn requires a method for storage and
+addressing. On modern computers, there are two storage methods: **row-major
+ordering** and **column-major ordering**. We analyze both approaches in
+turn.
+
+### Row-major Ordering
+
+First, let's consider row-major ordering (also called _row-major mapping_).
+This storage method is used by C, C++, Objective-C, Pascal, and many other
+high-level languages. Under row-major ordering, arrays are stored row by
+row. This idea is best clarified by example. Suppose we initialized the
+following matrix:
+
+```cpp
+int main() {
+int A[2][3] = {{3, 6, 9}, {12, 15, 18 }};
+}
+```
+
+With row-major mapping, the matrix is represented as such:
+
+![Visualizing row major mapping. The matrix consists of two rows and three columns. If we were asked to traverse this row through row major mapping, we we would first traverse each row, from left to right. Then, once we've finished traversing a row, we go to the next row below the current, starting again from the first element.](https://res.cloudinary.com/sublimis/image/upload/v1652813429/cs/row_major_mapping.svg)
+
+Notice that the column number represents the index of each element in the
+array, while the row number represents the index of each element within an
+element in the array. Notice further the transparent red line displaying
+the actual sequence. This is where the name _row-major ordering_ comes
+from. Array elements are assigned to successive memory locations by moving
+across the rows first and then down the columns:
+
+![Row major ordering from the memory perspective. The matrix is actually a contiguous block of each row in the matrix.](https://res.cloudinary.com/sublimis/image/upload/v1652813615/cs/row_major_ordering_in_memory.svg)
+
+We can interpret the matrix declaration as a declaration of the following:
+
+$$
+	A[\textit{number of rows}][\textit{number of columns}]
+$$
+
+Accordingly, when we write:
+
+$$
+	A[i][j]
+$$
+
+where ${i}$ is the row index, and ${j}$ is the column index.
+
+Say the matrix's index starts at 100. How does the compiler transform the
+expression `A[1][2]` to an address? The compiler achieves this
+transformation by rewriting the expression as a formula computing the
+address. The question then, is, what is this formula? From the above
+diagram, the first element's address is 100. Thus, the address of
+${\alpha(\texttt{A[0][0]})}$ is 100, where ${\alpha(n)}$ is some function
+returning the address of the element ${n.}$ The base address serves as the
+first term in the formula. Thus:
+
+$$
+	\alpha(A[1][2]) = 100
+$$
+
+Next, given the value `3` in the array's declaration `A[2][3]`, the
+compiler knows the array `A` contains 3 columns. This is called the **row
+size**—the number of elements in each row. Accordingly, when it encounters
+the expression `A[1][2]`, it sees the value `1` (the row index), so it
+multiplies this number by the row size, 3. This yields the number of
+elements it must move _from_ the base address: ${1 \times 3 = 3.}$
+
+$$
+	\alpha(A[1][2]) = 100 + (1 \cdot 3)
+$$
+
+Next, it sees in `A[1][2]` the value `2` (the column index), so it includes
+the operation `+ 2` (i.e., "move an additional 2 elements"):
+
+$$
+	\alpha(A[1][2]) = 100 + ((1 \cdot 3) + 2)
+$$
+
+It then multiples the sum by 4 bytes, the size of an `int`:
+
+$$
+	\alpha(A[1][2]) = 100 + 4((1 \cdot 3) + 2)
+$$
+
+Simplifying the right-hand side, we have ${100 + 20 = 120,}$ the address of
+`A[1][2]`. Generalizing this analysis, the row-major order approach employs
+the following formula for communicating addresses:
+
+> Formula: Row-major Ordering (${0}$-based Indexing). Given a matrix of
+> order ${n \times m,}$ where ${n}$ is the number of rows and ${m}$ is the
+> number of columns (i.e., ${A[n][m]}$),
+>
+> $$
+> 	\alpha(A[i][j]) = \alpha(A[0][0]) + \omega((i \cdot m) + j)
+> $$
+
+Where ${\alpha(A[i][j])}$ is the address of the element ${A[i][j],}$
+${\alpha(A[0][0])}$ is the base address, ${\omega}$ is the size of the
+array's type, ${i}$ is the row index, ${m}$ is the row size, and ${j}$ is
+the column index.
+
+Note that this formula changes when the language uses 1-based indexing:
+
+> Formula: Row-major Ordering (${1}$-based Indexing). Given a matrix of
+> order ${n \times m,}$ where ${n}$ is the number of rows and ${m}$ is the
+> number of columns (i.e., ${A[n][m]}$),
+>
+> $$
+> 	\alpha(A[i][j]) = \alpha(A[0][0]) + \omega(((i - 1) \cdot m) + (j - 1))
+> $$
+
+Where ${\alpha(A[i][j])}$ is the address of the element ${A[i][j],}$
+${\alpha(A[0][0])}$ is the base address, ${\omega}$ is the size of the
+array's type, ${i}$ is the row index, ${m}$ is the row size, and ${j}$ is
+the column index.
+
+The difference is that we must subtract 1 from the row index ${i,}$ and 1
+from the column index ${j.}$ This is because if we start from 1, we're no
+longer offsetting from 0, but rather offsetting from 1. In other words, if
+we used the previous formula, we would be off by 1, since the index starts
+at 1. We can see that with 1-based indexing, there are 2 additional
+decrementing operations to be performed, totalling 6 distinct operations.
+This is in contrast to 0-based indexing, where there are only 4 distinct
+operations.
+
+### Column-major Ordering
+
+The alternative to row-major ordering is _column-major ordering_ (also
+called _column-major mapping_). In column-major ordering, array elements
+are stored column by column. This method is used by languages like Fortran,
+MATLAB, Octave, S-Plus, R, Julia, Scilab, and a few others. Suppose we
+initialized the following matrix:
+
+```cpp
+int main() {
+	int A[3][4] = {{2, 4, 6, 8}, {10, 12, 14, 16}, {18, 20, 22, 24}};
+}
+```
+
+In column-major ordering, this matrix is visually interpreted as such:
+
+![Column major ordering. To traverse a matrix column-major wise, we would travel down each column, starting at the first element. Once we've finished a column, we move to the next column (to the right), and traverse once more, starting at the first element.](https://res.cloudinary.com/sublimis/image/upload/v1652814051/cs/column_major_ordering.svg)
+
+And in memory, the elements are stored column by column:
+
+![Column major ordering in memory. The elements are contiguous, but alternate by column.](https://res.cloudinary.com/sublimis/image/upload/v1652814166/cs/column_major_ordering_in_memory.svg)
+
+Suppose we wrote the expression `A[1][2]`. To return the address for this
+element, we use the same form ${A[r][s],}$ where ${r}$ is the row index and
+${s}$ is the column index. Again, the compiler uses a formula, the first
+term being the base address:
+
+$$
+	\alpha(A[1][2]) = 100
+$$
+
+Next, the compiler sees the value `2` in the expression `A[1][2]` (the
+number of columns), and multiplies this by the number of elements in each
+column (the number of rows): ${2 \cdot 3 = 6.}$ This yields the number of
+elements offset from the first element. Thus:
+
+$$
+	\alpha(A[1][2]) = 100 + (2 \cdot 3)
+$$
+
+Next, the compiler sees the value `1` in the expression `A[1][2]`, so it
+includes the operation `+ 1` (move 1 more element):
+
+$$
+	\alpha(A[1][2]) = 100 + ((2 \cdot 3) + 1)
+$$
+
+Finally, it multiplies the size of the array's type:
+
+$$
+	\alpha(A[1][2]) = 100 + 4((2 \cdot 3) + 1)
+$$
+
+Simplifying the right-hand expression, we have ${100 + 28 = 128,}$ which is
+in fact the address of `A[1][2]`. Generalizing this formula:
+
+> Formula: Column-major Ordering (${0}$-based Indexing). Given a matrix of
+> order ${n \times m,}$ where ${n}$ is the number of rows and ${m}$ is the
+> number of columns (i.e., ${A[n][m]}$),
+>
+> $$
+> 	\alpha(A[i][j]) = \alpha(A[0][0]) + \omega((j \cdot n) + i)
+> $$
+
+where ${\alpha(A[i][j])}$ is the address of the element ${A[i][j],}$
+${\alpha(A[0][0])}$ is the base address, ${\omega}$ is the size of the
+array's type, ${i}$ is the row index, ${m}$ is the row size, and ${j}$ is
+the column index.
+
+Like row-major ordering with 1-based indexing, we must decrement when
+considering languages that use 1-based indexing (e.g., Fortran):
+
+> Formula: Column-major Ordering (${1}$-based Indexing). Given a matrix of
+> order ${n \times m,}$ where ${n}$ is the number of rows and ${m}$ is the
+> number of columns (i.e., ${A[n][m]}$),
+>
+> $$
+> 	\alpha(A[i][j]) = \alpha(A[0][0]) + \omega(((j - 1) \cdot n) + (i - 1))
+> $$
+
+Where ${\alpha(A[i][j])}$ is the address of the element ${A[i][j],}$
+${\alpha(A[0][0])}$ is the base address, ${\omega}$ is the size of the
+array's type, ${i}$ is the row index, ${m}$ is the row size, and ${j}$ is
+the column index.
+
+Note that the only difference between column-major ordering and
+row-majoring order is that the ${i}$ and the ${j}$ are swapped in the
+formula. In essence, this means that with row-major ordering, we go from
+left to right, but with column-major ordering, we go from right to left.
+Both formulas have the same number of operations, 4, so in terms of time
+complexity, both formulas are equally efficient.
+
+Why are there two different approaches? Largely because of what earlier
+languages were designed for. And given that earlier languages play a
+significant role in inspiring future languages, these earlier approaches
+tend to stick. Fortran, for example, was designed primarily to solve
+scientific and engineering problems. In these fields, it is much more
+natural to think of matrices from a column-major perspective, since the
+general linear algebra convention is to treat matrices as concatenations of
+column-vectors. This makes it much easier to think about computations like
+matrix-vector multiplication. We can see some evidence of this by the fact
+that most languages employing column-major ordering are geared at
+scientific or statistical computing: MATLAB, Octave, R, Julia, etc.
+
+In contrast, in later languages like COBOL (which grew out of the finance
+world), it made much more sense to treat matrices as row-records.
+Accordingly, row-major ordering feels more natural. The notion of records,
+in general, made its way to languages like C (and later to C++ and Python).
+
+## Tensors
+
+In the previous example, we saw instances of a 2-dimensional matrix. We
+can, of course, insert another dimension, leading to some data structure
+with the dimensions ${a \times b \times c.}$ This data structure represents
+the abstract data type of a **tensor**. In the case of
+${a \times b \times c,}$ the data structure represents a _rank-3 tensor_.
+
+To implement tensors, we use **multidimensional arrays**. Let's consider a
+rank-3 tensor, a tensor with the dimensions ${a \times b \times c.}$ We can
+initialize this data structure as such:
+
+```cpp
+int main() {
+	int T[3][3][3];
+
+	return 0;
+}
+```
+
+Visually, this data structure resembles a cube:
+
+![Tensort of rank-3](https://res.cloudinary.com/sublimis/image/upload/v1652814514/cs/tensor_of_rank_3.svg)
+
+A rank-4 tensor with the order ${3 \times 3 \times 3 \times 3,}$ is
+implemented as such:
+
+```cpp
+int main() {
+	int T[3][3][3][3];
+
+	return 0;
+}
+```
+
+Visually, this looks like a sequence of cubes:
+
+![Tensor of rank-4](https://res.cloudinary.com/sublimis/image/upload/v1652814593/cs/tensor_of_rank_4.svg)
+
+A rank-5 tensor with the order ${3 \times 3 \times 3 \times 3 \times 3}$
+would be implemented as such:
+
+```cpp
+int main() {
+	int T[3][3][3][3][3];
+
+	return 0;
+}
+```
+
+Once we add the additional dimension, we have what looks like a matrix of
+cubes:
+
+![Tensor of rank-5](https://res.cloudinary.com/sublimis/image/upload/v1652814642/cs/tensor_of_rank_5.svg)
+
+### Tensor Addressing
+
+As we saw with sequences and matrices, it's helpful to ask how the compiler
+translates an expressing indexing into a tensor. As is the case with
+matrices, there are two approaches: row-major ordering and column-major
+ordering. Let's first start by considering a sufficiently complex tensor,
+the rank-4 tensor.
+
+Suppose we wrote the expression `T[0][2][3][0]`. Interpreting this from the
+array perspective, we're asking for: The first element in the fourth
+element of the third element in the first element of the array `A`.
+Abstracting this expression, we're asking for the element
+
+$$
+	T[i][j][k][l]
+$$
+
+To keep things clean, we denote this in tensor notation:
+
+$$
+	T[i][j][k][l] \equiv T_{ijkl}
+$$
+
+### Tensors: Row-major Ordering
+
+In row-major, we go from left to right in offsetting, starting from the
+base address. Suppose ${L_0}$ is the base address, and the array is
+initialized as ${A[d_1][d_2][d_3][d_4].}$ With row-major ordering, we start
+with the first index, ${i:}$
+
+$$
+	\alpha(T_{ijkl}) = L_0 + (i d_1 d_2 d_3 d_4)
+$$
+
+Next, we include the offsets from the second index, ${j:}$
+
+$$
+	\alpha(T_{ijkl}) = L_0 + (i d_2 d_3 d_4 + j d_3 d_4)
+$$
+
+Then include the offsets from the third index, ${k:}$
+
+$$
+	\alpha(T_{ijkl}) = L_0 + (i d_2 d_3 d_4 + j d_3 d_4 + k d_4)
+$$
+
+And then include the offsets from the fourth index:
+
+$$
+	\alpha(T_{ijkl}) = L_0 + (i d_2 d_3 d_4 + j d_3 d_4 + k d_4 + l)
+$$
+
+Finally, we multiply the resulting sum by the tensor's type, ${\omega:}$
+
+$$
+	\alpha(T_{ijkl}) = L_0 + \omega(i d_2 d_3 d_4 + j d_3 d_4 + k d_4 + l)
+$$
+
+### Tensors: Column-major Ordering
+
+With column-major ordering, we go from right to left in offsetting. Once
+more, suppose ${L_0}$ is the base address, and the array is initialized as
+${A[d_1][d_2][d_3][d_4],}$ and we are asking for the element ${A_{ijkl}.}$
+
+We start with the base address:
+
+$$
+	A_{ijkl} = L_0
+$$
+
+Then we include the offsets from the last index, ${l:}$
+
+$$
+	A_{ijkl} = L_0 + (l d_1 d_2 d_3)
+$$
+
+Next we include the offsets from the second-to-last index, ${k:}$
+
+$$
+	A_{ijkl} = L_0 + (l d_1 d_2 d_3 + k d_1 d_2)
+$$
+
+Then we include the offsets from the third-to-last index, ${j:}$
+
+$$
+	A_{ijkl} = L_0 + (l d_1 d_2 d_3 + k d_1 d_2 + j d_1)
+$$
+
+And then include the offsets from the last index, ${i:}$
+
+$$
+	A_{ijkl} = L_0 + (l d_1 d_2 d_3 + k d_1 d_2 + j d_1 + i)
+$$
+
+Finally, multiply the tensor's type, ${\omega:}$
+
+$$
+	A_{ijkl} = L_0 + \omega(l d_1 d_2 d_3 + k d_1 d_2 + j d_1 + i)
+$$
+
+### General Formula for Addressing
+
+After the above analysis, we've likely observed a pattern from addressing.
+Indeed, this pattern evidences the fact that all numbers are tensors (a
+tensor of rank-0), all sequences are tensors (a tensor of rank-1), and all
+matrices are tensors (a tensor of rank-2). Accordingly, we can construct a
+general formula for determining the address of a tensor. First, let's look
+back at the 4-rank tensor's formula:
+
+$$
+	\alpha(T_{ijkl}) = L_0 + \omega(i d_2 d_3 d_4 + j d_3 d_4 + k d_4 + l)
+$$
+
+We will rewrite this formula as such:
+
+$$
+	\alpha(T[i_1][i_2][i_3][i_4]) = L_0 + \omega(i_1 d_2 d_3 d_4 + i_2 d_3 d_4 + i_3 d_4 + i_4)
+$$
+
+There's no magic going on here. We're just changing the variable names and
+reverting back to the array notation we're familiar with in programming.
+Writing the formula in this way, we can more readily see that a summation
+and a product lurks beneath the surface. Applying the distributive
+property, we have:
+
+$$
+	\alpha(T[i_1][i_2][i_3][i_4]) = L_0 + \omega(i_1(d_2 d_3 d_4) + i_2 (d_3 d_4) + i_3(d_4) + i_4(1))
+$$
+
+Grouping the terms in this manner, we see that we can express the
+computation more generally with summation and product notation:
+
+$$
+	\alpha(T[i_1][i_2][i_3][i_4]) = L_0 + \omega \sum\limits_{j = 1}^{n} \left( i_j \cdot \prod_{k = n + 1}^{n} d_k\right)
+$$
+
+With this general formula, we can quickly determine the row-major ordering
+formula for rank-3 tensor (a 3-dimensional array):
+
+> Given a tensor ${A[l][m][n],}$ the address of element ${T_{ijk}}$ is
+> given by:
+>
+> $$
+> 	  \alpha(T_{ijk}) = L_0 + \omega(i m n + j n + k)
+> $$
+
+And for column-major ordering:
+
+> Given a tensor ${A[l][m][n],}$ the address of element ${T_{ijk}}$ is
+> given by:
+>
+> $$
+>  T_{ijk} = L_0 + \omega(k l m + j l + i)
+> $$
+
+## Time Complexity for Translation
+
+Once we move beyond the sequence data type into matrices and tensors, we
+begin seeing the costs of accessing. Revisiting the 4-rank tensor, let's
+look at how many operations there (we'll ignore the addition operations):
+
+$$
+	\alpha(T[i_1][i_2][i_3][i_4]) = L_0 + \omega(i_1(d_2 d_3 d_4) + i_2 (d_3 d_4) + i_3(d_4) + i_4(1))
+$$
+
+We see that there 3 multiplication operations for the first offset, 2
+multiplication operations for the second offset, and 1 multiplication
+operation for the third offset. Summing these:
+
+$$
+	3 + 2 + 1 = 6
+$$
+
+For a 5-rank tensor:
+
+$$
+	4 + 3 + 2 + 1
+$$
+
+For a 6-rank tensor:
+
+$$
+	5 + 4 + 3 + 2 + 1
+$$
+
+And so on and so forth. This expresses the sequence:
+
+$$
+	\lang n-1, n-2, n-3, n-4, \ldots 3, 2, 1 \rang
+$$
+
+Examining this sequence, this is just the arithmetic sequence of the
+positive integers. And as we know, the sum of this sequence is given by the
+equation:
+
+$$
+	\dfrac{n(n - 1)}{2} = \dfrac{n^2}{2} - \dfrac{1}{2} = \dfrac{1}{2} n^2 - \dfrac{1}{2}
+$$
+
+Applying complexity analysis, we drop the constants, ${\dfrac{1}{2},}$ and
+focus only on the leading term—${n^2.}$ Hence, accessing the ${n}$-rank
+tensor has a time complexity of ${O(n^2).}$ This is bad—we're working in
+quadratic time. However, it turns out that we can rewrite our expression
+above to return a different time complexity.
+
+### Horner's Method
+
+The trick is to use an algorithm over a century old, called **Horner's
+method** (also called _Horner's scheme_). Named after the British
+mathematician William George Horner, the algorithm allows us to quickly
+compute polynomials. The method is clearest through some simple algebraic
+manipulation. We focus on the just the offsetting terms for the row-major
+formula:
+
+$$
+	i_1 d_2 d_3 d_4 + i_2 d_3 d_4 + i_3 d_4 + i_4
+$$
+
+Applying the commutative property:
+
+$$
+	i_4 + i_3 d_4 + i_2 d_3 d_4 + i_1 d_2 d_3 d_4
+$$
+
+If we look closely, we see that there's a common term, ${d_4,}$ for some of
+the terms. Applying the distributive property:
+
+$$
+	i_4 + d_4 (i_3 + i_2 d_3 + i_1 d_2 d_3 )
+$$
+
+Then, we see that ${d_3}$ is common:
+
+$$
+	i_4 + d_4 (i_3 + d_3 (i_2 + i_1 d_2))
+$$
+
+It is this pattern that underlies _Horner's method_. Using this approach,
+we see that for a rank-4 tensor, there are 3 multiplication operations. For
+a rank-5 tensor, there are 4, for rank-6 there are 5, and so on. Hence,
+more generally, given a rank-n tensor, there are are ${n - 1}$ operations.
+Applying complexity analysis, we have a time complexity of order ${O(n).}$
+
+## Special Matrices
+
+Before we examine algorithms on matrices, we consider certain kinds of
+matrices. Each of these matrices have unique properties that separate them
+from the typical ${n \times n}$ matrix. Because of these unique properties,
+some matrices are better-suited for a particular problem over others.
+
+### Diagonal Matrix
+
+The diagonal matrix looks like the following:
+
+<Matrix
+	data={[
+		[3, 0, 0, 0, 0],
+		[0, 7, 0, 0, 0],
+		[0, 0, 4, 0, 0],
+		[0, 0, 0, 9, 0],
+		[0, 0, 0, 0, 6],
+	]}
+	focus={([0, 0], [1, 1], [3, 3], [4, 4], [5, 5])}
+/>
+
+Notice the numbers cutting diagonally: 3, 7, 4, 9, and 6. More generally,
+we observe that all spaces in the matrix are occupied by a zero, except:
+those spaces that run diagonally. The diagonal line could run from the
+top-left to the bottom-right, or from top-right to bottom-left:
+
+<Matrix
+	data={[
+		[0, 0, 0, 0, 3],
+		[0, 0, 0, 7, 0],
+		[0, 0, 4, 0, 0],
+		[0, 9, 0, 0, 0],
+		[6, 0, 0, 0, 0],
+	]}
+	focus={([0, 4], [1, 3], [2, 2], [3, 1], [4, 0])}
+/>
+
+Let's focus on the former, where the diagonal runs from top-left to
+bottom-right. Suppose the matrix is called ${M,}$ ${i}$ is the index for
+the row elements, and ${j}$ is the index for the column elements. Notice
+that when ${i = j,}$ the position ${M[i][j]}$ is occupied by an element
+other than zero. And when ${i \neq j,}$ the position ${M[i][j]}$ is
+occupied by a zero. This yields the following proposition:
+
+> _Diagonal Matrix Positions_. In a diagonal matrix ${M,}$ the element
+> ${M[i][j],}$ where ${i}$ is a row index and ${j}$ is a column index, the
+> following propositions hold:
+>
+> 1. If ${i = j,}$ then the element ${M[i][j] \neq 0.}$
+> 2. If ${i \neq j,}$ then the element ${M[i][j] = 0.}$
+
+Examining the diagonal matrix, we see that most of the matrix's elements
+are zero. Suppose ${b_t}$ is the number of bytes some type ${t}$ takes.
+Given a diagonal matrix ${D}$ of size ${n \times n,}$ the amount of memory
+the matrix ${D}$ takes is given by the function ${m(D)}$:
+
+$$
+	m(D) = b_t \cdot n^2
+$$
+
+For example, in a C compiler where an `int` takes ${4~\text{B}}$ of memory,
+a matrix of size ${5 \times 5}$ would consume:
+
+$$
+	m(D) = b_t \cdot n^2 = 4(5)^2 = 100
+$$
+
+bytes of memory. This can be a significant performance issue. For many
+problems involving diagonal matrices, the only relevant, or useful, data
+are the elements occupying the diagonal. Adding or multiplying two diagonal
+matrices, the zeroes are left unchanged. The only relevant pieces of
+information are the non-zero elements. Because each row contains only one
+useful element, we can quantify the amount of wasted space:
+
+$$
+	w(D) = m(D) - b_t(n)
+$$
+
+where ${w(D)}$ is a function returning the amount of wasted memory,
+${m(D)}$ is a function returning the total amount of memory consumed,
+${b_t}$ is the number of bytes consumed by a type ${t,}$ and ${n}$ is the
+number of rows.
+
+Thus, of the ${100}$ bytes used to store the matrix ${M,}$ only
+${4 \cdot 5 = 20}$ bytes are actually needed. The remaining ${80}$ bytes
+are wasted. We can avoid this problem by converting the diagonal of matrix
+${M}$ into an array of size ${n.}$ In other words, the matrix:
+
+<Matrix
+	data={[
+		[3, 0, 0, 0, 0],
+		[0, 7, 0, 0, 0],
+		[0, 0, 4, 0, 0],
+		[0, 0, 0, 9, 0],
+		[0, 0, 0, 0, 6],
+	]}
+/>
+
+becomes the array:
+
+<Sequence data={[3, 7, 4, 9, 6]} />
+
+How do we store the non-zero elements of the matrix ${M}$ in the array
+${A?}$ The first step, on our part, is to determine the mapping pattern.
+Examining the array and the matrix together, we see the following mapping:
+
+| Matrix Element  | Array Element |
+| --------------- | ------------- |
+| ${M[i][j]}$     | ${A[k]}$      |
+| ${M[0][0] = 3}$ | ${A[0] = 3}$  |
+| ${M[1][1] = 7}$ | ${A[1] = 7}$  |
+| ${M[2][2] = 4}$ | ${A[2] = 4}$  |
+| ${M[3][3] = 9}$ | ${A[3] = 9}$  |
+| ${M[4][4] = 6}$ | ${A[4] = 6}$  |
+
+Based on this mapping, we have the following implementation:
+
+```rust
+diagonalMatrixToArray(matrix M[]):
+	let n = M[0].size;
+	let A = new array A[n];
+	int i, j, k;
+	for (k = 0, i = 0; i < n; i++, k++):
+		for (j = 0; j < n; j++):
+			if (i = j):
+				A[k] = M[i][j];
+			else: continue
+	return A[];
+```
+
+Here's an implementation in Java.
+
+```java
+import java.util.Arrays;
+
+class matrix {
+	public static int[] flatten(int[][] m) {
+		int n = m[0].length;
+		int arr[] = new int[n];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (i == j) {arr[i] = m[i][j];}
+				else {continue;}
+			}
+		}
+		return arr;
+	}
+}
+public class diagonalMatrix {
+	public static void main(String[] args) {
+		int[][] M = {{1, 0, 0}, {0, 2, 0}, {0, 0, 3}};
+		int[] A = matrix.flatten(M);
+		System.out.println(Arrays.toString(A));
+	}
+}
+```
+
+Here's an implementation in Python.
+
+```python
+def flattenDiagonally(M):
+	arr = []
+	for i in range(len(M)):
+		for j in range(len(M[i])):
+			if (i == j): arr.append(M[i][j])
+	return arr
+
+matrix = [[1,0,0],[0,2,0],[0,0,3]]
+matrixArr = flattenDiagonally(matrix)
+
+for i in matrixArr:
+	print(i)
+```
+
+```bash
+1
+2
+3
+```
+
+### Lower Triangular Matrix
+
+A **lower triangular matrix** looks like the following:
+
+$$
+	\begin{bmatrix} a_{0_0} & 0 & 0 & 0 & 0 \\ a_{1_0} & a_{1_1} & 0 & 0 & 0 \\ a_{2_0} & a_{2_1} & a_{2_2} & 0 & 0 \\ a_{3_0} & a_{3_1} & a_{3_2} & a_{3_3} & 0 \\ a_{4_0} & a_{4_1} & a_{4_2} & a_{4_3} & a_{4_4} \\ \end{bmatrix}
+$$
+
+Needless to say, this special matrix's name is self-descriptive. The matrix
+is essentially cut diagonally, forming two triangles. The lower triangle is
+occupied by non-zero values (represented above with the variable ${a}$),
+and the upper triangle is occupied by zeroes. Examining the non-zero
+elements:
+
+| Element     | ${i}$    | ${j}$    | Relation  |
+| ----------- | -------- | -------- | --------- |
+| ${a_{0_0}}$ | 0        | 0        | ${i = j}$ |
+| ${a_{1_0}}$ | 1        | 0        | ${i > j}$ |
+| ${a_{1_1}}$ | 1        | 1        | ${i = j}$ |
+| ${a_{2_0}}$ | 2        | 0        | ${i > j}$ |
+| ${a_{2_1}}$ | 2        | 1        | ${i > j}$ |
+| ${a_{2_2}}$ | 2        | 2        | ${i = j}$ |
+| ${a_{3_0}}$ | 3        | 0        | ${i > j}$ |
+| ${a_{3_1}}$ | 3        | 1        | ${i > j}$ |
+| ${a_{3_2}}$ | 3        | 2        | ${i > j}$ |
+| ${a_{3_3}}$ | 3        | 3        | ${i = j}$ |
+| &vellip;    | &vellip; | &vellip; | &vellip;  |
+
+If we look at the relations between ${i}$ and ${j,}$ we see that for the
+non-zero elements, ${i}$ is _always_ greater than or equal to ${j.}$
+Everything else is zero. Stated another way: If ${i < j,}$ then the element
+${a_{i_j} = 0.}$ Hence, we have the following conditions:
+
+1. ${(i < j) \implies a_{i_j} = 0}$
+2. ${(i \geq j) \implies a_{i_j} \neq 0}$
+
+As we saw with the diagonal matrix, depending on what we're doing with the
+lower triangular matrix, there's potentially wasted memory. Here, we see a
+pattern to the zero elements. In the first row there are four zeroes, in
+the second there are three, in the third there are two, and in the fourth
+there is one. This is an arithmetic sequence:
+
+$$
+	\lang 4, 3, 2, 1 \rang
+$$
+
+The arithmetic series:
+
+$$
+  1 + 2 + 3 + 4 = 10
+$$
+
+We can generalize this formula:
+
+$$
+	\sum\limits_{k = 0}^{n-1} k = \dfrac{n(n-1)}{2}
+$$
+
+Thus, given an ${n \times n}$ matrix, the amount of memory used by the zero
+elements is:
+
+$$
+	m_w(T) = b_t \left(\dfrac{n(n-1)}{2}\right)
+$$
+
+Where ${m_w(T)}$ is a function of the wasted memory, ${T}$ is some lower
+triangular matrix of size ${n \times n,}$ and ${b_t}$ is the amount of
+bytes consumed by the matrix type ${t.}$
+
+Because there are ${n^2}$ elements, the amount of memory needed for the
+non-zero elements is:
+
+$$
+	\begin{aligned} M(T) &= n^2 - \dfrac{n(n-1)}{2} \\[1em] &= \dfrac{2n^2 - n^2 + n}{2} \\[1em] &= \dfrac{n^2 + n}{2} \end{aligned}
+$$
+
+We can confirm that this is correct by observing that the sum of all the
+non-zero elements is the arithmetic series of the positive integers:
+
+$$
+	\begin{aligned} \sum\limits_{k = 0}^{n} k &= 1 + 2 + 3 + \ldots + n \\[1em] &= \dfrac{n(n + 1)}{2} \end{aligned}
+$$

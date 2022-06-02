@@ -1,0 +1,43 @@
+# Order Determination
+
+Suppose we want to determine a binary tree's order (the number of nodes in
+the binary tree). Given what we know about traversals, one way to do so is
+to traverse the entire tree, counting each time we visit a node:
+
+Below, we have a function called `TreeOrder()`. This function takes a
+`Node` pointer as an argument, and returns an `int`. Inside `TreeOrder()`,
+we have two local variables, `x` and `y`. These variables will keep track
+of the count for the left-subtrees and right-subtrees respectively. As long
+as `root` is not `NULL`, we will traverse the subtrees. At some point, we
+reachl a leaf, in which case we go to line `6`: `return 0`. This ultimately
+leads to the final line in the if-block: `return x + y + 1`.
+
+```rust
+TreeOrder(Node* root) -> int :
+	int x, y;
+	if (root != NULL):
+		x = TreeOrder((*root).left_child);
+		y = TreeOrder((*root).right_child);
+		return x + y + 1;
+	return 0;
+```
+
+Notice that this algorithm uses postorder traversal. This isn't necessarily
+some arbitrary decision. For post applications, binary tree processing is
+done with post-order traversal.
+
+What if instead we wanted to only count the nodes with a degree of two? To
+do so, we use the following:
+
+```rust
+TreeOrder2(Node* root) -> int :
+	int x, y;
+	if (root != NULL):
+		x = TreeOrder2((*root).left_child);
+		y = TreeOrder2((*root).right_child);
+		if ((*root).left_child && (*root).right_child):
+			return x + y + 1;
+		else
+			return x + y;
+	return 0;
+```

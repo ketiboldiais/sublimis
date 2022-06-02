@@ -1,0 +1,511 @@
+# Static Arrays
+
+The first set of abstract data types we explore is the **sequence**.
+Sequences allow us to store ${n}$ things in a specific order. Those things
+could be strings, integers, floating point values, or even other abstract
+data type objects.
+
+<Sequence data={[5, 8, 3, 9]}/>
+
+There are two kinds of array data structures: **static arrays** and
+**dynamic arrays**. Static arrays are arrays of fixed size, while dynamic
+arrays can lengthen and shorten at their ends. Because of this difference,
+what ADT we can represent with an array differs, depending on the kind of
+array we're using.
+
+The sequence data type consists of two subtypes: (a) the
+**sequence**[^sequencenote] and (b) the **list**.[^listnote] The sequence
+type is a sequence with a fixed size. I.e., the number of elements in the
+sequence does not change. The list type is a sequence with a dynamic size;
+the sequence can grow or shrink through the insertion, shifting, or
+removing of elements in the sequence.
+
+[^sequencenote]: The sequence is also called a _static sequence_.
+[^listnote]:
+    The list data type is also called a _vector_ or _dynamic sequence_.
+
+Arrays and lists have costs and benefits. Because array's have a fixed
+size, accessing the array's elements takes constant time—${O(1).}$ This is,
+in fact, the greatest selling point for static arrays.
+
+Say we have some array `arr`. To access some element `arr[i]`, we only
+perform _one_ memory access to read or write the data. This is not the case
+for the dynamic array. With dynamic arrays, we have to perform one memory
+access to read the array's reference, then a second memory access for the
+array element itself. **Rigidity.** Once an array is initialized, they have
+a fixed length that cannot be changed. For example, when we write:
+
+```cpp
+int main() {
+	int arr[] = {1,5,4,3,2};
+	int arr_size = sizeof(arr)/sizeof(int);
+	console.log(arr_size);
+}
+```
+
+```bash
+5
+```
+
+The output `5` is the size of `arr`, and it will remain `5` so long as
+`arr` exists.
+
+**Passing by reference.** Depending on what we're using the array for,
+passing-by-reference can be a cost to ease of use. For example, consider a
+function that takes an array as a parameter. When we pass the array
+argument for that parameter, it's not the actual array that's passed—it's
+the address to the first element of that array. Because an address is
+passed, if we want to iterate over the array inside the function, we must
+provide the array's length.
+
+In the materials that follow, we will first examine some common properties
+and methods associated with sequences.
+
+## Sequence Constructor
+
+The sequence constructor is a function that creates a new sequence. To do
+so, we will use a `class` (or, for languages without classes like C, a
+`struct`). The first thing we should address is a type. Sequences, by
+definition, can consist of only one type. In our case, we'll use the type
+`TYPE` to indicate some generic, _consistent_ type.
+
+Next, because sequences have a _size_ and _length_, our constructor must
+utilize these properties. Importantly, we make a distinction between the
+two properties. For example, suppose we have the following sequence:
+
+<Sequence data={[1, 3, 4, 2, 8, "", ""]} />
+
+This array has a _size_ of ${7}$ and a _length_ of ${5.}$ Length is
+variable, but size is constant.
+
+Here's a constructor in pseudocode:
+
+```rust
+class Sequence:
+	private:
+		TYPE _array
+		uint _size
+		uint _length
+```
+
+In C++, we have the following:
+
+```cpp
+template<class TYPE>
+class Sequence {
+	private:
+		TYPE* _array;
+		uint _size;
+		uint _length;
+};
+```
+
+Following these properties is the actual constructor:
+
+```rust
+class Sequence:
+	public:
+		Sequence(uint size) -> Sequence*:
+			Sequence* newSequence = malloc(sizeof(sequence))
+			newSequence->_array = malloc(sizeof(size * TYPE))
+			newSequence->_size = size;
+			newSequence->_length = 0
+			return newSequence;
+```
+
+In C++ implementation:
+
+```cpp
+template<class TYPE>
+	Sequence<TYPE>::Sequence(int size) {
+		_size = size;
+		_length = 0;
+		_array = new TYPE[_size];
+		std::cout << "Memory allocate succeeded.\n";
+	}
+```
+
+Notice how this constructor works. We allocate enough memory for the size
+of a `Sequence` class. This returns a pointer— an address—to that allocated
+memory. This address is identified as `newSequence`. Then, we allocate
+enough memory for an array with elements of generic type `TYPE`, which is
+then bound to the sequence's `_array` field. Then we set the properties
+`_size` and `_length`. Assuming all of this goes well, we return
+`newSequence`, the address of the newly created `Sequence` instance.
+
+## Sequence Destructor
+
+Alongside the sequence's constructor, we also want a destructor. This
+serves as a way of cleaning up whatever memory we've allocated for our
+sequence:
+
+```rust
+class Sequence:
+	public:
+		~Sequence(Sequence** sequence):
+		free((*sequence)->_array)
+		free(*sequence)
+```
+
+In C++, the destructor is straightforward.
+
+```cpp
+template<class TYPE>
+Sequence<TYPE>::~Sequence() {
+	delete [] _array;
+	std::cout << "Memory release succeeded.\n";
+}
+```
+
+The destructor takes one argument, a pointer to a `Sequence` pointer. The
+double pointer parameter is used because whenever we work with a `Sequence`
+instance, we're working with a pointer to a pointer of the `Sequence`.
+
+## Fullness Tester
+
+Given that arrays have a fixed size, our sequence ADT should also include a
+**fullness tester**. This returns `true` if we've completely filled the
+array, and `false` otherwise. We'll call this function `isFull()`.
+
+```rust
+class Sequence:
+	public:
+		IsFull(Sequence* sequence):
+			return sequence->_length == sequence->_size;
+```
+
+In C++:
+
+```cpp
+template<class TYPE>
+bool Sequence<TYPE>::IsFull() {
+	return _length == _size;
+}
+```
+
+Later, we'll see that this function works because the `_length` property
+changes each time we insert or remove elements from the sequence.
+
+## Empty Tester
+
+Similar to `isFull()`, it's also helpful to know if the array is empty.
+We'll call this function `isEmpty()`. The function returns `true` if the
+array is empty; otherwise `false`.
+
+```rust
+class Sequence:
+	public:
+		IsEmpty(Sequence* sequence):
+			return sequence->_length == 0;
+```
+
+```cpp
+template<class TYPE>
+bool Sequence<TYPE>::IsEmpty() {
+	return _length == 0;
+}
+```
+
+Once again, this function works because the `_length` property increases
+and decreases each time we insert or remove elements from the sequence.
+
+## Size Getter
+
+Another helpful method is retrieving the sequence's size. Because the
+sequence's `_size` property is private, we cannot directly read the
+property. However, many of the methods we'll cover must use the `_size`
+property. Accordingly, we write a separate `_size` getter to obtain this
+property's value, while avoiding the risk of accidentally modifying the
+property.
+
+```rust
+class Sequence:
+	public:
+		Capacity(Sequence* sequence):
+			return sequence->_size;
+```
+
+```cpp
+template<class TYPE>
+uint Sequence<TYPE>::Size() {
+	return _size;
+}
+```
+
+## Length Getter
+
+Similar to the `Capacity()` function, we also want a function that returns
+the sequence's current length:
+
+```rust
+class Sequence:
+	public:
+		Length(Sequence* sequence):
+			return sequence->_length;
+```
+
+```cpp
+template<class TYPE>
+uint Sequence<TYPE>::Length() {
+	return _length;
+}
+```
+
+## Sequential Print
+
+First, the `print()` operation. To print a sequence, we must iterate over
+each of the sequence's element, displaying each element to the console.
+Because we're iterating over each element, the `print()` operation has a
+time complexity of ${O(n)}$ given the ${n-}$sequence. This is linear time.
+
+```rust
+class Sequence:
+	public:
+		Print(Sequence* sequence):
+			int length = sequence->_length;
+			for (int i = 0; i < length; i++):
+				print(sequence->_array[i]);
+```
+
+## Appending an Element
+
+With the basic auxiliary functions above, we can now consider the major
+operations associated with sequences. The first operation we consider is
+_appending_. To append an element to a sequence, we'll write a function
+with the following header:
+
+```rust
+append(Sequence* sequence, TYPE element)
+```
+
+When we append an element to the sequence, we insert a new element to the
+sequence's end. For example, suppose we have the following sequence:
+
+<Sequence data={[7, 3, 9, 1, "", ""]} />
+
+When we call `append(seq, 5)`, the sequence changes to:
+
+<Sequence data={[7, 3, 9, 1, 5, ""]} />
+
+The implementation:
+
+```rust
+class Sequence:
+	public:
+		Append(Sequence* sequence, TYPE element):
+			if sequence.IsFull():
+				print "Sequence is full, append prohibited."
+				return;
+			else:
+				int i = sequence.length();
+				sequence._array[i] = element;
+```
+
+```cpp
+template<class TYPE>
+void Sequence<TYPE>::Append(TYPE element) {
+	if (this->IsFull()) {
+		std::cout << "Append prohibited. Sequence is full.\n";
+	} else {
+		this->_array[this->_length] = element;
+		this->_length++;
+	}
+}
+```
+
+## Inserting an Element
+
+With the `insert(i, x)` operation, we're inserting an element ${x}$ at the
+index ${i.}$ For example, suppose we have the following sequence:
+
+<Sequence data={[1, 8, 3, 2, 5, "", "", ""]} />
+
+This is a sequence of size 8, with length 5. If we write `insert(0, 9)`, we
+would have the sequence:
+
+<Sequence data={[9, 1, 3, 2, 5, "", ""]} />
+
+Notice what happened to the indices. They shifted. If we insert the element
+at the very end of the sequence—our earlier `append()` method—no shifting
+occurs. Accordingly, `append()` has a time complexity of order ${O(1),}$
+constant time.
+
+However, if we insert the element at the very beginning, as we did above,
+then we must shift _all_ the elements. Given a sequence of length ${n,}$
+this operation would require iterating over all ${n}$ elements. As such, we
+have a time complexity of order ${O(n).}$
+
+Implementing this in pseudcode:
+
+```rust
+Insert(Sequence* sequence, uint index, TYPE element) -> void:
+	if (isFull(sequence)):
+		print("Insert prohibited: Sequence is full.")
+	else if (index > sequence->_length):
+		print("Insert prohibited: Index out of bounds.")
+	else:
+		for (int i = sequence->_length; i > index; i--):
+			sequence->_array[i] = sequence->_array[i-1];
+			_array[index] = element;
+			_length++
+```
+
+```cpp
+template<class TYPE>
+void Sequence<TYPE>::Insert(uint index, TYPE element) {
+	if (this->IsFull()) {
+		std::cout << "Insert prohibited: Sequence is full.\n";
+	}
+	else if (index > (_length)) {
+		std::cout << "Insert prohibited: Index out of bounds.\n";
+	}
+	else {
+		for (int i = _length; i > index; i--) {
+			_array[i] = _array[i-1];
+		}
+		_array[index] = element;
+		_length++;
+	}
+}
+```
+
+Examining these possibilities, we have a best-case scenario and a
+worst-case scenario. The best-case scenario is ${\Omega(1),}$ constant
+time, which occurs only if we insert at the very end. The worst-case
+scenario is ${O(n),}$ linear time, which occurs if we insert at the origin,
+${i = 0.}$
+
+## Removing an Element
+
+Suppose we had the following sequence:
+
+<Sequence data={[1, 5, 8, 3, 2, "", ""]} />
+
+We want to write a function that allows us to remove the element specified
+at a particular index. This function has the following signature:
+
+```rust
+remove(i) -> TYPE
+```
+
+In other words, `remove()` will delete the element at the index ${i}$ and
+return the removed element. Thus, for the above array, executing
+`remove(2)` results in:
+
+<Sequence data={[1, 5, 3, 2, "", "", ""]} />
+
+Notice the shifting. Like insert, whenever we remove an element from the
+sequence other than the last, we must shift the elements to the left to
+fill in the gap. This is because the sequence's static array cannot have
+gaps. The implementation in pseudocode:
+
+```rust
+Remove(Sequence* sequence, uint index) -> TYPE:
+	TYPE removedElement;
+	if (index > _length):
+		removedElement = 0;
+		print("Invalid index. Returning 0.")
+		return removedElement;
+	else:
+		removedElement = sequence->_array[index];
+		for (int i = index; i < _length; i++):
+			_array[i] = _array[i+1];
+		_length--;
+		return removedElement;
+```
+
+In C++:
+
+```cpp
+template<class TYPE>
+TYPE Sequence<TYPE>::Remove(uint index) {
+	TYPE removedElement;
+	if (index > _length) {
+		removedElement = 0;
+		std::cout << "Invalid index. Returning 0.\n";
+		return removedElement;
+	} else {
+		removedElement = _array[index];
+		for (int i = index; i < _length; i++) {
+			_array[i] = _array[i+1];
+		}
+		_length--;
+		return removedElement;
+	}
+}
+```
+
+The time complexity for this algorithm depends on the value of `index`. If
+`index = length`, then no shifting occurs. This yields a complexity of
+${O(1)}$—constant time. If, however, `index = 0`, then we have to perform
+${n}$ shifts. This yields ${O(n),}$ which is linear time. Accordingly,
+deleting an element from a array, in the best case scenario, is
+${\Omega(1),}$ and in the worst case scenario, ${O(n).}$
+
+## Accessing an Array Element
+
+One operation we want with sequences is returning the element at a given
+index. We implement this operation with a `ElementAt()` method:
+
+```rust
+ElementAt(i)
+```
+
+For example, given the sequence:
+
+<Sequence data={[7, 3, 9, 5, 8]} />
+
+executing `ElementAt(3)` returns the element `5`. Implementing this method
+is straightforward. There are only two operations we must perform: First,
+we must ensure the index argument ${i}$ is an integer not less than 0. This
+is easily ensured with type-checking: set the parameter to `uint`. Second,
+we must ensure the index is less `_length`. The implementation:
+
+```rust
+ElementAt(Sequence* sequence, uint index) -> TYPE
+	TYPE element;
+	if (index > (*sequence)._length):
+		element = 0;
+		print("Invalid element, returning 0.")
+		return element;
+	else:
+		element = _array[index];
+		return element;
+```
+
+```cpp
+template<class TYPE>
+TYPE Sequence<TYPE>::ElementAt(uint index) {
+	TYPE element;
+	if (index > _length) {
+		element = 0;
+		std::cout << "Invalid element, returning 0.\n";
+		return element;
+	} else {
+		element = _array[index];
+		return element;
+	}
+}
+```
+
+Because the algorithm above consists of only basic operations, accessing a
+sequence element has a complexity of order ${O(1)}$ —constant time.
+
+## Setting
+
+The `set(x, i)` operation will set the element ${x}$ and the index ${i.}$
+Effectively, this will replace the element ${y}$ occupying the index ${i.}$
+Like the `get(i)` operator, we must ensure that the index passed is an
+integer and that ${i < \texttt{length}.}$ In pseudocode:
+
+```rust
+get(int x, int index) {
+	if ( (index >= 0) ∧ (index < length) ) {
+		⟹ A[index] = x;
+	}
+}
+```
+
+Once more, because there are really only two operations performed (ensuring
+the requirements are met and assignment), replacing an element in an array
+has running time of ${O(1)}$—constant time.

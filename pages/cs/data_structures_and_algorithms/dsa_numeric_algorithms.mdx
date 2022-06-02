@@ -1,0 +1,666 @@
+<meta
+	name="description"
+	content="Notes on number representation in CS: binary, hexadecimal, octal, decimal representation, and complements."
+/>
+<title>Number Theory for CS</title>
+
+# Numeric Algorithms
+
+This article presents some of the key algorithms associated with
+mathematical computations. These include prime-finders, factorization,
+numeric approximations, and bit manipulations.
+
+## Number Representation
+
+Consider this image:
+
+$$
+\huge 7
+$$
+
+Our immediate response is to recognize this as the number "seven." In
+reality, however, the image above is just a symbol for the number seven. In
+some alternate universe, the majority of the world could have used one of
+the following:
+
+$$
+	\huge \begin{matrix} \text{VII} & \text{ז} & \text{七} \\ \text{७}
+	& \text{፯} & \text{৭} \\ \text{٧} & \text{౭} & \text{៧} \\ \text{๗} &
+	\text{௭} & \text{൭} \end{matrix}
+$$
+
+Or, the majority could have used tally marks, but here too we find variety:
+
+![Tallies](https://res.cloudinary.com/sublimis/image/upload/v1652744755/cs/tallies.svg)
+
+This all to say that the number seven is a conception in the mind—a
+quantification of something we perceive in the real world. What that
+quantification is could be many things: Seven positions from a starting
+point, seven units from zero, seven apples, the fourth prime, a lucky
+number, etc. Regardless, we use the symbol ${7}$ to communicate this idea,
+and provide other symbols for refinement—${7~\text{cm},}$ ${7}$ gallons,
+${7}$ points, ${i = 7,}$ ${+7,}$ ${-7,}$ ${\lvert 7 \rvert,}$ ${7x,}$ and
+so on.
+
+Question: How many symbols do we need to represent _any_ number? There are
+infinitely many numbers, but we cannot have infinitely many symbols. Thus,
+we need a finite number of symbols that allows us to represent every
+conceivable number. For most of the world, that finite number is ten:
+
+$$
+	\huge 0~1~2~3~4~5~6~7~8~9
+$$
+
+Number systems that use ten symbols to represent all numbers are called
+**decimal number systems**, or **base-10 systems**. In the Western decimal
+number system, ten symbols (called the **Hindu-Arabic numerals**) are used
+to represent every conceivable number. The number of unique symbols used in
+a numbering system to represent a number in that system is called the
+**base** or **radix** of the numbering system. For example, with the
+decimal system, the radix is ${10.}$ For the ancient Mayans, the radix was
+${20}$ (called a _vigesimal system_). For the Babylonians, the radix was
+${60}$ (called a _base-60 system_).
+
+To understand how the base works, we'll consider the decimal system. First,
+we have enough symbols to represent the numbers zero through nine:
+
+$$
+	\huge 0~1~2~3~4~5~6~7~8~9
+$$
+
+The symbols above, however, hide a critical fact: They all have an infinite
+amount of "slots" or "places", immediately to the left, occupied by a zero:
+
+$$
+	\large \begin{aligned} & \ldots 01 \\ & \ldots 02 \\ & \ldots 03
+	\\ & \ldots 04 \\ & \ldots 05 \\ & \ldots 06 \\ & \ldots 07 \\ &
+	\ldots 08 \\ & \ldots 09 \\ \end{aligned}
+$$
+
+When we reach the number nine, we've run out of unique symbols. So to
+represent the number ten, we go to the slot on the left (occupied by a
+zero), and increment it by ${1:}$
+
+$$
+	\begin{aligned} & \ldots 01 \\ & \ldots 02 \\ & \ldots 03 \\ &
+	\ldots 04 \\ & \ldots 05 \\ & \ldots 06 \\ & \ldots 07 \\ & \ldots
+	08 \\ & \ldots 09 \\ & \ldots 10 \\ & \ldots 11 \\ & \vdots \\ &
+	\ldots 19 \end{aligned}
+$$
+
+Once we get to nineteen, we increment the slot again:
+
+$$
+	\begin{aligned} & \ldots 10 \\ & \ldots 11 \\ & \ldots 12 \\ &
+	\ldots 13 \\ & \ldots 14 \\ & \ldots 15 \\ & \ldots 16 \\ & \ldots
+	17 \\ & \ldots 18 \\ & \ldots 19 \\ & \ldots 20 \end{aligned}
+$$
+
+Because there are ten symbols, and for each of these ten we can assign one
+of the ten symbols immediately to its left, we have
+${10 \times 10 = 10^2 = 100}$ unique symbols. This allows us to represent
+numbers from zero (${0}$) to ninety-nine (${99}$).
+
+Once we reach ${99,}$ we've run out of symbols for the second slot, so we
+turn to the third slot: ${100.}$ Now we have
+${10 \times 10 \times 10 = 10^3 = 1000}$ unique symbols. This allows us to
+count from zero to nine hundred and ninety-nine (${999}$). Once we've
+reached ${999,}$ the process continues. We go to the fourth slot, giving us
+${10^4}$ unique symbols. Once that's run out we go to the
+fifth&mdash;${10^5}$ unique symbols; then the sixth&mdash;${10^6}$ unique
+symbols; seventh&mdash;${10^7;}$ eighth&mdash;${10^8;}$ _ad infinitum_.
+
+So, we have a way to generate unique symbols. But using this approach, we
+have a problem: How do we ensure that someone seeing ${67}$ doesn't
+interpret it as ${6}$ and ${7?}$ This is accomplished by everyone agreeing
+to intrepret the second position as indicating how many times we've used up
+symbols for the first position. For example, in the case of ${67,}$ we
+interpet the ${6}$ as: "We've run through the symbols
+${0~1~2~3~4~5~6~7~8~9}$ six times in the first position." With the ${7}$
+included, the number ${67}$ translates to "Six of the ten symbols and seven
+of the symbols":
+
+$$
+	(6 \times 10) + 7
+$$
+
+When we see ${826,}$ we think: "Eight of ten of the ten symbols, two of ten
+of the symbols, and six of the symbols:"
+
+$$
+	(8 \times 10 \times 10) + (2 \times 10) + 6
+$$
+
+This process continues over and over, embodying the following pattern:
+
+$$
+	(s_i \times 10^k) \ldots (s_3 \times 10^3) + (s_2 \times 10^2) +
+	(s_1 \times 10^1) + s_0
+$$
+
+where ${k}$ and ${s_i}$ are positive integers. Each of the terms above is
+called a place, and they are multiples of ten. For example,
+${s_2 \times 10^2}$ is the tenth's place, ${s_3 \times 10^3}$ is the
+hundredth's place, and so on. The term ${s_0}$ is often called the one's
+place, and it is mathematically denoted ${s_0 \times 10^0:}$
+
+$$
+	(s_i \times 10^k) \ldots (s_3 \times 10^3) + (s_2 \times 10^2) +
+	(s_1 \times 10^1) + (s_0 \times 10^0)
+$$
+
+### Octal Number System
+
+Although the decimal system allows us to write large numbers with fewer
+symbols, the more symbols we use, the more computations we must perform and
+the more likely we are to commit computational errors. Inversely, the fewer
+symbols we need, the less computations we must perform, and the less likely
+we are to commit computational errors. The tradeoff, however, is
+readability. With fewer digits, larger numbers are long and difficult to
+decipher. Nevertheless, some problems (as we'll later see) do not require
+humans to directly read the numbers, so we've gone ahead and used number
+systems with fewer symbols. One such system is the **octal number system**.
+
+To understand the octal number system, it's worth mentioning a bit of its
+history. Before the French Revolution, most of Europe used a dizzying array
+of inconsistent measurement systems. At the turn of the nineteenth century,
+global trade increased dramatically, and the ancient units proved costly
+for international transactions. The French merchant would appear in court
+arguing he received less than the agreed upon amount, ${1}$ _pied du roi_
+(the length of the King's foot, about ${32.48}$ cm), with the German
+merchant responding that he gave the correct amount, ${1}$ Fuß (possibly
+${23.6}$ cm; there were competing values of Fuß).
+
+In 1799, the Académie des sciences, a French learned society known for
+solving scientific and mathematical problems, tasked a panel of scientists
+and mathematicians to remedy these problems.[^note_lagrange] Their
+solution: a decimal system of measurement relying on ten symbols, using
+prefixes like deci, centi, milli, deca, hecto, kilo, and several others. As
+we can guess, we know this system today as the _metric system_.
+
+[^note_lagrange]:
+    Among the panelists were the mathematicians Joseph-Louis Lagrange,
+    Pierre-Simon Laplace, and Nicolas de Condorcet.
+
+Across the Channel, the English had their own system and its proponents.
+One such defender was the Scottish economist James Anderson. Weary of the
+costs of changing a centuries-old measurement system, Anderson advocated
+for an alternative more closely aligned with the English system. Instead of
+relying on ten symbols, Anderson's system relied on eight:
+
+$$
+	\huge 0 ~ 1 ~ 2 ~ 3 ~ 4 ~ 5 ~ 6 ~ 7
+$$
+
+Likely inspired by the Latin _octo_, meaning "eight," Anderson called his
+alternative the _octal system_. Knowing the basics of number systems, we
+see that in the octal number system, the radix is eight—a base-8 number
+system. And with eight symbols, we can represent the numbers zero through
+seven. Like what we saw with the decimal system, we run out of symbols once
+we reach ${7.}$ To represent the number eight, we add a new symbol to the
+left, and start the symbol to the right back at ${0:}$
+
+$$
+	\huge 10
+$$
+
+Thus, in the octal number system, the number eight is represented as
+${10.}$ Nine is ${11,}$ ten is ${12,}$ eleven is ${13,}$ and so on. Once we
+reach ${17,}$ the number fifteen, we increment the number to the right and
+start at zero on the left: The number sixteen is ${20.}$
+
+Similar to what we saw with the decimal system, going from right to left,
+the first position indicates the one's, and the second position indicates
+how many times we've gone through the first position. The third position
+indicates how many times we've gone through the second, the fourth the
+third, the third the fourth, and so on. The difference, however, is that
+instead of using a base of ten, we use a base of eight:
+
+$$
+	(s_i \times 8^k) \ldots (s_3 \times 8^3) + (s_2 \times 8^2) + (s_1 \times 8^1) + (s_0 \times 8^0)
+$$
+
+Thus, the octal number ${117}$ is actually:
+
+$$
+	(1 \times 8^2) + (1 \times 8^1) + (7 \times 8^0) = 79
+$$
+
+Because octal numbers use the same symbols as the decimal numbers, we
+indicate them with subscripted brackets containing the base. For example,
+the octal number ${117}$ is formally written as:
+
+$$
+	\Large 117_{[8]}
+$$
+
+Alternatively (and in some computer languages), the number ${117}$ would be
+indicated as:
+
+$$
+	\Large \texttt{0o117}
+$$
+
+Following standard practice, we will use the former syntax in exposition,
+but the latter when referring to code. To convert quickly from decimal to
+octal, it's helpful to know the first ten powers of eight by heart:
+
+$$
+	\begin{aligned} &8^1 = 8 \\ &8^2 = 64 \\ &8^3 = 512 \\ &8^4 = 4096 \\ &8^5 = 32~768 \\ &8^6 = 262~144 \\ &8^7 = 2~097~152 \\ &8^8 = 16~777~216 \\ &8^9 = 134~217~728 \\ &8^{10} = 1~073~741~824 \end{aligned}
+$$
+
+## Primality Tests
+
+Suppose we're given a number ${n.}$ We want to answer the following
+question: Is ${n}$ a prime number?
+
+Recall the definition for a prime number. ${n}$ is a prime number only if
+it satisfies the following propositions:
+
+1. ${n}$ is a natural number,
+2. ${n}$ is greater than ${1,}$ and
+3. ${n}$ consists of only two divisors: ${n}$ and ${1.}$
+
+We denote the set of primes with the symbol ${\mathbb{P}.}$ The set below
+illustrates this, listing the first twenty-four prime numbers, with
+ellipses to indicate more:
+
+$$
+	\mathbb{P} = \left\{ \begin{matrix} 2 & 3 & 5 & 7 \\ 11 & 13 & 17
+	& 19 \\ 23 & 29 & 31 & 37 \\ 41 & 43 & 47 & 53 \\ 59 & 61 & 67 & 71
+	\\ 73 & 79 & 83 & 89 \\ \vdots & \vdots & \vdots & \vdots
+	\end{matrix} \right\}
+$$
+
+Algorithms that determine whether a given number ${n}$ is a prime number
+are called **primality tests**. These algorithms are immensely important in
+cryptography. Cryptography itself is what ensures sensitive data like
+passwords, text messages, emails, and credit card numbers stay secure as
+they are transmitted across networks.
+
+### Brute-force Primality Test
+
+There are a variety of ways to implement a primality test, but we start
+with the simplest algorithm: a **brute-force primality test**. This
+algorithm is part of a family of algorithms called **brute-force
+algorithms**. These algorithms solve problems in the most simple, direct,
+or obvious way. For the prime number testing, the brute-force primality
+test is closely related to **proof-by-exhaustion**, a method of proof in
+mathematics. We exhaust all of the possibilities before we exhaust
+ourselves (or more accurately, our machine's RAM).
+
+To implement the brute-force primality test, we study the mathematical
+definition:
+
+> _Definition_. If a natural number ${n}$ is prime, then ${n}$ is greater
+> than ${1}$ and is not divisible by any positive integer other than ${1}$
+> and ${n.}$
+
+When implementing algorithms based on mathematical definitions, it's
+helpful to read the definitions in all directions. In this case, let's read
+the definition in terms of its contrapositive:
+
+> _Definition_. If ${n}$ is less than or equal to ${1}$ or is divisible by
+> a positive integer other than ${1}$ and ${n,}$ then ${n}$ is _not_ prime.
+
+The contrapositive essentially lays out the brute-force algorithm. The
+implementation is simple: Using a for-loop, we go through all of the
+integers from ${1}$ to ${n - 1,}$ verifying no number divides ${n}$ without
+a remainder. If there is such a number, that would imply that ${n}$ has a
+divisor other than ${1}$ and itself. This violates the last requirement
+above, and ${n}$ is not a prime number. Otherwise, ${n}$ is a prime number.
+Implementing in pseudocode:
+
+```rust
+fn brute_force_primality_test(int n):
+	if (n < 2): return "n is not prime";
+	else:
+	for (int i = 2; i < n - 1; i++):
+		if (n % i == 0): return "n is not prime";
+	return "n is prime";
+```
+
+With brute-force primality test, we must iterate through ${n - 1}$
+elements. As such, the running time function for this algorithm can be
+expressed as ${f(n) = n - 1.}$ Applying asymptotic analysis, the
+brute-force primality test, in the worst-case scenario, has a running time
+of order ${O(n).}$ This is linear time. Can we do better? Let's consider
+another algorithm.
+
+### Trial Division
+
+The second primality test we investigate is **trial division**. This
+algorithm relies on the same definition above, but the key insight lies in
+honing in on what constitutes a composite number—a number that is not
+prime.
+
+> _Definition_. If ${n}$ is composite, then the following proposition is
+> true: $$ \large n = a \cdot b $$ where ${a, b \in \N,}$ ${a \geq 2,}$ and
+> ${b \leq n - 1}$
+
+With the brute-force primality test, we attempted to find the divisor
+${a.}$ The index ${i}$ represents the divisor ${a,}$ and we iterated up to
+${n-1}$ checking to see if ${\dfrac{n}{a} = b.}$ Now, given any two numbers
+${p}$ and ${q,}$ or in our case, ${a}$ and ${b,}$ one will be less than or
+equal to the other. This proposition originates in the trichotomy law in
+real analysis. Suppose ${a \leq b.}$ This is a perfectly reasonable
+assumption to start with; we don't lose any generality in doing so.
+
+So, what's next? This is where we get creative. We look at the facts we
+have so far and try to draw further facts. We assumed that ${a \leq b.}$
+And before that, we saw that the composite number ${n}$ has the form
+${a \cdot b.}$ Our inequality looks like ${a \leq b,}$ so what if we tried
+getting it to look like ${n = a \cdot b?}$ To do so, we multiply ${a}$ to
+both sides:
+
+$$
+	\begin{aligned} a \cdot a &\leq a \cdot b \\ a^2 &\leq a \cdot b \end
+	{aligned}
+$$
+
+That's an interesting result. If ${n = a \cdot b}$ and ${a \leq b,}$ we
+have:
+
+$$
+	a^2 \leq n
+$$
+
+Now if we took the square root of both sides:
+
+$$
+	\begin{aligned} \sqrt{a ^ 2} &\leq \sqrt{n} \\ a &\leq \sqrt{n} \end{aligned}
+$$
+
+This is another big insight. If ${n = a \cdot b}$ and ${a \leq b,}$ then
+${a \leq \sqrt{n}.}$ Given that ${a}$ must be less than ${\sqrt{n,}}$ we
+don't have to search up to ${n - 1.}$ Instead, we only have to search up to
+${\sqrt{n}.}$ The implementation is thus:
+
+```rust
+trial_division_primality(int n):
+	if (n < 2): return "n is not prime";
+	else:
+		for (int i = 2; i < (sqrt(n)); i++):
+			if n % i == 0:
+				return "n is not prime";
+		return "n is prime";
+```
+
+With trial-division, the algorithm only takes ${\sqrt{n} - 1}$ operations
+to execute. Hence, this algorithm has a time complexity of ${O(\sqrt{n}),}$
+or ${O(n^{1/2}).}$ This is fractional power time, which is faster than
+linear time. Note that the time complexity for this algorithm may vary
+depending on how `sqrt(n)` is implemented. To avoid these issues, we can
+instead establish the test condition as `i*i < n` rather than
+`i < sqrt(n)`:
+
+```rust
+trial_division_primality(int n):
+	if (n < 2): return "n is not prime";
+	else:
+		for (int i = 2; i*i < n; i++):
+			if n % i == 0:
+				return "n is not prime";
+		return "n is prime";
+```
+
+## Prime Factorization
+
+Closely related to primality tests is **prime factorization**—expressing a
+number as a product of their prime factors. For example, the number ${12}$
+in terms of its prime factors is:
+
+$$
+	2 \times 2 \times 3 = 12
+$$
+
+We can visualize prime factorization in terms of a tree. For example, the
+prime factors of ${100.}$ We start with ${2,}$ the first prime number.
+Since ${100}$ is divisible by ${2,}$ we get ${50:}$
+
+<div id="primeFactor1"></div>
+
+Then we consider the prime factors of ${50.}$ We start again with ${2,}$
+and we see that ${50}$ is also divisible by ${50:}$
+
+<div id="primeFactor2"></div>
+
+Then we look at ${25.}$ We go back to testing ${2.}$ ${25}$ is not
+divisible by ${2,}$ so we consider the next prime number, ${3.}$ ${25}$ is
+not divisible by ${3,}$ so test the next prime number, ${5.}$ Here, ${25}$
+is divisible by ${5:}$
+
+<div id="primeFactor3"></div>
+
+Finally, we have ${5,}$ which leads to:
+
+<div id="primeFactor4"></div>
+
+Once we've reached the factor ${1,}$ we know we've found the prime factors.
+
+$$
+	2 \times 2 \times 5 \times 5 = 2^2 \times 5^2 = 100
+$$
+
+Implementing the procedure above in pseudocode:
+
+```rust
+int factors[100];
+int exponents[100];
+int length = 0;
+fn primeFactors(int m) -> void:
+	int d = 2;
+	while (m > 1):
+		int k = 0;
+		while (m % d == 0):
+			m = m / d;
+			k++;
+		if (k > 0):
+			length++;
+			factors[length] = d;
+			exponents[length] = k;
+		d++;
+```
+
+In the pseudocode above, the `factors[]` array will hold the prime factors
+we find, and the `exponents[]` array will hold the exponents we find. Let's
+run through the code above with a simple example. Suppose we want to find
+the prime factors of ${24.}$ First, we call `primeFactors(24)`:
+
+```rust
+primeFactors(24):
+	int m = 24;
+	int d = 2;
+```
+
+We then reach while-loop-1. Here, the test condition is `(m > 1)`. In this
+case, `24 > 1`, so we proceed:
+
+```rust
+primeFactors(24):
+	int m = 24;
+	int d = 2;
+		while (m > 1):
+		int k = 0;
+```
+
+We then encounter our while-loop-2. The test condition here is
+`(m % d == 0)`. In this case, `(24 % 2 == 0)` is true, so we proceed:
+
+```rust
+primeFactors(24):
+	int m = 24;
+	int d = 2;
+	while (m > 1):
+		int k = 0;
+		while (m % d == 0):
+				m = m / d; m = 24 / 2 = 12
+				k++; k = 1
+```
+
+Given that `m = 12`, while-loop-2's condition is still true, so we execute
+again:
+
+```rust
+primeFactors(24):
+	int m = 24;
+	int d = 2;
+	while (m > 1):
+		int k = 0;
+		while (m % d == 0):
+				m = 12
+				k = 1
+				m = m / d; m = 12 / 2 = 6
+				k++; k = 2
+```
+
+Once more our test condition is true, so we execute again
+
+```rust
+primeFactors(24):
+	int m = 24;
+	int d = 2;
+	while (m > 1):
+		int k = 0;
+		while (m % d == 0):
+				m = 6
+				k = 2
+				m = m / d;
+				m = 6 / 2 = 3
+				k++;
+				k = 3
+```
+
+Going back to while-loop-2, the test condition returns
+false—`(3 % 2 != 0)`. So, we go to the next line in while-loop-1. In this
+case, it's an if-statement, whose test condition is true:
+
+```rust
+primeFactors(24):
+	int m = 24;
+	int d = 2;
+	while (m > 1):
+		int k = 0;
+		while (m % d == 0):
+			m = m / d;
+			k++;
+			k = 3
+			if (k > 0):
+				factors[length] = d;
+				factors[0] = 2
+				exponents[length] = k;
+				exponents[0] = 3
+				length++ factors = 1
+			d++; d = 3
+```
+
+Now `m = 3`, and we go back to while-loop-1's test condition. Here, we see
+that `m > 1 == 3 > 1`, which is true. So, we again execute while-loop-1's
+body. We set `int k = 0`, and reach while-loop-2. Here, we see that
+`m % d == 0` is true—`3 % 3 == 0`. So, we proceed executing while-loop-2's
+body:
+
+```rust
+primeFactors(24):
+	int m = 24;
+	int d = 2;
+		while (m > 1):
+			int k = 0;
+			while (m % d == 0):
+				m = m / d; m = 3 / 3 = 1
+				k++; k = 1
+```
+
+Now, with `m = 1`, while-loop-2's condition is false, so we exit
+while-loop-2 and continue with the rest of the statements in while-loop-1.
+We see that `k > 0 ${\equiv}$ 1 > 0`, so we execute the if-block:
+
+```rust
+primeFactors(24):
+	int m = 24;
+	int d = 2;
+		while (m > 1):
+			int k = 0;
+			while (m % d == 0):
+				m = m / d;
+				k++;
+			k = 1
+			if (k > 0):
+				length = 1
+				factors[length] = d;
+				factors[1] = 3;
+				exponents[length] = k;
+				exponents[1] = 1;
+				length++ length = 2
+			d++; d = 4
+```
+
+With `m = 1`, our while-loop-1's condition is false, and we have finished.
+With the data from these two arrays, we have:
+
+${24 = 2^3 \times 3^1}$
+
+Which is, in fact, the prime factorization of ${24.}$ Intuitive as this
+algorithm is, it performs poorly in terms of time complexity. The worst
+case scenario in this case is when `m` is a prime number. If we call
+`primeFactors(23)`, for example, we would have to increment ${d}$ all the
+way up to ${23.}$ This leaves us with a time complexity of ${O(n).}$
+
+## Bitwise Operations
+
+For most developers, the bitwise operations are the least used. They can,
+however, come in very handy with certain problems. To begin, let's review
+these operations:
+
+| Operation | Description                                                                                                                                 |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `a & b`   | Bitwise-AND. Given two binary digits, returns 0 if any of the two digits are 0, otherwise 1.                                                |
+| `a \| b`  | Bitwise-OR. Given two binary digits, returns 1 if any of the two gits are 1, otherwise 0.                                                   |
+| `a ^ b`   | Bitwise-XOR. Given two binary digits, returns 1 if exactly one of the two digits is 1, otherwise 0.                                         |
+| `~a`      | Bitwise-NOT. Given a single binary digit, returns 0 if the digit is 1, and 1 if the digit is 0.                                             |
+| `a<<b`    | Bitwise-left-shift. Moves all of the bits to the left, with the position previously occupied by the least-significant bit filled with a 0.  |
+| `a>>b`    | Bitwise-right-shift. Moves all of the bits to the right, with the position previously occupied by the most-significant bit filled with a 0. |
+
+Let's see some examples. For the bitwise-AND:
+
+$$
+\begin{aligned} &0000101 \\ \texttt{\&{}}~~~ &0000111 \\ \hline
+&0000101 \end{aligned}
+$$
+
+Notice that we get `1` if, and only if, we have `1 & 1`. Otherwise, it's
+`0`. Furthermore, if we converted the binary numbers above into decimal, we
+get:
+
+$$ \texttt{5 \&{} 7 = 5} $$ Now let's see the bitwise-OR:
+
+$$
+\begin{aligned} &0000101 \\ \texttt{|{}}~~~ &0000111 \\ \hline
+&0000111 \end{aligned}
+$$
+
+In contrast to the bitwise-AND, for the bitwise-OR we get `0` if, and only
+if, we have `0 | 0`. Otherwise, get `1`. Thus, we have:
+
+$$ \texttt{5 | 7 = 7} $$
+
+Closely related is the bitwise-XOR. This is essentially bitwise-OR, but
+with one restriction: We can't have two `1`s. In other words, we get `1`
+if, and only if, we have exactly one `1`:
+
+$$
+\begin{aligned} &0000101 \\ \texttt{\^{}}~~~ &0000111 \\ \hline
+&0000010 \end{aligned}
+$$
+
+Thus, we have: $$ \texttt{5 \^{} 7 = 2} $$
+
+Next, the bitwise-NOT. Unlike the previous operators, bitwise-NOT is a
+_unary operator_—it applies to only one operand. Thus:
+
+$$
+\begin{aligned} \texttt{\~{}}~~~ &0000111 \\ \hline &1111000
+\end{aligned}
+$$
+
+This yields: $$ \texttt{\~{} 7 = 120} $$

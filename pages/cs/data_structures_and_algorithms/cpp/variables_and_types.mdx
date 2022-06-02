@@ -1,0 +1,644 @@
+# Variables & Types
+
+In a computer, data is stored inside a memory location. We can think of
+computer memory as a large grid of small squares with unique addresses.
+These small squares, or cells, are arranged in a logical order. Each cell
+can store **1 byte, or 8 bits** of data. A bit is either a 0 or a 1. With 8
+bits, we have 256 different combinations (${2^8 = 256.}$) Those
+combinations can be used to represent the numbers 0 to 255. In statically
+typed languages, we must explicitly state variable's type during
+declaration. This tells the compiler what type of data the variable will
+store. Given that information, the compiler can determine how much memory
+to allocate. To use that data, we must reference that particular location.
+In languages like Assembly, this is in fact how we access that data. Now,
+these memory locations are fairly cryptic and difficult to read (they're in
+hexadecimal). Instead of referencing these memory locations, we can
+associate a _name_ to that particular location, and reference that name
+instead. This is called a **binding**.
+
+Variables are essentialy "cabinets" where we can place data. Those
+cabinets, however, have specific labels called _types_. The data we place
+in a cabinet must have a type that matches the label. However, we can
+change the contents of the cabinets. More formally, variables are locations
+in memory where we can store data. Instead of referring to that location
+with its memory address, we give that location a name called an
+_identifier_. In source code, the identifier is the name we give a
+variable. Identifiers should be descriptive and meaningful, so as to make
+later recall easier. Identifiers can only consist of (a) upper-case
+alphabets, (b) lower-case alphabets (c) numbers, and (d) underscores.
+Additionally, the first character in the identifier must be either an
+alphabet or an underscore. Thus, identifiers cannot contain special
+characters (`&`, `!`, `#`, `;`, etc.) nor can it contain whitespace.
+Upper-case alphabets and lower-case alphabets are distinct. Thus, the
+identifier `foo` is different from the identifier `Foo`. A **variable** is
+a programming construct that allows us to associate a _value with a name_.
+More formally, a variable is a named piece of memory that a programmer uses
+to store specific types of data. In other words, it is an abstraction for
+the process described previously. Examples of variables in C++:
+
+```cpp
+int x; // value is undefined
+char grade = 'A';
+double pi = 3.14;
+```
+
+The value `'A'` and `3.14` are called **literals**. A literal is a value
+directly represented inside the program executable (as opposed to a value
+that must be accessed through a variable stored somewhere in memory). For
+example, the variable `pi` will be stored somewhere in memory. The literal
+`3.14`, however, will be directly represented as binary in the executable.
+For example, suppose we wrote the following:
+
+A _variable declaration_ is an instruction to the compiler to **reserve**
+space in memory for data. Because C++ is a _statically typed_ language,
+variable declarations must explicitly include the variable's type. A
+_variable initialization_ is an instruction to the compiler to **store**
+data in the reserved space.
+
+```cpp
+int a = 1
+int b = 2
+```
+
+When we actually compile the program, the code above looks something like:
+
+| value      | code        |
+| ---------- | ----------- |
+| 001        | a = 1 (int) |
+| 002        | b = 2 (int) |
+| ${\vdots}$ | ${\vdots}$  |
+| 0040       | 1           |
+| 0041       | 2           |
+
+The values are called literals because they are _literally_ inside the
+source code. They do not need to be represented in memory. Because the
+values bound to `a` and `b` are literals, we can use `a` and `b` throughout
+our program (this is true because the variables above are presumed to be
+declared in the global scope; more on this later).
+
+Note that literals with modifiers, like `long` and `unsigned`, should have
+a suffix appended at the end, indicating that the value is a literal:
+
+```cpp
+unsigned int ceoBonus {2'000'000u}; // evaluates to 2989 int myOctal {0777u}
+unsigned int errorCode = 0xBAD;  // evaluates to 511
+float myFloat {1.2f}
+```
+
+Notice the use of single quotes as separators. This is particularly helpful
+when we have large value literals. Notice also that we can represent hex
+numbers in C++.[^hexnote] Hex numbers are also used to indicate colors.
+Above, we also see an example of using octal numbers as literals. Notice
+that octal numbers are prefaced with a `0`. Because of this use of `0`, be
+very careful not to preface `int` values with a `0` if an `int` is
+intended.
+
+[^hexnote]:
+    Hex numbers are used amusingly (and usefully) in many programs as _hex
+    speak._ For example, the hex number `0xBAAAAAAD` is used as an iOS
+    exception report (it evaluates to the integer `3131746989`.) Similarly,
+    `0xDEADBEEF` is almost ubiquitously used in embedded systems to
+    indicate a software crash or a deadlock. These are all examples of
+    **magic numbers**; numbers used to indicate a particular value.
+
+In the last line, we see a `float` literal. Notice the suffix `f`. This
+suffix must be included if we want to ensure the value is treated as a
+`float` literal. If we fail to include the suffix, we risk C++ treating the
+value as a `double`.
+
+# Data Types
+
+C++ has three kinds of data types:[^typenote] (1) _primitive types; (2)
+derived types_; and (3) _user-defined types_. The primitive types are types
+provided by default in C++. They include: `int`, `float`, `double`, `char`,
+`boolean`, and `void`. The derived types are types derived from the
+primitive data types. They include: `Function`, `Array`, `Pointer`, and
+`Reference`. The user-defined types are types defined by the user. They
+include: `Structure`, `Union`, `Enum`, `Class`, and `Typedef`.
+
+[^typenote]:
+    Mathematically, a data type is really just a _set_. It is the set of
+    all the possible values that belong to that type, alongside the
+    operations that can be performed on those values.
+
+A variable of type `float`, as well as a variable of type `double`, stores
+floating point values (i.e., numbers with a decimal point). `double` is
+allocated 8 bytes of memory. Thus, it can store values ranging from
+${-2^{63}}$ to ${2^{63} - 1.}$ How precise floating-point value is depends
+on how many numbers follow the decimal point. A `float` can store up to 7
+digits.
+
+A variable of type `int` takes up 4 bytes of memory. It can store any value
+from ${-2^{31}}$ to ${2^{31} - 1.}$ If we store a floating point value
+(e.g., ${2.32}$) in an `int` variable, C++ will truncate the value to 2. A
+`double` can store up to 15 digits A variable of type `char` stores a
+character from the ASCII table. In reality, `char` represents the
+character's numeric ASCII value. `char` is allocated 1 byte of memory. It
+can store any Unicode value from ${-2^7}$ to ${2^7 - 1.}$
+
+A variable of type `bool` stores one of two values &mdash; `true` or
+`false`. A variable of type `bool` is allocated 1 byte of memory. The
+`void` data type represents "no value." This is a specific instruction to
+the compiler not to allocate any memory.
+
+## Datatype Modifiers
+
+_Data type modifiers_ are special symbols we can prepend to a data type to
+modify the data type's instructions. The modifier `long` will instruct the
+compiler to allocate 4 more bytes. We can use `long` with `int` and
+`double`. The modifier `short` instructs the compiler to only allocate 2
+bytes. `short` applies only to `int`. We **cannot** use modifiers with the
+`float` type. The `unsigned` modifier allows us to store only positive
+values (i.e., values without the signed bit). The `signed` modifier allows
+us to store both positive and negative values. `signed` is the default
+declaration for `int` and `char`.
+
+## Type Casting
+
+_Type-casting_ is when we instruct the compiler to convert a value of one
+type to another. There are two types of type-casting: _implicit casting_
+and `explicit casting`. In implicit-casting, the compiler automatically
+converts one data type to another. In explicit-casting, we, the
+programmers, explicitly instruct the compiler to convert.
+
+The value of `x` above is `undefined`, which is itself a value. It will
+display to the console some value, but it could be any value. All of the
+types above are **primitive types** in `C++`. There are several others:
+
+| Type               | Size                              | Description             |
+| ------------------ | --------------------------------- | ----------------------- |
+| char               | ${1}$ byte, ${\geq 8}$ bits       | character               |
+| char16_t           | ${\geq 16}$ bits                  |                         |
+| char32_t           | ${\geq 32}$ bits                  |                         |
+| wchar_t            | largest available character set   |                         |
+| short              | ${\geq 16}$ bits                  | signed integer values   |
+| short              | ${\geq 16}$ bits                  |                         |
+| int                | ${\geq 16}$ bits                  |                         |
+| long               | ${\geq 32}$ bits                  |                         |
+| long long          | ${\geq 64}$ bits                  |                         |
+| unsigned short     | ${\geq 16}$ bits                  | unsigned integer values |
+| unsigned           | ${\geq 16}$ bits                  |                         |
+| unsigned long      | ${\geq 32}$ bits                  |                         |
+| unsigned long long | ${\geq 64}$ bits                  |                         |
+| float              | ${\approx}$ ${7}$ decimal places  | non-integer reals       |
+| double             | ${\approx}$ ${15}$ decimal places |                         |
+| long double        | ${\approx}$ ${19}$ decimal places |                         |
+| bool               | usually ${8}$ bits                | true; false             |
+| void               | represents "typelessness"         |                         |
+| auto               | used to deduce types              |                         |
+
+What data type we use depends on the program we're writing and whether
+we're particularly concerned about memory use. If we attempt to assign too
+large of a value into a variable type that does not accomodate for that
+value's size, we will get an **overflow**.
+
+# Constants
+
+Constants are variables whose bound values are immutable &mdash; the value
+cannot be changed. We can initialize constants in C++ as such:
+
+```cpp
+const double accelerationGravity { 9.807 }; // meters per second^2
+```
+
+A _constant_ is a variable whose constants **cannot** be changed. We can
+think of it as a locked cabinet. Because they are locked cabinets,
+constants must be initialized and declared at the same time.
+
+The `const` qualifier does not actually apply to the data in memory. In
+other words, it's not like the data in memory permanently stays in some
+location, never moving, never changing. Instead, the qualifier applies to
+the variable name. What this means is, in the variable above,
+`accelerationGravity`, we cannot change the value bound to it, `9.807`,
+using `accelerationGravity`. This is a crucial distinction to understand,
+because there is more than one way to modify a value bound to a variable.
+As we will see on the section with pointers, there are situations where we
+can accidentally cause a `const` to change.
+
+Question: What if the `const` value depends on the computation of a
+non-constant value? Will subsequent changes to the non-constant value cause
+changes to the `const` value? Fortunately in C++, no. Once a variable is
+initialized as a constant, that value will remain bound to the identifier:
+
+```cpp
+#include <iostream>
+
+int main() {
+	int a = 3;
+	const int b = 4 + a;
+	std::cout << b << std::endl;
+	a += 1;
+	std::cout << b << std::endl;
+
+	return 0;
+}
+```
+
+```bash
+7
+7
+```
+
+Constants are what allow us to ensure that a value bound to a particular
+identifier is never changed through that identifier. If we, or any part of
+our code, attempt to modify that constant through the identifier, we will
+get a compiler error.
+
+In general, we should err on the side of using constants. While mutability
+is a useful tool, erring on mutability only increases the amount of values
+we must keep track of. Some of those values will be things that should
+never change, and should not be included in our personal list of tracked
+values. Some C++ programmers follow the habit of declaring every variable
+as a `const`, then deciding after seeing compiler errors whether to remove
+the `const` declaration. This is great habit, as it forces us to more
+carefully consider whether we want mutability.
+
+## Constant Expressions
+
+Constant expressions are expressions that are evaluated at compile time
+rather than runtime. The default behavior is to perform these computations
+at runtime. The problem, however, is that some computations can be
+enormous. This means that whenever a user loads an executable (i.e., runs
+the program,) the computation may need to be performed again. This
+redundancy can amount to large costs in runtime. To declare constant
+expressions, we use the `constexpr` keyword:
+
+```cpp
+constexpr double pi {3.14};
+```
+
+We cannot use non-constant expressions (i.e., **runtime values**) inside
+constant expressions (compile-time values). This is because the compiler
+cannot perform computations on or with runtime values. Those computations
+must be done at runtime.
+
+```cpp
+const double e {2.718};
+constexpr double myNum { e * 2.2 };  // returns an error
+```
+
+The code above returns an error because `e` is a non-constant expression.
+To actually perform the computation, `e` must also be a constant
+expression:
+
+```cpp
+constexpr double e {2.718};
+constexpr double myNum { e * 2.2 };  // returns 5.9796
+```
+
+Constant expressions are enormously useful in ensuring that we do not waste
+valuable runtime. In particular, we almost always want to perform large,
+heavy computations at compile time. By doing so, we do not have to waste
+valuable runtime performing the large computation. Instead, the computer's
+loader will simply retrieve the result from the compiler's computation.
+
+We can think of constant expressions as a cost-shifting mechanism. Rather
+than the user paying the price for the large computation, we, as the
+programmers, pay the price at computation. Erring on constant expressions,
+executables can load much, much faster.[^constnote]
+
+[^constnote]:
+    As evidence of how valuable constant expressions are, one of the most
+    competitive games in the programming languages market is moving as many
+    computations as possible to compile time. With each new standard of C++
+    (and other languages like Java), there have been increases in the
+    number of movable computations. Given how fast compilers are getting,
+    the game is only growing more heated.
+
+Constant expressions are very useful for checks For example, suppose our
+program should not proceed any further &mdash; in compilation &mdash;
+unless some condition is met. We can do so with `static_assert(${b}$)`,
+where ${b}$ is the condition we want met.
+
+```cpp
+int main() {
+	constexpr int a = 2;
+	static_assert(a == 3);
+	return 0;
+}
+```
+
+```bash
+main.cpp:5:2: error: static_assert failed due to requirement 'a == 3'
+		static_assert(a == 3);
+		^             ~~~~~~
+1 error generated.
+```
+
+Above, our program never actually compiles &mdash; and never gets to
+runtime &mdash; because the condition `a == 3` is not met. Separately,
+constant expressions are effectively constants, so the expressions cannot
+be mutated. `static_assert()` can be a very valuable tool when we are
+moving large amounts of computations to compile time, as it reduces the
+costs we've shifted to ourselves as programmers.
+
+## The Size Of Operator
+
+The `sizeof()` operator returns the size, in bytes, of a type or variable.
+The operator is often used to determine size of arrays, structures, and
+objects. We address it here because it is particularly useful for
+variables, and will revisit it when we discuss arrays.
+
+`C++` provides several ways to declare and initialize variables:
+
+```cpp
+int foo; // declaration; likely contains garbage value
+int baz = 17; // assignment initialization
+int kwa (43); // constructor initialization; initializes to 43
+int xyz {13}; // C++ list initialization; initializes to 13
+int bar {}; // initializes to 0
+
+// we can also uses expressions as initializers
+int bop {14 + 2}; // initializes to 16
+int x {2};
+int y {5};
+int z {x + y}; // initializes to 7
+int g {x + y + i}; // won't compile, i is undeclared
+```
+
+Note that if we declare a variable but do not initialize it, that variable
+will have some **garbage value** stored, and we have no control over what
+that value is. As such, it is crucial that we initialize variables once
+declared.
+
+This is a stark contrast to other languages like Java, where there are
+default values for uninitialized variables. If you're coming from one of
+those languages, beware!
+
+## More on Numeric Types
+
+Numeric types are so important in programming that it's worth exploring
+them more deeply. To begin, `C++` has no problem handling positive and
+negative numbers:
+
+```cpp
+int val1 {1} // a positive integer
+int val2 {-1} // a negative integer
+```
+
+The code above is a form of syntactic sugar for the following:
+
+```cpp
+signed int val1 {1}
+signed int val2 {-1}
+```
+
+The keyword `signed` is called a **modifier**. A modifier does what it says
+&mdash; it modifies what a variable can and cannot do. In this case,
+`signed` indicates that the subsequent variable can store positive or
+negative numbers. If we want to ensure that a variable can only store
+positive numbers, we use the `unsigned` modifier. Whether or not an `int`
+is signed or unsigned, the `int` will still occupy 4 bytes in memory.
+
+Signage, however, impacts how many values a given numeric type can
+represent. Roughly, where ${n}$ is the number of bits for a type in memory,
+unsigned numeric types can represent numbers in the interval ${[0,
+2^n-1].}$
+Signed integers can store numbers in the interval
+${[-2^{n-1},
+2^{n-1} - 1].}$ For example, with integers, the `unsigned`
+modifier allows us to represent numbers from 0 to about 4.2 billion. With
+`signed`, we can represent numbers from about -2.1 billion to 2.1 billion.
+
+There are additional modifiers we can use for numeric types, `short` and
+`long`. The `short` and `long` modifiers will modify the number of bytes a
+type requires. With `short`, we reduce the range of values we can
+represent, but save memory. With `long`, we increase the range of values
+can represent, but use up more memory. We can use `short` and `long` with
+`signed` and `unsigned` to balance the tradeoffs:
+
+```cpp
+// these variables take up 2 bytes
+short foo {};
+short int bar {};
+signed short bang {};
+signed short int zing {};
+unsigned short int blob {};
+
+// these variables take up 4 bytes
+int vroom {};
+signed hoho {};
+signed int gaga {};
+unsigned int didi {};
+
+// these variables take up 4 or 8 bytes
+long wawa {};
+long int pepe {};
+signed long toto {};
+signed long int shibi {};
+unsigned long int grob {};
+
+// these variables take up 8 bytes
+long long jam {};
+long long int jip {};
+signed long long doop {};
+signed long long int coco {};
+unsigned long long lulu {};
+unsigned long long int momo {};
+```
+
+Note that the modifiers `signed`, `unsigned`, `long`, and `short` only work
+for **integral types** &mdash; types representing integers. They will not
+work for **floating types** &mdash; types representing fractional numbers.
+
+Furthermore, we should be careful when using the `short` and `unsigned`
+modifiers with integral types like `short int`. Arithmetic may not work as
+expected for an integral type that can take no more than 4 bytes of memory
+(e.g., `short int`, which only takes 2 bytes). If the result requires more
+than 4 bytes of memory, C++ will return a result in type other than the
+operands'. For example, in the case of `short int`, if the result requires
+more than 2 bytes of memory, C++ will return a result of type `int`.
+
+## Floats
+
+C++ has three base floating types: `float`, `double`, and `long double`.
+The base type `float` takes up 4 bytes of memory, `double` takes up 8
+bytes, and `long double` takes up 12 bytes. With floating types, the
+primary concern for memory usage is more focused on precision. With 4 bytes
+of memory, precision is ensured for up to 7 decimal places (including the
+integral part). For `double`, it's 15. With `long double`, it depends on
+the compiler implementation; it can range anywhere from 15, 18, to 33. For
+the most part, `double` is the recommended type to use, and it suffices for
+most programming tasks.
+
+## Scientific Notation
+
+C++ supports scientific notation natively:
+
+```cpp
+// x and y are equivalent
+double x { 732400023 };
+double y { 7.32400023e8 };
+
+// v and w are equivalent
+double v { 0.00000000002313 };
+double w { 2.313e-11 };
+```
+
+## Infinity and NaN
+
+For those familiar with JavaScript, C++ has representations for Infinity
+and `NaN`:
+
+```cpp
+#include <iostream>
+
+int main() { float a { 1.0 }; float b {}; float c { a / b }; // evaluates to Infinity
+	float u { 0.0 };
+	float v { 0.0 };
+	float w { u / v };; // evaluates to NaN
+
+	std::cout << "valueOf c: " << c << std::endl;
+	std::cout << "valueOf w: " << w << std::endl;
+	return 0;
+	}
+```
+
+```bash
+valueOf c: inf
+valueOf w: nan
+```
+
+# Division
+
+The arithmetic operations covered are fairly straightforward. Special
+attention, however, should be given to division.[^asterisknote]
+
+[^asterisknote]:
+    As an aside, the `*` (asterisk) operator's use for multiplication dates
+    back to John Backus and his team's development of Fortran. At the time
+    (1954), the available character set for computers was limited, and `*`
+    was the closest symbol to ${\times.}$
+
+Dividing integers can yield unusual results:
+
+```cpp
+#include <iostream>
+
+int main() {
+	int c = 21 / 10; // expected: 2.1
+	std::cout << c << std::endl;
+}
+```
+
+```bash
+2
+```
+
+Notice that the output is 2. Why is this? What's actually happening is that
+C++ is trying to figure out how many times it can fit 10 inside 21. In this
+case, 2. This is what happens when we divide an `int` value by a
+non-multiple of that value. We won't get back a fractional number. For
+that, we need to use float types:
+
+```cpp
+#include <iostream>
+
+int main() {
+	double c = 21.0 / 10.0; // expected: 2.1
+	std::cout << c << std::endl;
+}
+```
+
+```bash
+2.1
+```
+
+## Booleans
+
+Boolean data types represent just two states &mdash; true or false.
+Accordingly the data type `bool` in C++ consists of only two values: `true`
+and `false`. A Boolean value takes up 8 bits of memory (an entire byte).
+This may seem extremely wasteful, particularly from the perspective of
+embedded systems, where memory is very scarce. With advances in memory
+capacity, however, most programs aren't impacted by the consumption. We
+will see in later sections various ways of bundling more data into a byte.
+
+## Characters
+
+In C++, single-character data is represented with `char` type. A `char`
+value is represented with single quotes in C++:
+
+```cpp
+char foo = 'a';
+```
+
+Note that we must use single quotes. Any other symbol will return an error.
+The `char` type takes up 1 byte, or 8 bits, of memory. Characters in C++
+map to the ASCII table. Thus, each ASCII character has an integer ASCII
+encoding.
+
+## The Keyword `auto`
+
+The keyword `auto` is C++'s take on type inference. By appending the
+keyword to a variable name, we instruct C++ to infer the bound value's
+type. This is particulary useful for when we have particularly long type
+names. We can't really appreciate how useful type inference is at the
+moment, but we mention it here for completeness.
+
+```cpp
+	auto val1 {19}; // type inferred: int
+	auto val2 {38.3}; // type inferred: double
+	auto val3 {'e'}; // type inferred: char
+	auto val4 {2.0f}; // type inferred: float
+	auto val5 {290.3l}; // type inferred: long
+	auto val6 {923u}; // type inferred: unsigned
+	auto val7 {197ul}; // type inferred: unsigned long
+	auto val9 {9291ll}; // type inferred: long long
+```
+
+## User Input
+
+In the examples above, we used `cout` to output data. `cout` has sibling,
+`cin`, which _inputs_ data:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main(int argc, char *argv[]) {
+	int userNumber;
+	cout << "Pick a number:" << endl;
+	cin >> userNumber;
+	cout << "You picked: " << userNumber << endl;
+
+	return 0;
+}
+```
+
+```bash
+Pick a number:
+27
+You picked: 27
+```
+
+## Global v. Local
+
+Variables declared inside the `main()` function are said to be **local
+variables**:
+
+```cpp
+int zob {1};
+
+int main() {
+	int fen {25};
+	int jib {12};
+}
+```
+
+In the code above, `fen` and `jib` are local variables. We say they are
+local variables because their scope (visibility) is within the `main()`
+function. Put differently, the variables `fen` and `gib` only exist inside
+the `main()` function. Outside of the `main()` function, they effectively
+do not exist.
+
+In contrast, the variable `zob` is a **global variable**. This means they
+are visible to everything in the program. Which in turn means they can be
+changed from anywhere and by anything in the program.
+
+## Naming
+
+`C++` has a few naming rules we must follow: (1) Variables can contain
+letters, numbers, and underscores; (2) Variables must begin with a letter
+or underscore; (3) Cannot use reserved symbols; and (4) cannot _redeclare_
+a name in the same scope.

@@ -1,0 +1,557 @@
+# Strings in C++
+
+In C++, there are two approaches to represent strings: (1) as an array of
+`char` values; or (2) as an instance of the class `string`. In C++, the
+second approach is preferred.[^stringnote]
+
+[^stringnote]:
+    The first approach, representing strings as an array of character
+    values, originates in the C language. It is how strings are represented
+    in C, and because C++ is a superset of C, the same approach can be
+    applied in C++.
+
+## Character Arrays
+
+Applying the first approach:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+void printString(char arr[], int n);
+int main() {
+	char greet[] = "Hello world!";
+	cout << greet << endl;
+
+	return 0;
+}
+```
+
+```
+	Hello world!
+```
+
+Notice the use of square bracket syntax to denote an array of `char`. An
+important point to notice about character arrays is their size. Recalling
+the fact that a `char` type takes 1 byte, consider this output:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+void printString(char arr[], int n);
+int main() {
+	char greet[] = "Hello world!";
+	int sizeOf_greet = sizeof(greet);
+	cout << "size of greet = " << sizeOf_greet << " bytes" << endl;
+
+	return 0;
+}
+```
+
+```bash
+	size of greet = 13 bytes
+```
+
+The array `greet` consists of 12 elements (there are 12 characters in
+&#8220;Hello world!&#8221;). Why are we seeing 13 bytes as the size of
+`greet`? Because every character array, denoted as a string, takes one
+extra byte, reserved for `\0`. This value, `\0`, is called the **null
+byte**, or more specifically, the **string delimiter**. It is the byte at
+the very end of the array, placed there to indicate the end of an array of
+characters, a string.[^stringnote]
+
+[^stringnote]:
+    Note that not every character array is a string. The array
+    `{'b', 'y', 'e'}` is a `char` array, but it is not a string. However,
+    once we include the string delimiter, it is considered a string:
+    `{'b', 'y', 'e', '\0'}`.
+
+## Reading & Writing Character Arrays.
+
+We can read and write `char` arrays with `cin` and `cout`. The catch,
+however, is that we must indicate the size of the character array. This can
+lead to wasted space, but we will address this problem later.
+
+```cpp
+#include <iostream>
+using namespace std;
+
+void printString(char arr[], int n);
+int main() {
+	char name[20];
+	cout << "What's your name?" << endl;
+	cin >> name;
+	cout << "Hello, " << name << "." << endl;
+
+	return 0;
+}
+```
+
+```bash
+	What's your name?
+	Dorian
+	Hello, Dorian.
+```
+
+The problem with the approach above, however, is that it will not read
+anything after a whitespace:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+void printString(char arr[], int n);
+int main() {
+	char name[20];
+	cout << "What's your name?" << endl;
+	cin >> name;
+	cout << "Hello, " << name << "." << endl;
+
+	return 0;
+}
+```
+
+```bash
+	What's your name?
+	Dorian Gray
+	Hello, Dorian.
+```
+
+To fix this, we need to use `cin.get`:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+void printString(char arr[], int n);
+int main() {
+	char name[20];
+	cout << "What's your name?" << endl;
+	cin.get(name, 20);
+	cout << "Hello, " << name << "." << endl;
+
+	return 0;
+}
+```
+
+```
+What's your name?
+Dorian Gray
+Hello, Dorian Gray.
+```
+
+Notice the syntax for `cin.get()`. We must pass into it the variable we
+want to store the input in, and the number of characters to be read. With
+`cin.get()`, if we pass in 20 for the number of characters, the number of
+characters to be read is actually 19, with 1 for the null byte.
+
+If we want multiple string inputs from the user, we use `cin.getline()`.
+This is a separate function for reading strings because `cin.get()` does
+not differentiate between different `enter` key inputs. If we do want to
+use `cin.get()`, we should separate the different `cin.get()` calls with a
+`cin.ignore()`. Of course, it is much easier to just use `cin.getline()`
+whenever we seek multiple inputs from the user.
+
+## Functions on Strings
+
+C++ provides several string functions through `string.h`, a header file, or
+alternatively, through `cstring`. These are both libraries providing
+various operations we can perform on strings.
+
+### Finding a String's Length
+
+Without the aforementioned libraries, one way to find a string's length is
+with the `sizeof()` operator:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main() {
+	char greet[] = "Foo bar baz bang";
+	int sizeOfGreet = sizeof(greet) - 1;
+	cout << "size of greet = " << sizeOfGreet << endl;
+	return 0;
+}
+```
+
+```
+	size of greet = 16
+```
+
+We subtract 1 because there is 1 extra element in the array, reserved for
+the null byte. Alternatively, we can simply use the `strlen()` method
+provided by `cstring`:
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main() {
+	char greet[] = "Foo bar baz bang";
+	int sizeOfGreet = strlen(greet);
+	cout << "size of greet = " << sizeOfGreet << endl;
+	return 0;
+}
+```
+
+```
+size of greet = 16
+```
+
+Notice the syntax for `strlen()`. We simply pass in the variable storing
+the string, or the string itself, we seek the length for.
+
+## Concatenating Strings
+
+When we **concatenate** two strings, we merge the strings together. We can
+concatenate strings with the `strcat()` method:
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main() {
+	char foo[] = "John ";
+	char bar[] = "Kim";
+	strcat(foo, bar);
+	cout << foo << endl;
+	return 0;
+}
+```
+
+```
+John Kim
+```
+
+The syntax for `strcat()` is as follows:
+
+> `strcat(destination, source)`
+
+Where `destination` is the string to be merged on to (here `foo`), and
+`source` is the string to merge (here `bar`).
+
+To understand how concatenation works, examine the array of characters:
+
+```cpp
+array1 = ['J', 'o', 'h', 'n', ' ', '\0'];
+array2 = ['K', 'i', 'm', '\0'];
+```
+
+When we concatenate `Kim` onto `John`, we take the first character of `Kim`
+&mdash; `K` &mdash; and use it to replace the null byte of `John`. If we
+want to concatenate only some characters in the source string, we use
+`strncat()`:
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main() {
+	char x[] = "Big ";
+	char y[] = "Apple";
+	strncat(x, y, 3);
+	cout << x << endl;
+
+	return 0;
+}
+```
+
+```
+Big App
+```
+
+### Copying Strings
+
+With the functions above, we mutated an existing string. What if we do not
+want to mutate an existing string? For that, we need the ability to copy
+strings. We can do so with `strcpy()`. The general syntax:
+
+> `strcpy(destination, source)`
+
+For example:
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main() {
+	char x[] = "Hello";
+	int sizeOfx = sizeof(x);
+	char z[sizeOfx];
+	char y[] = " world!";
+	strcpy(z, x);
+	strcat(z, y);
+	cout << "x: " << x << endl;
+	cout << "z: " << z << endl;
+
+	return 0;
+}
+```
+
+```
+x: Hello
+z: Hello world!
+```
+
+Notice that we did not mutate `x`. This is because we made a copy of the
+string stored in `x`, and stored that copy in `z`.
+
+## Substrings
+
+Another useful feature to have when working with strings is determining
+whether a given string is a substring of another string. For example, the
+string &#8220;corn&#8221; is a substring of the string &#8220;acorn.&#8221;
+We can make this determination with `strstr()`. The general syntax:
+
+> `strstr(main, substring)`
+
+In the syntax above, `main` is the existing string, and `substring` is the
+substring we want to check for. An example:
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main() {
+	char x[] = "Apple pie";
+	bool result = strstr(x, "Apple");
+	cout << result << endl;
+
+	return 0;
+}
+```
+
+```
+	1
+```
+
+We get back `1`, indicating `"Apple"` is a substring of the string
+`"Apple pie"`. Remember that upper and lowercase characters are different.
+Checking for the substring `"apple"` will return `0`.
+
+If we want to find an instance of a `char`, we use `strchar()`. The general
+syntax:
+
+> `strchr(string, char)`
+
+The function `strchr()` will search for a given character starting from the
+left. If we want to find a given character from the right, we use
+`strrchar()`.
+
+## Comparing Strings
+
+In some languages, we can compare strings with the `<` or `>` operators.
+These operations output which of the given strings appears first in the
+alphabet. C++ provides a similar function, `strcmp()`.[^strcmpnote] The
+general syntax:
+
+[^strcmpnote]:
+    &#8220;strcmp&#8221; is a clipping of &#8220;string compare.&#8221;
+
+> `strcmp(s1, s2)`
+
+Where `s1` and `s2` are the strings to be compared. For example:
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main() {
+	char apple[] = "apple";
+	char kiwi[] = "kiwi";
+	char peach[] = "peach";
+
+	int result1 = strcmp(apple, kiwi);
+	int result2 = strcmp(peach, apple);
+	int result3 = strcmp(peach, peach);
+
+	cout << "result1 = " << result1 << endl;
+	cout << "result2 = " << result2 << endl;
+	cout << "result3 = " << result3 << endl;
+
+	return 0;
+}
+```
+
+```bash
+result1 = -10
+result2 = 15
+result3 = 0
+```
+
+Let's examine this output. First, `strcmp(s1, s2)` returns either a
+negative, 0, or positive value. If ${s_1}$ comes before ${s_2}$ in the
+alphabet, the value returned is negative. If ${s_1}$ comes after ${s_2}$ in
+the alphabet, the value returns positive. Finally, if both ${s_1}$ and
+${s_2}$ are the same, the value returned is 0.
+
+How does `strcmp()` work? It compares the ACII integer values of the first
+non-matching character. For example, with `apple` and `kiwi`, the first
+non-matching characters are `a` and `k`. The character `a` has an ASCII
+value of 97, and the character `k` has an ASCII value of `107`. Thus,
+`apple` is different from `kiwi` by -10 in terms in ASCII value.
+
+### String to Number
+
+Suppose we have the following strings:
+
+```cpp
+	#include <iostream>
+	#include <cstring>
+	using namespace std;
+
+	int main() {
+		char num1[] = "157";
+		char num2[] = "2.49";
+
+		return 0;
+	}
+```
+
+Strings containing numbers are common in programming. So much so that C++
+provides functions for converting a string of numbers into a numeric type.
+These functions are `strtol()` and `strtof()`.[^clippingnote] The function
+`strtolong()` will convert a number string into a `long int`, and
+`strtof()` will convert a number string into a `float`.
+
+[^clippingnote]:
+    `strtol()` is a clipping of &#8220;string to long&#8221; and `strtof()`
+    is a clipping of &#8220;string to float.&#8221;
+
+```cpp
+#include <iostream>
+#include <cstring>
+#include <typeinfo>
+using namespace std;
+
+int main() {
+	char num1[] = "157";
+	char num2[] = "2.49";
+	long int x = strtol(num1, NULL, 10);
+	float y = strtof(num2, NULL);
+
+	cout << typeid(num1).name() << " num1 : " << num1 << endl;
+	cout << typeid(num2).name() << " num2 : " << num2 << endl;
+	cout << typeid(x).name() << " x : " << x << endl;
+	cout << typeid(y).name() << " y : " << y << endl;
+
+	return 0;
+}
+```
+```
+A4_c num1 : 157 A5_c num2 : 2.49 l x : 157 f y : 2.49
+```
+
+Notice how the types have changed. The function `strtol()` takes three
+arguments: (1) the string we wish to convert; (2) `NULL`; and (3) the base
+for the relevant number system (e.g., 10 for the decimal systemm; 2 for the
+binary system; 16 for hexadecimalese; etc.). The `strtof()` function takes
+the same arguments, but without the need for a number system parameter.
+
+### Tokenizing
+
+Consider the following string:
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main() {
+	char userInput[] = "Hello world";
+
+	return 0;
+}
+````
+
+Can we separate the string `userInput` into the smaller strings `"Hello"`
+and `"world"`? Yes, we can. The process of breaking down a string into
+smaller pieces is called **tokenizing**. The term &#8220;tokenizing&#8221;
+comes from the fact that every string consists of discrete parts. For
+example, the string `"Hello world"` consists of the tokens `"Hello"` and
+`"world"`. Tokens are defined according to some common separator. For
+example, in `"Hello world"` the separator is a whitespace.
+
+To tokenize a string in C++, we use the `strtok()` function. The general
+syntax:
+
+> `strtok( `${s_1}$`, `${d}$`)`
+
+Where ${s_1}$ is the string to tokenize, and ${d}$ is the delimiter, or
+separator
+
+For example, let's tokenize the string `userInput`:
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main() {
+	char userInput[] = "Hello world";
+	char *substr = strtok(userInput, " ");
+	cout << substr << endl;
+
+	return 0;
+}
+```
+
+```bash
+	Hello
+```
+
+We managed to extract `Hello`, but what about `world`? This is the expected
+behavior for `strtok()`. With only the arguments we passed into `strtok()`,
+C++ will only extract the first token. To extract all the tokens, we will
+need to run `strtok()` repeatedly. In other words, we must use a loop.
+Let's use a while loop, and store the respective tokens into a string
+array:
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+void printStringArray(char *arr[], int n);
+
+int main() {
+	char str[] = "Hello world";
+	char *token = strtok(str, " ");
+	char *tokenArr[2];
+	int i = 0;
+	while (token != NULL) {
+		tokenArr[i] = token;
+		token = strtok(NULL, " ");
+		i++;
+	}
+
+	printStringArray(tokenArr, 2);
+	// we can then index into the array
+	cout << tokenArr[0] << endl;
+	cout << tokenArr[1] << endl;
+
+	return 0;
+}
+
+void printStringArray(char *arr[], int n) {
+	cout << "[ ";
+	for (int i = 0; i < n; i++) {
+		cout << arr[i] << "  ";
+	}
+	cout << "]" << endl;
+}
+```
+
+```bash
+	[ Hello  world ]
+	Hello
+	world
+```

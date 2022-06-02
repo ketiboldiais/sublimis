@@ -1,0 +1,685 @@
+# JavaScript Fundamentals
+
+## Values & Types
+
+Values in JavaScript (and many other programming languages), are classified
+by type. A value's type will determine what JavaScript can and cannot do
+with the value. There are two categories of types: **primitive types** and
+**object types**. These primitive types are: `Number`, `String`, `Boolean`,
+`Null`, `Undefined`, and `Symbol`.
+
+Any value that is not a _number_, _string_, _boolean_, _symbol_, _null_, or
+_undefined_ is an **object type** value. Generally, an **object** (a value
+of _object type_), is a collection of **properties**, where each property
+consists of a** name ** and its corresponding **value** (and that value may
+be a primitive type value or an object).
+
+The key difference between an object type value and a primitive type value:
+Object type values are **mutable** (the value can be changed), while
+primitive type values are **immutable** (the value cannot be changed).
+
+For example, if we have an object with a property `{emotion: "happy"}`, the
+emotion's assigned value, "happy" can be changed. But, the value `1`, a
+value of primitive type _number_, cannot be changed (rightly so&mdash;there
+is no other value of "1" other than "1"). Below we cover the key features
+of the primitive types.
+
+If we are ever unsure what type a particular value is, we can use the
+`typeof` operator.
+
+```javascript
+typeof 3476; // output: "number"
+typeof true; // output: "boolean"
+```
+
+## Number Type
+
+Unlike some programming languages (e.g., Java), JavaScript only has 1
+number type. Moreover, JavaScript uses 64 bits to represent single number
+values. With 64 bits, we can represent up to 2^{64} different numbers in
+JavaScript (roughly a quintillion). However, because must also represent
+negative numbers and floating point numbers, the actual maximum number we
+can store is roughly 9 quadrillion.
+
+The primitive type `number` stores integers, floats (decimal numbers), and
+approximations of real numbers. In other words, <b>immutable numeric
+data</b>. And when a number appears directly in a JavaScript program is
+called a **numeric literal**. Negative integers can be stored by appending
+a minus sign directly to the number (e.g., `-17`).
+
+JavaScript's number type is not limited to the base-10 system or to decimal
+decimal notation:
+
+```javascript
+// 12648430 in hex is C0FFEE
+0xc0ffee;
+
+// 17 in binary is 0011
+0b0011;
+
+// 3.8 * 10^8:
+3.8e8;
+```
+
+We can also ensure large numbers are more readable with underscores as
+separators:
+
+```javascript
+// The number 10,000,000
+10_000_000;
+```
+
+### NaN
+
+The value `NaN` ("Not a Number") represents a numeric value that is not a
+number, but is a value of type `number`.
+
+`NaN` is the value returned from undefined operations:
+
+```javascript
+// This evaluates to NaN
+0 / 0;
+
+// This also evaluates to NaN
+NaN + 1;
+```
+
+```bash
+NaN
+NaN
+```
+
+`NaN` has an unusual feature in JavaScript: it does not equal itself or any
+other value. This leads to some unusual results:
+
+```javascript
+const x = NaN;
+console.log(x === NaN);
+```
+
+```bash
+false
+```
+
+Thus, to check whether a variable is equal to `NaN`, we need to test for
+nonequality. The expression will return true if, and only if, the variable
+has the same value as `NaN`. If it does not, then the variable does not
+have the value `NaN`.
+
+```javascript
+const x = NaN;
+console.log(x != NaN);
+```
+
+```bash
+true
+```
+
+### Infinity
+
+The value `infinity` is the value returned from perform indeterminate
+operations. More specifically, JavaScript stores infinity in two different
+ways, $\infty^+$ (positive infinity) and $\infty^-$ (negative infinity).
+
+```javascript
+// this evaluates to positive infinity
+1 / 0 -
+	// this evaluates to negative infinity
+	1 / 0;
+```
+
+### Zero
+
+Perhaps to the mathematician's disgust, JavaScript has two values for 0:
+
+```javascript
+0 - // positive 0
+	0; // negative 0
+```
+
+### BigInt
+
+The data type `BigInt` is a separate primitive type for numeric data.
+`BigInt` is the primitive type for extraordinarily large numbers (e.g.,
+numbers with thousands or millions of digits):
+
+```javascript
+// the number 11,395,430,243,259,821:
+11395430243259821n;
+```
+
+The distinguishing syntax for `BigInt` is the symbol
+
+`n` appended to the end of the literal.
+
+## Math Object
+
+JavaScript has a built in math object, which provides values and operations
+(more accurately "_methods_"). These built-in values and methods allow
+programs to perform somewhat complex operations without having to write
+code from scratch. Below are static properties:
+
+| Property       | Evaluates to             |
+| -------------- | ------------------------ |
+| `Math.PI`      | ${\pi}$                  |
+| `Math.E`       | ${e}$ (Euler's constant) |
+| `Math.SQRT2`   | ${\sqrt{2}}$             |
+| `Math.LN2`     | ${\ln 2}$                |
+| `Math.LN10`    | ${\ln 10}$               |
+| `Math.LOG2E`   | ${\log_{2}e}$            |
+| `Math.LOG10E`  | ${\log_{10}e}$           |
+| `Math.SQRT1_2` | ${\dfrac{1}{\sqrt{2}}}$  |
+
+And the static methods:
+
+| Method             | Returns                                            |
+| ------------------ | -------------------------------------------------- |
+| `Math.sin(x)`      | ${\sin x}$                                         |
+| `Math.cos(x)`      | ${\cos x}$                                         |
+| `Math.tan(x)`      | ${\tan x}$                                         |
+| `Math.hypot(x, y)` | ${\sqrt{x^2 + y^2}}$                               |
+| `Math.abs(x)`      | ${\lvert x \rvert }$                               |
+| `Math.ceil(x)`     | ${\lceil x \rceil}$ (next largest integer)         |
+| `Math.floor(x)`    | ${\lfloor x \rfloor }$ (next smallest integer)     |
+| `Math.round(x)`    | ${ \lfloor x \rceil }$ (nearest integer function)  |
+| `Math.max(x,y,z)`  | Given numbers ${x, y, z,}$ returns largest number  |
+| `Math.min(x,y,z)`  | Given numbers ${x, y, z,}$ returns smallest number |
+| `Math.cbrt(x)`     | ${x^3}$                                            |
+| `Math.pow(x,y)`    | ${x^y}$                                            |
+| `Math.random()`    | pseudorandom float ${n,}$ where ${0 < n < 1.}$     |
+| `Math.sign()`      | number's signage                                   |
+
+In addition to the math object methods, we have the basic arithmetic
+operators and the unary operators:
+
+| Operator | Returns            |
+| -------- | ------------------ |
+| `a + b`  | ${a + b}$          |
+| `a - b`  | ${a - b}$          |
+| `a * b`  | ${(a)(b)}$         |
+| `a ** b` | ${a^b}$            |
+| `a / b`  | ${\dfrac{a}{b}}$   |
+| `a % b`  | ${a \bmod b}$      |
+| `x += n` | ${x = x + n}$      |
+| `x -= n` | ${x = x - n}$      |
+| `x *= n` | ${x = x \times n}$ |
+| `x /= n` | ${x = x / n}$      |
+| `x %= n` | ${x = x \bmod n}$  |
+
+And the unary operators:
+
+| Unary Operator | Returns       |
+| -------------- | ------------- |
+| `x++`          | ${x = x + 1}$ |
+| `x--`          | ${x = x - 1}$ |
+
+## Variables
+
+Like other languages, values in JavaScript can be stored in a **variable**.
+Variables themselves are a kind of _binding_. They consist of two
+attributes: A _name_, which allows us (and JavaScript) to tell variables
+apart. And a _value_, which represents the current contents of the
+variable. The name of a variable is fixed. But, the value can (but not
+always) change whenever we assign a new value to the variable.
+
+Unlike many other programming languages (e.g., Java), JavaScript variables
+and constants are **untyped**&mdash;we do not specify the type of the value
+to be assigned in a declaration. **Variables** are essentially boxes with
+labels, that we can then use to store data. By storing data in a variable,
+we can recall the data later on, use it, or change it.
+
+Before we can use a variable in JavaScript, they must be _declared_. There
+are three ways to declare variables in JavaScript: `let`, `const`, or
+`var`. We cover each of their uses below. To do so, however, we need to
+give the variable a **name**. The general template:
+
+> `let` ${n}$ = ${val}$;
+>
+> `const` ${n}$ = ${val}$;
+>
+> `var` ${n}$ = ${val}$;
+
+Where ${n}$ is the name we give to the variable (an _identifier_) and
+${val}$ is an expression specifying the initial value.
+
+When we declare a variable and assign it a value, the expression to the
+right side of the equal asign is evaluated and assigned to the variable
+name on the left side of the equal sign. This is called an <b>assignment
+statement</b>. Because of this procedure, we should always read assignment
+statements from left to right when determining what value the variable is
+assigned. That said, let's consider the differences between each of the
+keywords. First, once a variable is declared with `let`, it cannot then be
+_redeclared_ later down the program:
+
+```javascript
+let x = 0;
+
+// This returns an uncaught syntax error
+let x = 1;
+```
+
+However, a variable declared with `let` can be _reassigned_ a value. When
+reassign a value to some variable ${x,}$ the old value assigned to ${x}$ is
+lost:
+
+```javascript
+let x = 0;
+x = x + 1;
+console.log(x);
+```
+
+```bash
+1
+```
+
+From these rules, we can see that `let` is JavaScript's way of providing
+**mutable variables**.
+
+Alternatively, we can declare a variable with `const`:
+
+```javascript
+const acceleration = 9.807;
+```
+
+As the name suggests, a variable declared with `const` is a constant
+&mdash; it cannot be redeclared, nor can we reassign it values. Thus,
+`const` is JavaScript's way of providing **mutable variables**. Moreover, a
+variable declared with `const` must always be _initialized_. In other
+words, we
+
+<span class="underlineText">cannot</span> simply declare a `const`; it must
+always be assigned an initial value.
+
+```javascript
+const acceleration = 9.807;
+
+acceleration += 1; // returns an error
+
+const velocity; // returns an error
+```
+
+We can assign a constant to a variable with declared with `let` or `const`.
+When this is done, a copy of the value stored in the constant is passed to
+the variable. Thus, any mutation done to the variable will only affect
+changed to the variable, not the constant:
+
+```javascript
+const x = 1;
+let y = x;
+y++;
+console.log(y);
+console.log(x);
+```
+
+```bash
+2
+1
+```
+
+When should we use `const` or `let`? It depends on what the value is being
+used for. If we know a particular value will be reused extensively
+throughout the code or we want an immutable value, `const` should always be
+used. Otherwise, we can use `let`. In general, mutability should be
+minimized whenever possible, as it reduces the number of values we have to
+keep track of.[^track_note]
+
+[^track_note]:
+    We will see in later sections why mutability can become very tedious
+    and confusing. Simply put, allowing code elsewhere to modify a
+    variable's assigned value can affect code relying on the variable's
+    previous value. A hallmark of object-oriented programming is
+    meticulously keeping track of mutable values.
+
+As an aside and warning, note that `const` and `let` do not somehow allow
+us to use the same identifiers in a single namespace. For example,
+`let x = term;` does not allow us to write `const x = term;`. `var` was
+JavaScript's original way of declaring variables. Like `let`, variables
+declared with `var` are mutable variables.
+
+```javascript
+var mass = 4.5;
+mass += 1;
+console.log(mass);
+```
+
+```bash
+5.5
+```
+
+Using `var` is generally discouraged. We will refrain from delving into the
+details for now, but `var` is **function-scoped**, and `let` is
+**block-scoped**. The issues this distinction causes will be explored in
+subsequent materials on functions.
+
+## Naming Variables and Other Conventions
+
+There are a few rules that should always be followed when naming variables:
+(1) Variable names should be concise, descriptive, and balanced between
+being concise and descriptive. (2) The first character in a variable name
+should be a letter. (3) Do not use reserved words. (4) _camelCasing_ should
+be used for variables of multiple words (camelCasing is the most
+widely-used and preferred approach; _snake_casing_ is consider bad
+practice). In particular: (a) Functions and methods generally follow
+camelCasing. (b) Classes and components generally follow PascalCasing. (c)
+Private variables, functions, and methods are generally prefixed with an
+underscore. (d) Constants, class names, and program names are in all
+uppercase or _PascalCased_ (every word capitalized). (e) Variables cannot
+be named with _kebab-casing_ (dashes-for-spaces), but JavaScript files can.
+For Boolean variables or functions with Boolean return values, use of
+quantifiers (&#8220;is&#8221;, &#8220;are&#8221;, &#8220;were&#8221;, etc.)
+helpful:
+
+```javascript
+let isVisible = true;
+let isSubmitted = true;
+const IsEncrypted = true;
+```
+
+The collection of bindings and their values at any given time is called the
+**environment**. The moment we run a JavaScript program, an environment is
+created. That environment, however, is not limited to the bindings we've
+created. It also contains bindings provided by JavaScript natively.
+
+## Null & Undefined
+
+The primitive type **null** is a primitive type consisting of only one
+value: _null_. The value _null_ represents the absence of a meaningful
+value. This can be useful, in that it allows us to declare a variable
+without assigning it a value, then use it later on.
+
+```javascript
+let x = null;
+console.log(x);
+```
+
+```bash
+null
+```
+
+Like `null`, the type `undefined` consists of only one value, _undefined_.
+It too represents the absence of value. However, it's meaning is slighly
+different from `null`. In JavaScript, `undefined` is a value JavaScript
+returns to us. It informs us that we have declared a variable, but have not
+yet assigned it a value. Because of this fact, we do not typically
+programmer declare variables and assign them the value _undefined_. We
+would instead us `null` for such a case.
+
+```javascript
+let x;
+console.log(x);
+```
+
+```bash
+undefined
+```
+
+One way to think about this is a toilet tissue holder. When a variable is
+assigned a non-zero value, the toilet tissue holder has a roll of tissue.
+When the variable is assigned a zero value, the toilet tissue holder only
+holds the roll's cardboard cylinder. When the variable is assigned `null`,
+the toilet tissue holder is there, but there is no cardboard cylinder; only
+the holder. When the variable is `undefined`, there's no holder at all.
+
+## Strings
+
+A **string** is a sequence of characters. In JavaScript, strings are an
+_immutable_ ordered sequence of 16-bit values, where each value represents
+a Unicode character. Strings are inherently _arrays_ (since they are an
+_ordered_ sequence). Thus, each character in a string has an _index_,
+starting at 0. While the type number represents _numeric data_, and the
+type boolean represents _logical data_, the type _string_ represents
+_textual data_.
+
+Strings can be represented in JS with double quotes (""), single quotes
+(''), or backticks (``), as long as they are used consistently.
+
+```javascript
+firstName = "David";
+lastName = 'Hilbert';
+occupation = `Mathematician`;
+nickName = 'Hilby" // Error here
+```
+
+Backticks are used for _string interpolation_:
+
+```javascript
+let a = 9;
+let b = 8;
+let sum = a + b;
+let result = `The result of ${a} + ${b} is ${sum}`;
+console.log(result);
+```
+
+```bash
+The result of 9 + 8 is 17
+```
+
+JavaScript provides many built in methods for manipulating strings. A few
+of the most often used methods are provided below.
+
+### String Length
+
+The number of characters in a string is called its **length**, and JS can
+return that number by using the syntax `${a}$.length`, where ${a}$ is a
+string:
+
+```javascript
+"hello".length; // returns 5
+let greeting = "howdy";
+greeting.length; // returns 5
+```
+
+### Concatenating Strings
+
+The arithmetic symbols do not operate on strings, except for `+`. Writing
+`${a}$ + ${b}$`, where ${a}$ and ${b}$ are strings will **concatenate**
+${a}$ and ${b}$. Concatenation is simply appending, or combing different
+strings. Strings can be concatenated with a `+` character.
+
+```javascript
+let firstName = "Sherlock";
+let lastName = "Holmes";
+let fullName = firstName + " " + lastName;
+console.log(fullName);
+// JS returns "Sherlock Holmes"
+```
+
+### Using Comparison Operators on Strings
+
+The comparison operators, `>`, `<`, `>=` , `<=`, `==`, and `!=` can be used
+with strings. When this is done, JavaScript compares Unicode's numeric
+representation of each character from left to right. For example, `"apple"`
+is &#8220;less than&#8221; `"banana"` because the character `"a"` is 97 in
+Unicode, and the character `"b"` is 98. Along the same lines, `"annatto"`
+is less than `"apple"`, because `"n"` is 110 in Unicode, and `"p"` is 112.
+
+### String Indices
+
+Strings are an array of characters (i.e., they are an ordered list of
+characters). Thus, every character in a string has an _index_—the number of
+its position.
+
+Recall that in computer science, we always count from 0. Thus, the first
+character in a string has index 0, the second character index 1, the third
+index 4, etc. Furthermore, because strings are _indexed_, JavaScript can
+search for parts of a string. A string's indices also allow JavaScript to
+copy parts of the string, and store those copies into a new variable. For
+example:
+
+```javascript
+let word = "quadratic";
+// Return first character in word, q:
+word[0];
+```
+
+### Common String Methods
+
+JavaScript provides numerous methods for use with strings. Below are
+examples of some of the most common methods:
+
+```javascript
+let word = "hello";
+// capitalize all characters in string
+word.toUpperCase;
+
+// lowercase all characters in string
+word.toLowerCase;
+
+let phrase = " excuse me ";
+// remove white spaces before the string
+phrase.trimStart();
+
+// remove white spaces after the string
+phrase.trimEnd();
+
+let greet = "Hello world!";
+// determine if string contains a substring
+greet.includes("World!"); // returns false
+greet.includes("world!"); // returns true
+
+let sport = "basketball";
+let law = "contracts law";
+// take a slice of the string
+sport.slice(6); // returns 'ball'
+law.slice(0, 9); // returns 'contracts'
+
+let quote = "Call me Bond";
+// replace a substring
+quote.replace("Bond", "Ishmael"); // return 'Call me Ishmael'
+
+let food = "hotdog";
+// find starting index of a substring or character
+food.indexOf("hot"); // returns 0
+food.indexOf("dog"); // returns 3
+```
+
+## Primitive Type: Boolean
+
+The primitive type **boolean** covers only 2 values: `true` or `false`.
+Because the boolean type has only two values, they are an effective way of
+representing strictly binary values:
+
+1. true or false
+2. yes or no
+3. 1 or 0
+
+### Boolean Operators
+
+Like most languages, JavaScript provides **Boolean operators**
+corresponding to the logical connectives:
+
+| operator   | meaning       |
+| ---------- | ------------- |
+| `a && b`   | ${a \land b}$ |
+| `a \|\| b` | ${a \lor b}$  |
+| `!a`       | ${\neg a}$    |
+
+## Comparison Operators
+
+Being able to compare values is critical to making simple decisions. The
+**comparison operators** are what allow us to compare numbers.
+
+The comparison operator `>` determines whether the first value is _greater
+than_ the second value.
+
+```javascript
+10 > 9; // returns true
+```
+
+The comparison operator `<` determines whether the first value is _less
+than_ the second value.
+
+```javascript
+5 < 8; // returns true
+2 < 1; // returns false
+1 < 1; // returns false
+```
+
+The boolean operator `>=` determines whether or not the first value is
+_greater than or equal to_ the second value.
+
+```javascript
+7 >= 8; // returns false--7 is neither greater than nor equal to 8
+8 >= 8; // returns true--8 is not greater than 8, but it is equal to 8
+10 >= 7; // returns true--10 is not equal to 7, but it is greater than 8
+```
+
+The boolean operator `<=` determines whether or not the first value is
+_less than or equal to_ the second value.
+
+```javascript
+9 <= 10; // returns true; 9 is not equal to 10, but it is less than 10.
+10 <= 10; // returns true; 10 is not less than 10, but it is equal to 10.
+11 <= 10; // returns false; 11 is neither less than nor equal to 10.
+```
+
+The equality operator `==` determines whether two values are _equal in
+value_, but it does not check whether the values are _equal in type_.
+
+```javascript
+7 == "7"; // returns true; JavaScript forces the values into a common type
+0 == "s"; // returns false
+0 == ""; // returns true
+0 == false; // returns true
+null == undefined; // returns true
+```
+
+The strict equality operator `===` determines whether two values _equal in
+value_ AND _equal in type_.
+
+```javascript
+5 === 5; // returns true
+1 === 2; // returns false
+2 === "2"; // returns false
+0 === false; // returns false
+null === undefined; // returns false
+```
+
+The nonequality operator `!=` determines whether two values are _nonequal
+in value_, but it does not determine whether the values are _nonequal in
+type_; this is the analog of the equality operator, `==`.
+
+```javascript
+null != undefined; // returns false
+2 != "2"; // returns false
+2 != 3; // returns true
+```
+
+The strict nonequality operator `!==` determines whether two values are
+_nonequal in value_ and _nonequal in type_.
+
+```javascript
+null !== undefined; // returns true
+2 !== "2"; // returns true
+2 !== 3; // returns true
+```
+
+## Conversions
+
+JavaScript has no problem converting values from one type to another. This
+is a double-edged sword. For example, if we give JavaScript a value of type
+`number` when it expects a value of type `string`, JavaScript will convert
+the number into a string. This can lead to unexpected results. In other
+programming languages, these sort of operations will return an error.
+
+```javascript
+Number(n); // casts n as a number
+parseFloat(); // parses a string, returns float
+parseInt(); // parses a string, returns int
+String(); // convert number into string
+```
+
+## typeof
+
+Given JavaScript's automatic type conversion feature, a useful operator to
+know is the `typeof` operator. With `typeof`, we can determine what the
+type of a given value or variable is. For example:
+
+```javascript
+typeof "hi"; // returns "string"
+typeof 1; // returns "number"
+```
+
+Notice that in the comments we used double quotes. `typeof` returns an
+actual value of type string. This is particularly useful for checking
+whether an inputted or outputted value is of a particular type.

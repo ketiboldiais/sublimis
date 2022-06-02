@@ -1,0 +1,120 @@
+# Strong Induction
+
+Another kind of proof-by-induction is the **proof-by-strong-induction**.
+This is a proof structured according to the _axiom of strong induction_:
+
+> _Axiom: Strong Induction_. Let ${P(n)}$ be any predicate. If ${P(n)}$ is
+> true, if ${P(0) \land P(1) \land P(2) \land \ldots \land P(n)}$ are all
+> true, then ${P(n+1).}$ More formally:
+>
+> $$
+> 		P(0) \land P(1) \land \ldots \land P(n) \implies P(n+1)
+> $$
+
+The only difference between ordinary induction and strong induction is that
+with ordinary induction, we are attempting to prove that
+${P(n) \implies P(n+1).}$ In strong induction, we are trying to prove that
+${P(0) \land \ldots \land P(n) \implies P(n+1).}$ However, he technique is
+no different. We are still trying to prove an implication, so we assume
+that ${P(n)}$ is true, ${P(n-1)}$ is true, ${P(n-2)}$ is true, all the way
+to ${P(0).}$ It is called strong induction because we are allowed to assume
+much more that just ${P(n).}$ If we look closely, we wonder if a
+proof-by-induction can be done with a proof-by-strong-induction. This is in
+fact the case. Any proof-by-induction can be rewritten as a proof-by-strong
+induction.
+
+Fair question: Why not use proof-by-strong-induction all the time then?
+Because some problems are much easier to solve with an ordinary
+proof-by-induction rather than with a proof-by-strong-induction.
+
+To explore how a proof-by-strong-induction looks like, we consider another
+game, _stack split_. We start with a stack of 8 blocks. In the first move,
+the player must divide the stack into 2 substacks. If the player divides
+the stack into 3 and 5, the player receives 15 points: ${3 \times 5.}$ In
+the next move, the player divides either substack into 2 substacks. For
+example, if the player divides the stack of 5 into 4 and 1, the player
+receives 4 points. The player must keep dividing the substacks until they
+have 8 stacks of height 1. The last move is dividing a 2-block substack
+into 2 substacks of 1 block, returning the player 1 point. The player's
+total score is the sum of all points received on each move. The goal:
+Obtain the most number of points.
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653276176/math/unstacker_k2lktf.svg"
+	}
+	caption={"Unstacking tiles"}
+	width={"45"}
+	imwidth={"970"}
+	imheight={"533"}
+/>
+
+It turns out that no matter how we divide the stacks, the final score will
+always be 28. Let's state the proposition:
+
+> _Conjecture._ All strategies for the ${n}$ block game produce the same
+> score, ${S(n).}$
+
+Following this conjecture, we saw that ${S(8) = 28.}$ So, let's begin the
+proof. First, we state the inductive hypothesis: ${P(n) \coloneqq}$ "All
+strategies produce the same score ${S(n).}$" Second, we verify that the
+base case is correct. At ${n = 1,}$ the score is 0, since we never made a
+move. Thus, ${S(1) = 0.}$ Now we make the inductive step: Assume
+${P(1) \land P(2) \land \ldots \land P(n)}$ is true to prove ${P(n+1).}$
+
+Now, given ${n+1}$ blocks, we can split the stack in a stack of ${k}$
+blocks or a stack of ${(n + 1)-k}$ blocks, where ${1 \leq k \leq n}$:
+
+<FlowChart
+	data={` a[label="𝑛 + 𝟣"]; b[label="𝑘"]; c[label="(𝑛 - 𝟣)𝑘"]; a--b; a--c; `}
+	type="graph"
+/>
+
+The resulting score is ${k(n+1-k).}$ If we split the block of ${k}$ blocks,
+then we have ${P(k)}$ points.Thus, the resulting score from spliting ${k}$
+blocks is ${k(n+1-k)+P(k).}$ And if we split the ${(n+1)-k}$ stack, we get
+${P(n+1-k).}$ Thus, our total score for the game is:
+
+$$
+	k(n+1-k) + P(k) + P(n+1-k)
+$$
+
+Recall what are trying to prove: The total score just depends on ${n,}$ not
+${k.}$ In other words:
+
+$$
+	S(n+1) = k(n+1-k) + P(k) + P(n+1-k)
+$$
+
+It seems like we're stuck. In every term, there is a ${k.}$ Whenever we're
+stuck with inductive proof like this, we want to make a stronger inductive
+hypothesis. To make the hypothesis stronger, we want represent ${S(n)}$ as
+a formula. This appears to be summing a pattern of numbers, and those
+numbers are formed by divisions. But, the formula should work for every
+possible way we could divide. The simplest way to divide would be to just
+take one stack off at a time, 1 and 7, 1 and 6, 1 and 5, 1 and 4, 1 and 3,
+1 and 2, 1 and 1. The resulting score is the sum of ${1 \times 7,}$
+${1 \times 6,}$ and so on. More generally, given ${n}$ numbers in order,
+this just the sum of ${n-1}$ numbers:
+
+$$
+	\dfrac{n(n-1)}{2}
+$$
+
+Checking this formula against the base case, it works:
+${S(1) = (1(1-1))/2 = 0.}$ So, let's try it on our total score thus far:
+
+$$
+	\begin{aligned}
+		S(n + 1) &= k(n + 1 - k) + \dfrac{k(k - 1)}{2} + \dfrac{(n + 1 - k)(n - k)}{2} \\[1em]
+		&= \dfrac{2k(n + 1 - k) + k(k - 1) + (n + 1 - k)(n - k)}{2} \\[1em]
+		&= \dfrac{2kn + 2k - 2k^2 + k^2 - k + n^2 + n - kn - kn - k + k^2}{2} \\[1em]
+		&= \dfrac{n^2 + n}{2} \\[1em]
+		&= \dfrac{n(n + 1)}{2}
+	\end{aligned}
+$$
+
+It's better than magic. The formula for ${S(n + 1)}$ is
+${\dfrac{n(n-1)}{2}.}$ This establishes the stronger hypothesis, thereby
+proving that all strategies for an ${n-block}$ game result in the same
+score, ${\dfrac{n(n-1)}{2}.}$

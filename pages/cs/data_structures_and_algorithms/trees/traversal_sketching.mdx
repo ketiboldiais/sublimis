@@ -1,0 +1,51 @@
+# Traversal Sketching
+
+We can also determine traversal sequences through a technique called
+
+<b>traversal sketching</b>. To sketch a traversal, we first draw a
+horizontal line at the bottom of the tree. Then, we draw lines linking each
+node to this horizontal line.
+
+For preorder traversal, the links are drawn from left to right, starting at
+the root:
+
+![A sketch of preorder traversal.](https://res.cloudinary.com/sublimis/image/upload/v1652990016/cs/preorder_traversal_sketch.svg)
+
+$$
+	(a, b, d, e, c, f, g)
+$$
+
+For inorder traversal, the links are drawn from left to right:
+
+![A sketch of inorder traversal.](https://res.cloudinary.com/sublimis/image/upload/v1652990103/cs/inorder_traversal_sketch.svg)
+
+$$
+	(d, b, e, a, f, c, g)
+$$
+
+And for postorder traversal, the links are drawn from right to left,
+starting at the root:
+
+![A sketch of postorder traversal.](https://res.cloudinary.com/sublimis/image/upload/v1652990167/cs/postorder_traversal_sketch.svg)
+
+$$
+	(d, e, b, f, g, c, a)
+$$
+
+Another way to sketch a traveral sequence is <b>tree contouring</b>. The
+idea is that we draw a path along the tree's outline. For each of the
+traversal approaches, we place a tick on either the left, bottom, or right.
+Each time the countour crosses a tick, we record the ticked node.
+
+With preorder traversal, the tick is placed on the lefthand side of the
+node:
+
+![Outlining preorder traversal](https://res.cloudinary.com/sublimis/image/upload/v1652990233/cs/preorder_contour.svg)
+
+With inorder traversal, the tick is drawn on the bottom of the node:
+
+![Outlining inorder traversal](https://res.cloudinary.com/sublimis/image/upload/v1652990297/cs/inorder_contour.svg)
+
+And with postorder traversal, the tick is drawn to the right of the node:
+
+![Outlining postorder traversal](https://res.cloudinary.com/sublimis/image/upload/v1652990346/cs/postorder_contour.svg)

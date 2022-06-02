@@ -1,0 +1,603 @@
+# Control Flow
+
+As we saw in the section on variables, the initialization of variables is
+called an _assigment statement_. The assignment statement is just one
+instance of a statement. In JavaScript, there are three types of
+statements: (1) **simple statements**, (2) **compound statements**, and (3)
+**control statements**. The assignment statement is one kind of simple
+statement. Sequences of statements, like those found in a function or the
+entirety of a program, are compound statements. Control statements consist
+of two subtypes categories: (1) **conditional statements** and (2)
+**iterative statements**. In this section, we focus on the former.
+
+Conditional statements are the backbone of simple decisions in a program. A
+conditional statement is a statement that specifies a test. If the test is
+satisfied, other statements are executed. Otherwise, JavaScript proceeds to
+the next statement. In JavaScript, we have several conditional statements:
+the if-statement, if-else-estatement, else-statement, ternary operators,
+and switch statements. Later, we will consider iterative statements, which
+specify repetition of statements.
+
+## The if-statement
+
+The if-statement tells JavaScript to run a given block of code **if** a
+given condition is true. If the condition is false, then the code block is
+never run. The if-statement takes the following format:
+
+```rust
+if (<condition>) {
+	<statements>
+}
+```
+
+For example:
+
+```javascript
+if (2 > 1) {
+	console.log("True");
+}
+```
+
+The code above says, "If 2 is greater than 1, display in the console
+'True.'"
+
+```javascript
+if (1 !== 1) {
+	console.log("True");
+}
+```
+
+This code says, "If 1 is not equal to 1 in value or type, then display in
+the console 'True.'" Because the condition is false, the code block never
+runs.
+
+Another example: Check if a number is odd or even, we can use the following
+code:
+
+```javascript
+let num = 39;
+if (num % 2 != 0) {
+	console.log("Odd number");
+}
+```
+
+This returns "Odd number" in the console
+
+## The else-if-statement
+
+The else-if-statement tells JavaScript: If the first condition (to the
+if-statement) is true, run the if-statement's block of code. If the first
+condition (to the if-statement) is false, check this second condition (to
+the else-statement), and if it is true, run the else-statement's block of
+code. The else-if-statement takes the following form:
+
+```rust
+if ("condition-is-true") {
+	"run-this-block-of-code";
+}
+else if ("this-condition-is-true") {
+	"run-this-block-of-code";
+}
+```
+
+Note that JavaScript will only look at the else-if-statement's condition if
+the first condition, from the if-statement, is false. This means that an
+else-if-statement must always accompany an if-statement.
+
+An if-statement can be accompanied by multiple else-if-statements:
+
+```rust
+if ("condition1-is-true") {
+	"run-this-code-block";
+}
+// Condition 1 is false? Check condition 2.
+else if ("condition2-is-true") {
+	"run-this-code-block";
+}
+// Condition 2 is false? Check condition 3.
+else if ("condition3-is-true") {
+	"run-this-code-block";
+}
+```
+
+## The else-statement
+
+The else-statement acts like an "otherwise." I.e., the else-statement
+effectively tells JavaScript that this is the code that should be run if
+all the conditions before it fail. In a way, it sort of sets the "default"
+instruction to a set of conditionals. The else-statement takes the
+following form:
+
+```rust
+if ("condition1-is-true") {
+	"run-this-block-of-code";
+}
+else {
+	"run-this-block-of-code";
+}
+```
+
+Limitation of else-statements Because JavaScript only executes an
+else-statement after checking an if-statement, the else-statement must
+always be preceded by an if-statement or an else-if-statement. Thus, an
+else-statement can never stand on its own. Furthermore, because an
+else-statement effectively provides the default, or fallback, instruction
+to JavaScript in a set of conditionals, there can only be **one**
+else-statement in a given block of conditionals.
+
+## Branching: Nesting Conditional Statements
+
+Conditional statements can be nested within conditional statements. For
+example, below is some code that attempts to verify a password.
+
+```javascript
+let password;
+if (password.length >= 6) {
+	if (password.indexOf(" ") === -1) {
+		console.log("Valid password!");
+	} else {
+		console.log("Password cannot contain a space.");
+	}
+} else {
+	console.log("Password must be longer.");
+}
+```
+
+Let's run through the code.
+
+The first condition: Check if the password has at least 6 characters. If it
+meets this condition, run the block code of inside the braces. First
+condition: Check if the password contains spaces. We can do this by using
+indexOf. If it does not contain spaces, it will return -1. If it does
+contain spaces, it will return a number other than -1.
+
+Inside the block, we have another condition. If the password contains a
+space (i.e., the first condition is not strictly equal to 1, run this code
+below.)
+
+If the password is not at least 6 characters (i.e., the first condition is
+not satisfied), run this code.
+
+## Inherent Boolean Values
+
+In JavaScript, all values have an inherently true or false value. Values
+that are inherently false:
+
+1. `false`
+2. `0`
+3. `""` (an empty string)
+4. `null`
+5. `undefined`
+6. `NaN`
+
+Every value other than the above has an inherently true value. For example:
+
+```javascript
+let x = 3;
+if (x) {
+	console.log("true");
+}
+```
+
+The console displays "true" because 3 is inherently true, the
+if-statement's condition is satisfied, and so JavaScript executes its code
+block.
+
+```javascript
+let y = NaN;
+if (y) {
+	console.log("true");
+} else {
+	console.log("false");
+}
+```
+
+The console displays "false" because NaN is inherently false because the
+condition is not satisfied (the if-statement's condition is false), the
+else-statement's code block is run.
+
+## JavaScript Logical Operators
+
+The logical operators provide a way to arrange, or connect, conditional
+statements. With the ability to connect and arrange conditional statements,
+we can write programs with more complex conditional statements. This in
+turn allows us to write more concise and efficient code.
+
+### AND Operator
+
+The `&&` operator allows us to streamline nested if-statements:
+
+```javascript
+// Here is code that attempts to verify a password.
+let password = "masterProgrammer";
+// First condition: Check if these two sub-expressions are true:
+//  (1) The password has at least 6 characters.
+//  (2) The password contains no spaces.
+if (password.length >= 6 && password.indexOf(" ") === -1) {
+	console.log("Valid password");
+} else {
+	console.log("Invalid password");
+}
+```
+
+`&&` allows us to connect conditional statements into a single conditional
+expression, called a **conditional AND expression**. We can connect as many
+conditional expressions (i.e., conditions) as we want with `&&`. For the
+conditional AND expression to be true, all of its **sub-expressions** (the
+connected conditions) must all be true. Thus, if a single sub-expression is
+false, the entire conditional AND expression is false. Example:
+
+```javascript
+// Condition 1: Check if these two sub-expressions are true:
+//	(1) Is 1 <= 4?
+//	(2) Is 'a' strictly equal to 'a'?
+if (1 <= 4 && "a" === "a") {
+	console.log("true");
+}
+// Default code: If Condition 1 is false, run this code block.
+else {
+	console.log("false");
+}
+```
+
+Running the code above, the console returns true. Why is that? Because
+`1 <= 4` is true, and 'a' is strictly equal to 'a'.
+
+Note, if just one of the sub-expressions is false, then the entire
+conditional AND statement is false. For example:
+
+```javascript
+// Condition 1: Check if these two sub-expressions are true:
+//	(1) Is 9 <= 10?
+//	(2) Is 'a' strictly equal to 'a'?
+if (9 > 10 && "a" === "a") {
+	console.log("true");
+}
+// If Condition 1 is false, run this code block.
+else {
+	console.log("false");
+}
+```
+
+Here, the console returns "false". Why? Because even though sub-expression
+(2) is true, sub-expression (1) is false, so the entire condition (1), a
+conditional AND statement, is false. Because condition (1) is false, the
+else-statement's code block is run.
+
+### OR Operator
+
+The `||` operator allows us to connect sub-expressions into a single
+conditional expression, called a **conditional OR expression**. If just one
+of the sub-expressions is true, then the entire OR expression is true.
+
+The code below returns true, since one of the sub-expressions, 10 === 10,
+is true.
+
+```javascript
+1 !== 1 || 10 === 10;
+```
+
+This returns true, because one of the sub-expressions, `10/2 === 5`, is
+true.
+
+```javascript
+10 / 2 === 5 || null;
+```
+
+This returns false, because both 0 and undefined are inherently false
+(i.e., none of the sub-expressions are true.)
+
+```javascript
+0 || undefined;
+```
+
+Below is a code example using the `||` operator. Suppose we provide a
+service that gives users under 6 or over 60 a discount. We want to let the
+user know, after inputting their age, that they get a discount.
+
+First condition: Check if at least one of these sub-expressions is true:
+(1) The person's age is less than or equal to 6. (2) The person's age is
+greater than or equal to 60.
+
+If none of the above sub-expressions is true, run this code block. The
+code:
+
+```javascript
+let age = 64;
+if (age <= 6 || age >= 60) {
+	console.log("You get a discount!");
+} else {
+	console.log("Proceeding to checkout");
+}
+```
+
+As an aside, note that JavaScript evaluates the `&&` and `||` operators
+using an evaluation model called **short-circuit mode**. Under this
+evaluation model, JavaScript evaluates the right operand only if it needs
+to. For example, given the expression `a && b`, if JavaScript evaluates `a`
+to be `false`, it will immediately return `false` for the entire
+expression; it will not evaluate `b`. It will, however, evaluate `b` if `a`
+evaluates to `true`. Similarly, given the expression `x || y`, if `x`
+evaluates to `true`, JavaScript will immediately evaluate the entire
+expression as `true`. It will not evaluate `y`. But again, if `x` evaluates
+to `false`, JavaScript will evaluate `y`.
+
+### NOT Operator
+
+The NOT operator reverses the values for a conditional expression. Thus, if
+a conditional expression is true, if the NOT operator `!` is attached to
+the expression, then the conditional expression returns the opposite—false.
+Illustration:
+
+```javascript
+!null; // Returns true; null is an inherently false value, and so its opposite is true.
+!0; // Returns true
+!""; // Returns true
+!45; // Returns false
+```
+
+We can attach the NOT operator to AND conditionals or OR conditionals.
+Suppose we are running a bubble tea stand. We only have two flavors: taro
+or tea.
+
+Condition 1: If the flavor inputted by the user is NOT "taro" or "tea",
+then run this code block.
+
+```javascript
+let flavor = "blueberry";
+if (!(flavor === "taro" || flavor === "tea")) {
+	console.log("Sorry, we only have taro and tea at the moment.");
+} else {
+	console.log(`One ${flavor} bubble tea, coming right up!`);
+}
+```
+
+## Logical Operator Precedence
+
+JavaScript follows a strict rule, called **operator precedence**, when
+evaluating complex conditional statements. For example, what does
+JavaScript return for the following:
+
+```javascript
+let x = 7;
+x == 7 || (x === 3 && x > 10);
+```
+
+Operator precedence applies:
+
+1. Conditional expressions contained inside parantheses are always
+   evaluated first.
+2. The NOT operator is evaluated before the AND operator.
+3. The AND operator is evaluated before the OR operator.
+
+Thus, in the above code, JavaScript evaluates the above code as:
+
+```javascript
+let x = 7;
+(x == 7 || x === 3) && x > 10;
+```
+
+If we want to change this behavior, we need to use parentheses:
+
+```javascript
+let x = 7;
+x == 7 || (x === 3 && x > 10);
+```
+
+## Switch Statements
+
+The switch statement allows us to perform different actions based on
+different conditions. The switch statement takes the following form:
+
+```rust
+switch(<expression>) {
+	case <possible value 1>:
+		<statement 1>;
+	case <possible value 2>:
+		<statement 2>;
+}
+```
+
+Note that if a single case value matches the variable, JavaScript will
+execute all of the statements thereafter except the statements in the first
+match. This is called **fall-through behavior**, and is found in languages
+like C and C++. In some situations, this may be desirable, and in others,
+it may not be.[^swift_note].
+
+[^swift_note]:
+    Notably, some languages (e.g., Swift) eschew fall-through behavior,
+    concluding that users are not likely to use the feature. Accordingly,
+    fall-through behavior is absent in Swift, unless the fallthrough
+    keyword is used.
+
+To ensure JavaScript stops at the first match, each case must include a
+
+`break` statement. This essentially tells JavaScript to stop and return the
+first match the moment it's encountered.
+
+For example, suppose we have a program where the user enters a number from
+1 to 7, and gets back out a day of the wee. We could do the following:
+
+```javascript
+let day = 8;
+if (day === 1) {
+	console.log("Monday");
+} else if (day === 2) {
+	console.log("Tuesday");
+} else if (day === 3) {
+	console.log("Wednesday");
+} else if (day === 4) {
+	console.log("Thursday");
+} else if (day === 5) {
+	console.log("Friday");
+} else if (day === 6) {
+	console.log("Saturday");
+} else if (day === 7) {
+	console.log("Sunday");
+} else {
+	console.log("Enter a number from 1 to 7.");
+}
+```
+
+The above code accomplishes the task, but it can be written much more
+compactly with a switch statement:
+
+```javascript
+let day = 1;
+switch (day) {
+	case 1:
+		console.log("Monday");
+		break;
+	case 2:
+		console.log("Tuesday");
+		break;
+	case 3:
+		console.log("Wednesday");
+		break;
+	case 4:
+		console.log("Thursday");
+		break;
+	case 5:
+		console.log("Friday");
+		break;
+	case 6:
+		console.log("Saturday");
+		break;
+	case 7:
+		console.log("Sunday");
+		break;
+	default:
+		console.log("Enter a number from 1 to 7.");
+}
+```
+
+Note how each of the cases contains a "break" statement. This is because
+without the break statement, the moment JavaScript arrives at a matching
+case, it will run the code block for everything thereafter. This default
+behavior is prevented by using the break statement.
+
+A further note: Switch-case statements use the triple-equal operator
+inherently. This means that a case will match if, and only if, the switched
+value is both equal in value and type.
+
+## The Ternary Operator
+
+If we have a single if-statement accompanied with an else-statement, we can
+write the statements as a single line of code with the **ternary
+operator**. The template for the ternary operator:
+
+```rust
+<expression1> ? <truth-case-value> : <false-case-value>;
+```
+
+For example, here is a program that displays in the console "Lucky Number
+7" if the user picks 7:
+
+```javascript
+let num = 7;
+if (num === 7) {
+	console.log("Lucky!");
+} else {
+	console.log("No luck.");
+}
+```
+
+We can refactor the program with a switch statement:
+
+```javascript
+let num = 7;
+num === 7 ? console.log("Lucky!") : console.log("No luck.");
+```
+
+## Converting to Booleans
+
+Recall that every JavaScript literal has an inherently true or false value.
+For example, the literal `1` is inherently true, and the literal `""` (an
+empty string) is inherently false. We can convert these values to actual
+Boolean values with explicit type conversion:
+
+```javascript
+let x = 1;
+let y = Boolean(x);
+console.log(y);
+```
+
+```bash
+true
+```
+
+Alternatively, we can use implicit type conversion:
+
+```javascript
+let x = 1;
+let y = !!x;
+```
+
+```bash
+true
+```
+
+Notice the `!!` syntax. This handy trick negates the inherent Boolean value
+(`false`), and negates it again (`true`), which effectively returns an
+actual Boolean value. This may not seem like much of an ability, but it can
+lead to more concise code:
+
+```javascript
+let names = ["John", "Jane", "", "", "Lori"];
+console.log(names);
+let formattedNames = names.filter(Boolean);
+console.log(formattedNames);
+```
+
+```bash
+['John', 'Jane', '', '', 'Lori']
+['John', 'Jane', 'Lori']
+```
+
+Another example: Returning `false` for a variable called `isValidInput` if
+the user enters an empty string:
+
+```javascript
+const userInput = "";
+const isValidInput = !!userInput;
+```
+
+## Sum Types
+
+In functional programming languages like ML, one of the most useful
+features is the support for _sum type data_. This is essentially a piece of
+data that can only be one of a discrete set of values. For example, say we
+have the status of whether someone is dead. From a purely logical
+standpoint, the person could be `"dead"`, `"alive"`. In the real world,
+however, we have a third option: `"unknown"`. We can accomplish this
+representation with the OR operator in JavaScript:
+
+```javascript
+let lifeStatus = deadOrAlive || "unknown";
+```
+
+In the code above, the value `deadOrAlive` is some input from another part
+of the program. If the value assigned to `deadOrAlive` is `"dead"`, then
+the variable `lifeStatus` is assigned the value `"dead"`. If `deadOrAlive`
+is assigned the value `"alive"`, then `lifeStatus` is assigned `"alive"`.
+If `deadOrAlive` is `undefined` (an inherently `false` value), then
+`lifeStatus` is assigned the value `"unknown"` (an inherently `true`
+value).
+
+Why does this work in JavaScript? Because the AND and OR operators, at a
+low level, operate on literals. Because they are commonly used with
+relational or comparison operators, they return Boolean literals most
+often. However, when used with non-Boolean literals (e.g., a `string`
+value), they will return the appropriate literal. In this case, the
+operator OR returns `"unknown"` (a string), rather than `true`.
+
+This idea extends to the AND operator. For example:
+
+```javascript
+let discountApplies = (validCouponEntered && 4.98) || 0;
+```
+
+The code above assigns to the variable `discountApplies` the value `4.98`
+if and only if the variable `validCouponEntered` is initialized (or, in
+this case, has a `true` value). Otherwise, the assigned value defaults to
+`0`.

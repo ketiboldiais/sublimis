@@ -1,0 +1,198 @@
+# Rational Expressions
+
+The quotient of two polynomial expressions is called a _rational
+expression_. When handling rational expressions, we use the same rules
+applicable to fractions.
+
+## Simplifying Rational Expressions.
+
+Simplifying a rational expressions is no different from simplifying a
+fraction. The only differences is that we must often use the techniques of
+factorization, as well as be mindful of the laws governing variable
+manipulation. To simplify a rational expression:
+
+1. Factor the numerator and denominator;
+2. cancel any common factors
+
+For example:
+
+$$
+\begin{aligned}
+	\dfrac{x^2 - 9}{x^2 + 4x + 3} &= \dfrac{(x+3)(x-3)}{(x+3)(x+1)} \\
+	&= \dfrac{\cancel{(x+3)}(x-3)}{\cancel{(x+3)}(x+1)}
+	&= \dfrac{(x-3)}{(x+1)}
+\end{aligned}
+$$
+
+## Multiplying Rational Expressions.
+
+We follow the same procedures for multiplying fractions when we multiply
+rational expressions: To multiply two rational expressions:
+
+1. Factor the numerator and denominator;
+2. multiply the numerators;
+3. multiply the denominators
+4. simplify.
+
+For example, given:
+
+$$
+	\left(\dfrac{x^2 + 4x - 5}{3x + 18}\right)\left(\dfrac{2x-1}{x+5}\right)
+$$
+
+By factorization:
+
+$$
+	\left(\dfrac{x^2 + 4x - 5}{3x + 18}\right)\left(\dfrac{2x-1}{x+5}\right) = \left(\dfrac{(x+5)(x-1)}{3(x+6)}\right)\left(\dfrac{2x-1}{x+5}\right)
+$$
+
+Using the associative property of multiplication:
+
+$$
+	\left(\dfrac{x^2 + 4x - 5}{3x + 18}\right)\left(\dfrac{2x-1}{x+5}\right) = \dfrac{(x+5)(x-1)(2x-1)}{3(x+6)(x+5)}
+$$
+
+Cancelling like terms:
+
+$$
+	\left(\dfrac{x^2 + 4x - 5}{3x + 18}\right)\left(\dfrac{2x-1}{x+5}\right) = \dfrac{\cancel{(x+5)}(x-1)(2x-1)}{3(x+6)\cancel{(x+5)}}
+$$
+
+We can thus conclude:
+
+$$
+	\left(\dfrac{x^2 + 4x - 5}{3x + 18}\right)\left(\dfrac{2x-1}{x+5}\right) = \dfrac{(x-1)(2x-1)}{3(x+6)}
+$$
+
+## Adding &amp; Subtracting Rational Expressions.
+
+Once more, adding and subtracting rational expressions works the same way
+was adding and subtracting fractions: We may add and subtract the fractions
+iff the rational expressions have a common denominator. To ease the
+computation, the _least common denominator_ &mdash; the smallest multiple
+that the denominators have in common &mdash; should be used whenever
+possible.
+
+To add or subtract rational expressions:
+
+1. Factor the numerator and denominator.
+2. Find the least common denominator of the expressions &mdash; to find the
+   least common denominator:
+   1. Factor the expressions.
+   2. Multiply all of the distinct factors.
+3. Multiply the expressions by a form of 1 that changes the denominators to
+   the LCD.
+4. Add or subtract the numerators. Simplify.
+
+For example, given:
+
+$$
+	\dfrac{5}{x} + \dfrac{6}{y}
+$$
+
+The least common denominator is ${(x)(y).}$ Multiplying the expressions by
+a form of 1 to ensure the denominator is the least common denominator:
+
+$$
+	\left(\dfrac{5}{x} \cdot \dfrac{y}{y}\right) + \left(\dfrac{6}{y} \cdot \dfrac{x}{x} \right)
+$$
+
+Carrying out the multiplication:
+
+$$
+\begin{aligned}
+	\left(\dfrac{5}{x} \cdot \dfrac{y}{y}\right) + \left(\dfrac{6}{y} \cdot \dfrac{x}{x} \right) &= \dfrac{5y}{xy} + \dfrac{6x}{xy} \\
+	&= \dfrac{5y + 6x}{xy}}$
+\end{aligned}
+$$
+
+## Simplifying Nested Rational Expressions
+
+Often, the numerators and denominators of a rational expression will
+themselves contain rational expressions. They might look like:
+
+$$
+	\dfrac{a + \dfrac{b}{c}}{\dfrac{d}{e} + \dfrac{f}{g}}
+$$
+
+We call such expressions _nested rational expressions_ (the rational
+expressions in the numerators and denominators are colloquially called
+_nesting rats_). Nested rational expressions often strike fear in students,
+partly because of their size, partly because they are not often
+encountered. Nested rational expressions, however, are a good example of
+where _Polish notation_ has an advantage over the more common _infix
+notation_ (the notation above). The same expression above can be expressed
+as:
+
+$$
+\begin{aligned}
+	(/ \space &[+ \space a \space (/ \space b \space c)] \\[1em] &[+ \space (/ \space d \space e) (/ \space f \space g)])
+\end{aligned}
+$$
+
+When encountering deeply nested rational expressions like the above,
+consider rewriting the expression in Polish notation and simplifying the
+expression from inside to outside. For most nested rational expressions,
+however, we use the following algorithm:
+
+1. Combine the expressions in the numerator into a single rational
+   expression by adding or subtracting.
+
+2. Combine the expressions in the denominator into a single rational
+   expression by adding or subtracting.
+
+3. Rewrite the overall expression as the numerator divided by the
+   numerator.
+
+4. Rewrite the overall expression as a multplication.
+
+5. Multiply.
+
+6. Simplify.
+
+For exmaple, given:
+
+$$
+	\dfrac{y + \dfrac{1}{x}}{\dfrac{x}{y}}
+$$
+
+Combine the expressions in the numerator into a single expression:
+
+$$
+	\dfrac{\dfrac{yx}{x} + \dfrac{1}{x}}{\dfrac{x}{y}} = \dfrac{\dfrac{yx + 1}{x}}{\dfrac{x}{y}}
+$$
+
+Rewrite the expression as multiplication:
+
+$$
+\begin{aligned}
+	\dfrac{\dfrac{yx}{x} + \dfrac{1}{x}}{\dfrac{x}{y}} &= \dfrac{yx + 1}{x} \cdot \dfrac{y}{x} \\
+	&= \dfrac{y(xy + 1)}{x^2}
+\end{aligned}
+$$
+
+## Rationalizing Radical Denominators
+
+Rational expressions can contain radicals in the denominator. These can be
+cumbersome to handle, and it is almost always best to simplify them.
+
+To remove radicals from the denominators of rational expressions, we
+multiply the radical expression by the form of 1 that will eliminate the
+radical. If the denominator contains a single term, we multiply the
+rational expression by its reciprocal. I.e., if the rational-radical
+expression is ${\dfrac{1}{b \sqrt{c}},}$ we multiply the expression by
+${\dfrac{\sqrt{c}}{\sqrt{c}}.}$
+
+Now, if the denominator of the rational-radical expression contains the sum
+of a rational and an irrational term, we multiply the numerator and the
+denominator by the conjugate of the denominator &mdash; the expression
+wherein the sign of the radial portion of the denominator is made opposite.
+For example, if the denominator is ${a + b \sqrt{c},}$ then the conjuage is
+${a - b \sqrt{c}.}$
+
+Given a radical expression of the form ${\dfrac{a}{\sqrt{b}},}$
+
+1. Multiply the numerator and the denominator by the radical in the
+   denominator.
+
+2. Simplify.

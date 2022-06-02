@@ -1,0 +1,15 @@
+# BST Constructor
+
+Now that we know how to insert nodes into a binary search tree, generating
+an entire binary tree from scratch is almost trivial. We can just insert
+keys one at a time, using the `Insert()` function we saw earlier:
+
+```rust
+newBST(int array[], int nodeCount) -> BST* :
+	TreeNode* first_node = newTreeNode(array[0]);
+	BST* new_tree = malloc(sizeof(BST));
+	(*new_tree).root = first_node;
+	for (int i = 1; i < nodeCount; i++):
+		insert((*new_tree).root, _arr[i]);
+	return new_tree;
+```

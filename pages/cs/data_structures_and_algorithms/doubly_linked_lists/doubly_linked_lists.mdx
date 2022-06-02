@@ -1,0 +1,590 @@
+# Doubly Linked Lists
+
+- [Doubly Linked Lists](#doubly-linked-lists)
+  - [Insertion: Doubly-linked Lists](#insertion-doubly-linked-lists)
+    - [Prepending](#prepending)
+  - [Appending to a Doubly Linked List](#appending-to-a-doubly-linked-list)
+  - [Deletion](#deletion)
+    - [Head Deletion](#head-deletion)
+    - [Tail Node Deletion](#tail-node-deletion)
+
+In the previous section, we saw **singly-linked lists**—linked lists whose
+nodes are linked with just one link, implemented with a `next` pointer. We
+now examine **doubly-linked lists**. These are lists whose nodes are linked
+with _two_ links, implemented with a `next` and `prev` pointer:
+
+<DoublyLinkedList data={[6, 3, 9, 7, 5]} />
+
+In a singly-linked list, every node has a pointer to the next node. With
+double linked lists, each node has a pointer to the next node, as well as
+the previous node. And since we have links to the next node and to the
+previous node, we can move forward _and_ backward.
+
+Doubly linked lists are used for a variety of applications:
+
+1. Implementing navigation systems where a forward and back feature is
+   desired. For example, on a browser, we can move forward and back in our
+   history.
+
+2. Executing past and future procedures. Most interactive programs like
+   text editors have _undo_ and _redo_ functions. These functions require
+   going forward and back on the timeline of changes.
+
+3. Recording data associated with time. For example, manipulating cache
+   data in terms of most-recently-used or least-recently-used requires
+   going forward and back.
+
+4. Thread scheduling. Some operating systems implement a _thread scheduler_
+   with a doubly linked list, allowing the system to determine which
+   process must run at a particular time.
+
+5. Implementing the doubly-linked list is not that much of a departure from
+   implementing the singly-linked list. The key difference is that the node
+   structure changes. Where the singly-linked list node consists of a
+   record with just two fields `data` and `next`, the doubly-linked list
+   node is comprised of a record with three fields: `prev` (a pointer to
+   the previous node), `data` (the data stored in the node), and `next` (a
+   pointer to the next node). Accordingly, the record would look like:
+
+```rust
+class Node:
+	Node* prev
+	TYPE data
+	Node* next
+```
+
+```c
+struct Node {
+	struct Node* prev;
+	int data;
+	struct Node* next;
+};
+```
+
+We can then write a function for instantiating new nodes:
+
+```rust
+class Node:
+	Node* prev
+	TYPE  data
+	Node* next
+
+	Node(val):
+		prev = null
+		data = val
+		next = null
+```
+
+```c
+struct Node* newNode(int newData) {
+	struct Node* node = malloc(sizeof(struct Node));
+	(*node).prev = NULL;
+	(*node).data = newData;
+	(*node).next = NULL;
+	return node;
+}
+```
+
+With the function above, we can begin creating new nodes. The next step is
+to link them. Before doing so, let's briefly introduce some new notation.
+When we refer to doubly-linked lists in text, we will write:
+
+$$
+	(n_1, n_2, \ldots, n_i)_d
+$$
+
+Where ${n}$ is a node, and ${i}$ is its position. When we refer to a
+singly-linked list in text, we will write:
+
+$$
+	(n_1, n_2, \ldots, n_i)_s
+$$
+
+The differentiating symbol being, ${d}$ for double, and ${s}$ for single.
+For circular singly-linked lists and circular doubly-linked lists, we
+write:
+
+$$
+	(n_1, n_2, \ldots, n_i)_s^{\circ} \\[1em] (n_1, n_2, \ldots, n_i)_d^{\circ}
+$$
+
+Suppose we want to implement the doubly-linked list ${(1,2,3)_d}$. So, we
+create three nodes, using the code above:
+
+```rust
+	Node* root = null
+	Node* node1 = new Node(1)
+	Node* node2 = new Node(2)
+	Node* tail  = new Node(3)
+```
+
+In C:
+
+```c
+	int main() {
+		struct Node* root = NULL;
+		struct Node* n1 = newNode(1);
+		struct Node* n2 = newNode(2);
+		struct Node* tailend = newNode(3);
+		return 0;
+	}
+```
+
+Then, we link the nodes:
+
+```rust
+Node* root  = null
+Node* node1 = new Node(1)
+Node* node2 = new Node(2)
+Node* tail  = new Node(3)
+
+root       = n1
+n1->next   = n1
+n2->prev   = n1
+n2->next   = tail
+tail->prev = n2
+```
+
+In C:
+
+```c
+int main() {
+	struct Node* root = NULL;
+	struct Node* n1 = newNode(1);
+	struct Node* n2 = newNode(2);
+	struct Node* tailend = newNode(3);
+
+	// linking
+	root = n1;
+	(*n1).next = n2;
+	(*n2).prev = n1;
+	(*n2).next = tailend;
+	(*tailend).prev = n2;
+}
+```
+
+To test whether this works, let's write two functions, `printForward()` and
+`printBackward()`. Using the C implementation:
+
+```c
+void printForward(struct Node* p) {
+	printf("( ");
+	while(p != NULL) {
+		printf("%d ", (*p).data);
+		p = (*p).next;
+	}
+	printf(")\n");
+}
+```
+
+Note that the `printForward()` function prints the list's elements from the
+first to last. The `printBackward()` function prints the list's elements
+from last to first.
+
+```c
+void printBackward(struct Node *p) {
+	printf("( ");
+	while(p != NULL) {
+		printf("%d ", (*p).data);
+		p = (*p).prev;
+	}
+	printf(")\n");
+}
+```
+
+Using all of the code above and calling the two functions:
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+	struct Node* prev;
+	int data;
+	struct Node* next;
+};
+
+struct Node* newNode(int newData) {
+	struct Node* node = malloc(sizeof(struct Node));
+	(*node).prev = NULL;
+	(*node).data = newData;
+	(*node).next = NULL;
+	return node;
+}
+
+void printForward(struct Node* p) {
+	printf("( ");
+	while(p != NULL) {
+		printf("%d ", (*p).data);
+		p = (*p).next;
+	}
+	printf(")\n");
+}
+
+void printBackward(struct Node *p) {
+	printf("( ");
+	while(p != NULL) {
+		printf("%d ", (*p).data);
+		p = (*p).prev;
+	}
+	printf(")\n");
+}
+
+int main() {
+	struct Node* root = NULL;
+	struct Node* n1 = newNode(1);
+	struct Node* n2 = newNode(2);
+	struct Node* tailend = newNode(3);
+
+	// linking
+	root = n1;
+	(*n1).next = n2;
+	(*n2).prev = n1;
+	(*n2).next = tailend;
+	(*tailend).prev = n2;
+
+	printForward(root);
+	printBackward(tailend);
+	return 0;
+}
+```
+
+```bash
+( 1 2 3 )
+( 3 2 1 )
+```
+
+Look at that, it works. As we saw with singly linked lists, instantiating
+and linking nodes manually is pretty tedious. For the pseudocode in the
+rest of this section, we'll use a function called `newDList()` that returns
+a pointer to a `DList` struct. The `DList` struct consists of a node
+pointer called `head` (a pointer to the first node), and a node pointer
+called `foot` (a pointer to the last node). The `newDList()` function
+allows us to implement the doubly linked list ${(1,2,3)_d}$ in pseudocode
+as:
+
+```rust
+DList* dlist = newDList([1,2,3]);
+```
+
+Below is an implementation in C.
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+// The node data structure.
+struct Node {
+	struct Node* prev; // Pointer to the previous node.
+	int data; // The data stored in the node.
+	struct Node* next; // Pointer to the next node.
+};
+
+// Function: Creates a new node, and returns a pointer to the new node.
+struct Node* newNode(int newData) {
+	struct Node* node = malloc(sizeof(struct Node)); // Make space for a new node.
+	(*node).prev = NULL; // Pointer to previous node is NULL by default
+	(*node).data = newData; // store newData in the data field.
+	(*node).next = NULL; // Pointer to next node is NULL by default.
+	return node;
+}
+
+// The doubly-linked list data structure. It consists of two pointers:
+struct DList {
+	struct Node* head; // Pointer to the first node in the list.
+	struct Node* foot; // Pointer to the last node in the list.
+};
+
+// Function: Creates a new instance of DList.
+// It takes an array and returns a doubly-linked list.
+struct DList* newDList(int arr[], int size) {
+	struct DList* DList = malloc(sizeof(struct DList)); // Make space for a DList.
+	(*DList).head = newNode(arr[0]); // List head points to a node with arr[0] as data.
+	(*DList).foot = (*DList).head; // List foot starts at the same place as head.
+	for (int i = 1; i < size; i++) { // Loop: start at the second element.
+		struct Node* t = newNode(arr[i]); // Create new node storing arr[i] as data.
+		(*t).next = (*(*DList).foot).next; // New node's next points to foot's next (NULL by default).
+		(*t).prev = (*DList).foot; // New node's prev points to list's foot.
+		(*(*DList).foot).next = t; // Foot's next points to the new node.
+		(*DList).foot = t; // List's foot points to the new node.
+	}
+	return DList;
+}
+
+// Function: Prints the DList's data from first (head) to last (foot).
+void printForward(struct DList* p) {
+	struct Node* t = (*p).head;
+	printf("( ");
+	while (t != NULL) {
+		printf("%d ", (*t).data);
+		t = (*t).next;
+	}
+	printf(")\n");
+}
+
+// Function: Prints the DList's data from last (foot) to first (head).
+void printBackward(struct DList* p) {
+	struct Node* t = (*p).foot;
+	printf("( ");
+	while (t != NULL) {
+		printf("%d ", (*t).data);
+		t = (*t).prev;
+	}
+	printf(")\n");
+}
+
+int main() {
+	int arr[] = {1,2,3};
+	int arrSize = 3;
+	struct DList* list1 = newDList(arr, arrSize);
+	printForward(list1);
+	printBackward(list1);
+	return 0;
+}
+```
+
+Now that we can implement doubly-linked lists, we have the ability to move
+forward and back. This ability opens up a wide variety of procedures that
+would be slower to execute on singly-linked lists or tedious to implement.
+Importantly, we can perform all of the procedures we've seen with
+singly-linked lists, the only difference being we can now move forward and
+back. To see how this changes things, let's consider a few basic
+operations.
+
+## Insertion: Doubly-linked Lists
+
+Suppose we had the following linked list:
+
+<DoublyLinkedList data={[6, 9, 1, 5]} />
+
+To insert a new node into this linked list, it's helpful to pretend each
+node, and space between each node, has an index, just as we saw with
+singly-linked lists, we can pretend each node has an index, and that
+there's an index between each node.
+
+Thus, given a doubly-linked list of size ${4,}$ there are ${5}$ possible
+positions for insertion. Let's consider insertion before the first node, or
+**prepending** a doubly-linked list.
+
+### Prepending
+
+Given the doubly linked list:
+
+<DoublyLinkedList data={[6, 9, 1, 5]} />
+
+Prepending a new node ${N}$ containing data `d` results in:
+
+<DoublyLinkedList data={["d", 6, 9, 1, 5]} />
+
+The procedure:
+
+1. First create a new node, say ${N}$, and assigning a data value for it.
+   Say, ${8.}$ Because we're working with doubly-linked lists, there are a
+   total of two links to modify. Why two? Because we have a new node,
+   ${N}$, with a `prev` pointer ${p}$ and a `next` pointer ${x,}$ both
+   initially NULL.
+
+2. At the head of the list is also a node with a `prev` and `next` pointer.
+   This node also has the special pointer ${h,}$ which indicates it as the
+   head.
+
+3. Once ${N}$ is instantiated, we must have set its `next` pointer to
+   ${h}$'s pointee, ${n_1.}$
+
+4. Once we've modified ${N}$'s `next` pointer, we must then have ${h}$'s
+   `prev` pointer point to ${N.}$ Because ${N}$ is now the first node in
+   the list, we should have the `head` pointer point to it.
+
+The procedure in pseudocode:
+
+```rust
+	fn prepend(Node* head) -> void:
+		Node* N = new Node(d);
+		N->prev = NULL;
+		N->next = head;
+		head->prev = N;
+		head = N;
+```
+
+Notice that these are all basic operations. Prepending to a doubly-linked
+list is a constant time operation—${O(1).}$
+
+## Appending to a Doubly Linked List
+
+Referring to the same doubly linked list:
+
+<DoublyLinkedList data={[6, 9, 1, 5]} />
+
+Let's say we wanted to insert a new node, ${(N \mid 4)}$ just before the
+last node:
+
+<DoublyLinkedList data={[6, 9, 1, 4, 5]} />
+
+Referring to our index diagram, we would be inserting at position ${3.}$
+
+The procedure:
+
+1. Start with a pointer ${q}$ on the head:
+2. Then begin moving it. We move once:
+3. Then again to reach the node just before the position we want to append
+   to.
+4. Now we go back to our new node, ${N:}$
+5. We set it's `next` pointer to point to the last node, which is the
+   `next` pointee of ${q.}$
+6. Notice, however, that ${N}$'s `prev pointer` is still NULL. Thus, we
+   must modify this pionter to point to `q`.
+7. The last node's `prev` pointer is ${n_3,}$ which is ${q}$'s pointee.
+   Accordingly, we must have ${n_4}$'s `prev` point to the new node ${N:}$
+8. Finally, ${q}$'s pointee still has its `next` pointer pointing to
+   ${n_4:}$
+9. We must change this so it points to ${N,}$ the new node:
+
+In pseudocode:
+
+```rust
+Node* N = new Node(int data);
+Node* q = head;
+for (int i = 0; i < position-1; i++):
+	q = q->next;
+N->next = q->next;
+N->prev = q;
+if (q->next):
+	q->next->prev = N;
+q->next = N;
+```
+
+Notice that last three lines above:
+
+```rust
+if (q->next):
+	q->next->prev = N;
+q->next = N;
+```
+
+We include the if-expression because we must handle the special case of
+appending to the end of the list. If `q` points to the last node, then it's
+`next` pointer is NULL. In that case, we should'nt be trying to assign
+`q`'s next pointee's `prev` pointee, since `q` has no next pointee.
+
+With this algorithm, we must iterate over ${n - 1}$ nodes, where ${n}$ is
+the position we want to index into. This means that this algorithm has a
+time complexity of ${O(n).}$ This is only if we're inserting to a position
+other than the head.
+
+## Deletion
+
+Say we had the following doubly-linked list:
+
+<DoublyLinkedList data={[3, 8, 2, 7]} />
+
+Just as we saw with singly-linked lists, there are two cases for deletion:
+
+1. Deleting the head.
+2. Deleting any node other than the head.
+
+We consider each in turn.
+
+### Head Deletion
+
+Using the same linked list earlier, say we wanted to delete the head:
+
+<DoublyLinkedList data={[{ val: 3, focus: true }, 8, 2, 7]} />
+
+If we delete the head, then the node immediately after the head should
+become the first node:
+
+<DoublyLinkedList data={[3, { val: 8, focus: true }, 2, 7]} />
+
+This is the key fact to keep in mind when deleting the head. So, to start,
+we need two pointers, `p` and `h` on the first node:
+
+<DoublyLinkedList data={[{ val: 3, focus: true, ant: "p h" }, 8, 2, 7]} />
+
+Then, we move the head pointer `h` to the next node:
+
+<DoublyLinkedList data={[3, { val: 8, ant: "h" }, 2, 7]} />
+
+Now that we've moved the head, we can simply delete `p`'s pointee:
+
+<DoublyLinkedList
+	data={[{ val: 8, ant: "h" }, 2, 7]}
+	width={180}
+	containerWidth={60}
+	containerHeight={15}
+/>
+
+This leaves us with the list:
+
+<DoublyLinkedList
+	data={[8, 2, 7]}
+	width={180}
+	containerWidth={60}
+	containerHeight={15}
+/>
+
+While we've successfully deleted the head, notice the new head's `prev`
+pointer is still pointing to `n(1)` which is the node we just deleted.
+Accordingly, we must change `n(1)`'s `prev` pointer to `NULL`.
+
+Importantly, when we change `n(2)`'s `prev` pointee, we must take care to
+check that `h` actually points to some node. If we deleted the head of a
+doubly-linked list with only one node, then `h` would become the null
+pointer.
+
+The implementation:
+
+```rust
+fn deletedHead(node* head) -> void:
+	p = head;
+	head = head->next;
+	delete p;
+	if (head != NULL):
+		head->prev = NULL;
+```
+
+The procedure above consists of constant steps. As such, this operation
+takes constant time—${O(1).}$ Needless to say, deleting a doubly-linked
+list's head is an efficient operation. Contrast this with deleting a node
+at a given index, explored in the next section.
+
+### Tail Node Deletion
+
+We have the following doubly-linked list, and we want to delete the fourth
+node:
+
+<DoublyLinkedList data={[3, 8, 2, { val: 7, focus: true }, 6]} />
+
+To delete the fourth node, we must have the third node, `n(3)` point to the
+fifth node, `n(5)`, annd the fifth node should point on the third node.
+
+However, before we change these pointers' pointees, we must ensure we have
+a pointer to the delete target. If we changed the pointees before doing so,
+we would no longer have a way to access the delete target.
+
+Hence, we need a pointer `p` on the target node. So, we start by
+initializing a pointer `p` initially at the head of the list:
+
+<DoublyLinkedList
+	data={[{ val: 3, ant: "p" }, 8, 2, { val: 7, focus: true }, 6]}
+/>
+
+Then, with a for-loop, move `p` to delete target:
+
+<DoublyLinkedList data={[3, 8, 2, { val: 7, ant: "p" }, 6]} />
+
+Once `p` is in place, all we have to do is modify `n(3)` and `n(5)`'s
+pointees through `p`. With `n(3)`'s `next` pointer pointing to `n(5)` we
+want to have `n(5)`'s `prev` pointer pointing to `n(3)`.
+
+Implementing:
+
+```rust
+fn delete(Node* head, int position):
+	Node* p = head;
+	for (int i = 0; i < position - 1; i++):
+		p = p->next;
+	p->prev->next = p->next;
+	if (p->next):
+		p->next->prev = p->prev;
+	delete p;
+```

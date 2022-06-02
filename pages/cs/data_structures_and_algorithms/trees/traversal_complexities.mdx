@@ -1,0 +1,50 @@
+# Traversal Complexities
+
+Let's lay out our numeric conclusions for the traversal approaches:
+
+| preorder()  | ${2N + 1}$ | ${H + 2}$ |
+| ----------- | ---------- | --------- |
+| inorder()   | ${2N + 1}$ | ${H + 2}$ |
+| postorder() | ${2N + 1}$ | ${H + 2}$ |
+
+Where ${N}$ is the tree's order, and ${H}$ is the tree's height.
+
+The number of calls and stack sizes are all the same. Now, recall the
+Proper Binary Tree Bounds Lemma: The height of a tree, denoted ${H,}$ has
+the bounds:
+
+<figure>$$ O(\log n) ≤ H ≤ O(n) $$</figure>
+
+where ${n}$ is the number of nodes. This yields the following complexities:
+
+<table>
+	<thead>
+		<th>Traversal Method</th>
+		<th>Time Complexity</th>
+		<th>Space Complexity</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td>`preorder()`</td>
+			<td>${O(n)}$</td>
+			<td>${O(\log n) \leq H \leq O(n)}$</td>
+		</tr>
+		<tr>
+			<td>`inorder()`</td>
+			<td>${O(n)}$</td>
+			<td>${O(\log n) \leq H \leq O(n)}$</td>
+		</tr>
+		<tr>
+			<td>`postorder()`</td>
+			<td>${O(n)}$</td>
+			<td>${O(\log n) \leq H \leq O(n)}$</td>
+		</tr>
+		
+	</tbody>
+</table>
+
+Where ${n}$ is the tree's order, and ${H}$ is the tree's height.
+
+Thus, traversing an entire binary tree has a time complexity of ${O(n).}$
+And the space complexity for such a traversal is at least ${O(\log n),}$
+and at most ${O(n),}$ depending on the tree's height.

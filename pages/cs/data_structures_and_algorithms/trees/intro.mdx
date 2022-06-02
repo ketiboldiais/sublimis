@@ -1,0 +1,1387 @@
+# Introduction to Trees
+
+- [Introduction to Trees](#introduction-to-trees)
+  - [Terminology](#terminology)
+  - [Tree Paths](#tree-paths)
+  - [Binary Trees](#binary-trees)
+    - [Tree Counting](#tree-counting)
+    - [Unordered Tree Permutations](#unordered-tree-permutations)
+  - [Tallest Unordered Binary Tree Permutation](#tallest-unordered-binary-tree-permutation)
+  - [Ordered Tree Permutations](#ordered-tree-permutations)
+  - [Height and Node Bounds](#height-and-node-bounds)
+    - [Binary Shrub Sizes](#binary-shrub-sizes)
+    - [Binary Lumber Size](#binary-lumber-size)
+  - [Lumber Heights](#lumber-heights)
+  - [Shrub Heights](#shrub-heights)
+    - [Binary Tree Bounds](#binary-tree-bounds)
+  - [Branch Nodes v. Leaf Nodes](#branch-nodes-v-leaf-nodes)
+  - [Types of Binary Trees](#types-of-binary-trees)
+    - [Rooted Binary Tree](#rooted-binary-tree)
+    - [Proper Binary Tree](#proper-binary-tree)
+    - [Relationship Between Height and Nodes](#relationship-between-height-and-nodes)
+    - [Shrubs](#shrubs)
+    - [Bounds of Proper Binary Trees](#bounds-of-proper-binary-trees)
+    - [Relation: Branch Nodes and Leaves](#relation-branch-nodes-and-leaves)
+    - [Complete Binary Trees](#complete-binary-trees)
+    - [Perfect Binary Tree](#perfect-binary-tree)
+    - [Balanced Binary Tree](#balanced-binary-tree)
+    - [Summary of Tree Types](#summary-of-tree-types)
+  - [${k\text{-ary}}$ Trees](#ktext-ary-trees)
+    - [Strict ${k\text{-ary}}$ Trees](#strict-ktext-ary-trees)
+    - [Strict ${k\text{-ary}}$ Shrub Sizes](#strict-ktext-ary-shrub-sizes)
+    - [Strict ${k\text{-ary}}$ Timber Sizes](#strict-ktext-ary-timber-sizes)
+    - [Strict ${k\text{-ary}}$ Shrub Heights](#strict-ktext-ary-shrub-heights)
+    - [Strict ${k\text{-ary}}$ Timber Heights](#strict-ktext-ary-timber-heights)
+    - [Relationship: Leaves & Branch Nodes](#relationship-leaves--branch-nodes)
+
+In this section, we examine the **tree** data structure. There are many
+kinds of trees—_general trees_, _binary trees_, special types of binary
+trees, and so on. Below is a diagram of some tree.
+
+<Tree
+	data={[
+		[1, ""],
+		[2, 1],
+		[3, 1],
+		[4, 1],
+		[5, 2],
+		[6, 2],
+		[10, 6],
+		[11, 6],
+		[13, 6],
+		[7, 4],
+		[8, 4],
+		[9, 4],
+		[12, 8],
+		[14, 12],
+		[15, 12],
+	]}
+	narrow={50}
+	edgeLength={100}
+/>
+
+A _tree_ is a collection of **nodes** and **edges**; the nodes being the
+colored circles, and the edges being the numbered lines. The nodes need not
+be occupied by number, nor do the edges have to be numbered. The diagram
+above is presented as such for demonstration purposes.
+
+To refer to each node, we use the syntax:
+
+$$
+	\Large n_d
+$$
+
+where ${d}$ is either the data contained in the node, or the index of the
+node. For example, the first node, containing `1`, is denoted:
+
+$$
+	\Large n_1
+$$
+
+For edges, we use the following notation:
+
+$$
+	\Large (n_i, n_j)
+$$
+
+where ${n_i}$ is some node, and ${n_j}$ is a node connected to ${n_i}$ via
+_an_ edge. For example, the edge connecting the node containing `1`
+(${n_1}$) and the node containing `4` (${n_4}$), is written as:
+
+$$
+	\Large (n_1, n_4)
+$$
+
+With this basic notation, we can now discuss terminology.
+
+## Terminology
+
+Trees have specific terminology regarding the relationships between nodes
+to other nodes, nodes to edges, and edges to edges.
+
+First, if there are ${n}$ nodes, there are ${n-1}$ edges. Examining the
+tree above, notice that there are ${15}$ total nodes, and ${14}$ edges. We
+get ${n-1}$ edges because the very first node, called the **root**, has no
+**parents** or **ancestors**.
+
+First, the total number of nodes in a tree is called the tree's **order**,
+denoted with ${|N|.}$ It may also be denoted ${\text{card}(V),}$ or
+${\lvert V \rvert.}$
+
+For example, the tree below is a tree of order ${|N| = 3.}$
+
+<Tree
+	data={[
+		["a", ""],
+		["b", "a"],
+		["c", "a"],
+	]}
+	narrow={70}
+	containerHeight={20}
+/>
+
+This tree is of order ${|N| = 5.}$
+
+<Tree
+	data={[
+		["a", ""],
+		["b", "a"],
+		["c", "a"],
+		["d", "b"],
+		["e", "b"],
+	]}
+	narrow={70}
+	edgeLength={60}
+	containerHeight={25}
+/>
+
+And this tree is of order ${|N| = 15.}$
+
+<Tree
+	data={[
+		["a", ""],
+		["b", "a"],
+		["d", "b"],
+		["g", "d"],
+		["h", "d"],
+		["l", "g"],
+		["m", "h"],
+		["n", "h"],
+		["o", "h"],
+		["c", "a"],
+		["e", "c"],
+		["f", "c"],
+		["i", "e"],
+		["j", "e"],
+		["k", "f"],
+	]}
+/>
+
+A **root** is a node with at least one edge to a node below it, but no
+edges to nodes above it (i.e., a node with a child, but no parents, or, in
+some trees, the topmost node).
+
+For all trees other than the empty tree, every node either (1) has a child,
+or (2) has no children. If a node ${n_i}$ has a child, then the node is
+called a **parent.** A **child** is a node with at least one edge to a node
+above it. For example, in the tree below, the node ${n_e}$ is a _child_ of
+${n_b.}$ The nodes ${n_b,}$ ${n_c,}$ and ${n_d}$ are _children_ of ${n_a.}$
+${n_a}$ is the parent of three nodes: ${n_b,}$ ${n_c,}$ and ${n_d.}$ And
+${n_b}$ is the parent of ${n_e}$ and ${n_f.}$
+
+<Tree
+	data={[
+		["a", ""],
+		["b", "a"],
+		["c", "a"],
+		["d", "a"],
+		["e", "b"],
+		["f", "b"],
+	]}
+/>
+
+A node with one child is called a **uniparous node**. A node with two
+children is called a **biparous** node. A node with three children, a
+**triparous node**, and so on.
+
+A node with no children is called a **leaf**. Any node that is not a
+leaf—i.e., a node with children—is called a **branch node**. In the tree
+diagrams we've seen thus far, branch nodes have been colored beige, and
+leaves have been colored green.
+
+The number of leaves in a tree is called the **foliage count**, denoted
+${n(\ell).}$ For example, in the tree below, the ${n(\ell) = 8.}$
+
+<Tree
+	data={[
+		["a", ""],
+		["b", "a"],
+		["c", "a"],
+		["d", "a"],
+		["e", "b"],
+		["i", "b"],
+		["f", "c"],
+		["g", "d"],
+		["h", "d"],
+		["m", "i"],
+		["n", "i"],
+		["j", "f"],
+		["k", "f"],
+		["l", "g"],
+		["o", "l"],
+		["p", "l"],
+	]}
+/>
+
+If a path exists from node ${n_0}$ to node ${n_i,}$ we say that ${n_0}$ is
+an **ancestor** of ${n_i,}$ and ${n_i}$ is a **descendant** of ${n_0.}$ In
+the tree below, ${n_c}$ is an _ancestor_ of ${n_f,}$ ${n_l,}$ and ${n_g.}$
+Similarly, ${n_j}$ is _descendant_ of ${n_b.}$
+
+<BinaryTree
+	data={[
+		["a", ["b", "c"]],
+		["b", ["d", "e"]],
+		["c", ["f", "g"]],
+		["d", ["h", "i"]],
+		["e", ["j", null]],
+		["f", ["l", null]],
+	]}
+/>
+
+Notice that following these definitions, the root node is the ancestor of
+all nodes within the tree. To refer to all the descendants of a particular
+node ${n_i,}$ we use the term **strict descendants**, denoting such set
+${I(n_i).}$[^issues_note] To refer to all the ancestors of ${n_i,}$ we use
+the term **strict ancestors**, and denote the set ${A(n_i).}$ For example,
+in the tree below, the strict descendants of ${n_b}$ are
+${I(n_b) = \{ n_d, n_h, n_i, n_e, n_j \}.}$
+
+[^issues_note]:
+    Borrowing from legal terminology, we use the letter ${I}$ to stand for
+    "issues," the legal term for a person's descendants.
+
+<BinaryTree
+	data={[
+		["a", ["b", null]],
+		["b", ["d", "e"]],
+		["d", ["h", "i"]],
+		["e", ["j", null]],
+	]}
+/>
+
+And the strict ancestors of ${n_h}$ are ${A(n_h) = \{ n_d, n_b, n_a \}:}$
+
+A **sibling** is a node that shares a parent with another node. For
+example, in the tree below, the nodes ${n_b}$ and ${n_c}$ are siblings,
+since they share the parent ${n_a.}$ The nodes ${n_h}$ and ${n_i}$ are also
+siblings, since they share the parent ${n_d.}$ The nodes ${n_h,}$ ${n_i,}$
+and ${n_j,}$ however, are _not_ siblings, since ${n_h}$ and ${n_i}$ have a
+parent different from ${n_j.}$
+
+<BinaryTree
+	data={[
+		["a", ["b", "c"]],
+		["b", ["d", "e"]],
+		["d", ["h", "i"]],
+		["e", ["j", null]],
+	]}
+/>
+
+The nodes ${n_h,}$ ${n_i,}$ and ${n_j,}$ however, are **cousins**—nodes
+whose parents are siblings. We also say that ${n_e,}$ the parent of
+${n_j,}$ is a **pibling** of ${n_h}$ and ${n_i,}$ and that ${n_h}$ and
+${n_i}$ are **niblings** of ${n_j.}$
+
+A node with no siblings is called a **monoprogeny**, or **monoprog**. In
+the tree above, the nodes ${n_j}$ and ${n_c}$ are monoprogs, since they are
+the only children of ${n_e}$ and ${n_a}$ respectively. From this
+definition, it follows that the root is always a monoprog, since it has no
+siblings.
+
+The **degree** of a node ${n_i}$ is the number of the ${n_i}$'s _children_
+(not descendants), denoted ${\text{deg}(n_i).}$ For example, in the tree
+below, ${\text{deg}(n_b) = 3,}$ since ${n_b}$ has three children: ${n_f,}$
+${n_g,}$ and ${n_h.}$ The degree of ${n_c}$ is ${\text{deg}(n_c) = 2,}$
+since ${n_c}$ has two children: ${n_j}$ and ${n_k.}$ Implied by this
+definition is the proposition that all leaves have a degree of ${0,}$ since
+leaves, by definition, have no children. Thus, ${\text{deg}(n_f) = 0,}$
+${\text{deg}(n_g) = 0,}$ and so on.
+
+<Tree
+	data={[
+		["a", ""],
+		["b", "a"],
+		["c", "a"],
+		["d", "a"],
+		["e", "a"],
+		["f", "b"],
+		["g", "b"],
+		["h", "b"],
+		["k", "c"],
+		["j", "c"],
+		["n", "d"],
+		["o", "e"],
+		["i", "j"],
+		["l", "j"],
+		["m", "k"],
+	]}
+	containerHeight={35}
+/>
+
+The **degree of a tree**, or **tree degree**, has varying definitions. Some
+authors will define the tree's degree as the degree of the root, others
+will define it as the maximum degree of any given node in a tree (i.e., the
+maximum number of children a node may have). In these materials, we define
+the **tree degree** as follows:
+
+> _Definition_ The _degree of a tree_ ${T}$ denoted ${k,}$ is the maximum
+> degree of any given node in the tree.
+
+When we seek to convey the degree of the root, we will use the term **root
+degree**. For example, the tree below has a degree ${k = 2,}$ since every
+node has at most ${2}$ children.
+
+<BinaryTree
+	data={[
+		["a", ["b", "c"]],
+		["b", ["d", "e"]],
+		["c", ["f", "g"]],
+		["d", ["h", "i"]],
+		["e", ["j", null]],
+		["f", ["l", "m"]],
+		["g", ["n", null]],
+	]}
+/>
+
+This tree has a degree ${k = 4,}$ since every node has at most ${3}$
+children:
+
+<Tree
+	data={[
+		["a", ""],
+		["b", "a"],
+		["c", "a"],
+		["d", "a"],
+		["e", "a"],
+		["f", "c"],
+		["g", "c"],
+		["h", "c"],
+		["i", "c"],
+		["j", "e"],
+		["l", "f"],
+		["m", "f"],
+		["n", "f"],
+	]}
+/>
+
+## Tree Paths
+
+The shape of a tree gives a natural flow from the root down to any node
+within the tree. For example, consider the following tree:
+
+<BinaryTree
+	data={[
+		["A", ["B", "C"]],
+		["B", ["D", "E"]],
+		["C", ["F", "G"]],
+		["D", ["H", "I"]],
+		["E", ["J", "K"]],
+		["F", ["L", "M"]],
+		["G", ["O", "P"]],
+	]}
+/>
+
+A **path** is essentially a "route" or "road" from some node to another
+node. For example, a path from the root to the node ${n_F}$ would be:
+
+$$
+	p(n_A, n_F) = (n_A, n_C, n_F)
+$$
+
+A path to the leaf ${n_K:}$
+
+$$
+	p(n_A, n_K) = (n_A, n_B, n_E, n_K)
+$$
+
+Notice that these paths are simply lists. Because paths are lists, they
+have a _length_—the number of edges in the path. For example, the path
+${p(n_A, n_F)}$ has the length ${L(p(n_A, n_F)) = 2.}$ The path
+${p(n_A, n_K)}$ has the length ${L(p(n_A, n_K)) = 3.}$
+
+For any node ${n}$ within a tree, there is a unique path from the root to
+${n.}$ The length of this path is called the **depth** of ${n.}$ Because
+there is no edge connecting the root to the root, we say that the depth of
+the root is ${0.}$
+
+For example, the tree below presents different depths:
+
+<BinaryTree
+	data={[
+		["A", ["B", "C"]],
+		["B", ["D", "E"]],
+		["C", ["F", "G"]],
+		["D", ["H", "I"]],
+		["E", ["J", "K"]],
+		["F", ["L", "M"]],
+		["G", ["O", "P"]],
+	]}
+	depthMark={true}
+/>
+
+The **tree depth** ${D}$ is the maximum depth among all nodes in the tree.
+In the tree above, the tree depth is ${3.}$
+
+Each node ${n}$ in the tree also has a **height**, the number of edges on
+the longest path from ${n}$ to a leaf. To illustrate, the tree below marks
+the various heights for each node. The leaf nodes have a height of ${0,}$
+because there is no path from the leaf node to a leaf node. The nodes
+${n_D,}$ ${n_E,}$ ${n_F,}$ and ${n_G}$ each have a height of ${1,}$ since
+the longest path from those nodes to a leaf node consists of ${1}$ edge.
+
+<BinaryTree
+	data={[
+		["A", ["B", "C"]],
+		["B", ["D", "E"]],
+		["C", ["F", "G"]],
+		["D", ["H", "I"]],
+		["E", ["J", "K"]],
+		["F", ["L", "M"]],
+		["G", ["O", "P"]],
+	]}
+	heightMark={true}
+/>
+
+The **tree height** ${H}$ is the maximum height among all nodes in the
+tree. In the tree above, the tree height is ${3.}$
+
+## Binary Trees
+
+The **binary tree** is a tree of degree-${2}$—a tree where every node can
+have, at most, ${2}$ children. For example, below is a binary tree
+consisting of fifteen nodes:
+
+<BinaryTree
+	data={[
+		[1, [2, 3]],
+		[2, [4, 5]],
+		[3, [6, 7]],
+		[4, [8, 9]],
+		[5, [10, 11]],
+		[6, [12, 13]],
+		[7, [14, 15]],
+	]}
+/>
+
+The binary tree above is an example of a **perfect binary tree**—a binary
+tree where all branch nodes have exactly two children, and every leaf is at
+the same generation or depth within the tree. Binary trees can be thought
+of in various shapes and sizes. For example, this is a binary tree:
+
+<BinaryTree data={[[1, [2, null]]]} />
+
+Remember, the only requirement for a binary tree is that each node has, _at
+most_, two children. The tree above is a special kind of binary tree called
+a **degenerate binary tree** or a **pathological binary tree**. When the
+degenerate tree skews left, we call it a **left-skewed tree**.
+
+<BinaryTree
+	data={[
+		[1, [2, null]],
+		[2, [3, null]],
+	]}
+/>
+
+And when the tree skews right, we call it a **right-skewed tree**:
+
+<BinaryTree
+	data={[
+		[1, [null, 2]],
+		[2, [null, 3]],
+	]}
+/>
+
+### Tree Counting
+
+_Tree counting_ is the process of counting the number of possible trees
+given certain constraints. The most common form of tree counting is
+counting the number of possible trees given ${|N|}$ nodes. How the counting
+is performed depends on whether the nodes are labelled or unlabelled. We
+distinguish these two constraints by presenting the following definitions
+immediately:
+
+> _Lemma_. Given ${|N|}$ nodes, the number of possible unordered trees,
+> denoted ${P_u(|N|),}$ is given by the formula:
+>
+> $$
+> 	P_U(|N|) = \dfrac{(2|N|)!}{(|N|+1)! \cdot |N|!}
+> $$
+>
+> where ${|N| \geq 0.}$
+
+> _Lemma_. Given ${|N|}$ nodes, the number of possible ordered trees,
+> denoted ${P_O(|N|),}$ is given by the formula:
+>
+> $$
+> 	P_O(|N|) = \dfrac{(2|N|)!}{(|N|+1)! \cdot |N|!} \cdot |N|!
+> $$
+>
+> where ${|N| \geq 0.}$
+
+### Unordered Tree Permutations
+
+Suppose we have three nodes, ${n_1,}$ ${n_2,}$ and ${n_3.}$ With three
+nodes, we have ${|N| = 3.}$ Suppose further that the nodes are **unlabelled
+nodes**—they do not contain any data or any associated identifiers. Just
+three empty nodes. How many structurally different binary trees can be
+generated with these three nodes? Well, we can draw each of them:
+
+![A forest of unlabeled trees of order 3.](https://res.cloudinary.com/sublimis/image/upload/v1652914768/cs/unlabeled_three_node_forest.svg)
+
+We see that there are ${5}$ possible trees. What if we had ${4}$ nodes?
+Again, each node is just a node—no particular data or associated label.
+Four empty nodes. Once more, we can draw each of them:
+
+![A forest of unlabeled trees of order 4.](https://res.cloudinary.com/sublimis/image/upload/v1652914865/cs/unlabeled_four_node_forest.svg)
+
+Here, we see that there are ${14}$ possible trees. In general, the number
+of possible trees for ${|N|}$ unlabelled nodes is given by the _Catalan
+Number Formula_:
+
+> _Catalan Number_. A Catalan number ${C_n}$ is a positive integer that
+> satisfies the following equation:
+>
+> $$
+> 	C_n = \dfrac{1}{n+1} \dbinom{2n}{n}
+> $$
+>
+> where ${n \geq 0.}$
+
+Expanding the Catalan number formula, we get:
+
+$$
+	\begin{aligned} C_n &= \dfrac{1}{n+1} \dbinom{2n}{n} \\[1em] &= \dfrac{1}{n+1} \cdot \dfrac{(2n)!}{n!(2n-n)!} \\[1em] &= \dfrac{(2n)!}{(n+1)! \cdot n!} \end{aligned}
+$$
+
+We can use this formula to state our lemma:
+
+> _Lemma: Unordered Tree Permutations_. Given ${|N|}$ nodes, the number of
+> possible unordered trees, denoted ${P_u(|N|),}$ is given by the formula:
+>
+> $$
+> 	  P_U(|N|) = \dfrac{(2|N|)!}{(|N|+1)! \cdot |N|!}
+> $$
+>
+> where ${|N| \geq 0.}$
+
+The formula can be verified by checking our earlier work exhausing possible
+trees. Where ${|N| = 3,}$ we have:
+
+$$
+	\begin{aligned} P_U(|N|) &= \dfrac{(2|N|)!}{(|N|+1)! \cdot |N|!} \\[1em] &= \dfrac{(2 \cdot 3)!}{(3+1)! \cdot 3!} \\[1em] &= \dfrac{6!}{4! \cdot 3!} \\[1em] &= \dfrac{6 \cdot 5 \cdot 4!}{4!  \cdot 3!} \\[1em] &= \dfrac{6 \cdot 5 \cdot \cancel{4!}}{\cancel{4!} \cdot 3!} \\[1em] &= \dfrac{30}{6} \\[1em] &= 5 \end{aligned}
+$$
+
+The lemma we've derived allows us to enumerate all the possible unordered
+trees given ${|N|}$ nodes without having to draw all of the possibilities.
+For example, with ${|N| = 6,}$ we have:
+
+$$
+	\begin{aligned} P_U(|6|) &= \dfrac{(2|6|)!}{(|6|+1)! \cdot |6|!}
+	\\[1em] &= \dfrac{12!}{(7)! \cdot 6!} \\[1em] &= \dfrac{12 \cdot 11
+	\ldots \cdot 8 \cdot 7!}{7! \cdot 6!} \\[1em] &= \dfrac{12 \cdot 11
+	\ldots \cdot 8 \cdot \cancel{7!}}{\cancel{7!} \cdot 6!} \\[1em] &=
+	\dfrac{12 \cdot 11 \ldots \cdot 8}{6 \cdot 5 \cdot 4 \cdot 3 \cdot
+	2} \\[1em] &= \dfrac{6 \cdot 2 \cdot 11 \cdot 5 \cdot 2 \cdot 3
+	\cdot 3 \cdot 4 \cdot 2}{6 \cdot 5 \cdot 4 \cdot 3 \cdot 2} \\[1em]
+	&= \dfrac{\cancel{6} \cdot \cancel{2} \cdot 11 \cdot \cancel{5}
+	\cdot 2 \cdot \cancel{3} \cdot 3 \cdot \cancel{4} \cdot
+	2}{\cancel{6} \cdot \cancel{5} \cdot \cancel{4} \cdot \cancel{3}
+	\cdot \cancel{2}} \\[1em] &= 11 \cdot 2 \cdot 3 \cdot 2 \\[1em] &=
+	132 \end{aligned}
+$$
+
+possible unordered, structurally different trees. Each of these trees is
+called an **unordered tree permutation of order ${|N|}$ (${N}$-UTP)**.
+
+## Tallest Unordered Binary Tree Permutation
+
+Among all of the possible binary ${N}$-UTPs, we often want to find the the
+number of binary ${N}$-UTPs of maximum height. We denote this number with
+the variable ${\varkappa.}$
+
+> _Definition_. Given ${|N|}$ nodes, the number of unordered binary tree
+> permutations of maximum height is:
+>
+> $$
+> 	\varkappa = 2^{n-1}
+> $$
+
+To see why this formula holds, let's look at our previous diagrams. Where
+${n = 3,}$ we have ${4}$ trees of maximum height. Where ${n = 4,}$ we have
+${8}$ possible trees of maximum height. Laying this data out via table:
+
+| ${n}$ | number of maximum height trees |
+| ----- | ------------------------------ |
+| ${3}$ | ${4 = 2^2}$                    |
+| ${4}$ | ${16 = 2^3}$                   |
+
+Accordinly, given ${n}$ nodes, the number of trees of maximum height is
+given by:
+
+$$
+	\varkappa = 2^{n-1}
+$$
+
+## Ordered Tree Permutations
+
+When the nodes are labelled, the number of possible trees—denoted
+${P_O(|N|) }$—is different. For example, recall that with unlabelled nodes,
+we have ${5}$ possible trees:
+
+![A forest of unlabeled trees of order 3.](https://res.cloudinary.com/sublimis/image/upload/v1652914768/cs/unlabeled_three_node_forest.svg)
+
+Once we introduce labels, we add a slight wrinkle to the analysis. For the
+first possibility, a left-skewed tree, we have ${3! = 6}$ possibilities:
+
+![A forst of labeled trees of order 3.](https://res.cloudinary.com/sublimis/image/upload/v1652915220/cs/labeled_three_node_forest.svg)
+
+Thus, every structurally unique tree carries with it ${|N|!}$ possible
+arrangements, where ${|N|}$ is the number of nodes. Accordingly, we want to
+take the number of structurally different unordered trees, and multiply
+that number by ${|N|!,}$ to account for the different possible orders.
+
+$$
+	P_O(|N|) = \dfrac{(2|N|)!}{(|N|+1)! \cdot |N|!} \cdot |N|!
+$$
+
+Thus, we have the following lemma:
+
+> _Lemma_. Given ${|N|}$ nodes, the number of possible ordered trees,
+> denoted ${P_O(|N|),}$ is given by the formula:
+>
+> $$
+> 	P_O(|N|) = \dfrac{(2|N|)!}{(|N|+1)! \cdot |N|!} \cdot |N|!
+> $$
+>
+> where ${|N| \geq 0.}$
+
+This lemma gives us the cardinality of the set of all possible ordered
+trees given ${N}$ nodes. Each member of the set is called an **ordered tree
+permutation of order |N| (N-OTP)**.
+
+## Height and Node Bounds
+
+The number of nodes in a binary tree, ${|N|,}$ and the tree's height ${H}$
+have several relationships:
+
+> _Definition_ The shortest possible tree that can be achieved with ${|N|}$
+> nodes is called an ${N}$-shrub or minimum height tree of order ${N}$,
+> denoted ${\mathbb{S}.}$ If the tree is restricted to a tree degree ${k,}$
+> we write ${\mathbb{S}^k.}$
+
+> _Definition_ The tallest possible tree that can be achieved with ${|N|}$
+> nodes is called an ${N}$-lumber or maximum height tree of order ${N}$,
+> denoted ${\mathbb{L}.}$ If the tree is restricted to a tree degree ${k,}$
+> we write ${\mathbb{L}^k.}$
+
+> _Definition_ Given a height ${H,}$ the minimum order necessary to
+> achieving a tree of height ${H}$ is called the shrub size given height
+> ${H}$, denoted ${S_{min}(H).}$ If the tree's nodes can only have at most
+> ${k}$ children, we write ${S_{min}^k(H).}$
+
+> _Definition_ Given a height ${H,}$ the maximum order necessary to
+> achieving a tree of height ${H}$ is called the lumber size given height
+> ${H}$, denoted ${S_{max}(H).}$ If the tree's nodes can only have at most
+> ${k}$ children, we write ${S_{max}^k(H).}$
+
+> _Definition_ The minimum height achieved with ${|N|}$ nodes is called the
+> shrub height given ${n}$ nodes, denoted ${H_{min}(|N|).}$ If the tree's
+> nodes can only have at most ${k}$ children, we write ${H_{min}^k(|N|).}$
+
+> _Definition_ The minimum height achieved with ${|N|}$ nodes is called the
+> lumber height give ${|N|}$ nodes, denoted ${H_{max}(|N|).}$ If the tree's
+> nodes can only have at most ${k}$ children, we write ${H_{max}^k(|N|).}$
+
+We examine each of these properties for binary trees.
+
+### Binary Shrub Sizes
+
+A binary shrub size solves the following problem:
+
+> Given a height ${H}$ of a binary tree, what is the minimum number of
+> nodes, or the minimum order, necessary to achieving ${H?}$
+
+A good starting point to answering this question is by considering a few
+easy examples:
+
+![Various shrub sizes.](https://res.cloudinary.com/sublimis/image/upload/v1652915501/cs/binary_shrub_size.svg)
+
+From the diagram above, we make the following findings:
+
+<table>
+<thead>
+<th>Height</th>
+<th>Mininum number of nodes</th>
+<th>Maximum number of of nodes</th>
+</thead>
+<tbody>
+<tr>
+<td>${1}$</td>
+<td>${|N| = 2}$</td>
+<td>${|N| = 3}$</td>
+</tr>
+<tr>
+<td>${2}$</td>
+<td>${|N| = 3}$</td>
+<td>${|N| = 7}$</td>
+</tr>
+<tr>
+<td>${3}$</td>
+<td>${|N| = 4}$</td>
+<td>${|N| = 15}$</td>
+</tr>
+</tbody>
+</table>
+
+Reading this table, we see that for a tree of height ${1,}$ the smallest
+possible number of nodes we can use to achieve that height is ${2,}$ and
+the biggest possible number of nodes we can use is ${3.}$
+
+Studying the patterns, we have the following formulas:
+
+> _Formula_ Given a binary tree height of ${H,}$ the minimum number of
+> nodes needed to achieve ${H}$ is:
+>
+> $$
+>   S_{min}(H) = H + 1
+> $$
+
+### Binary Lumber Size
+
+The binary lumber size answers the following problem:
+
+> Given a height ${H}$ of a binary tree, what is the maximum number of
+> nodes to achieve ${H?}$
+
+For the maximum number of nodes, the trick is to look at the generations.
+Consider the tree where ${|N| = 15.}$ At the first generation, there is
+${1}$ node. At the second generation, there are ${2}$ nodes. At the third
+generation, there are ${2^2 = 4}$ nodes. At the fourth generation, there
+are ${2^3}$ nodes. This yields:
+
+$$
+	\begin{aligned}
+		&n(\{ v \in V : v_L = 1 \}) + n(\{ v \in V : v_L = 2 \}) + n(\{ v \in V : v_L = 3 \}) \\ 
+		&= 1 + 2 + 2^2 + 2^3 \\ 
+		&= 
+	15 \end{aligned}
+$$
+
+The notation ${\{ v \in V : v_L = i \}}$ means, the set of all nodes ${v}$
+whose generation is ${i.}$ Thus, we're summing the number of nodes at each
+generation. To maximize the number of possible nodes, we want each node at
+each generation to have two children, per the constraints for a binary
+tree.
+
+Examining the computation, we see a sequence, the _geometric progression_:
+
+$$
+	(a, ar, ar^2, ar^3, \ldots, ar^k)
+$$
+
+The sum of this sequence is the _geometric series_:
+
+$$
+	ar^0 + ar^1 + ar^2 + \ldots + ar^k = \sum\limits_{k=1}^{k=h} ar^k = \dfrac{a(r^{k+1} - 1)}{r-1}
+$$
+
+where ${r}$ is the common ratio, ${a}$ is the base ${1,}$ ${k}$ is the
+power, and ${h}$ is the height. Thus, applying this formula to, say,
+${h = 3,}$ we get:
+
+$$
+	\begin{aligned} \sum\limits_{k=1}^{k=h} ar^k &= \dfrac{a(r^{k+1} - 1)}{r-1} \\[1em] &= \dfrac{1(2^{3+1} - 1)}{2-1} \\[1em] &= \dfrac{1(2^{4} - 1)}{1} \\[1em] &= \dfrac{1(16 - 1)}{1} \\[1em] &= \dfrac{1(15)}{1} \\[1em] &= 15 \end{aligned}
+$$
+
+Thus, we have the formula:
+
+> _Formula_. Given a binary tree height of ${H,}$ the _maximum_ number of
+> nodes needed to achieve ${H}$ is:
+>
+> $$
+> 	|N|_{max} = 2^{H+1} - 1
+> $$
+
+## Lumber Heights
+
+Alternatively, some problems require us to find the tallest (i.e., the
+greatest possible height) tree given ${n}$ nodes. Knowing the height of
+this tree provides an upper bound for certain calculations. We call such a
+tree a **lumber**.
+
+> _Definition_. A lumber ${L}$ is a tree with the greatest possible height
+> ${H(L)}$ given ${n}$ nodes.
+
+For example, given ${3}$ nodes, we have a lumber of ${H(L) = 2.}$ With
+${7}$ nodes, we have a lumber of ${H(L) = 6.}$ With ${15}$ nodes, we have a
+lumber of ${H(L) = 14.}$
+
+Finding a lumber and its height for a binary tree of ${n}$ nodes is
+straightforward. Per the constraints of a binary tree, to achieve the
+maximum height, we just have to ensure that each node has ${1,}$ and only
+${1}$ child. In other words, arrange the tree linearly. Thus, we have the
+formula:
+
+> _Timber Height Formula_. Given ${n}$ nodes, the height of a lumber,
+> denoted ${H(L),}$ is given by the formula:
+>
+> $$
+> 	H(L) = n - 1
+> $$
+
+## Shrub Heights
+
+In many problems, we often want to find the shortest (i.e., the smallest
+possible height) tree given ${n}$ nodes. Knowing the height of this tree is
+a useful asset for analyzing various computations. We call such a tree a
+**shrub**.
+
+> _Definition_. A shrub ${S}$ is a tree with the least possible height
+> ${H(S)}$ given ${n}$ nodes.
+
+For example, with ${3}$ nodes, we have a shrub of ${H(S) = 1.}$ With ${7}$
+nodes, we have a shrub of ${H(S) = 2.}$ With ${15}$ nodes, we have a shrub
+of ${H(S) = 3.}$
+
+The formula for computing height of a shrub is simply a rearrangement of
+the formula for the _maximum_ number of nodes need to achieve a height
+${H.}$[^shrub_height_note]
+
+[^shrub_height_note]:
+    Notice that the lumber height formula is also a rearrangement of the
+    formula for the _minimum_ number of nodes needed to achieve a height
+    ${H.}$
+
+$$
+	\begin{aligned} n &= 2^{h+1} - 1 \\ n + 1 &= 2^{h+1} \\ \log_{2}(n+1) &= h + 1 \\ \log_{2}(n+1) - 1 &= h \end{aligned}
+$$
+
+> _Shrub Height Formula_. Given ${n}$ nodes, the height of a lumber,
+> denoted ${H(L),}$ is given by the formula:
+>
+> $$
+> 	  H(S) = \log_{2}(n+1) - 1
+> $$
+
+### Binary Tree Bounds
+
+From our analyses of shrubs and lumbers, we have the following conclusions:
+
+| Property                                                                    | Quantification            |
+| --------------------------------------------------------------------------- | ------------------------- |
+| Given a height ${H,}$ the least number of nodes needed to achieve ${H.}$    | ${n = H + 1}$             |
+| Given a height ${H,}$ the greatest number of nodes needed to achieve ${H.}$ | ${n = 2^{H+1} - 1}$       |
+| Given ${n}$ nodes, the height of the shortest possible tree (a shrub).      | ${H = \log_{2}(n+1) - 1}$ |
+| Given ${n}$ nodes, the height of the tallest possible tree (a lumber).      | ${H = n + 1}$             |
+
+These findings yield two powerful theorems. First, the bounds for the
+height of a binary tree:
+
+> _Lemma: Height Bounds of a Binary Tree_. Let ${B}$ be a binary tree. The
+> height of ${B,}$ denoted ${H_B,}$ is bounded on the interval:
+>
+> $$
+> 	\log_{2}(n+1) - 1 \leq H_B \leq n - 1
+> $$
+>
+> where ${n}$ is the number of nodes in ${B.}$
+
+A useful implication of this theorem is seen when we rewrite the upper and
+lower bounds in terms of big-O notation:
+
+$$ O(\log n) \leq H_B \leq O(n) $$ This yields the corollary:
+
+> _Corollary: Big-O Height Bounds of a Binary Tree_. Let ${B}$ be a binary
+> tree. The height of ${B,}$ denoted ${H_B,}$ is bounded on the interval:
+>
+> $$
+> 	O(\log n) \leq H_B \leq O(n)
+> $$
+>
+> where ${n}$ is the number of nodes in ${B.}$
+
+Second, the bounds for the cardinality of ${V_B,}$ the set of all nodes in
+the binary tree ${B:}$
+
+> _Theorem: Node Bounds of a Binary Tree_. Let ${B}$ be a binary tree. The
+> number of nodes in ${B,}$ denoted ${n(V_B),}$ is bounded on the interval:
+>
+> $$
+> 	H_B + 1 \leq n(V_B) \leq 2^{H_B+1} - 1
+> $$
+>
+> where ${H_B}$ is the height of the binary tree ${B.}$
+
+## Branch Nodes v. Leaf Nodes
+
+Recall that a **leaf node** is a node with no children; i.e., a node with
+${\text{deg}(n) = 0.}$ Nodes that do have children are called **branch
+nodes**. With binary trees, branch nodes either have ${\text{deg}(n) = 1}$
+or ${\text{deg}(n) = 2.}$ We call a branch node with ${1}$ child a
+**twig**, and a branch node with ${2}$ children a **bough**. Is there a
+mathematical relationship between leaf nodes and branch nodes? Let's find
+out.
+
+Consider the following binary trees:
+
+![Various trees with different leaf and branch node counts.](https://res.cloudinary.com/sublimis/image/upload/v1652916043/cs/leaf_and_branch_node_relationship.svg)
+
+In the trees above, bough nodes are colored brown, twig nodes are colored
+yellow, and leaf nodes are colored green. Examining each tree, we have the
+following observations:
+
+<table>
+<thead>
+<tr>
+<th>Tree</th>
+<th>${|N|}$</th>
+<th>${\text{deg}(n) = 0}$ (number of leaves)</th>
+<th>${\text{deg}(n) = 1}$ (number of twigs)</th>
+<th>${\text{deg}(n) = 2}$ (number of boughs)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>${1}$</td>
+<td>${2}$</td>
+<td>${1}$</td>
+<td>${1}$</td>
+<td>${0}$</td>
+</tr>
+<tr>
+<td>${2}$</td>
+<td>${3}$</td>
+<td>${2}$</td>
+<td>${0}$</td>
+<td>${1}$</td>
+</tr>
+<tr>
+<td>${3}$</td>
+<td>${7}$</td>
+<td>${3}$</td>
+<td>${2}$</td>
+<td>${2}$</td>
+</tr>
+<tr>
+<td>${5}$</td>
+<td>${7}$</td>
+<td>${2}$</td>
+<td>${4}$</td>
+<td>${1}$</td>
+</tr>
+<tr>
+<td>${4}$</td>
+<td>${15}$</td>
+<td>${5}$</td>
+<td>${6}$</td>
+<td>${4}$</td>
+</tr>
+</tbody>
+</table>
+
+Examining this table, we see that there is some sort of relationship
+between leaves (nodes of degree ${0}$) and boughs (nodes of degree ${2}$):
+The number of nodes of degree ${0}$ is one plus the number of nodes of
+degree ${2:}$
+
+> _Lemma_. Given a binary tree ${B}$ with leaves ${\ell}$ and boughs ${b,}$
+> the number of leaves is one more than the number of boughs:
+>
+> $$
+> 	n(\ell) = n(b) + 1
+> $$
+
+## Types of Binary Trees
+
+To understand the costs and benefits of the binary tree data structure,
+it's helpful to know the different types of binary trees. This allows us to
+efficiently communicate various propositions.
+
+### Rooted Binary Tree
+
+Recall that a **binary tree** is a tree where each node has at most two
+children. Notice that this definition imposes no requirement for a _root_.
+In most applications, when we use the term "binary tree," we're actually
+referring to a **rooted binary tree**—a tree data structure with: (1) a
+_root_, and (2) each node in the tree has at most ${2}$ children.
+
+> _Definition: Rooted Binary Tree_. A binary tree ${B}$ with nodes
+> ${\{v \in V_B\}}$ is a _rooted binary tree_ if and only if:
+>
+> - ${B}$ has ${1}$ root, and
+> - ${v \in V_B \implies \text{deg}(v) \in \{ 0,1,2 \}}$
+
+### Proper Binary Tree
+
+A **proper binary tree** is a binary tree where each node has either ${0}$
+or ${2}$ children.[^proper_binary_tree_note] The proper binary tree's
+definition is simply a modification of the second prong of the rooted
+binary tree's definition:
+
+[^proper_binary_tree_note]:
+    Proper binary trees are also called **full binary trees** or **plane
+    binary trees**.
+
+> _Definition: Proper Binary Tree_ A binary tree ${B}$ with nodes
+> ${\{v \in V_B\}}$ is a _proper binary tree_ if and only if:
+>
+> - ${B}$ has ${1}$ root, and
+> - ${v \in V_B \implies \text{deg}(v) \in \{ 0,2 \}}$
+
+Binary trees that are not proper binary trees are called **improper binary
+trees**. For example, the green trees below are all proper binary trees,
+but the red trees are not:
+
+[!Proper and improper binary trees](https://res.cloudinary.com/sublimis/image/upload/v1652916272/cs/proper_binary_trees.svg)
+
+We can think of a proper binary tree as a binary tree where the nodes are
+"all or nothing"—the node either has the greatest possible number of
+children (${2}$) or has no children at all (${0}$). Alternatively, we can
+think of the property binary tree as any tree where no node has just one
+child. A helpful way to remember this property is to observe that the
+definition of a proper binary tree prohibits a node from having just ${1}$
+child—node with a unary, not binary, degree.
+
+### Relationship Between Height and Nodes
+
+Proper binary trees can be identified by a special relationship between its
+height and its nodes. Consider the following table:
+
+| Height | Minimum Number of Nodes | Maximum Number of Nodes |
+| ------ | ----------------------- | ----------------------- |
+| ${2}$  | ${n = 5}$               | ${n = 7}$               |
+| ${3}$  | ${n = 7}$               | ${n = 15}$              |
+| ${4}$  | ${n = 9}$               | ${n = 31}$              |
+
+We have the following formulas establishing the relationship between the
+height of a proper binary tree and the minimum or maximum number of nodes
+needed to achieve that height.
+
+> _Formula ${n_{min}}$-for-${H}$._  Let ${B}$ be a proper binary tree. Then
+> the _minimum_ number of nodes ${n_{min}}$ needed to achieve the height of
+> ${B,}$ denoted ${H,}$ is given by the :
+>
+> $$
+> 	n_{min} = 2H + 1
+> $$
+
+and the maximum number of nodes:
+
+> _Formula: ${n_{max}}$-for-${H}$._ Let ${B}$ be a proper binary tree. Then
+> the _maximum_ number of nodes ${n_{min}}$ needed to achieve the height of
+> ${B,}$ denoted ${H,}$ is given by the formula:
+>
+> $$
+> 	n_{max} = 2^{H+1} - 1
+> $$
+
+### Shrubs
+
+Given ${n}$ nodes, we often want to find the height of the **proper
+shrub**—the shortest possible proper binary tree given ${n}$ nodes. As we
+saw earlier with the general formulas, we can derive the height of a proper
+shrub from the ${n_{max}}$-for-${H}$ formula:
+
+$$
+	\begin{aligned} n &= 2^{H+1} - 1 \\ n + 1 &= 2^{H+1} \\ \log_2(n + 1) &= H+1 \\ \log_2(n + 1) - 1 &= H \end{aligned}
+$$
+
+> _Formula: Shrub Height_. Given ${n}$ nodes, the height of _shortest
+> possible_ proper binary tree is given by the formula:
+>
+> $$
+> 	H(S) = \log_{2}(n + 1) - 1
+> $$
+
+The same reasoning extends to deriving the formula for the height of the
+**proper lumber**—the tallest possible binary tree given ${n}$ nodes:
+
+$$
+	\begin{aligned} n &= 2H + 1 \\[1em] n - 1 &= 2H \\[1em] \dfrac{n-1}{2} &= H \end{aligned}
+$$
+
+Hence, we have the formula:
+
+> _Formula: Lumber Height_. Given ${n}$ nodes, the height of _tallest
+> possible_ proper binary tree is given by the formula:
+>
+> $$
+> 	H(L) = \dfrac{n-1}{2}
+> $$
+
+### Bounds of Proper Binary Trees
+
+As we saw the general formulas, the lumber and shrub height formulas
+provide us with upper and lower bounds for the heights of proper binary
+trees.
+
+> _Theorem: Proper Binary Tree Bounds_. Given a proper binary tree ${B}$
+> with ${n}$ nodes, the height of ${B,}$ denoted ${H(B),}$ satisfies the
+> following expression:
+>
+> $$
+> 	\log_{2}(n+1) \leq H(B) \leq \dfrac{n-1}{2}
+> $$
+>
+> or, alternatively,
+>
+> $$
+> 	O(\log n) \leq H(B) \leq O(n)
+> $$
+
+### Relation: Branch Nodes and Leaves
+
+Is there a relationship between a proper binary tree's branch nodes and
+leaves? It turns out yes:
+
+> _Relation: Proper Branch Nodes and Leaves_. Given a proper binary tree
+> ${B}$ with ${n(b)}$ branch nodes and ${n(\ell)}$ leaves, the number of
+> nodes and the number of leaves have the relation:
+>
+> $$
+> 	n(\ell) = n(b) + 1
+> $$
+
+### Complete Binary Trees
+
+A **complete binary tree** is a binary tree where each generation other
+than possibly the last is completely filled (i.e., each node has exactly
+two children). The last generation may be completely or partially filled,
+but if it is partially filled, it must be filled from left to right.
+
+> _Definition: Complete Binary Tree_. Let ${B}$ be a binary tree. ${B}$ is
+> a complete binary tree iff the following propositions are true:
+>
+> - If a node has a height ${h > 0,}$ then the node has exactly two
+>   children.
+> - For the set of all nodes with a height ${h = 0,}$ the only monoprog
+>   must be in the right subtree of ${B,}$ and the left child of its
+>   parent.
+
+For example, the green trees below are all complete binary trees, while the
+non-green trees are **incomplete binary trees**—binary trees that are not
+complete.
+
+![Complete and incomplete binary trees.](https://res.cloudinary.com/sublimis/image/upload/v1652916631/cs/complete_and_incomplete_binary_trees.svg)
+
+The purple tree is an incomplete binary tree because it has no siblings,
+but is not the left child. The brown tree is an incomplete binary tree
+because not every generation is filled—the node at generation ${2}$ has
+only one child (i.e., a node with a degree of ${1}$ when it must have a
+degree of ${2}$). The blue tree is not a complete binary tree because it
+has no root.
+
+### Perfect Binary Tree
+
+A perfect binary tree is a binary tree where all interior nodes have two
+children, and all leaves have the same depth or are on the same generation.
+
+> _Definition: Perfect Binary Tree_. Let ${B}$ be a binary tree. ${B}$ is a
+> _perfect binary tree_ if and only if:
+>
+> - all branch nodes have two children, and
+> - all leaves have the same depth.
+
+For example, all of the green trees below are perfect binary trees, while
+the non-green trees are **imperfect binary trees**— trees that are not
+perfect binary trees:
+
+![Perfect and imperfect binary trees.](https://res.cloudinary.com/sublimis/image/upload/v1652916751/cs/perfect_and_imperfect_binary_trees.svg)
+
+The purple tree is imperfect because not all branch nodes have two
+children. The red and blue trees are imperfect because not all leaf nodes
+have the same depth.
+
+### Balanced Binary Tree
+
+Balanced binary trees come in two forms: **height-balanced trees** and
+**weight-balanced trees**. Below are the definitions.
+
+> _Definition: Height-balanced Binary Tree_. Let ${B}$ be a binary tree.
+> ${B}$ is a _height-balanced binary tree_ if and only if:
+
+> - For each node ${n_1, n_2, \ldots, n_i,}$ the heights of its subtrees
+>   ${H(S_i)}$ differ by at most ${1.}$
+
+For example, the green trees below are all height-balanced binary trees,
+while the non-green trees are not:
+
+![Various height-balanced and non-height balanced trees](https://res.cloudinary.com/sublimis/image/upload/v1652916836/cs/height_balanced_binary_trees.svg)
+
+Next, we have the definition of a weight-balanced binary tree:
+
+> _Definition: Weight-balanced Binary Tree_. Let ${B}$ be a binary tree.
+> ${B}$ is a _weight-balanced binary tree_ if and only if:
+>
+> - For each node ${n_1, n_2, \ldots, n_i,}$ the numbers of branch nodes in
+>   its left subtree and the number branch nodes in its right subtree
+>   differ by at most ${1.}$
+
+There is one unifying property for both height- and weight-balanced binary
+trees—height. This leads to the general definition of a balanced binary
+tree:
+
+> _Definition: Balanced Binary Tree_. Let ${B}$ be a binary tree. ${B}$ is
+> a balanced binary tree if and only if its height is ${O(\log_2 n).}$
+
+### Summary of Tree Types
+
+Because of the variety of tree types, it can be overwhelming at first
+keeping track of all the names and conditions. Accordingly, a helpful
+summary is provided in the list below.
+
+We'll cover ${k}$-ary trees in the next section, but a ${k}$-ary tree is
+simply the general term for a tree with a degree of ${k.}$ For example, a
+binary tree is a ${2}$-ary tree, since every node can have at most ${2}$
+children; a ternary tree is a ${3}$-ary tree, since every node can have at
+most ${3}$ children; etc.
+
+- Rooted ${k}$-ary tree
+  - There is exactly ${1}$ root.
+  - All nodes have at most ${k}$ children.
+- Perfect ${k}$-ary tree
+  - All branch nodes have exactly ${k}$ children.
+  - All leaves have the same depth.
+  - _Other names_: Complete ${k}$-ary tree
+- Complete ${k}$-ary tree
+  - All generations other than the last are completely filled.
+  - The last generation is filled from left to right.
+  - _Other names_: almost complete ${k}$-ary tree, nearly complete
+    ${k}$-ary tree
+- Proper ${k}$-ary tree
+  - All nodes have either ${0}$ or ${k}$ children.
+  - _Other names_: full ${k}$-ary tree, plane ${k}$-ary tree, strict
+    ${k}$-ary tree
+- Pathological tree
+  - Every node has exactly ${0}$ or ${1}$ child, left or right.
+  - _Other names_: degenerate tree
+- Left-skewed tree
+  - Every node has exactly ${0}$ or ${1}$ left child.
+- Right-skewed tree
+  - Every node has exactly ${0}$ or ${1}$ right child.
+
+Additionally, it may be helpful to visualize the different types with a
+Venn diagram:
+
+![A Venn diagram of the various tree types.](https://res.cloudinary.com/sublimis/image/upload/v1652917198/cs/tree_types_venn_diagram.svg)
+
+## ${k\text{-ary}}$ Trees
+
+Binary trees are more generally called ${k\text{-ary}}$ trees.
+Specifically, they are a ${2\text{-ary}}$ tree.
+
+> _Definition_: A ${k\text{-ary}}$ tree is a rooted tree where each node
+> has at most ${k}$ children.
+
+Thus, for the binary tree, we have ${k = 2.}$ This means that each node in
+the tree can only have ${0,}$ ${1,}$ or ${2}$ children. These are the only
+possiblities.
+
+A **ternary tree** is a ${3\text{-ary}}$ tree, so ${k=3.}$ Thus, in a
+ternary tree, each node can only have ${0,}$ ${1,}$ ${2,}$ or ${3}$
+children. For example, the green trees below are all ternary trees, but the
+red tree is not:
+
+![Ternary and non-ternary trees](https://res.cloudinary.com/sublimis/image/upload/v1652917290/cs/ternary_and_non_ternary_trees.svg)
+
+That blue tree looks like a binary tree. Indeed, it is. Remember, all
+that's required for a ternary tree is that each node must have _at most_
+${3}$ nodes. That's a ceiling, not a floor.
+
+Similarly, a ${4\text{-ary}}$ tree is a tree where each node only has
+either ${0,}$ ${1,}$ ${2,}$ ${3,}$ or ${4}$ children.
+
+### Strict ${k\text{-ary}}$ Trees
+
+A _strict ${k\text{-ary}}$ tree_ is a ${k\text{-ary}}$ tree where each node
+has either (1) zero children or (2) exactly ${k}$ children.
+
+> _Definition_. Let ${T}$ be a ${k\text{-ary}}$ tree. ${T}$ is a _strict
+> ${k\text{-ary}}$ tree_ iff every node in ${T}$ has a ${0}$ or ${k}$
+> children.
+
+Thus, a **strict binary tree** (what we referred to earlier as a _proper
+binary tree_) is a binary tree where every node has either ${0}$ or ${2}$
+children. A **strict ternary tree** is a ternary tree where every node has
+either ${0}$ or ${3}$ children. A **strict ${4\text{-ary}}$ tree** is a
+${4\text{-ary}}$ tree where every node has either ${0}$ or ${4}$ children.
+And so on.
+
+### Strict ${k\text{-ary}}$ Shrub Sizes
+
+The shrub size lemmas we saw earlier apply to strict ${k\text{-ary}}$
+trees.
+
+> _Lemma: Strict ${k}$-ary Shrub Sizes_. Let ${H \in \Z+}$ and
+> ${k \in \Z+.}$ The minimum number of nodes, i.e., the _minimum size_,
+> necessary to achieving a ${k\text{-ary}}$ tree of height ${H}$ is the
+> _strict ${k}$-ary shrub size_, denoted ${S_{min}^k(H),}$ where:
+>
+> $$
+> 	  S_{min}^k(H) = kH + 1
+> $$
+
+### Strict ${k\text{-ary}}$ Timber Sizes
+
+A similar lemma is found for timber sizes:
+
+> _Lemma: Strict ${k}$-ary Shrub Sizes_. Let ${H \in \Z+}$ and
+> ${k \in \Z+.}$ The maximum number of nodes, i.e., the _maximum size_,
+> necessary to achieving a ${k\text{-ary}}$ tree of height ${H}$ is the
+> _strict ${k}$-ary timber size_, denoted ${S_{max}^k(H),}$ where:
+>
+> $$
+> 	  S_{max}^k(H) = \dfrac{k^{H + 1} - 1}{k - 1}
+> $$
+
+### Strict ${k\text{-ary}}$ Shrub Heights
+
+The strict ${k\text{-ary}}$ lumber size lemma yields the strict
+${k\text{-ary}}$ shrub height lemma: The smallest possible height strict
+${k\text{-ary}}$ tree given ${N}$ nodes.
+
+$$
+	\begin{aligned} \text{where } N &= S_{max}^k(H) \\[1em] N &= \dfrac{k^{H + 1} - 1}{k - 1} \\[1em] N(k-1) &= k^{H + 1} - 1 \\[1em] N(k-1) + 1 &= k^{H + 1} \\[1em] \log_{k}(N(k-1) + 1) &= H + 1 \\[1em] \log_{k}(N(k-1) + 1) + 1 &= H \\[1em] \log_{k}(Nk-k + 1) + 1 &= H \end{aligned}
+$$
+
+Hence, we have the following lemma:
+
+> _Lemma: Strict ${k}$-ary Shrub Height_. Let ${N, k \in \Z^+.}$ Given
+> ${N}$ nodes, the shortest possible height strict ${k\text{-ary}}$ tree,
+> called the _${k}$-ary shrub_, has the height ${H_{min}^k(N),}$ called the
+> _${k}$-ary shrub height_, where:
+>
+> $$
+> 	H_{min}^k(N) = [\log_{2}(Nk - k + 1)] + 1
+> $$
+
+### Strict ${k\text{-ary}}$ Timber Heights
+
+By a similar line of reasoning, we can derive the strict ${k\text{-ary}}$
+timber height lemma from the strict ${k\text{-ary}}$ shrub size lemma: The
+_tallest_ possible height strict ${k\text{-ary}}$ tree given ${N}$ nodes.
+
+$$
+	\begin{aligned} \text{where } N &= S_{min}^k(H) \\[1em] N &= kH + 1 \\[1em] N - 1 &= kH \\[1em] \dfrac{N - 1}{k} &= H \end{aligned}
+$$
+
+Thus, we have the lemma:
+
+> _Lemma: Strict ${k}$-ary Timber Height_. Let ${N, k \in \Z^+.}$ Given
+> ${N}$ nodes, the tallest possible height strict ${k\text{-ary}}$ tree,
+> called the _${k}$-ary timber_, has the height ${H_{max}^k(N),}$ called
+> the _${k}$-ary timber height_, where:
+>
+> $$
+> 	H_{max}^k(N) = \dfrac{N - 1}{k}
+> $$
+
+### Relationship: Leaves & Branch Nodes
+
+As we saw with binary trees, there's a relationship between the leaves of a
+${k\text{-ary}}$ tree and its branch nodes.
+
+> _Lemma_. Let ${k, \ell, b \in \Z^+,}$ where ${\ell}$ is the number of
+> leaves and ${b}$ is the number of branch nodes in a strict
+> ${k\text{-ary}}$ tree. Then:
+>
+> $$
+> 	\ell = (k - 1)b + 1
+> $$
+>
+> or, alternatively,
+>
+> $$
+> 	\ell = bk - b + 1
+> $$

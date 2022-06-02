@@ -1,0 +1,1114 @@
+# Propositional Logic
+
+Propositional logic provides the foundations of both computer science and
+mathematics. The following materials provide a review of the logic
+necessary to understanding mathematics.
+
+There are two kinds of mathematical statements: **predicates** and
+**propositions**. A proposition is a special kind of mathematical statement
+&mdash; it's a statement that can be verified as either true or false. For
+example, all of statements below are examples of mathematical statements:
+
+1. ${1 + 2 = 3}$
+2. ${x < x + 1}$
+3. ${\pi = 3}$
+
+Each of the statements above can be verified as true or false. Mathematical
+statements, however, don't have to be written with symbols. In fact, much
+of formal mathematics is written in prose:
+
+> Every even integer greater than ${2}$ can be written as the sum of two
+> prime numbers.
+
+The statement above is a famous mathematical statement called the _Goldbach
+Conjecture_.
+
+A **predicate** is an "incomplete" mathematical statement. By "incomplete"
+we mean a statement that cannot be verified as true or false unless we add
+further specification. Mathematical predicates are also called _open
+sentences_ or **expressions.** For example, the following are all
+predicates:
+
+1. ${1 + 1}$
+2. ${n^2 - 2n > 0}$
+
+The expression ${1+1}$ cannot be evaluated as true or false because it
+merely expresses, or communicates, some predicate. In this case, the
+predicate ${1+1.}$ What we need is further specification:
+
+1. ${1+1 = 2}$
+2. ${1+1 > 3}$
+3. ${1+1 \leq 2}$
+
+The same idea extends to the statement ${n^2 - n > 0.}$ We cannot verify
+whether this statement is true or false because we don't know what ${n}$ is
+an element of. If ${n}$ is any integer, then the statement is false, since
+${n=0}$ renders the statement false. If ${n = 3,}$ then the statement is
+true.
+
+## Arguments
+
+An **argument** is a sequence of statements leading to an assertion. The
+assertion at the end of the sequence is called the **conclusion**, and the
+preceding statements are called **premises**.
+
+When we create or assess arguments, there are two things we should always
+distinguish: (1) The argument's _intrinsic merit_; and (2) The argument's
+_form_. Logical analysis has no business, and provides no help, with an
+argument's intrinsic merits. Where it does help, however, is determining
+whether a conclusion _necessarily_ follows from the _truth_ of the
+premises.
+
+For example, consider the argument: "If taxes are raised, then unemployment
+increases. If unemployment increases, then government expenditures
+increase. Since government expenditures did not increase, taxes were not
+raised." Strictly from a logical analysis, there are no problems with this
+argument. But, there may be problems with the argument's intrinsic merits
+(is it not the case that government expenditures can go unchanged, or even
+decrease, while taxes are raised?). Logic does not help determine whether
+the argument's premises are true (Is it true that raising taxes increases
+unemployment? Is it true that increased unemployment leads to increased
+government expenditures?). Logic can help determine whether the premises
+are conclusions that necessarily follow from other premises, but without
+more, logical analysis provides no aid here.
+
+## Logical Statements
+
+Arguments consist of **propositions** &mdash; sentences that can be
+assigned the values _true_ or _false_, but not both. The entirety of
+mathematics is composed of terms defined by using terms previously defined.
+This process of using terms to define terms, however, had to start
+somewhere. For this reason, there are a few terms in mathematics taken to
+be _undefined_. The terms _sentence_, _true_, and _false_, are examples of
+undefined terms in mathematics. Following the definition of a proposition,
+the following sentences are propositions:
+
+1. ${1 + 1 = 2}$ (true)
+2. ${2^2 = 18}$ (false)
+
+The sentence ${x^2 = 16}$ is not a proposition, because we cannot assign it
+the value true or false unless we provide some value for $x$. It is both
+true or false, depending on $x$.
+
+## Compound Propositions &amp; Logical Connectives
+
+Propositions can be connected with _logical connectives_ to create
+**compound propositions**. For example, the propositions "$x$ is less than
+_or_ to 4" and "$s$ is a member of $A$ but not a member of $B$" are
+examples of compound propositions.
+
+To form compound propositions, the connected propositions must have set
+truth values. In other words, we cannot connect propositions that do not
+already have the assigned values of _true_ or _false_. Once we _know_ what
+the truth values for individual propositions, we can then connect them with
+logical connectives. We investigate the most common logical connectives in
+the next sections.
+
+### Logical NOT
+
+The logical connective NOT is the _logical negation_. It takes a
+proposition, and returns the proposition with the opposite truth value.
+More formally: Let $p$ be a proposition. The negation of $p$ is "NOT p,"
+or, "It is NOT the case that $p$." We denote the negation of $p$ with
+${\neg p.}$ If $p$ is true, then ${\neg p}$ is false; if $p$ is false, then
+${\neg p}$ is true.
+
+We can summarize the possibilities with a truth table:
+
+| $p$ | ${\neg p}$ |
+| --- | ---------- |
+| T   | F          |
+| F   | T          |
+
+## The Double Negative Property.
+
+The **double negative property** provides that, given a proposition $p$,
+the negation of the negation of $p$ is simply $p$. We can see this to be
+the case from the truth table for ${\neg (\neg p)}$:
+
+| $p$ | ${\neg p}$ | ${\neg (\neg p)}$ |
+| --- | ---------- | ----------------- |
+| T   | F          | T                 |
+| F   | T          | F                 |
+
+### Logical AND
+
+The logical connective AND is the _logical conjunction_. If $p$ and $q$ are
+propositions, then the conjunction of $p$ and $q$ is "$p$ AND $q$," denoted
+${p \land q.}$ If, and only if, $p$ is true and $q$ is true, then
+${p \land q}$ is true. If $p$ is false, $q$ is false, or both $p$ and $q$
+are false, then ${p \land q}$ is false.
+
+As a truth table:
+
+| $p$ | $q$ | ${p \land q}$ |
+| --- | --- | ------------- |
+| T   | T   | T             |
+| T   | F   | F             |
+| F   | T   | F             |
+| F   | F   | F             |
+
+## NEITHER NOR
+
+The sentence structure "NEITHER NOR in logic is simply the logical
+conjunction of two negations. Thus, suppose $p$ and $q$ are propositions.
+The statement "NEITHER $p$ NOR $q$" in logical notation is
+${\neg p \land \neg q.}$ For example, consider the proposition "It is
+neither hot nor sunny." Let ${h = \text{ "It is hot." }}$ and
+${s = \text{ "It is sunny." }}$ The statement, in logic, is reduced to
+${\neg h \land \neg s.}$
+
+## BUT
+
+The word BUT is just another word for AND in logic. Thus: Let $p$ and $q$
+be propositions. The statement "$p$ BUT $q$ in logical notation is
+${p \land q.}$ For example, consider the proposition "It is not hot but it
+is sunny." Let ${h = \text{ "It is hot." }}$ and
+${s = \text{"It is sunny."}}$ In logical notation, the statement is reduced
+to ${\neg h \land s.}$
+
+## Logical OR
+
+The logical connective OR is the _logical disjunction_. Let $p$ and $q$ be
+propositions. The disjunction of $p$ and $q$ is "$p$ OR $q$," denoted
+${p \lor q.}$ If, and only if, $p$ is true, $q$ is true, or both $p$ and
+$q$ are true, then ${p \lor q}$ is true. Otherwise, if both $p$ and $q$ are
+false, then ${p \lor q}$ is false.
+
+As a truth table:
+
+| $p$ | $q$ | ${p \lor q}$ |
+| --- | --- | ------------ |
+| T   | T   | T            |
+| T   | F   | T            |
+| F   | T   | T            |
+| F   | F   | F            |
+
+Note that this definition of OR differs from our more common usage of _or_,
+which generally denotes "one or the other, but not both." This common usage
+of _or_ is called the **exclusive or**. In mathematics and computer
+science, we use the **inclusive or** by default &mdash; "one or the other,
+or both." When the _exclusive or_ is used, mathematicians and computer
+scientists will make it explicit with sentence structures such as "$A$ or
+$B$ but not both," or, occassionally, "Either $A$ or $B$." The _exclusive
+or_ (XOR) is covered in later sections.
+
+### Logical XOR
+
+The logical connective XOR, is the _exclusive disjunction_ (the _exlusive
+or_). Given propositions $p$ and $q$, the exlusive disjunction of $p$ and
+$q$ is "Either $p$ or $q$," or "$p$ or $q$ but not both." It is denoted
+${p \oplus q}$.
+
+The proposition ${p \oplus q}$ is true if, and only if, $p$ is true or $q$
+is true, but not both. If (a) both $p$ and $q$ are true, or (b) both $p$
+and $q$ are false, then ${p \oplus q}$ is false.
+
+| $p$ | $q$ | ${p \oplus q}$ |
+| --- | --- | -------------- |
+| T   | T   | F              |
+| T   | F   | T              |
+| F   | T   | T              |
+| F   | F   | F              |
+
+Note that ${p \oplus q}$ is the same statement as
+${(p \lor q) \land \neg (p \land q).}$ We can verify this with a truth
+table:
+
+| $p$ | $q$ | ${p \lor q}$ | ${p \land q}$ | ${\neg (p \land q)}$ | ${(p \lor q) \land \neg (p \land q)}$ | ${p \oplus q}$ |
+| --- | --- | ------------ | ------------- | -------------------- | ------------------------------------- | -------------- |
+| T   | T   | T            | T             | F                    | F                                     | F              |
+| T   | F   | T            | F             | T                    | T                                     | T              |
+| F   | T   | T            | F             | T                    | T                                     | T              |
+| F   | F   | F            | F             | T                    | F                                     | F              |
+
+## Inequalities and Logic
+
+One of the most common relationships between discrete objects in
+mathematics is inequality. Inequalities, as a matter of logic, are just
+compound propositions. However, they are so frequent in mathematics that
+we've given them special symbols.
+
+Let $x$, $b$, and $a$ be real numbers. The following statements are
+compound propositions:
+
+- The statement ${x \leq a}$ means:
+  - ${x < a}$ OR
+  - ${x = a}$
+- The statement ${x \geq a}$ means:
+  - ${x > a}$ OR
+  - ${x = a}$
+- The statement ${a \leq x \leq b}$ means:
+  - ${a \leq x}$ AND
+  - ${x \leq b}$
+- The statement ${a \geq x \geq b}$ means:
+  - ${a \geq x}$ AND
+  - ${x \geq b}$
+
+## Logical Equivalence &amp; Propositional Forms
+
+Given propositions $p$ and $q$, we can use logical connectives to construct
+the compound propositions ${\neg p}$, ${p \land q}$, and ${p \lor q.}$
+Compound propositions themselves can be connected to form more complicated
+expressions:
+
+- ${\neg p \lor q}$
+- ${(\neg p \lor q) \land \neg (p \lor q)}$
+- ${\neg ((p \land q) \lor (p \land (p \lor \neg q)))}$
+
+These expressions are called **propositional forms**. When determining a
+propositional form's truth value, we follow the _Boolean order of
+operations_:
+
+1. Expressions inside brackets/parentheses are performed first
+2. The NOT operator is performed second.
+3. The operator AND is performed third.
+4. The operator OR is performed last.
+
+## Logical Equivalence.
+
+The statements "2 is greater than 1" and "1 is less than 2" are two
+different ways of saying the same thing. This is because of the definitions
+of the words &#8220;greater than&#8221; and &#8220;less than.&#8221; Both
+statements, together, can only be: (1) both true, or (2) both false. In
+other words, if the statements were connected with a logical connective and
+evaluated in a truth table, their truth values would be identical.
+
+For example, suppose $p$ and $q$ are propositions. The compound
+propositions ${p \land q}$ and ${q \land p}$ have the same truth values:
+
+| $p$ | $q$ | ${p \land q}$ | ${q \land p}$ |
+| --- | --- | ------------- | ------------- |
+| T   | T   | T             | T             |
+| T   | F   | F             | F             |
+| F   | T   | F             | F             |
+| F   | F   | F             | F             |
+
+When two _proposition forms_ have the same truth values, we say that they
+are **logically equivalent**. More formally, two proposition forms are
+_logically equivalent_ if, and only if, they have identical truth values
+for each possible substitution of statements for their statement variables.
+The logical equivalence of statement forms $p$ and $q$ is denoted by
+writing ${p \equiv q.}$
+
+Two _propositions_ are _logically equivalent_ if, and only if, they have
+logically equivalent forms when identical component statement variables are
+used to replace component statements. Because of logical equivalence, there
+are logical properties we can use in all situations. We will explore some
+tactics for evaluating logical equivalences once we've covered conditonals.
+
+## De Morgan's Laws
+
+Consider the proposition: &#8220;Apples are reed and sweet.&#8221; This is
+a compound proposition: (1) &#8220;Apples are red&#8221; (2) &#8220;Apples
+are sweet&#8221; For the proposition to be false (the proposition's
+negation), one or both of (1) and (2) must be false. I.e., "Apples are NOT
+red BUT sweet"; "Apples are red BUT NOT sweet"; "Apples are NOT red AND are
+NOT sweet." These propositions can be reduced to a single proposition:
+"Apples are NOT red OR are NOT sweet."
+
+Similarly, consider the proposition: "Apples are red OR green." Like the
+AND proposition above, this is a compound proposition: (1) "Apples are
+red." (2) "Apples are green." Thus, for the compound proposition to be
+false, both (1) and (2) must be false, because an OR proposition is false
+if, and only if, both of its component propositions are false. The negation
+then is: "Apples are NOT red AND are NOT green."
+
+DeMorgan's laws formalize this reduction. The negation of an AND
+proposition is logically equivalent to the OR proposition in which each
+component proposition is _negated_. The negation of an OR statement is
+logically equivalent to the AND statement in which each component
+proposition is _negated_.
+
+More formally:
+
+> ${\neg (p \land q) \equiv \neg p \lor \neg q}$ >
+> ${\neg (p \lor q) \equiv \neg p \land \neg q}$
+
+A truth table demonstrates the logical equivalences:
+
+| $p$ | $q$ | ${\neg p}$ | ${\neg q}$ | ${p \land q}$ | ${\neg (p \land q)}$ | ${\neg p \lor \neg q}$ |
+| --- | --- | ---------- | ---------- | ------------- | -------------------- | ---------------------- |
+| T   | T   | F          | F          | T             | F                    | F                      |
+| T   | F   | F          | T          | F             | T                    | T                      |
+| F   | T   | T          | F          | F             | T                    | T                      |
+| F   | F   | T          | T          | F             | T                    | T                      |
+
+Note that the negation of an OR proposition is the same as the NEITHER NOR
+proposition. Consider the proposition: "Cats are sympathetic or lively."
+The negation of this proposition is "Cats are not sympathetic and are NOT
+lively." This is same proposition as "Neither are cats sympathetic nor are
+cats lively."
+
+## De Morgan's Laws and Inequalities.
+
+Recall that inequalities are simply compound propositions. Negations of
+inequalities are direct results of applying De Morgan's Laws.
+
+The proposition ${x \nless y}$ means that $x$ is NOT to the left of $y$ on
+the real number line. This implies:
+
+- $x$ is in the same position as $y$, ${x = y;}$ OR
+- $x$ lies to the right of $y$, ${x > y.}$
+
+These two possibilities are ecapsulated in the propostition ${x \geq y.}$
+
+The proposition ${x \ngtr y}$ means that $x$ is NOT to the right of $y$ on
+the real number line. This implies:
+
+- $x$ is in the same position as $y$, ${x = y;}$ OR
+- $x$ lies to the left of $y$, ${x < y.}$
+
+These two possibilities are encapsulated in the proposition ${x \leq y.}$
+
+The proposition ${x \nleq y}$ means that $x$ is NOT in the same position as
+$y$ on the real number line, AND $x$ is NOT to the left of $y$ on the real
+number line. This implies:
+
+- $x$ is to the right of $y$ on the real number line; ${x > y.}$
+
+The proposition ${x \ngeq y}$ means that $x$ is NOT in the same position as
+$y$ on the real number line, AND $x$ is NOT to the right $y$ on the real
+number line. This implies:
+
+- $x$ is to the left of $y$ on the real number line; ${x < y.}$
+
+## De Morgan's Laws and Compound Inequalities
+
+Negating compound inequalities is a common source of error for novices.
+Confronted with an inequality of the form ${x < y \leq z}$, it is tempting
+to write: ${x \nless y \nleq z.}$ Temptation be gone! This is wrong.
+
+Suppose a compound inequality of the form
+${x \stackrel{?}= y
+\stackrel{?}= z.}$[^inequality_note] This compound
+inequality consists of two component propositions:
+
+[^inequality_note]:
+    the symbol ${\stackrel{?}=}$ means "unknown relation," and represents
+    the possibility of any of the relation symbols $=$, $>$, $<$, $\leq$,
+    $\geq$, etc.
+
+1. ${x \stackrel{?}= y}$ AND
+2. ${y \stackrel{?}= z.}$
+
+Thus, the negation of the compound inequality is:
+
+1. ${\neg (x \stackrel{?}= y)}$ OR
+
+2. ${\neg (y \stackrel{?}= z).}$
+
+For example, suppose the compound inequality ${x < y \leq z.}$ The negation
+of this proposition is:
+
+1. ${x \nless y}$ OR
+2. ${y \nleq z}$.
+
+Proposition (1), ${x \nless y,}$ means that ${x \geq y}$. Proposition (2),
+${x \nleq z,}$ means that ${y > z.}$ Thus, the negation of the proposition,
+reduced, is:
+
+1. ${x \geq y}$ OR
+2. ${y > z}$.
+
+It follows that the negation of ${x < y \leq z}$ leaves several
+possibilities:
+
+1. ${x > y}$ OR
+2. ${x = y}$ OR
+3. ${y > z}$
+
+Below are the negations of common compound inequalities:
+
+$$
+\neg (x < y \leq z) \to \begin{cases} x > y \text{ or } \\ x = y \text{
+or } \\ y > z \end{cases}
+$$
+
+$$
+\neg (x \leq y < z) \to \begin{cases} x > y \text{ or } \\ y = z \text{
+or } \\ y > z \end{cases}
+$$
+
+$$
+\neg (x > y \geq z) \to \begin{cases} x < y \text{ or } \\ x = y \text{
+or } \\ y < z \end{cases}
+$$
+
+$$
+\neg (x \geq y > z) \to \begin{cases} x < y \text{ or } \\ y = z \text{
+or } \\ y < z \end{cases}
+$$
+
+$$
+\neg (x > y > z) \to \begin{cases} x < y \text{ or } \\ x = y \text{ or
+} \\ y = z \text{ or } \\ y < z \end{cases}
+$$
+
+$$
+\neg (x < y < z) \to \begin{cases} x > y \text{ or } \\ x = y \text{ or
+} \\ y > z \text{ or } \\ y = z \end{cases}
+$$
+
+$$
+\neg (x \leq y \leq z) \to \begin{cases} x > y \text{ or } \\ y > z
+\end{cases}
+$$
+
+$$
+\neg (x \geq y \geq z) \to \begin{cases} x < y \text{ or } \\ y < z
+\end{cases}
+$$
+
+Whenever we attempt to prove that the negation of a compound inequality is
+true, we must prove at least one of the possible cases implied by the
+negation.
+
+## Tautologies
+
+A **tautology** is a propositional form that is _always true_ regardless of
+the truth values of the individual propositions substituted for the
+propositional form's variables. A proposition whose form is a tautology is
+called a **tautological proposition**.
+
+For example, consider the proposition: "Beijing is the capital of China OR
+Beijing is NOT the capital of China." Let
+${p = \text{Beijing is the capital of China.}}$ The proposition in logic
+notation: ${p \lor \neg p.}$ As a truth table:
+
+| $p$ | $\neg p$ | ${p \lor \neg p}$ |
+| --- | -------- | ----------------- |
+| T   | F        | T                 |
+| F   | T        | T                 |
+
+From the truth table above, we can see that ${p \lor \neg p}$ will always
+be true, regardless of what truth values are assigned to $p$. Thus, we say
+that ${p \lor \neg p}$ is a tautology:
+
+$$
+	\top (p \lor \neg p)
+$$
+
+The symbol $\top$ is called the _verum_ symbol, and represents a "true". We
+attach it next to the parentheses containing the relevant proposition to
+indicate that the proposition is a tautology.
+
+## Contradictions
+
+The polar opposite of a tautology is a **contraction** &mdash; a
+propositional form that is _always false_, regardless of the truth values
+of the individual propositions substituted for the propositional form's
+variables. A proposition whose form is a contradiction is called a
+**contradictory proposition**.
+
+Example: Consider the proposition "Dogs are canines AND dogs are NOT
+canines." Let ${d = \text{Dogs are canines.}}$ In logic notation, the
+proposition is: ${d \land \neg d.}$ As a truth table:
+
+| $d$ | $\neg d$ | ${d \land \neg d}$ |
+| --- | -------- | ------------------ |
+| T   | F        | F                  |
+| F   | T        | F                  |
+
+From the table above, we can see that ${d \land \neg d}$ is always false,
+regardless of the truth value of $d$. Thus, we say that ${d \land \neg d}$
+is a contradictory proposition. We denote this fact with the logical
+notation:
+
+$$
+	\bot (d \land \neg d)
+$$
+
+The symbol $\bot$ is the _falsum_ symbol, and denotes false. We attach it
+next to the parentheses containing the relevant proposition to indicate
+that the proposition is a contradiction.
+
+## Boolean Laws
+
+The following are several helpful boolean laws.
+
+### Boolean Commutative Law.
+
+The proposition "The United States is a Western country and a country in
+the Americas" is logically equivalent to the proposition "The United States
+is a country in the Americas and a Western country." Similarly, the
+proposition "China is an ancient or old civilization" is logically
+equivalent to "China is an old or ancient civilization." These statements
+are true because of the Boolean commutative law:
+
+> _Boolean Commutative Law._ Given propositions $p$ and $q$,
+>
+> - ${p \land q \equiv q \land p}$ and
+> - ${p \lor q \equiv q \lor p}$
+
+A truth table proves the Boolean commutative law:
+
+| $p$ | $q$ | ${p \land q}$ | ${q \land p}$ | ${p \lor q}$ | ${q \lor p}$ |
+| --- | --- | ------------- | ------------- | ------------ | ------------ |
+| T   | T   | T             | T             | T            | T            |
+| T   | F   | F             | F             | T            | T            |
+| F   | T   | F             | F             | T            | T            |
+| F   | F   | F             | F             | F            | F            |
+
+## Boolean Associative Law.
+
+The proposition &#8220;${x}$ is even and greater than 4, and ${x}$ is a
+perfect square&#8221; is equivalent to &#8220;${x}$ is even, and ${x}$ is
+greater than 4 and a perfect square.&#8221; Similarly, the proposition
+&#8220;${n}$ is red or blue, or ${n}$ is green&#8221; is equivalent to
+&#8220;${n}$ is red, or ${n}$ is is blue or green.&#8221; We can rest
+assured that these statements are true because of the Boolean associative
+law:
+
+> _Boolean Associative Law_. Given propositions $p$ and $q$:
+>
+> - ${(p \land q) \land r \equiv p \land (q \land r)}$ and
+> - ${(p \lor q) \lor r \equiv p \lor (q \lor r)}$
+
+A truth table provides a proof. Notice that both ${p \land q} \land r$ and
+${p \land (q \land r)}$ have the same truth values, regardless of the
+values of $p$, $q$, and ${r.}$
+
+| $p$ | $q$ | $r$ | ${p \land q}$ | ${q \land r}$ | ${(p \land q) \land r}$ | ${p \land (q \land r)}$ |
+| --- | --- | --- | ------------- | ------------- | ----------------------- | ----------------------- |
+| T   | T   | T   | T             | T             | T                       | T                       |
+| T   | T   | F   | T             | F             | F                       | F                       |
+| T   | F   | T   | F             | F             | F                       | F                       |
+| T   | F   | F   | F             | F             | F                       | F                       |
+| F   | T   | T   | F             | T             | F                       | F                       |
+| F   | T   | F   | F             | F             | F                       | F                       |
+| F   | F   | T   | F             | F             | F                       | F                       |
+| F   | F   | F   | F             | F             | F                       | F                       |
+
+### Boolean Distributive Law
+
+The **Boolean distributive law** states:
+
+> Given propositions $p$ and ${q,}$
+>
+> - ${p \land (q \lor r) \equiv (p \land q) \lor (p \land r);}$ and
+> - ${p \lor (q \land r) \equiv (p \lor q) \land (p \lor r)}$
+
+A truth table demonstrates the distributive law to be true. It is omitted
+here due to its size.
+
+### Boolean Identity Law
+
+The **Boolean identity law** states:
+
+> Given a proposition $p$ and a tautological proposition ${\top(q)}$
+>
+> - ${p \land \top(q) \equiv p}$ Given a proposition $p$ and a
+>   contradictory proposition ${\bot(r)}$
+> - ${p \land \bot(r) \equiv p}$
+
+Truth table:
+
+| p   | ${\top(q)}$ | ${\bot(r)}$ | ${p \land \top(q)}$ | ${p \land \bot(r)}$ |
+| --- | ----------- | ----------- | ------------------- | ------------------- |
+| T   | T           | T           | F                   | F                   |
+| F   | T           | F           | F                   | F                   |
+
+### Boolean Negation Law
+
+The **Boolean negation law** provides:
+
+> Given a proposition ${p,}$
+>
+> - ${p \lor \neg p \equiv \top}$
+> - ${p \land \neg p \equiv \bot}$
+
+In other words, ${p \lor \neg p}$ is a tautological proposition, and
+${p \land \neg p}$ is a contradictory proposition.
+
+| $p$ | $\neg p$ | ${p \lor \neg p}$ | ${p \land \neg p}$ |
+| --- | -------- | ----------------- | ------------------ |
+| T   | F        | T                 | F                  |
+| F   | T        | T                 | F                  |
+
+### Boolean Double Negation Law
+
+The **Boolean double negation law** provides:
+
+> Given a proposition ${p,}$
+>
+> - ${\neg (\neg p) \equiv p}$
+
+| $p$ | $\neg p$ | $\neg (\neg p)$ |
+| --- | -------- | --------------- |
+| T   | F        | T               |
+
+### Indempotent Laws
+
+The **indempotent laws** state:
+
+> Let ${p}$ be a proposition. Then:
+>
+> - ${p \land p \equiv p,}$ and
+> - ${p \lor p \equiv p}$
+
+### Universal Bound Laws
+
+The **universal bound laws** provide:
+
+> Given a proposition $p$, a tautological proposition ${\top(q)}$, and a
+> contradictory proposition ${\bot(r),}$
+>
+> - ${p \lor \top(q) \equiv \top,}$ and
+> - ${p \land \bot(r) \equiv \bot}$
+
+### De Morgans Laws
+
+**De Morgan's laws** state:
+
+> Given propositions $p$ and ${q,}$
+>
+> - ${\neg (p \land q) \equiv \neg p \lor \neg q,}$ and
+> - ${\neg (p \lor q) \equiv \neg p \land \neg q}$
+
+### Absorption Laws
+
+The **absorption laws** provide:
+
+> Given propositions $p$ and $q$,
+>
+> - ${p \lor (p \land q) \equiv p;}$ and
+> - ${p \land (p \lor q) \equiv p}$
+
+### Negations of Tautologies and Contractions
+
+> Given a statement $p$, ${\neg (\top(p)) \equiv \bot(p)}$ Similarly,
+> ${\neg (\bot(p)) \equiv \top(p)}$
+
+## Conditional Statements
+
+When we reason _from_ a hypothesis to a _conclusion_, we make a
+**deduction**. This act is embodied in the statement:
+
+> If $p$ then ${q.}$
+
+We call this statement a **conditional**, and we denote it with:
+
+> ${p \implies q}$
+
+The symbol ${\implies}$ is a _logical connective_, just like ${\land}$,
+${\lor}$, ${\neg}$, etc. The proposition $p$ is called the **sufficient
+condition**, and the proposition $q$ is called the **necessary
+condition**.[^implies_note].
+
+[^implies_note]:
+    In the order of operations, the logical connective ${\implies}$ is
+    performed last.
+
+### When is a conditional false?
+
+Consider the following statement:
+
+    If Paris picks Hera, then there will be no war.
+
+When is this statement false? It is false if, and only if, Paris picks Hera
+and there is a war (i.e., the sufficient condition is true and the
+necessary condition is false). Otherwise, the conditional ${p
+\implies q}$
+is true. Truth table:
+
+| $p$ | $q$ | ${p \implies q}$ |
+| --- | --- | ---------------- |
+| T   | T   | T                |
+| T   | F   | F                |
+| F   | T   | T                |
+| F   | F   | T                |
+
+If a conditional proposition's necessary condition, or conclusion, is true
+because its sufficient condition is false, we say that the proposiiton is
+**vacuously true** or **true by default**. For example, consider the
+proposition:
+
+    If Hera is not related to Zeus, then Hera is Zeus's wife.
+
+This conditional proposition is vacuously true if Hera is related to Zeus
+(a false sufficient condition), and Hera is Zeus's wife (a true
+conclusion).
+
+## Conditionals & Logical Equivalence.
+
+Conditionals can be tricky to determine the logical equivalence for. There
+are three ways to determine whether propositions are logically equivalent:
+(1) Construct a truth table; (2) apply a sequence of known logical
+equivalences; or (3) divergent thinking.
+
+As we've seen, truth tables are the most explicit way to confirm that
+propositions are logically equivalent. But, truth tables are very easy to
+make mistakes with. Moreover, if we have ${n}$ propositions, the number of
+rows for the truth table is ${2^n}$ &mdash; the table grows exponentially
+with the number of propositions. After 2 through 3 propositions, we're much
+more likely to either exhaust ourselves or make mistakes. They simply don't
+scale well.
+
+The second approach is to use a sequence of known logical equivalences.
+Here, we perform logical evaluations much like algebra. We substitute known
+logical equivalences with variables, and evaluate accordingly. This
+approach can be particularly effective when used alongside truth tables.
+The risk here with logical equivalences is going around in circles. It's
+very easy to fall into duplicated analyses. We avoid this problem by having
+a clear plan for evaluation.
+
+The third approach is what we call &#8220;divergent thinking.&#8221; With
+this approach, we use a mixture of intuition, analogy, and modularity.
+There really isn't a set formula for this approach. We break down the
+problem into smaller pieces, and ask ourselves what should be true? What
+should be false? We can also substitute words in the propositions to check
+if they make sense intuitively. This approach usually yields informal
+arguments, so it's often necessary to use the other two approaches for
+confirmation. Fortunately, divergent thinking tends to yield plans helpful
+for the second approach.
+
+For example, suppose we had the proposition ${p \implies (q \implies r).}$
+Using the divergent thinking approach, we ask ourselves, &#8220;When is
+this proposition false?&#8221; Well, we know that an implication is false
+when the sufficient condition is true and the necessary condition is false.
+So, we turn to the necessary condition. When is the necessary condition
+false? Again, when the sufficient condition is true and the necessary
+condition is false. Thus, the proposition ${p \implies (q \implies r)}$ is
+false iff ${p \implies (q \implies (\neg r).}$ Or, by logical equivalence,
+${a \implies q \land (\neg r).}$ Thus, ${p \implies (q \implies r)}$ is
+false if, and only if, ${p}$ and ${q}$ are true, and ${r}$ is false. We can
+then draw a logical equivalence:
+
+$$
+	\begin{aligned}
+		p \implies (q \implies r) &\equiv (\neg p) \lor (q \implies r) \\
+		&\equiv (\neg p) \lor (\neg q \lor r) \\
+		&\equiv (\neg p) \lor (\neg q) \lor r
+	\end{aligned}
+$$
+
+$$
+	\neg (p \implies (q \implies r)) \equiv p \land q \land (\neg r)
+$$
+
+### Division Into Cases
+
+A frequent analysis in mathematics is dividing propositions into cases.
+Whenever we encounter a conditional of the form:
+
+$$
+	a \lor b \implies c
+$$
+
+there are two cases:
+
+$$
+	(a \lor b \implies c) \space \begin{cases} a \implies c \\ b \implies c \end{cases}
+$$
+
+Thus, to prove that ${a \lor b \implies c}$ is true, we must prove that:
+
+1. ${a \implies c}$ is true;
+2. ${b \implies c}$ is true; or
+3. both ${a \implies c}$ and ${b \implies c}$ is true
+
+## Implications as Logical Disjunctions
+
+The _if..then.._ proposition is logically equivalent to the _or_
+proposition. In fact, this is apparent from every day speech. Consider the
+statement:
+
+    "Either you study or you receive poor grades."
+
+Suppose ${\neg s \coloneqq \texttt{"you study"}}$ and
+${r \coloneqq \texttt{"you receive poor grades"}.}$ Accordingly,
+${s \coloneqq \texttt{"you do not study"}.}$ Thus,
+${(\neg s) \lor r \coloneqq \texttt{"You study OR you receive poor grades"}.}$
+The equivalent proposition is ${s \implies r:}$
+
+    "If you do not study, then you receive poor grades."
+
+We can see that this is true with truth table:
+
+| $p$ | $q$ | ${\neg p}$ | ${p \implies q}$ | ${(\neg p) \lor q}$ |
+| --- | --- | ---------- | ---------------- | ------------------- |
+| T   | T   | F          | T                | T                   |
+| T   | F   | F          | F                | F                   |
+| F   | T   | T          | T                | T                   |
+| F   | F   | T          | T                | T                   |
+
+Both ${p \implies q}$ and ${\neg p \lor q}$ have the same truth values;
+they are logically equivalent.Similarly, if ${q \implies p,}$ then
+${(q \implies p) \equiv ((\neg q) \lor p).}$
+
+| $q$ | $p$ | ${\neg q}$ | ${q \implies p}$ | ${(\neg q) \lor p}$ |
+| --- | --- | ---------- | ---------------- | ------------------- |
+| T   | T   | F          | T                | T                   |
+| T   | F   | F          | F                | F                   |
+| F   | T   | T          | T                | T                   |
+| F   | F   | T          | T                | T                   |
+
+Accordingly, we have the following logical equivalence:
+
+> _Lemma_. Given propositions ${p}$ and ${q,}$
+>
+> - ${p \implies q \equiv q \lor (\neg p)}$, _or_
+> - ${p \implies q \equiv (\neg p) \lor q}$
+
+## Negative Implications
+
+The fact that ${(p \implies q) \equiv ((\neg p) \lor q)}$ yields several
+inferences:
+
+Negating both sides:
+
+$$
+	\neg (p \implies q) \equiv \neg ((\neg p) \lor q)
+$$
+
+Applying De Morgan's laws:
+
+$$
+	\neg (p \implies q) \equiv \neg ((\neg p) \lor q)
+$$
+
+By the double negative law:
+
+$$
+	\neg (p \implies q) \equiv p \land (\neg q)
+$$
+
+Thus, we have the following fact:
+
+$$
+	\neg (p \implies q) \equiv (p \land \neg q)
+$$
+
+In other words, the negation of ${\text{"If p then q"}}$ is
+${\text{"p and not q"}.}$ We can see this in everyday speech with the word
+"but." For example:
+
+    	"If I timely submit my assignment, I will not lose points"
+    	"I timely submit my assignment, but I lose points."
+
+For those fond of Victorian horror:
+
+    	Proposition: "If Dracula is a man, then Dracula is human"
+    	Negation: "Dracula is a man but not human."
+
+Accordingly, we have the following theorem:
+
+> _Lemma_. Given propositions ${p}$ and ${q,}$
+>
+> $$
+>   \neg (p \implies q) \equiv \neg [q \lor (\neg p)] \equiv (\neg q) \land p
+> $$
+
+As an aside, the last example might spark some thought about how we assign
+truth values to propositions. Consider for example Immanuel Kant's
+observation of three values: the "alive," the "dead," and somewhere in the
+middle, the "undead." Is there any relationship between the fact that these
+terms exist and how we evaluate the truth values of propositions? If the
+answer is yes, does the relationship affect the proposition that such a
+relationship exists?
+
+## The Contrapositive
+
+A foundational law of logic is the equivalence between a conditonal and its
+**contrapositive**. Suppose the statement, If I go to class, then I will
+attend lecture." The contrapositive of this proposition is: If I do not
+attend lecture, then I do not go to class."
+
+More formally: Given a conditional of the form ${p \implies q}$, its
+contrapositive is
+
+$$
+	(\neg q) \implies (\neg p)
+$$
+
+A conditional is logically equivalent to its contrapositive. We can see
+that this is true with a proof table. Suppose $a$ and $b$ are propositions.
+
+| $a$ | $b$ | ${\neg b}$ | ${\neg a}$ | ${a \implies b}$ | ${(\neg b) \implies (\neg a)}$ |
+| --- | --- | ---------- | ---------- | ---------------- | ------------------------------ |
+| T   | T   | F          | F          | T                | T                              |
+| T   | F   | T          | F          | F                | F                              |
+| F   | T   | F          | T          | T                | T                              |
+| F   | F   | T          | T          | T                | T                              |
+
+The fact that a conditional's contrapositive is logically equivalent to the
+conditional is a valuable asset. Often, proving a conditional proposition's
+contrapositive is much easier than proving the conditional proposition
+itself.
+
+### The Converse
+
+The **converse** of a proposition is formed when the proposition's
+necessary and sufficient conditions are switched:
+
+    	Proposition: "If Bo is a horse, then Bo is a mammal."
+    	Converse: "If Bo is a mammal, then Bo is a horse."
+
+Formally: Given a conditional of the form ${p \implies q,}$ its _converse_
+is
+
+$$
+	q \implies p
+$$
+
+The converse of a conditional is not logically equivalent to the
+conditional. We can see that this is true with a truth table. Let $p$ and
+$q$ be propositions:
+
+| $p$ | $q$ | ${p \implies q}$ | ${q \implies p}$ |
+| --- | --- | ---------------- | ---------------- |
+| T   | T   | T                | T                |
+| T   | F   | F                | T                |
+| F   | T   | T                | F                |
+| F   | F   | T                | T                |
+
+## The Inverse
+
+The **inverse** of a conditional is the conditional formed from negating
+the sufficient and necessary conditions while keeping their order in place:
+
+    	Proposition: "If Bo is a horse, then Bo is a mammal."
+    	Inverse: "If Bo is not a horse, then Bo is not a mammal."
+
+Formally: Given a conditional of the form ${p \implies q,}$ its _inverse_
+is:
+
+$$
+	(\neg q) \implies (\neg p)
+$$
+
+Like the converse, the inverse of a conditional is not logically equivalent
+to the conditional:
+
+| $p$ | $q$ | ${\neg p}$ | ${\neg q}$ | ${p \implies q}$ | ${(\neg p) \implies (\neg q)}$ |
+| --- | --- | ---------- | ---------- | ---------------- | ------------------------------ |
+| T   | T   | F          | F          | T                | T                              |
+| T   | F   | F          | T          | F                | T                              |
+| F   | T   | T          | F          | T                | F                              |
+| F   | F   | T          | T          | T                | T                              |
+
+### Equivalence of Converse and Inverse.
+
+Although both the converse and inverse of a conditional are not logically
+equivalent to the conditional, the converse of a conditional is logically
+equivalent to the inverse of a conditional, and vice versa.
+
+| $p$ | $q$ | ${\neg p}$ | ${\neg q}$ | ${p \implies q}$ | ${q \implies p}$ | ${(\neg p) \implies (\neg q)}$ |
+| --- | --- | ---------- | ---------- | ---------------- | ---------------- | ------------------------------ |
+| T   | T   | F          | F          | T                | T                | T                              |
+| T   | F   | F          | T          | F                | T                | T                              |
+| F   | T   | T          | F          | F                | F                | F                              |
+| F   | F   | T          | T          | F                | T                | T                              |
+
+## &#8220;Only if&#8221;
+
+The phrase **only if** introduces a necessary condition. In other words,
+when we say "A only if B", we are saying "If A occurs, B MUST occur;" that
+is, "If b does not occur, a does not occur."
+
+Formally, given propositions $a$ and $b$, the proposition "$a$ only if $b$"
+is denoted as:
+
+$$
+	a \implies b
+$$
+
+or, equivalently,
+
+$$
+	(\neg b) \implies (\neg a)
+$$
+
+## The Biconditional
+
+A **biconditional proposition** (a "biconditional") is a conditional
+proposition where both component propositions are the necessary and
+sufficient conditions. The biconditional most often takes the form "$p$ if,
+and only if, $q$". The words _if and only if_ are sometimes abbreviated
+**iff**, and we will follow this convention.
+
+More formally: Given propositions $p$ and ${q,}$ the **biconditional** of
+$p$ and $q$ is "$p$ iff $q$" denoted:
+
+$$
+	p \iff q
+$$
+
+The biconditional ${p \iff q}$ is true if both $p$ and $q$ have the same
+true values and is false if $p$ and $q$ have opposite truth values. The
+biconditional has the truth table:
+
+| $p$ | $q$ | ${p \iff q}$ |
+| --- | --- | ------------ |
+| T   | T   | T            |
+| T   | F   | F            |
+| F   | T   | F            |
+| F   | F   | T            |
+
+Consider the following truth table:
+
+| $p$ | $q$ | ${p \implies q}$ | ${q \implies p}$ | ${p \iff q}$ | ${(p \implies q) \land (q \implies p)}$ |
+| --- | --- | ---------------- | ---------------- | ------------ | --------------------------------------- |
+| T   | T   | T                | T                | T            | T                                       |
+| T   | F   | F                | T                | F            | F                                       |
+| F   | T   | T                | F                | F            | F                                       |
+| F   | F   | T                | T                | T            | T                                       |
+
+Observe that the biconditional "$p$ iff $q$" is logically equivalent to
+"$p$ if $q$ and $q$ if $p$." In other words, the biconditional is logically
+equivalent to the conjunction of the conditional and its converse.
+Symbolically:
+
+$$
+	(p \iff q) \equiv ((p \implies q) \land (q \implies p))
+$$
+
+This is helpful result. Biconditionals are much easier to prove or work
+with when they are reduced to the conditional and its converse.
+
+In the Boolean order of operations, the connective ${\iff}$ is coequal with
+${\implies.}$ Like ${\land}$ and ${\lor,}$ the only way to indicate one's
+precedence over the other is to use parentheses. Thus, the Boolean order of
+operations thus far proceeds as such:
+
+1. ${(\space \space)}$ | Parentheses are always examined before everything
+   else.
+
+2. ${\neg}$ | Negations are evaluated first.
+
+3. ${\land,}$ ${\lor}$ | AND and OR are evaluated second.
+
+4. ${\implies,}$ ${\iff}$ | IF-THEN and IF-AND-ONLY-IF are evaluated last.
+
+Consider some examples.
+
+Construct the truth table: ${p \lor \neg q \implies \neg p}$
+
+First, note that
+${p \lor \neg q \implies \neg p \equiv (p \lor (\neg q)) \implies (\neg p).}$
+
+| $p$ | $q$ | ${\neg p}$ | ${\neg q}$ | ${p \lor (\neg q)}$ | ${(p \lor (\neg q)) \implies \neg p}$ |
+| --- | --- | ---------- | ---------- | ------------------- | ------------------------------------- |
+| T   | T   | F          | F          | T                   | F                                     |
+| T   | F   | F          | T          | T                   | F                                     |
+| F   | T   | T          | F          | F                   | T                                     |
+| F   | F   | T          | T          | T                   | T                                     |
+
+Prove ${p \lor q \implies r \equiv (p \implies r) \land (q \implies r)}$
+
+The proposition is proved with a truth table:
+
+| $p$ | $q$ | $r$ | ${p \lor q}$ | ${(p \lor q) \implies r}$ | ${p \implies r}$ | ${q \implies r}$ | ${(p \implies r) \land (q \implies r)}$ |
+| --- | --- | --- | ------------ | ------------------------- | ---------------- | ---------------- | --------------------------------------- |
+| T   | T   | T   | T            | T                         | T                | T                | T                                       |
+| T   | T   | F   | T            | F                         | F                | F                | F                                       |
+| T   | F   | T   | T            | T                         | T                | T                | T                                       |
+| T   | F   | F   | T            | F                         | F                | T                | F                                       |
+| F   | T   | T   | T            | T                         | T                | T                | T                                       |
+| F   | T   | F   | T            | F                         | T                | F                | F                                       |
+| F   | F   | T   | F            | T                         | T                | T                | T                                       |
+| F   | F   | F   | F            | T                         | T                | T                | T                                       |
+
+Both ${(p \lor q \implies r)}$ and ${(p \implies r) \land (q \implies r)}$
+have the same truth values; they are logically equivalent.

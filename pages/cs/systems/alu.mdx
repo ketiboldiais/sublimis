@@ -1,0 +1,964 @@
+# The ALU
+
+The **Arithmetic Logic Unit (ALU)** can be thought of as the computer's
+brain. Using the elementary logic gates, we can implement **adders**
+&mdash; chips designed to add numbers. Once we can perform addition, a
+whole host of other operations are available &mdash; subtraction, numeric
+comparison, and other logical operations. The ALU is essentially a
+packaging of all these new, complex operations. And once we have an ALU, we
+can begin building a _CPU_. Before we begin implementing these adders,
+however, we must review binary arithmetic.
+
+## Bitstreams & Words
+
+Suppose we have boxes that can only be filled with either a single `0` or a
+single `1`. The boxes are arranged linearly to form a package, and packages
+are unique depending on how the boxes are arranged. With just ${1}$ box,
+how many possible packages are there? From combinatorics, we have two
+possible packages:
+
+<Sequence data={[1, 0]} />
+
+Now suppose we had two boxes. If we had two boxes, then we have four
+possible packages:
+
+<Sequence data={[0, 0]} />
+<Sequence data={[0, 1]} />
+<Sequence data={[1, 0]} />
+<Sequence data={[1, 1]} />
+
+And if we had three boxes, we would have eight possible packages:
+
+<Sequence data={[0, 0, 0]} />
+<Sequence data={[0, 0, 1]} />
+<Sequence data={[0, 1, 0]} />
+<Sequence data={[0, 1, 1]} />
+<Sequence data={[1, 0, 0]} />
+<Sequence data={[1, 0, 1]} />
+<Sequence data={[1, 1, 0]} />
+<Sequence data={[1, 1, 1]} />
+
+In general, if we have ${n}$ bits, where ${n}$ is a positive integer, we
+have ${2^n}$ possible packages. This analysis extends to computation. For
+computers, the boxes are **bits**, and the packages are **bitstreams**
+(sequences of bits):
+
+| Number of Bits | Number of Possible Bitstreams           |
+| -------------- | --------------------------------------- |
+| ${1}$          | ${2^1 = 2}$                             |
+| ${2}$          | ${2^2 = 4}$                             |
+| ${3}$          | ${2^3 = 8}$                             |
+| ${4}$          | ${2^4 = 16}$                            |
+| ${5}$          | ${2^5 = 32}$                            |
+| ${6}$          | ${2^6 = 64}$                            |
+| ${7}$          | ${2^7 = 128}$                           |
+| ${8}$          | ${2^8 = 256}$                           |
+| ${9}$          | ${2^9 = 512}$                           |
+| ${10}$         | ${2^{10} = 1024}$                       |
+| ${11}$         | ${2^{11} = 2048}$                       |
+| ${12}$         | ${2^{12} = 4096}$                       |
+| ${\vdots}$     | ${\vdots}$                              |
+| ${16}$         | ${2^{16} = 65~536}$                     |
+| ${32}$         | ${2^{32} = 4~294~967~296}$              |
+| ${64}$         | ${2^{64} = 18~446~744~073~709~551~616}$ |
+
+Notice that if we have ${32}$ bits, we have over ${4}$ billion possible
+bitstreams. And with ${64}$ bits, we have over ${18}$ quintillion (or
+${18}$ billion billion) possible bit streams. Keep these numbers in mind as
+we continue.
+
+Ok, so we have all of the possible bit streams. Now what? Well, we can give
+those bitstreams _meaning_. And once we give a particular bistream a unique
+meaning, that bistream is called a **word**. For example, we can assign the
+bitstreams to numbers, using _binary representation_, giving us _words_
+that represent numbers:
+
+| Decimal Number | Binary Number |
+| -------------- | ------------- |
+| ${0}$          | `0`           |
+| ${1}$          | `1`           |
+| ${2}$          | `10`          |
+| ${3}$          | `11`          |
+| ${4}$          | `100`         |
+| ${5}$          | `101`         |
+| ${6}$          | `110`         |
+| ${7}$          | `111`         |
+| ${8}$          | `1000`        |
+| ${9}$          | `1001`        |
+| ${10}$         | `1010`        |
+| ${11}$         | `1011`        |
+| ${12}$         | `1100`        |
+| ${13}$         | `1101`        |
+| ${14}$         | `1110`        |
+| ${15}$         | `1111`        |
+| ${16}$         | `10000`       |
+
+Look at the binary number representations. Those are really just
+bitstreams. More importantly, at each power of ${2,}$ we need an additional
+bit. This demonstrates that with ${k}$ bits, the largest decimal number we
+can represent is ${2^k-1}$ (minus ${1}$ because we must represent ${0}$;
+i.e., the count starts from ${0}$). For example, with just ${1}$ bit, the
+biggest number we can represent is ${2^1 - 1 = 1.}$ With ${2}$ bits, the
+biggest number we can represent is ${2^2 - 1 = 3.}$ With ${8}$ bits, the
+biggest number we can represent is ${2^8 - 1 = 255.}$ And with ${32}$ bits,
+the biggest number we can represent is
+${2^{32} - 1 = 4~294~967~295.}$[^bit_note].
+
+[^bit_note]:
+    Note that these numbers change if we're representing negative numbers.
+    For example, suppose we wanted to represent both positive numbers and
+    their negative counterparts. How we represent the negative numbers (to
+    be covered shortly) impacts the range of decimal numbers we can
+    represent. For example, if we used the _signed-magnitude approach_, we
+    use the first bit to indicate the signum &mdash; `1` for negative, and
+    `0` for positive. This leaves us with just ${7}$ bits for the actual
+    numbers. And with just ${7}$ bits, the largest decimal we can represent
+    is ${2^7 - 1 = 127.}$ Thus, the largest number we can represent is
+    ${127,}$ and the smallest number we can represent is ${-127.}$ ${127}$
+    bitstreams are used to represent the negative numbers, ${127}$
+    bitstreams for the positive numbers, and ${2}$ bitstreams for zero
+    (`00000000` and `10000000`). This exhausts all of the possible bit
+    streams: ${127+127+2=256.}$
+
+For simple computers, only so many numbers can be represented &mdash;
+there's a ceiling on how many bits are used to make a bitstream. In other
+words, returning to our box-package analogy, there's a limit on how many
+boxes the computer can fit into a single package. That limit is called a
+**word size**.
+
+For example, for computers with a word size of ${8}$ bits, there are
+${256}$ possible bitstreams, or ${256}$ possible words. For computers with
+a word size of ${32}$ bits, there are a little over ${4}$ billion possible
+words.
+
+### Binary Arithmetic
+
+Because binary numbers are just representations of numbers, we can perform
+addition over binary numbers. Later, when we consider how to represent
+negative numbers, subtraction and numeric comparisons (i.e., `&lt;`,
+`&gt;`, `&geq;`, `&leq;`, and `=`) are trivial. More complex operations
+like multiplication and division, however, are implemented with higher
+level software rather than the ALU.
+
+Binary addition is fairly straightforward. We just add the ones and zeros:
+
+$$
+	\begin{aligned} &0~0~1 \\ +~&0~1~0 \\ \hline &0~1~1 \end{aligned}
+$$
+
+If we converted the numbers to decimal, we get:
+
+$$
+	\begin{aligned} &1 \\ +~&2 \\ \hline &3 \end{aligned}
+$$
+
+Easy enough. But what happens when we get ${11_{[2]}+11_{[2]}?}$ Well, we
+can think about a simpler problem, ${1_{[2]}+1_{[2]}.}$ In terms of decimal
+numbers, ${1_{[10]} + 1_{[10]} = 2_{[10]}.}$ We know that ${2}$ in binary
+is ${10_{[2]}.}$ Thus, ${1_{[2]} + 1_{[2]} = 10_{[2]}.}$ This means that
+when we perform binary addition, the addition ${1_{[2]} + 1_{[2]}}$ results
+in a **carry bit** of ${1_{[2]}.}$ Accordingly, we have the following carry
+over combinations:
+
+$$
+	\begin{aligned} 1~\phantom{1} & \\ 0~1& \\ +~~~0~1& \\ \hline 1~0& \end{aligned}
+$$
+
+$$
+	\begin{aligned} 1~\phantom{1} & \\ 1~1& \\ +~~~0~1& \\ \hline 1~0~0& \end{aligned}
+$$
+
+$$
+	\begin{aligned} 1~\phantom{1} & \\ 1~1& \\ +~~~1~1& \\ \hline 1~1~0& \end{aligned}
+$$
+
+For example, suppose we want to compute ${1101_{[2]} + 0111_{[2]}}$ (in
+decimal, ${13 + 7}$). We have:
+
+$$
+	\begin{aligned} \color{purple}{1}~\color{green}{1}~\color{blue}{1}~\color{firebrick}{1}~\phantom{1}& \\ 1~1~0~1& \\ +~~~0~1~1~1& \\ \hline 1~\color{purple}{0}~\color{green}{1}~\color{blue}{0}~\color{firebrick}{0}& \end{aligned}
+$$
+
+We can see that this is correct, given that ${10100_{[2]}}$ is ${20}$ in
+decimal.
+
+Considering the output above, suppose our computer's word size is ${4.}$ If
+the word size is ${4,}$ then the computation of ${1101_{[2]} + 0111_{[2]}}$
+results in a number whose binary representation exceeds the word size:
+
+$$
+	\begin{aligned} 1~1~0~1& \\ +~~~0~1~1~1& \\ \hline {\color{indianred}1}~0~1~0~0& \end{aligned}
+$$
+
+When a computation results in a word that exceeds the computer's word size,
+we have an **overflow**. What happens when an overflow occurs? For most
+ALUs, nothing. The carry bit that does not fit into the word is simply
+ignored, and we end up with:
+
+$$
+	\begin{aligned} 1~1~0~1& \\ +~~~0~1~1~1& \\ \hline 0~1~0~0& \end{aligned}
+$$
+
+Thus, for the computer with a word size of ${4,}$ computing ${13 + 7}$
+results in ${4.}$ This illustrates a critical point about computers: The
+addition performed is not real integer addition. There are infinitely many
+integers, but computers can only handle a subset &mdash; the integers whose
+binary representations can fit within its word size. More formally,
+computer addition is actually **${\bmod~2^{\omega}}$ addition**, where
+${\omega}$ is the word size. Thus, for the computer with a word size of
+${4,}$ we have:
+
+$$
+	\begin{aligned} 13~+_{2^4}~7 &= 13~+_{16}~7 \\ &= \text{rem}(13+7, 16) \\ &= \text{rem}(20, 16) \\ &= 4 \end{aligned}
+$$
+
+Note that we get this result because we're only representing positive
+integers. When we discuss negative integer representation, we'll see how an
+overflow leads to some interesting, albeit similar, results.
+
+### Adders
+
+Now that we understand binary arithmetic, we can now discuss **adders**
+&mdash; logic gates for performing addition. As we saw earlier, when we
+perform binary addition, there are really just two cases we have to
+consider: Adding two bits (no carryover occurs) and adding three bits (a
+carryover occurs). Accordingly, to implement an adder, we need two simpler
+adders:
+
+1. The **half-adder** &mdash; a logic gate that adds two bits.
+
+2. The **full-adder** &mdash; a logic gate that adds three bits.
+
+Once we have these two simpler adders, we can implement a
+**multibit-adder** &mdash; a logic gate that adds two _numbers_.
+
+### Half-adder
+
+The _half adder_ has one, and only one, job: Adding two bits. Suppose the
+bits are called `a` and `b`. Because we have two bits, there are
+${2^2 = 4}$ permutations for `a` and `b`.
+
+<div id="half_adder_a_and_b"></div>
+
+If we compute the sum for each of the rows:
+
+<div id="half_adder_a_and_b_sum"></div>
+
+Notice that the last row results in the sum `10`. Because a bit can only be
+either `0` or `1`, we need a an additional column &mdash; a second output
+&mdash; indicating the carry bit, if any:
+
+<div id="half_adder_a_and_b_sum_carry"></div>
+
+Do we notice a pattern in this truth table? Well, for starters, we see that
+the `sum` column's values are really the result of ${a ⊻ b.}$ In other
+words, `XOR(a, b)`. And the `carry` column's values are the result of
+${a ∧ b,}$ or `AND(a,b)`.
+
+Thus, we have the HDL implementation:
+
+```verilog
+CHIP HalfAdder {
+	IN a, b;
+	OUT sum, carry;
+
+	PARTS:
+		Xor(a=a, b=b, out=sum);
+		And(a=a, b=b, out=carry);
+}
+```
+
+### Full-adder
+
+Now that we have a half-adder, let's consider the full-adder. The
+full-adder's purpose is to add three bits. Let's say those bits are called
+`a`, `b`, and `c`. Just as we saw with the half adder, the full-adder has
+two outputs: a `sum` and a `carry`. With three bits, we have ${2^3 = 8}$
+permutations. Laid out as a truth table:
+
+<div id="full_adder_truth_table"></div>
+
+While it may seem difficult to determine how we would implement the
+full-adder, it's helpful to start by just considering `a` and `b` first. If
+we add these two bits together, there's a carry bit and a sum bit. The sum
+bit from adding `a` and `b` must then be added to `c`. The result is the
+final sum, and a final carry. The final sum is straightforward &mdash; we
+pass `a` and `b` to a half adder, and pass its sum and `c` into another
+half adder.
+
+<div id="half_adder_a_and_b_sum_carry_sum1"></div>
+
+<div id="full_adder_truth_table_expanded"></div>
+
+But what about the final carry? Well, if we think a little more carefully
+about adding three bits, we have a carry of `1` if we get a carry from
+adding `a` and `b`, or if we get a carry from adding `sum1` and `c`.
+Accordingly, we have the implementation:
+
+```verilog
+CHIP FullAdder {
+	IN a, b, c;
+	OUT sum, carry;
+
+	PARTS:
+		HalfAdder(a=a, b=b, sum=sum1, carry=carry1);
+		HalfAdder(a=c, b=sum1, sum=sum, carry=carry2);
+		Or(a=carry1, b=carry2, out=carry);
+}
+```
+
+### Multibit-adder
+
+Now that we have a full-adder and a half-adder, the multibit-adder is
+almost trivial. Let's say we're working with ${16}$-bit integers. This
+means we want a ${16}$-bit adder &mdash; an adder with two ${16}$-bit
+inputs, and one ${16}$-bit output. If we again recall how binary addition
+works, we add from right to left. The right-most column is a simple
+half-adder, since there is no carry bit when we first perform the addition.
+All other columns must be computed with a full-adder.
+
+![Multibit adder](https://res.cloudinary.com/sublimis/image/upload/v1653170831/cs/multibit_adder_illustrate_wpzq1y.svg)
+
+Thus, we have the following implementation:
+
+```verilog
+CHIP Add16 {
+	IN a[16], b[16];
+	OUT out[16];
+
+	PARTS:
+		HalfAdder(a=a[0], b=b[0], sum=out[0], carry=c0);
+		FullAdder(a=c0, b=a[1], c=b[1], sum=out[1], carry=c1);
+		FullAdder(a=c1, b=a[2], c=b[2], sum=out[2], carry=c2);
+		FullAdder(a=c2, b=a[3], c=b[3], sum=out[3], carry=c3);
+		FullAdder(a=c3, b=a[4], c=b[4], sum=out[4], carry=c4);
+		FullAdder(a=c4, b=a[5], c=b[5], sum=out[5], carry=c5);
+		FullAdder(a=c5, b=a[6], c=b[6], sum=out[6], carry=c6);
+		FullAdder(a=c6, b=a[7], c=b[7], sum=out[7], carry=c7);
+		FullAdder(a=c7, b=a[8], c=b[8], sum=out[8], carry=c8);
+		FullAdder(a=c8, b=a[9], c=b[9], sum=out[9], carry=c9);
+		FullAdder(a=c9, b=a[10], c=b[10], sum=out[10], carry=c10);
+		FullAdder(a=c10, b=a[11], c=b[11], sum=out[11], carry=c11);
+		FullAdder(a=c11, b=a[12], c=b[12], sum=out[12], carry=c12);
+		FullAdder(a=c12, b=a[13], c=b[13], sum=out[13], carry=c13);
+		FullAdder(a=c13, b=a[14], c=b[14], sum=out[14], carry=c14);
+		FullAdder(a=c14, b=a[15], c=b[15], sum=out[15], carry=c15);
+}
+```
+
+### Negative Integers
+
+So far, we've only been working with nonnegative integers,
+${0, 1, 2, 3, \ldots}$ and so on. There are plenty of things we can do with
+nonnegatives, our lives would be much easier if we had negative integers as
+well. So how do we represent negative integers? It turns out that we have
+several choices.
+
+### Sign Bit Representation
+
+One way is to reserve the first bit of a word as the **sign bit** &mdash; a
+bit corresponding to the integers's signum; `0` for positive, `1` for
+negative. This approach is called **sign bit representation**.
+
+| Word      | Decimal  |
+| --------- | -------- |
+| `1 0 0 0` | `-`${0}$ |
+| `1 0 0 1` | `-`${1}$ |
+| `1 0 1 0` | `-`${2}$ |
+| `1 0 1 1` | `-`${3}$ |
+| `1 1 0 0` | `-`${4}$ |
+| `1 1 0 1` | `-`${5}$ |
+| `1 1 1 0` | `-`${6}$ |
+| `1 1 1 1` | `-`${7}$ |
+
+| Word      | Decimal  |
+| --------- | -------- |
+| `0 0 0 0` | `+`${0}$ |
+| `0 0 0 1` | `+`${1}$ |
+| `0 0 1 0` | `+`${2}$ |
+| `0 0 1 1` | `+`${3}$ |
+| `0 1 0 0` | `+`${4}$ |
+| `0 1 0 1` | `+`${5}$ |
+| `0 1 1 0` | `+`${6}$ |
+| `0 1 1 1` | `+`${7}$ |
+
+With sign bit representation, the first bit is reserved for the integer's
+signum, and the remaining bits represent a nonnegative integer. Intuitive
+as it may be, sign bit representation has downsides; so much so that it's
+the least popular approach for representing negatives.
+
+First, we have two distinct representations for zero: ${-0}$ and ${+0.}$
+While those coming from languages like JavaScript may be comfortable with
+this notion, it flies in the face of mathematics and requires further
+implementations for handling the two cases of zero. This kind of complexity
+at such a low level is undesirable &mdash; it's very, very easy to entangle
+ourselves in elaborate case-handling schemes.
+
+Second, subtraction is not straightforward. From mathematics, we know that
+subtraction is just the addition of a nonnegative and a negative. If we
+tried doing so with sign bit representation, we get strange results. For
+example, suppose we wanted to compute ${5-2.}$ Using sign bit
+representation, we have:
+
+$$
+	\begin{aligned} 0~1~0~1 & \\ 1~0~1~0 & \\ \hline 1~1~1~1 \end{aligned}
+$$
+
+Clearly, this is not the right answer. We expected to get ${3,}$ but
+instead we got ${1~1~1~1,}$ which is ${-7.}$ The fact is, the binary
+additional algorithm <em>does not</em> work with sign bit representation.
+Instead, we have to perform a more elaborate procedure. First, we determine
+which of the two numbers is greater. In this case, it's ${5.}$ This means
+that the sign of the sum is `1`. Then, we perform subtraction on the
+non-sign bits. If we encounter ${0-1,}$ we borrow from the leftmost column,
+and compute ${1:}$
+
+$$
+	\begin{aligned} 0~1~\phantom{1}& \\ \cancel{1}~\cancel{0}~1 & \\ -~~~0~\cancel{1}~0 & \\ \hline 0~1~1 \end{aligned}
+$$
+
+Then we add the sign for the larger number:
+
+$$
+	0~0~1~1
+$$
+
+which give us the correct answer, ${3.}$ This is a needlessly complicated
+process requiring an entirely separate logic gate, a **subtractor**, with
+the following truth table:
+
+<div id="sign_bit_subtractor"></div>
+
+Third, we're reducing the number of bits available for representation. With
+sign bit representation, if we have a word size ${\omega,}$ the largest
+number we can represent is ${2^{\omega - 1}-1.}$ For example, consider the
+table above. Suppose a computer's word size is ${4.}$ With sign bit
+representation, the largest number we can represent is ${7.}$ If it weren't
+for that additional representation of ${0,}$ we'd at least have ${8.}$
+
+### One's Complement Representation
+
+Another representation approach is **one's complement**. With one's
+complement, negative numbers are formed by <q>flipping</q> or
+<q>reflecting</q> all of the bits &mdash; turn all the ones into zeros, and
+all the zeros into ones. For example, the binary number
+${1011_{\texttt{b}},}$ flipped, is ${0100_{\texttt{b}}.}$ This
+<q>flipped</q> form of ${1011_{\texttt{b}},}$ the binary number
+${0100_{\texttt{b}},}$ is called the **complement** of
+${1011_{\texttt{b}},}$ and the operation of reflecting or flipping the
+digits is called **complementing**. Through complementing, the most
+significant bit communicates the number's sign. Note, however, that this is
+<em>not</em> sign bit.
+
+| Word   | Decimal   |
+| ------ | --------- |
+| `0111` | `+` ${7}$ |
+| `0110` | `+` ${6}$ |
+| `0101` | `+` ${5}$ |
+| `0100` | `+` ${4}$ |
+| `0011` | `+` ${3}$ |
+| `0010` | `+` ${2}$ |
+| `0001` | `+` ${1}$ |
+| `0000` | `+` ${0}$ |
+
+| Word   | Decimal   |
+| ------ | --------- |
+| `1000` | `-` ${7}$ |
+| `1001` | `-` ${6}$ |
+| `1010` | `-` ${5}$ |
+| `1011` | `-` ${4}$ |
+| `1100` | `-` ${3}$ |
+| `1101` | `-` ${2}$ |
+| `1110` | `-` ${1}$ |
+| `1111` | `-` ${0}$ |
+
+Compared to sign bit representation, subtraction in one's complement is a
+little simpler. For example, to compute ${a-b}$ in binary, where ${a}$ and
+${b}$ are positive integers, we perform the following procedure:
+
+1. Compute the one's complement of the ${b.}$ Let ${b_c}$ be the result.
+
+2. Compute ${a + b_c.}$ Let ${S}$ be the result.
+
+3. If ${a + b_c}$ results in a carry over ${C,}$ drop ${C}$ and add ${1}$
+   to the least significant bit of ${S.}$ Else, return ${S.}$
+
+For example, suppose we wanted to compute ${7-2.}$ In binary, this amounts
+to computing:
+
+$$
+	\begin{aligned} 0~1~1~1 &\\ -~~~0~0~1~0 &\\ \hline \end{aligned}
+$$
+
+We compue the one's complement of ${0010_{\texttt{b}},}$ which is
+${1101_{\texttt{b}},}$ corresponding to ${-2.}$ We then add this result to
+the minuend, ${0111_{\texttt{b}}:}$
+
+$$
+	\begin{aligned} 0~1~1~1 &\\ +~~~1~1~0~1 &\\ \hline 1~0~1~0~0& \end{aligned}
+$$
+
+Notice that this results in an overflow bit. We drop this bit and add it to
+the least significant bit of our result:
+
+$$
+	\begin{aligned} 0~1~0~0 &\\ +~~~\phantom{0}~\phantom{0}~\phantom{0}~1 &\\ \hline 0~1~0~1 & \end{aligned}
+$$
+
+The result is in line with our expected answer, ${5.}$ Undoubtedly, one's
+complement representation leads to an easier implementation of subtraction
+compared to sign bit representation. To find the complement of a given
+word, all we have to do is invert the ones and zeros &mdash; passing the
+bitstream into a NOT-gate.
+
+Although one's complement provides a simpler way to implement subtraction,
+it still shares problems with sign bit representation. We still have two
+representations for the integer zero: For a 4-bit word size computer,
+${1111_{\texttt{b}}}$ and ${0000_{\texttt{b}}.}$
+
+## Two's Complement Representation
+
+As much as one's complement falls short, its development led to the most
+common form of sign representation &mdash; **two's complement
+representation**. In two's complement representation, we represent signed
+numbers with two's complements, rather than one's complements. What is the
+two's complement of a number? It's just the result of complementing that
+number and adding ${1.}$
+
+For example, consider the number ${1}$ in binary. Positive ${1}$ is
+represented as:
+
+$$
+	0~0~0~1_{\texttt{b}}
+$$
+
+To find its two's complement, we first compute its one's complement:
+
+$$
+	\begin{aligned} \texttt{c}~~0~0~0~1 & \\ \hline 1~1~1~0 & \end{aligned}
+$$
+
+Then we add ${1_{\texttt{b}}}$ to the result:
+
+$$
+	\begin{aligned} 1~1~1~0 &\\ +~~~\phantom{0}~\phantom{0}~\phantom{0}~1 &\\ \hline 1~1~1~1 & \end{aligned}
+$$
+
+The binary number ${1111_{\texttt{b}}}$ corresponds to ${-1.}$ Like sign
+bit representation and one's complement, the most significant bit is used
+to represent the sign.
+
+| Word   | Decimal  |
+| ------ | -------- |
+| `0111` | `+`${7}$ |
+| `0110` | `+`${6}$ |
+| `0101` | `+`${5}$ |
+| `0100` | `+`${4}$ |
+| `0011` | `+`${3}$ |
+| `0010` | `+`${2}$ |
+| `0001` | `+`${1}$ |
+| `0000` | ${0}$    |
+
+| Word   | Decimal  |
+| ------ | -------- |
+| `1111` | `-`${1}$ |
+| `1110` | `-`${2}$ |
+| `1101` | `-`${3}$ |
+| `1100` | `-`${4}$ |
+| `1011` | `-`${5}$ |
+| `1010` | `-`${6}$ |
+| `1001` | `-`${7}$ |
+| `1000` | `-`${8}$ |
+
+To compute ${a + b,}$ we simply use the binary addition algorithm. If
+there's an overflow bit, we discard it. To compute ${a - b,}$ we apply the
+binary algorithm to ${a + b_c,}$ where ${b_c}$ is the two's complement of
+${b,}$ again discarding an overflow bit, if any.
+
+For example, suppose we wanted to compute ${6-5}$ in binary:
+
+$$
+	\begin{aligned} 0~1~1~0 &\\ +~~~1~0~1~1 &\\ \hline {\color{firebrick}1}~0~0~0~1 & \\ \end{aligned}
+$$
+
+Above, we disregard the overflow bit ${1_{\texttt{b}},}$ leaving us with
+the answer ${0001_{\texttt{b}},}$ which corresponds to the decimal ${1,}$
+the expected result of ${6-5.}$
+
+With two's complement, we're getting a little of the best from one's
+complement and sign bit representation. Addition and subtraction are easy
+to implement. While we don't have as much readability as sign bit
+representation, we're still using the most significant bit to represent the
+number's sign. This isn't a particularly large tradeoff, given that most
+computer users aren't directly manipulating bits. But perhaps most
+importantly, we have exactly one representation of zero. At the end of the
+day, this is what we truly wanted. Having just one, unique representation
+for zero greatly simplifies the ALU's implementation.
+
+### The Arithmetic Logic Unit
+
+So, we now know how to perform addition and subtraction with logic gates.
+Our next step is examining the **arithmetic logic unit (ALU)**.
+Schematically, the ALU looks like:
+
+![ALU Schematic](https://res.cloudinary.com/sublimis/image/upload/v1653171156/cs/ALU_schematic_euht0n.svg)
+
+The first thing to note is that the ALU is just another chip &mdash; it's
+an abstraction of some process. And just like the chips we've seen so far,
+it has inputs and outputs. Two inputs called `input1` and `input2`, and a
+third input denoed ${f.}$ That third input ${f}$ is _function_. The ALU
+takes these three inputs, and returns the output `${f}$(input1, input2)`.
+
+The function ${f}$ is one out of a set of pre-defined arithmetic and
+logical functions. That set determines what the ALU can and cannot do. For
+most ALUs, the set includes **arithmetic functions** (integer addition,
+subtraction, and for some, multiplication and division), **logical
+functions** (AND, OR, XOR, NOT, and so on), and even **bitwise functions**
+(bitwise-AND, bitwise-NOT, etc.).
+
+One of the hardest decisions an ALU designer must make is determining which
+operations the ALU should perform. Making these decisions is more economics
+than it is computer science. Hardware-implemented operations are much, much
+faster than operations implemented via software. So in that sense, there's
+potential for performance gains. That, however, can backfire. With more
+operations, the ALU becomes much more complex, and with greater complexity,
+the more difficult it is to debug and maintain the ALU. Moreover, excessive
+operations can lead to _slower_ and more expensive ALUs. Chips are a
+valuable commodity, and at the hardware level, we do not want to waste what
+little real estate we have.
+
+The ALU schematic above is a common diagram for denoting the ALU among
+other components. Here's another, more detailed diagram:
+
+![ALU Diagram](https://res.cloudinary.com/sublimis/image/upload/v1653171198/cs/ALU_intro1_xpai3a.svg)
+
+Notice how the ALU really is just another chip. We can think of it as a
+bigger, more formidable logic gate. Where the logic gates we've been
+working with can be thought of as small boutique shops, the ALU is a
+massive retail store.
+
+Examining the diagram above, we see that the ALU has ${11}$ pins. The blue
+arrows indicate single-bit buses, and the red arrows indicate ${16}$-bit
+buses. The single-bit bus inputs, `zx`, `nx`, `zy`, `ny`, `f`, and `no` all
+feed either a ${0}$ or ${1}$ into the ALU. These inputs are called
+**control bits**. Notice that there are ${6}$ of these bits. With ${6}$
+bits, we have ${2^6 = 64}$ possible bitstreams. Those bit streams can then
+be assigned to particular functions.
+
+Indeed, this is how we <q>pass functions</q> to the ALU. We pass specific
+values for each of the control bits, and the ALU performs its operation:
+Determine which function we're asking for. Here is the truth table for just
+a few of the possible functions:
+
+<div id="ALU_sample_table"></div>
+
+For example, if we send the control bit sequence (called the **control
+input**):
+
+<div id="control_input_neg"></div>
+
+The ALU computes `10 + 3`, and outputs `13`. The ALU <q>knows</q> to
+perform these operations because each of the control bits are sent to
+particular gates. The specifications:
+
+```verilog
+// The zx input:
+if (zx ≡ 1) ⟹ x = 0;
+```
+
+```verilog
+// The nx input:
+if (nx ≡ 1) ⟹ x = ¬x;
+```
+
+```verilog
+// The zy input:
+if (zy ≡ 1) ⟹ y = 0;
+```
+
+```verilog
+// The ny input:
+if (ny ≡ 1) ⟹ y = ¬y;
+```
+
+```verilog
+// The f input:
+if (f ≡ 1) ⟹ out = x + y;
+```
+
+```verilog
+// The f input:
+if (f ≡ 0) ⟹ out = x & y;
+```
+
+```verilog
+// The no input:
+if (no ≡ 1) ⟹ out = ¬out;
+```
+
+```verilog
+// The zr output:
+if (out ≡ 0) ⟹ zr = 1;
+else: zr = 0;
+```
+
+```verilog
+// The ng output:
+if (out &lt; 0) ⟹ ng = 1;
+else: ng = 0;
+```
+
+Following these specifications, let's consider an example. Suppose we
+wanted to compute `!x`. For simplicity, let's just say we're using four
+bits. To compute `!x`, we must first determine what the control input is.
+In this case, it's the sequence:
+
+<div id="not_sequence"></div>
+
+Suppose our `x` input is `1101` and our `y` input is `1001`. We pass this
+control input to the ALU, and the respective control bit gates execute.
+First, the gate corresponding to `zx`. Here, its input is `0`, so we leave
+`x` and `y` alone:
+
+```verilog
+x: 1100
+y: 1011
+```
+
+Next, the gate corresponding to `nx`. Here, `nx` is `0`, so again we leave
+`x` and `y` alone:
+
+```verilog
+x: 1101
+y: 1011
+```
+
+Next, `zy`. Here, we see that `ny` is `1`, so we zero the `y` input:
+
+```verilog
+x: 1100
+y: 0000
+```
+
+Then we have `ny`. Again we have `ny` as `1`. This means we must negate the
+`y` input:
+
+```verilog
+x: 1100
+y: 1111
+```
+
+Next up, `f`. If `f` is `1`, we compute `x+y`. Here, `f` is `0`, so we
+instead compute the bitwise-AND:
+
+```verilog
+x:   1100
+y:   1111
+out: 1100
+```
+
+Finally, we have `no` set to `1`. So, we compute the bitwise-NOT:
+
+```verilog
+x:   1100
+y:   1111
+out: 0011
+```
+
+Examining the final `out` value, we see that we get the negation of `x`
+&mdash; `0011`.
+
+### Implementing the ALU
+
+With a high-level understanding of how the ALU operates, we can now examine
+its implementation. As said earlier, we're only looking at a subset of the
+ALU's possible functions. For an ALU with a control input of ${6}$
+single-bit buses, we have ${64}$ possible control inputs. The schematic
+below illustrates only ${18}$ of the possible control inputs.
+
+![ALU implementation](https://res.cloudinary.com/sublimis/image/upload/v1653171341/cs/ALU_implement_l3pddg.svg)
+
+Let's break down the implementation in HDL. First, we need the ALU's `IN`
+and `OUT` pins:
+
+```verilog
+CHIP ALU {
+	IN
+		x[16], y[16],
+		zx,
+		nx,
+		zy,
+		ny,
+		f,
+		no;
+	OUT
+		out[16]
+		zr,
+		ng;
+}
+```
+
+Now we examine the parts. First, the `zx` input feeds into a gate that
+zeros the `x[16]` input if `zx` is `1`. To implement an if-statement, we
+need a multiplexor:
+
+```verilog
+// zx input
+Mux16(a[0..15]=x, b[0..15]=false, sel=zx, out=zxoutputx);
+```
+
+Above, the muliplexor's `b` input is always `0`, since we're only concerned
+with the `x[16]` input. The `sel` input is then used to toggle the
+multiplexor &mdash; if `x = 1`, then zero `x[16]`, otherwise, leave `x[16]`
+alone. We'll call the result `zxoutputx`.
+
+Next, the `nx` control bit. We use this control bit to determine if the `x`
+input should be negated (bitwise-NOT). To do so, we have `zxoutputx` feed
+into two inputs &mdash; one feeding into a NOT16-gate (whose output is
+called `notx`), and the other feeding into the `a` input of MUX16-gate. The
+NOT16-gate's output is then fed into the `b` input of the MUX16-gate. The
+MUX16-gate has its `sel` input receive the `nx` control bit, and its output
+called `nxoutputx`. If `nx` is `1`, we output the `nxoutputx` is `notx`,
+otherwise is `nxoutputx`.
+
+```verilog
+// nx input
+Not16(in[0..15]=zxoutputx, out[0..15]=notx);
+Mux16(a[0..15]=zxoutputx, b[0..15]=notx, sel=nx, out[0..15]=nxoutputx);
+```
+
+After the `nx` control bit, we have the `zy` control bit. This control bit
+toggles a gate that zeroes the `y[16]` input. The implementation is the
+same as the `zx` control, the only difference being we're using `y[16]` as
+the input and leaving `x[16]` alone.
+
+```verilog
+// zy bit
+Mux16(a[0..15]=y, b[0..15]=false, sel=zy, out[0..15]=zyoutputy);
+```
+
+Similar to the `nx` control's implementation, the `ny` control determines
+whether to apply the bitwise-NOT to the `y[16]` input.
+
+```verilog
+// ny bit
+Not16(in[0..15]=zyoutputy, out[0..15]=noty);
+Mux16(a[0..15]=zyoutputy, b[0..15]=noty, sel=ny, out[0..15]=nyoutputy);
+```
+
+These implementations take care of the unary operations. The `f` control
+bit introduces the binary operations. First, if the `f` control bit is `1`,
+we compute `x + y`. Otherwise, we compute `x & y` (bitwise-AND). Once
+again, we're modelling an if-statement, so we need Mux16-gate. Because the
+operations we're implementing take `x` and `y` as operands, we have to feed
+the `nxoutputx` and `nyoutputy` outputs into two gates: a Add16-gate and an
+And16-gate. The Mux16-gate then determines which of the two to output,
+depending on its `sel` input, the `f` control bit:
+
+```verilog
+// f bit
+Add16(a[0..15]=nxoutputx, b[0..15]=nyoutputy, out[0..15]=xplusy);
+And16(a[0..15]=nxoutputx, b[0..15]=nyoutputy, out[0..15]=xandy);
+Mux16(a[0..15]=xandy, b[0..15]=xplusy, sel=f, out[0..15]=fout);
+```
+
+We'll call the output of the Mux16-gate `fout`. The last control bit is
+`NO`. If `NO` is `1`, we negate `fout`. Otherwise, we leave `fout` alone.
+So, we need another Mux16-gate. One of Mux16-gate's inputs receives the
+result of feeding `fout` into a Not16-gate, the other `fout` directly:
+
+```verilog
+// no bit
+Not16(in[0..15]=fout, out[0..15]=notfout);
+
+// Output 'out'
+Mux16(
+		a[0..15]=fout,
+		b[0..15]=notfout,
+		sel=no,
+		out=out
+);
+```
+
+We've now taken care of all the control bits. All that remains is the `zr`
+and `ng` outputs. The `zr` output determines whether the result of the
+final computation is zero, and the `ng` output determines whether result of
+final computation is negative. Both outputs depend on what `out` outputs.
+If `out` is `0`, then `zr` outputs `1.` Otherwise, `zr` outputs `0`. If
+`out` is a negative number, then `ng` outputs `1`. Otherwise, `ng` outputs
+`0.`
+
+Of these outputs, `ng` is the easiest. To determine if `out` is negative,
+we just need the most significant bit of `out`. So, in our final
+Mux16-gate, we can extract the bit at the index `15` and output that as
+`ng`:
+
+```verilog
+// no bit
+Not16(in[0..15]=fout, out[0..15]=notfout);
+
+Mux16(
+	a[0..15]=fout,
+	b[0..15]=notfout,
+	sel=no,
+	out[16]=ng, // 'ng'
+	out=out // 'out'
+);
+```
+
+For the `zr` output, we must first determine if `out` is zero. Since we're
+using two's-complement representation, the value zero occurs when all of
+the bits are zero. There are many ways to do this. The approach we'll use
+is to separately output two halves of the Mux16-gate's output bits: one
+called `lowFinalOut`, corresponding to `out[0..7]`, the other called
+`highFinalOut`, corresponding to `out[8..15]`. We then feed these inputs
+into two separate Or8Way-gates respectively. Then, we feed the outputs of
+these two Or8Way gates into an OR-gate. The output of the OR-gate, called
+`AorBOut`, is then fed into a NOT-gate, whose output is `zr`:
+
+```verilog
+// 'out', 'ng' outputs
+Mux16(
+		a[0..15]=fout,
+		b[0..15]=notfout,
+		sel=no,
+		out[0..7]=lowFinalOut,
+		out[8..15]=highFinalOut,
+		out[15]=ng,
+		out=out
+);
+
+// zr output
+Or8Way(in[0..7]=lowFinalOut, out=lowOut);
+Or8Way(in[0..7]=highFinalOut, out=highOut);
+Or(a=lowout, b=highOut, out=AorBOut);
+Not(in=AorBOut, out=zr);
+```
+
+To illustrate why this works, suppose the final `out` is
+`1001 0010 0101 1101`. It follows that `lowFinalOut` is `0101 1101`, and
+`highFinalOut` is `1001 0010`. Passing these two inputs into separate
+Or8Way-gates, we get `1` and `1`. Passing `1` and `1` into an OR-gate, we
+get `1`. And passing that into a NOT-gate, we get `0`. This is correct,
+given that the final `out` `1001 0010 0101 1101` is not zero.
+
+Alternatively, suppose the final `out` is `0000 0000 0000 0000`. We thus
+have `0000 0000` for `lowFinalOut` and `0000 0000` for `highFinalOut`.
+Passing these to two `Or8Way`'s, we get `0` and `0`. Passing `0` and `0`
+into an OR-gate, we get `0`. And passing `1` into a NOT-gate, we get `1`.
+Again this is correct, given that the final `out` `0000 0000 0000 0000` is
+zero.
+
+As we can likely tell, an ALU with just ${6}$ control inputs &mdash; called
+a **${6}$-bit ALU** &mdash; is already fairly complex. Early computers had
+${4}$- and ${8}$-bit ALUs (thus capable of implementing ${16}$ operations
+and ${256}$ hardware-based operations respectively). Later, computers
+progressed to ${32}$-bit ALUs (over ${4}$ billion possible operations), and
+today, ${64}$-bit ALUs (over ${18}$ quintillion possible operations).
+Again, just because we have these possibilities does not mean designers
+exhaust all of them. Gates are _expensive_, and it's not at all
+unreasonable for designers to only use some of the possible bitstreams. For
+example, computers that used the Z80 processor in the 1970s could very well
+have implemented an ${8}$-bit ALU, since the Z80 had a word size of ${8}$
+bits. Nevertheless, the designers stuck with just ${4}$ control bits,
+saving power and transistor costs.

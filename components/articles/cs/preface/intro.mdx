@@ -1,0 +1,96 @@
+# CS Review
+
+<BinaryTree
+	data={[
+		[1, [2, 3]],
+		[2, [4, 5]],
+		[3, [7, 8]],
+		[4, [11, 17]],
+		[5, [22, null]],
+		[11, [32, 28]],
+		[17, [19, null]],
+	]}
+/>
+
+The pages below contain notes from various computer science courses I've
+taken, as well as my own independent readings. This page is updated daily,
+but every now and then I will miss something. I try to correct these errors
+during a full-weekend review at month's end. In the meantime, please excuse
+errors or omissions.
+
+Separately, I have another page, Review of Mathematics, containing similar
+notes for mathematics. I hope at least one of these pages helps anyone else
+exploring computer science.
+
+The notes are organized by volume (indicated by a Roman numeral), then by
+chapter (indicated by a Hindu-Arabic numeral). The organization attempts to
+mirror a typical course sequence for a computer science concentration at a
+U.S. university. The volumes focus on a specific area of computer science,
+and the chapters focus on topics within that area.
+
+Importantly, the volumes increase in difficulty by Roman numeral.
+Difficulty in terms of implicit assumptions about the reader's knowledge.
+For example, in the later materials on Assembly programming, I do not
+explain what a variable is. I assume readers are familiar with for-loops if
+they're going so far as to examine the details behind Assembly. I think
+that's a fair assumption to make.
+
+Volumes with higher roman numerals, however, have much more details on a
+particular topic. A common practice in computer science education is to
+hide a great deal of the details in the early course. In fact, any good
+computer science course will structure itself after identifying the
+following levels of detail:
+
+1. must know,
+2. should know,
+3. nice to know,
+4. edge cases,
+5. trivial
+
+Some Conventions. In my experience, English is not the best language for
+communicating ideas in computer science. There are many concepts in
+computer science that can easily come into conflict with conversational and
+formal English. As such, please take note of the following conventions I've
+adopted in my writing.
+
+First, I use the words to and through to mean different things in the
+context of intervals. I adopt this convention because there's no
+consistency in English when it comes to counting. My remedy: The phrase “1
+to 3” denotes the open interval $[1, 3)$. In other words, when I write
+“Count from 1 to 3,” I mean, “1, 2.” The phrase “1 through 3” denotes the
+closed interval $[1,3]$. I.e., the phrase “Count from 1 through 3” implies
+“1, 2, 3.” In short, “to” means exclude the last number, and “through”
+means include the last number.
+
+Second, in formal American English, punctuation at the end of a clause is
+inserted inside quotation marks, if any. For example: This is “correct,”
+But not “this”. This is one of the more asinine rules of American English
+that does not appear to serve any purpose. Worse, it comes into conflict
+with sentences refering to string values. To avoid any confusion, I adopt
+the more sensible British rule, where punctuation is placed “outside”.
+Owing to how deeply ingrained the American rule is in me, there may be
+instances where I succumb to the habit, but never will I do so with string
+values.
+
+Third, a few notes on logic. I will occasionally use the clipping “iff” to
+mean “if and only if”. The biconditional is one of the most important and
+pervasive constructs in logic, and it would be inefficient to have to write
+“if and only if” every time. Additionally: The word “or” is always the
+inclusive-or, and where the exclusive-or is intended, I use either “a xor
+b” or “a or b but not both”. Finally, the construct “x unless y” means “If
+y, not x”.
+
+Fourth, I've no qualms with contractions. You'll find I use them liberally,
+but I will occassionally refrain for clarity and flow. I personally do not
+think writing is any less serious or communicative if written without the
+use of contractions. In fact, strict adherence to contraction abstinence
+leads to rigid and distant communications. I'm not a fan.
+
+Finally, having gone through the rigidity of a legal education and the
+crucible of law review, I've learned not to fight the evolution of
+language. In fact, one of the wonders of computer science is seeing how
+programming languages evolve over time: some languages grow more efficient
+at communicating and expressing ideas, others demonstrate what not to do
+when expressing things, and yet others exhibit the sprouts for something
+very clever. In writing these materials, I err on the side of promoting
+change in the English language.

@@ -1,0 +1,76 @@
+# Binary Search Trees
+
+Now that we have the basics of binary trees down, we can now consider one
+of the most useful data structures in computer science &mdash; **binary
+search trees**.
+
+The binary search tree, on its face, looks like any other binary tree we've
+seen:
+
+<Tree
+	data={[
+		{ child: "30", parent: "" },
+		{ child: "15", parent: "30" },
+		{ child: "50", parent: "30" },
+		{ child: "10", parent: "15" },
+		{ child: "20", parent: "15" },
+		{ child: "40", parent: "50" },
+		{ child: "60", parent: "50" },
+	]}
+/>
+
+There is, however, a key property that makes it unique enough to merit its
+own name:
+
+> _Definition: Binary Search Tree_. A binary tree is a binary search tree
+> iff for any node ${n}$ in the tree, all nodes with a value less than
+> ${n's}$ weight are found in ${n}$'s left-subtree, and all nodes with a
+> weight greater than ${n's}$ weight are found in ${n}$'s right-subtree.
+
+In the definition above, the term _weight_ &mdash; borrowing from graph
+theory &mdash; can be substituted with any value where the comparison
+operators apply. For example, the node's weight could be an integer, a
+floating point number, or perhaps even strings that map to particular
+numberic values. The key point is, in a binary search tree, we can look at
+any node ${n,}$ and rest assured that all the nodes in ${n}$'s left-subtree
+contain values than ${n}$'s value, and all the nodes in ${n}$'s
+right-subtree contain values greater than ${n.}$ For example, in the tree
+above, we can see that `30`, the root node, has `15` to its left and `50`
+to its right. And for the node containig `50`, we see `40` to its left and
+`60` to its right.
+
+Because of this property, binary search trees make searching much faster.
+In fact, we can think of binary search trees as the data structure
+implementation of the binary search algorithm, as we saw with arrays.
+Recall that with the binary search algorithm on arrays, we had to sort
+elements first. The binary search tree skips that step through its data
+structure. This is made apparent when we examine the binary search tree's
+inorder traversal sequence. For the tree above, the inorder traversal
+sequence is:
+
+<Sequence
+	data={[
+		{ val: "10" },
+		{ val: "15" },
+		{ val: "20" },
+		{ val: "30" },
+		{ val: "40" },
+		{ val: "50" },
+		{ val: "60" },
+	]}
+/>
+
+The binary search tree is not without its limitations. The most obvious
+limitation: _Binary search trees cannot have duplicates_. This limitation
+is implied by the data structure. We have to nodes with lesser values to
+the left, and nodes with greater values to the right. There's no
+less-than-or-equal-to or greater-than-or-equal-to.
+
+Another limitation is traversal generation. All binary search trees are
+binary trees, so to generate the tree with traversal generation, we must
+specify an inorder traversal sequence and either a preorder traversal
+sequence or a postorder traversal sequence. With an inorder traversal
+sequence alone, there are many possible binary search trees.
+
+Keeping these limitations in mind, let's now consider how searching
+actually occurs for a binary search tree.

@@ -1,0 +1,289 @@
+# Deleting BST Nodes
+
+We have the following tree:
+
+<Tree
+	data={[
+		{ child: "30", parent: "" },
+		{ child: "15", parent: "30" },
+		{ child: "50", parent: "30" },
+		{ child: "10", parent: "15" },
+		{ child: "20", parent: "15" },
+		{ child: "40", parent: "50" },
+		{ child: "60", parent: "50" },
+		{ child: "55", parent: "60" },
+		{ child: "70", parent: "60" },
+	]}
+/>
+
+Now suppose that we're asked to delete a node associated with a particular
+value in the tree. Call it the _target node_. How might we do so? Once
+again, because we know how to search for nodes, deleting is _almost_
+trivial, at least for tree's leaves. We just to search for the particular
+node containing the key, then delete if found. For the leaves, this is
+straightforward. If we wanted to delete the node containing `70`, we just
+have call `search(root, 70)`, then, when we get to `70`, delete:
+
+<Tree
+	data={[
+		{ child: "30", parent: "" },
+		{ child: "15", parent: "30" },
+		{ child: "50", parent: "30" },
+		{ child: "10", parent: "15" },
+		{ child: "20", parent: "15" },
+		{ child: "40", parent: "50" },
+		{ child: "60", parent: "50" },
+		{ child: "55", parent: "60" },
+		{ child: "70", parent: "60", opacity: 0.15 },
+	]}
+/>
+
+All that's left to do after deleting `node(70)` is to ensure its parent,
+`node(60)` has its left-child pointer set to `NULL`. Now, we emphasized
+_almost_ trivial because there's a bit of a troublesome case: Deleting
+branch nodes. For example, suppose we were asked to delete the node
+containing `60`. If we just blindly deleted the node, we'd end up with:
+
+<Tree
+	data={[
+		{ child: "30", parent: "" },
+		{ child: "15", parent: "30" },
+		{ child: "50", parent: "30" },
+		{ child: "10", parent: "15" },
+		{ child: "20", parent: "15" },
+		{ child: "40", parent: "50" },
+		{ child: "60", parent: "50", opacity: 0.15 },
+		{ child: "55", parent: "60" },
+		{ child: "70", parent: "60", opacity: 0.15 },
+	]}
+/>
+
+We've partitioned the tree, and that's likely not what we intended. But
+even if we did, assuming the only way to access the tree was through a
+single `root` pointer, the other tree &mdash; `node(55)` &mdash; is lost in
+memory; from a practical perspective, we've essentially destroyed it.
+
+To avoid this problem: Before deletion, always check if the target node is
+a branch node or a leaf node. If the target node is a branch node with only
+one child, as is the case with `node(60)`, then the target node must take
+its parent's place after deletion:
+
+<Tree
+	data={[
+		{ child: "30", parent: "" },
+		{ child: "15", parent: "30" },
+		{ child: "50", parent: "30" },
+		{ child: "10", parent: "15" },
+		{ child: "20", parent: "15" },
+		{ child: "40", parent: "50" },
+		{ child: "55", parent: "50" },
+	]}
+/>
+
+This avoids partitioning, but only for deleting uniparous nodes. What if we
+were now asked to delete `node(50)`? Once again, blindly deleting causes a
+partition:
+
+<Tree
+	data={[
+		{ child: "30", parent: "" },
+		{ child: "15", parent: "30" },
+		{ child: "50", parent: "30", opacity: 0.1 },
+		{ child: "10", parent: "15" },
+		{ child: "20", parent: "15" },
+		{ child: "40", parent: "50" },
+		{ child: "55", parent: "50" },
+	]}
+/>
+
+There are several ways to avoid this problem. One way is to fill the
+newly-emptied position with the target node's _inorder predecesor_. In
+other words, fill the vacancy with the node that comes before the target
+node within the tree's inorder traversal sequence. For our tree above, the
+inorder traversal sequence is:
+
+$$
+	\lang 10, 15, 20, 30, {\color{forestgreen}{40}}, {\color{indianred}{50}}, {\color{dodgerblue}55} \rang
+$$
+
+and we can see that `node(40)` comes before `node(50)`. Above, we've also
+indicated the blue-colored `node(55)`, `node(50)`'s _inorder successor_.
+Thus, if we delete a biparous node, we can choose either the inorder
+predecesor or the inorder successor to fill the vacancy:
+
+Inorder predecessor sucession:
+
+<Tree
+	data={[
+		{ child: "30", parent: "" },
+		{ child: "15", parent: "30" },
+		{ child: "40", parent: "30" },
+		{ child: "56", parent: "40", display: "none" },
+		{ child: "55", parent: "40" },
+		{ child: "10", parent: "15" },
+		{ child: "20", parent: "15" },
+	]}
+/>
+
+Inorder successor succession:
+
+<Tree
+	data={[
+		{ child: "30", parent: "" },
+		{ child: "15", parent: "30" },
+		{ child: "55", parent: "30" },
+		{ child: "40", parent: "55" },
+		{ child: "41", parent: "55", display: "none" },
+		{ child: "10", parent: "15" },
+		{ child: "20", parent: "15" },
+	]}
+/>
+
+Given the binary search tree's structure, finding either of these
+successors is easy enough, per the following lemmas:
+
+> _Definition: Inorder Predecesor_. Let ${N}$ be a node in a binary search
+> tree ${B.}$ The <b>inorder predecesor</b> of ${N}$ is the rightmost child
+> of ${B}$'s left subtree.
+
+> _Definition: Inorder Successor_. Let ${N}$ be a node in a binary search
+> tree ${B.}$ The <b>inorder successor</b> of ${N}$ is the leftmost child
+> of ${B}$'s right subtree.
+
+We call this vacancy-filling technique _inorder-succession_. Having given a
+broad overview of how the technique works, let's point out some of the
+flaws with this technique. First, suppose we had the following tree:
+
+<Tree
+	data={[
+		{ child: "10", parent: "" },
+		{ child: "a", parent: "10", display: "none" },
+		{ child: "90", parent: "10" },
+		{ child: "20", parent: "90" },
+		{ child: "b", parent: "90", display: "none" },
+		{ child: "c", parent: "20", display: "none" },
+		{ child: "80", parent: "20" },
+		{ child: "30", parent: "80" },
+		{ child: "d", parent: "80", display: "none" },
+		{ child: "e", parent: "30", display: "none" },
+		{ child: "70", parent: "30" },
+	]}
+/>
+
+
+The inorder traversal squence for this tree is:
+
+<figure>$$ \lang 10, 20, 30, 70, 80, 90 \rang $$</figure>
+
+If we deleted `node(20)` using inorder-successor-succession, then we
+suddenly have to perform several successions:
+
+Before deletion. No changes.
+
+<figure>$$ \lang 10, 20, 30, 70, 80, 90 \rang $$</figure>
+
+<Tree
+	data={[
+		{ child: "10", parent: "" },
+		{ child: "a", parent: "10", display: "none" },
+		{ child: "90", parent: "10" },
+		{ child: "20", parent: "90" },
+		{ child: "b", parent: "90", display: "none" },
+		{ child: "c", parent: "20", display: "none" },
+		{ child: "80", parent: "20" },
+		{ child: "30", parent: "80" },
+		{ child: "d", parent: "80", display: "none" },
+		{ child: "e", parent: "30", display: "none" },
+		{ child: "70", parent: "30" },
+	]}
+/>
+
+Remove `node(20)`. There's a vacancy that must be filled, and because we're
+using inorder-successor-succession, `node(30)` must rise to fill the
+vacancy. In this case, it becomes the left-child of `node(90)`.
+
+<figure>$$ \lang 10, 30, \square, 70, 80, 90 \rang $$</figure>
+
+<Tree
+	data={[
+		{ child: "10", parent: "" },
+		{ child: "a", parent: "10", display: "none" },
+		{ child: "90", parent: "10", arrowTo: 7 },
+		{ child: "20", parent: "90", opacity: 0.1 },
+		{ child: "b", parent: "90", display: "none" },
+		{ child: "c", parent: "20", display: "none" },
+		{ child: "80", parent: "20" },
+		{ child: "30", parent: "80" },
+		{ child: "d", parent: "80", display: "none" },
+		{ child: "e", parent: "30", display: "none" },
+		{ child: "70", parent: "30" },
+	]}
+/>
+
+The previous step results in a vacancy, and now `node(70)` must succeed.
+
+<figure>$$ \lang 10, 30, 70, \square, 80, 90 \rang $$</figure>
+
+<Tree
+	data={[
+		{ child: "10", parent: "" },
+		{ child: "a", parent: "10", display: "none" },
+		{ child: "90", parent: "10", arrowTo: 7 },
+		{ child: "20", parent: "90", opacity: 0.2 },
+		{ child: "b", parent: "90", display: "none" },
+		{ child: "c", parent: "20", display: "none" },
+		{ child: "80", parent: "20", arrowTo: 10 },
+		{ child: "30", parent: "80" },
+		{ child: "d", parent: "80", display: "none" },
+		{ child: "e", parent: "30", display: "none" },
+		{ child: "70", parent: "30" },
+	]}
+/>
+
+Now `node(80)` must succeed.
+
+<figure>$$ \lang 10, 30, 70, 80, \square, 90 \rang $$</figure>
+
+<Tree
+	data={[
+		{ child: "10", parent: "" },
+		{ child: "a", parent: "10", display: "none" },
+		{ child: "90", parent: "10" },
+		{ child: "30", parent: "90" },
+		{ child: "b", parent: "90", display: "none" },
+		{ child: "d", parent: "80", display: "none" },
+		{ child: "f", parent: "70", display: "none" },
+		{ child: "80", parent: "70" },
+		{ child: "e", parent: "30", display: "none" },
+		{ child: "70", parent: "30" },
+	]}
+/>
+
+And finally, `node(90)` must succeed, which means `node(30)` must succeed.
+
+$$
+	\lang 10, 30, 70, 80, 90 \rang
+$$
+
+<Tree
+	data={[
+		{ child: "10", parent: "" },
+		{ child: "a", parent: "10", display: "none" },
+		{ child: "30", parent: "10" },
+		{ child: "20", parent: "90", display: "none" },
+		{ child: "b", parent: "90", display: "none" },
+		{ child: "c", parent: "20", display: "none" },
+		{ child: "f", parent: "70", display: "none" },
+		{ child: "80", parent: "70" },
+		{ child: "g", parent: "80", display: "none" },
+		{ child: "90", parent: "80" },
+		{ child: "e", parent: "30", display: "none" },
+		{ child: "70", parent: "30" },
+	]}
+/>
+
+## Time Complexity
+
+Examining this process, we see that the time complexity for removing nodes
+depends on the tree's height. We must search &mdash; i.e., traverse &mdash;
+the tree and modify accordingly.

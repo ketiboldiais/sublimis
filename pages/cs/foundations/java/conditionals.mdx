@@ -1,0 +1,384 @@
+# Conditionals
+
+1. [Comparisons in Java](#comparisons-in-java)
+2. [Comparing Variables](#comparing-variables)
+3. [Comparing Variables with Arithmetic](#comparing-variables-with-arithmetic)
+4. [Connecting Comparisons](#connecting-comparisons)
+5. [Evaluation Order & Grouping](#evaluation-order--grouping)
+6. [Rule](#rule)
+7. [Querying Data](#querying-data)
+8. [Nested Conditionals](#nested-conditionals)
+9. [Switch Statements](#switch-statements)
+
+The values `true` and `false` of type `boolean` are the building blocks of
+computer decision-making. This due to the way computers make decision
+&mdash; they take complex expressions and reduce them to true or false
+evaluations.
+
+## Comparisons in Java
+
+In Java, we can compare variables against either literal values or other
+values. This forms the basis for simple decision making. They return `true`
+or `false`, values of type `boolean`:
+
+```java
+int num = 10;
+System.out.println(num == 0);
+System.out.println(num != 0);
+System.out.println(num != 10);
+System.out.println(num < 10);
+System.out.println(num <= 10);
+System.out.println(num > 10);
+System.out.println(num >= 10);
+```
+
+```bash
+false
+true
+false
+false
+true
+false
+true
+```
+
+The code above demonstrates Java's comparison operators:
+
+| Operator | Computation Requested        |
+| -------- | ---------------------------- |
+| `a == b` | Is `a` equal to              |
+| `b`?     |
+| `a != b` | Is `a` not equal to          |
+| `b`?     |
+| `a < b`  | Is `a` less than             |
+| `b`?     |
+| `a <= b` | Is `a` less than or equal to |
+| `b`?     |
+| `a > b`  | Is `a` greater than          |
+| `b`?     |
+| `a >= b` | Is `a` greater than or equal |
+| `b`?     |
+
+## Comparing Variables
+
+We can also compare two variables:
+
+```java
+int firstNum = 1;
+int secondNum = 2;
+System.out.println(firstNum > secondNum);
+System.out.println(firstNum < secondNum);
+```
+
+```bash
+false
+true
+```
+
+## Comparing Variables with Arithmetic
+
+We can also compare results from computations involving variables directly:
+
+```java
+int firstNum = 1;
+int secondNum = 2;
+System.out.println(firstNum + secondNum == 3);
+System.out.println(firstNum - secondNum <= 2);
+```
+
+```bash
+true
+true
+```
+
+## Connecting Comparisons
+
+We can connect a comparison expression with another comparison express to
+form a compound comparison. This is done with the `and` operator (`&&`) and
+the `or` operator (`||`). There are two rules that always apply when using
+these two operators, stemming directly from logic:
+
+> Given Boolean expressions $p$ and ${q,}$ the compound expression
+> ${p \texttt{ \&\& } q}$ returns `true` if, and only if, both $p$ returns
+> `true` and $q$ returns `true`.
+
+> Given Boolean expressions $p$ and ${q,}$ the compound expression
+> ${p \texttt{ || } q}$ returns `false` if, and only if, both $p$ returns
+> `false` and $q$ returns `false`.
+
+For example:
+
+```java
+int num = 10;
+System.out.println(num > 5 && num < 10);
+System.out.println(num < 10 && num > 5);
+System.out.println(num > 10 || num > 5);
+System.out.println(num > 10 || false);
+```
+
+```bash
+false
+false
+true
+false
+```
+
+## Evaluation Order & Grouping
+
+Suppose we have the following Boolean expression:
+
+$$
+	p \texttt{ \&\& } q \texttt{ \&\& } (r \texttt{ || } (s \texttt{ \&\& } t))
+$$
+
+Java applies severaly rules for dealing with these complicated expressions.
+First, Boolean expressions are always evaluated from left to right. Second,
+as soon as Java knows what the entire expression's result is, it will stop.
+It will not continue evaluating the expression. If we want Java to evaluate
+particular expressions first, we use parentheses. In practice, however,
+these rules should not cause problems &mdash; we should not be writing
+complex Boolean expressions like that above. An example:
+
+```java
+int num = 10;
+System.out.println((num > 0 && num < 10) || (num == 10));
+System.out.println((num > 0 && num < 10) && (num == 10));
+System.out.println(num < 10 && (num == 10 || num == 10));
+System.out.println(num < 10 && num == 10 || num == 10);
+```
+
+```bash
+true
+false
+false
+true
+```
+
+The last line returns `true` because the expression is evaluated from left
+to right.
+
+1. `num < 10` is `false`.
+2. `num == 10` is `true`.
+3. Thus, the `and` expression thus far is `false`.
+4. But, that expression logically connected with `||` to the expression
+   `num == 10`, which is `true`.
+5. Thus, the entire expression is `true`.
+
+## Rule
+
+Given a compound Boolean expression $p$ in Java, $p$ is always evaluated
+from left to right. If $p$ contains parentheses, then the expressions
+contained in the parentheses are evaluated first. Else or therein, the
+expressions are evaluated in the following order:
+
+1. The unary operators are evaluated (`++, --, -, !, ~, !`).
+
+2. The mulplicative operators are evaluated (`*, /, %`).
+
+3. The additive operators are evaluated (`+ -`).
+
+4. The relational operators (`<, >, <=, >=`) are evaluated.
+
+5. The equality operators (`==, !=`) are evaluated.
+
+6. The logical `AND` operator (`&&`) is evaluated.
+
+7. The logical `OR` operator (`||`) is evaluated.
+
+8. The ternary operator (`? :`) is evaluated.
+
+9. The assignment operators (`=, +=, -=, *=, /=, %=`) are evalauted last.
+
+## Querying Data
+
+With the comparison operators, Java can make simple decisions:
+
+```java
+int num = 10;
+if (num > 20) {
+	System.out.println("num is greater than 20");
+} else {
+	System.out.println("num is not greater than 20")
+}
+```
+
+```bash
+num is not greater than 20
+```
+
+When we combine keywords `if` and `else`, we produce _conditional
+statements_. These statements tell Java to execute a _code block_ &mdash; a
+set of statements &mdash; if, and only if, a specified condition is true.
+Every single computer makes decisions using this general structure,
+`if-else`. As an aside, note the indentation in the example above. This
+indentation must be used in Java.
+
+With the `else if` keyword, we can produce more complex conditional
+statements:
+
+```java
+int num = 0;
+if (num == 1) {
+	System.out.println("if block executed");
+} else if (num < 1) {
+	System.out.println("first else if block executed");
+} else if (num > 1) {
+	System.out.println("second else if block executed");
+} else {
+	System.out.println("else block executed");
+}
+```
+
+```bash
+first else if block executed
+```
+
+The code outputs as expected. Each of the conditional statements are
+evaluated one by one, top to bottom. If a conditional statement's condition
+returns `false`, then Java moves to the next conditional statement. The
+very last statement, an `else` statement, is called a _false block_. Think
+of the `else` statement as the default rule, and the statements before it
+as the exceptions &mdash; if none of the `if` or `else if`s return `true`,
+then the `else` applies.
+
+A critical point: As soon as one of the conditional statements returns
+`true`, the conditional statements thereafter are never run:
+
+```java
+int num = 0;
+if (num == 0) {
+	System.out.println("if block executed");
+} else if (num < 1) {
+	System.out.println("first else if block executed");
+} else if (num > 1) {
+	System.out.println("second else if block executed");
+} else {
+	System.out.println("else block executed");
+}
+```
+
+```bash
+if block executed
+```
+
+Here we changed the first conditional statement to `num == 0`. This returns
+`true`, so Java goes into that _arm_, or _branch_, of the program. Java
+does not enter any of the other arms. Java will move to the next statements
+to execute, whether that's inside the conditional statement's code block or
+outside the branches. Note what this means: If there is an `else`
+statement, then there is _exactly one_ conditional statement executed. If
+there is no `else` statement, then there is either (a) no conditional
+statements executed, or (b) _at most one_ conditional statement executed.
+
+## Nested Conditionals
+
+We can nest conditional statements inside conditional statements to create
+more complex branching:
+
+```java
+int num = 3;
+if (num == 0) {
+	System.out.println("I am 0!");
+} else if (num > 0) {
+	if (num == 1) {
+		System.out.println("I am 1!");
+	} else if (num == 2) {
+		System.out.println("I am 2!");
+	} else {
+		System.out.println("I am positive, but not 0, 1, or 2!");
+	}
+} else if (num < 0) {
+	System.out.println("I am a negative!");
+} else {
+	System.out.println("I am a positive!");
+}
+```
+
+```bash
+I am positive, but not 0, 1, or 2!
+```
+
+## Switch Statements
+
+A branching structure consisting of `if` and `else-if` statements can be
+reduced to _switch statements_:
+
+```java
+// This structure:
+if (condition_A) {
+	...
+} else if (condition_B) {
+	...
+} else if (condition_C) {
+	...
+};
+
+// is equivalent to:
+switch (variable) {
+	case A:
+		...
+	case B:
+		...
+	case C:
+		...
+	default:
+		...
+}
+```
+
+Switch statements are common in many languages, but some languages
+implement them much more efficiently and powerfully. Java is not one of
+those languages. Switch statements are somewhat limited in Java, and they
+are not nearly as commonly seen in Java programs compared to say, Haskell
+programs. For example, switch statements in Java are inherently limited to
+the `variable` component above. That `variable` can only be a primitive
+type or a `string`. However, compared to `if` and `else-if` statements,
+switch statements can match multiple cases in a single `switch` statement
+(i.e., a switch statement can have multiple arms, while the formers
+cannot).
+
+There is a nuance to the way switch statements work that can lead to
+frustration: The execution starts at a matching case statement, then
+continues until a `break` statement is reached. In other words, the case
+analysis will not stop at the first match. It will continue testing. For
+this reason, we often must include a break at each case.
+
+Finally, notice the `default` case at the last line above. This means what
+it says: If none of the cases return `true`, Java will execute that
+particular line.
+
+```java
+int test = 2;
+switch (test) {
+	case 0: System.out.println("A");
+	case 1: System.out.println("B");
+	case 2: System.out.println("C");
+	case 3: System.out.println("D");
+	default: System.out.println("E");
+}
+```
+
+```bash
+C
+D
+E
+```
+
+Notice how Java continued execution after the match. To ensure only the
+test `case 2` is executed, we need a break statement:
+
+```java
+int test = 2;
+switch (test) {
+	case 0: System.out.println("A");
+	case 1: System.out.println("B");
+	case 2: System.out.println("C");
+		break;
+	case 3: System.out.println("D");
+	default: System.out.println("E");
+}
+```
+
+```bash
+C
+```

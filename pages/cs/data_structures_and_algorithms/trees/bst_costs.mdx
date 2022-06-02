@@ -1,0 +1,43 @@
+# Binary Search Tree Costs
+
+As with all data structures, there are costs to binary search trees. The
+BST's most significant cost is the lack of control over order of insertion.
+For example, the following traversal sequences have the same keys, but
+generate two different trees:
+
+<Sequence
+	data={[
+		{ val: 40 },
+		{ val: 20 },
+		{ val: 30 },
+		{ val: 60 },
+		{ val: 50 },
+		{ val: 10 },
+		{ val: 70 },
+	]}
+/>
+
+<Sequence
+	data={[
+		{ val: 10 },
+		{ val: 20 },
+		{ val: 30 },
+		{ val: 40 },
+		{ val: 50 },
+		{ val: 60 },
+		{ val: 70 },
+	]}
+/>
+
+Notice that ${\texttt{T}_1}$ has a height of ${2,}$ while ${\texttt{T}_2}$
+has a height of ${6.}$ Two different heights for the same set of keys! This
+shows that a BST's height depends on the order of key insertion.
+
+Can we control the order of insertion? With what we have so far, no.
+Ultimately, how the keys are inserted is up to the user. If the user
+inserts the keys according to ${\texttt{T}_1}$'s traversal sequence, then
+they'll get the tree ${\texttt{T}_1.}$ But if they insert the keys
+according to ${\texttt{T}_2}$ then they'll get the tree ${\texttt{T}_2.}$
+
+Because of this problem, we need a way to control the height of a binary
+search tree. Fortunately, there's a solution &mdash; AVL trees.

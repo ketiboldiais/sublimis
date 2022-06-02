@@ -1,0 +1,422 @@
+# Induction
+
+The proofs we've seen so far are examples of one type of proof, the
+**direct proof**. We now introduce another type of proof, the **indirect
+proof**. Indirect proofs come in several variants. One such variant is the
+**proof-by-contradiction**.
+
+## Proof-by-contradiction
+
+In a proof-by-contradiction, we start by assuming that the opposite of what
+we are trying to prove (the negation) is true. Then, following this
+assumption, we take logical deductions until we arrive at a contradiction
+(a proposition that states "false equals true"). If we ever reach a
+false-equals-true, then that means that what we assumed from the very
+beginning was wrong. In other words, the opposite (the negation) cannot be
+true. And since the negation cannot be true, the original proposition must
+be true. More formally:
+
+## Proof-by-Contradiction.
+
+To prove a proposition ${P}$ is true, we assume that ${P}$ is false
+(${\neg P}$ is true). From this hypothesis (${P}$ is false), we prove that
+a falsehood is true (${P}$ is false implies ${P}$ is true). In doing so, we
+prove that it must be the case that ${P}$ is true.
+
+This works because if we can prove that ${\neg P \implies F,}$ then the
+only way for ${\neg P \implies F}$ to be true is if ${\neg P}$ is false.
+And if ${\neg P}$ is false, then ${P}$ is true.
+
+Example: Prove that ${\sqrt{2}}$ is irrational. First, let's be clear about
+what our terms mean. An irrational number is a number that cannot be
+written as the ratio of two integers. In contrast, a rational number is a
+number that can be written as the ratio of two integers.
+
+When we write a proof by contradiction, we always start by indicating that
+the proof is a proof by contradiction.
+
+## Proof (by contradiction).
+
+Assume for the purpose of contradiction that ${\sqrt{2}}$ is a rational
+number. If ${\sqrt{2}}$ is rational, then ${\sqrt{2} = \dfrac{a}{b}}$ where
+${a}$ and ${b}$ are integers, and ${\dfrac{a}{b}}$ is a fraction expressed
+in lowest terms (a fraction with no common divisors).
+
+Squaring both sides: ${2 = \dfrac{a^2}{b^2}.}$ Multiplying both sides by
+${b^2,}$ we obtain ${2b^2 = a^2.}$ This implies that ${a^2}$ is even, since
+${2b^2}$ can be written as ${2k}$ given that ${b}$ is an integer. Because
+${a^2}$ is even, then it must be true that ${a}$ is even (since the square
+of an even number is even) &mdash; ${(2 \space\vert\space a)}$ ("two
+divides ${a}$").
+
+Given that ${a}$ is even, ${a^2}$ is a multiple of 4 &mdash;
+${(4 \space\vert\space a^2).}$ This means that
+${(4 \space\vert\space 2b^2).}$ Dividing each side by 2,
+${(2 \space\vert\space b^2).}$
+
+Now, if 2 divides by ${b^2,}$ then it must be the case that ${b}$ is even.
+We've arrived at a contradiction. If ${a}$ is even and ${b}$ is even, then
+${\dfrac{a}{b}}$ is not a fraction in lowest terms. This means that
+${\sqrt{2}}$ cannot be rational, so it must be irrational. ${\blacksquare}$
+
+The proof above was first discovered by a religious society of ancient
+Greece called the Pythagoreans. In ancient Greece, the practice of
+mathematics was a religious exercise. The ancient Greeks believed that
+mathematics was ruled by two gods &mdash; Apeiron and Peras. Apeiron was
+viewed as a malevolent god: the embodiment of primal chaos, the god of the
+infinite. In contrast, Peras was viewed as the benevolent one: the
+embodiment of order, the god of the finite.
+
+One of the axioms of these mathematical mystics was that there were no
+irrational numbers &mdash; they simply did not exist. The Greeks denied
+their existence because they were evil; they were infinite. In contrast,
+the mystics affirmed the existence of the rational numbers because they
+were finite.
+
+This denial of the infinite extended to other spheres. Every line,
+according to the Pythagoreans, was finite. From this axiom, they derived
+what we now know as the Pythagorean Theorem. If there was a triangle with
+legs of length 1, then the length of the hypotenuse was ${\sqrt{2}.}$
+Because they denied the existence of the irrationals, the Pythagoreans
+constructed a theorem that ${\sqrt{2}}$ was rational. Eventually, the
+Pythagoreans discovered the proof above.
+
+Needless to say, this caused mayhem. The Pythagoreans were now confronted
+with the fact that their axioms were inconsistent. Every theorem they had
+proven was premised on the non-existence of irrationals, and they now had
+just found an irrational. The solution: Cover it up. According to legend,
+the Pythagoreans not only denied the result, they went so far as to murder
+the member who discovered the proof.
+
+## The Well-Ordering Principle
+
+The **Well-ordering Principle** states:
+
+> _Definition_. Every nonempty set of nonnegative integers has a smallest
+> element.
+
+This short statement contains numerous implications. First, it's false for
+the empty set ${\emptyset,}$ since the empty set contains no elements.
+Second, it's false for the negative integers. And since it's false for the
+negative integers, it's false for the set of all integers. I.e., ${\Z}$ is
+not well ordered. And since it's false for ${\Z,}$ it's false for the set
+of all rational numbers, ${\mathbb{Q}.}$ And since it's false for
+${\mathbb{Q},}$ it's false for the set of all real numbers, ${\R.}$ These
+all imply that there's something very special about the nonnegative
+integers, a.k.a. the natural numbers ${\N.}$[^wop]
+
+[^wop]:
+    The well-ordering principle is often shortened to WOP, not to be
+    confused with Belcalis Marlenis Almánzar and Megan Jovon Ruth Pete's
+    popular hit, _WAP_.
+
+The well-ordering principle allows us to construct numerous
+proofs-by-contradiction, and it is a cornerstone of proof-by-induction. For
+example, recall the proof that ${\sqrt{2}}$ is irrational. In the previous
+proof, we used a little number theory and algebraic manipulation to
+construct a proof-by-contradiction. In that proof, however, we relied on a
+particular postulate:
+
+> _Postulate_. Let ${m, n \in \Z^{+}.}$ Then ${\dfrac{m}{n}}$ can be
+> written in _lowest terms_. In other words, ${\dfrac{m}{n}}$ cannot be
+> written as ${\dfrac{m'}{n'},}$ where ${m'}$ and ${n'}$ are positive
+> integers with no common prime factors.
+
+How do we know that this postulate is true? Well, we can prove it with WOP:
+
+**Proof (By Contradiction)**. Let ${m, n \in \Z^{+}.}$ Suppose
+${\dfrac{m}{n}}$ _cannot_ be written in lowest terms. Further suppose that
+${A}$ is the set of all positive integers that are numerators of
+${\dfrac{m}{n}.}$ In other words, ${m \in A.}$ Because ${m \in A,}$ ${A}$
+is nonempty.
+
+Since ${A}$ is nonempty and ${A \subseteq \N,}$ then by the well-ordering
+principle, ${A}$ contains a smallest integer ${m_0 \in A.}$ Hence, again by
+WOP there exists an integer ${n_0 > 0}$ such that:
+
+$$
+	\dfrac{m_0}{n_0}
+$$
+
+cannot be written in lowest terms.
+
+Because ${\dfrac{m_0}{n_0}}$ cannot be written in lowest terms, ${m_0}$ and
+${n_0}$ must have a common prime factor, ${p > 1.}$ Thus:
+
+$$
+	\dfrac{m_0}{n_0} = \dfrac{m_0/p}{n_0/p}
+$$
+
+This implies that ${\dfrac{m_0/p}{n_0/p}}$ cannot be written in lowest
+terms either. Because ${A}$ is the set of all positive integers that are
+numerators of ${\dfrac{m}{n},}$ the numerator ${\dfrac{m_0}{p}}$ is a
+member of ${A.}$ But ${m_0 / p < m_0.}$ This contradicts the fact that
+${m_0}$ is the smallest element of ${A.}$
+
+Since the assumption that ${C}$ leads to a contradiction, it follows that
+${C}$ must be empty. And because ${C}$ must be empty, for all positive
+integers, the fraction ${\dfrac{m}{n}}$ that _can_ be written in lowest
+terms. ${\blacksquare}$
+
+## Proof-by-induction
+
+We now turn to another variety of proofs &mdash; **proof-by-induction**.
+The concept of induction is actually a predicate itself:
+
+> _Axiom_. Let ${P(n)}$ be a predicate. If ${P(0)}$ is true, and
+> ${\forall n \in \N : (P(n) \implies P(n + 1))}$ is true, then
+> ${\forall n \in \N : P(n)}$ is true.
+
+Another way of expressing the axiom above: If ${P(0)}$ is true, and if
+${P(0) \implies P(1),}$ and if ${P(1) \implies P(2),}$ all the way up to
+${P(n),}$ then ${P(n)}$ is true for any natural number ${n.}$ As an axiom,
+induction is relatively straightforward. If know that ${P(0)}$ is true, and
+we know that ${P(0) \implies P(1),}$ and ${P(1) \implies P(2),}$ all the
+way up to ${P(n),}$ then it makes sense for ${P(n)}$ to be true for all
+${n.}$ We can think of this as akin to dominoes falling.
+
+Of note, mathematical induction is _not_ a form of _inductive reasoning_.
+In inductive reasoning, we reason that because of some previously observed
+phenomenon, we can make inferences about the future. This is entirely
+unrelated to mathematical induction. Mathematical induction is, in fact, a
+form of deductive reasoning, not inductive reasoning. In other words,
+mathematical induction is to induction what Rocky Mountain oysters are to
+oysters. Similar names but very, very different things. When mathematicians
+use the word "induction" alone, they are referring to the mathematical,
+rather than epistemic, context.
+
+Let's see an example. Prove the following:
+
+> ${\forall n \in \N,}$
+>
+> $$
+> 	  1 + 2 + 3 + \ldots + n = \dfrac{n(n + 1)}{2}
+> $$
+
+Note that the ellipses, ${\ldots,}$ tells us that we must complete the
+pattern. In this case, there is a pattern to ${1 + 2 + 3 + \ldots + n.}$ In
+this case, each element in the sequence is an increment-by-one of the
+element before it. Because this can be very vague, we have several ways to
+express this idea more explicitly.
+
+$$
+	\sum_{i = 1}^{n} i = \sum_{}^{1 \leq i \leq n} i = \sum_{1 \leq i \leq n}^{} i
+$$
+
+In each of the notations above, we are expressing the clause, "The sum of
+${i}$ from ${i = 1}$ to ${i = n.}$ Thus, the proposition we are asked to
+prove can be more succinctly expressed as:
+
+$$
+	\forall n \in \N : \left(\sum_{i = 1}^{n} = \dfrac{n(n + 1)}{2}\right)
+$$
+
+The notation above is called a **summation**. There are a number of reasons
+why use the summation notation. To begin with, if ${n = 1,}$ then the
+expression ${1 + 2 + \ldots + n}$ is ambiguous and confusing. With the
+summation notation, we can simply say the when ${n = 1,}$ then
+${\sum_{i = 1}^{n} = 1,}$ since the sum of 1 to 1 is simply 1. Similarly,
+if ${n \leq 0,}$ then ${\sum_{i = 1}^{n} = 0.}$ Why? Because there are no
+numbers to sum. We call these two cases, ${n = 0}$ and ${n = 1,}$ the
+**edge cases**.
+
+All this in mind, let us write the proof. The first thing we do is to state
+that the proof will be done by induction. Next step: What is our predicate?
+In other words, what is the hypothesis? Here, it is the proposition we are
+trying to prove: That ${\sum_{i = 1}^{n} = \dfrac{n(n + 1)}{2}.}$
+
+Proof (by induction).
+
+Let ${P(n)}$ be the proposition that
+${\sum_{i = 1}^{n} = \dfrac{n(n + 1)}{2}.}$
+
+Now we begin thinking about the proof. The first thing to analyze is the
+**base case**. Here, we must establish that ${P(0)}$ is true. We saw this
+earlier. The sum of ${i = 1}$ to 0 of ${i}$ is 0. The proposition is also
+true by algebra:
+
+$$
+	\sum_{i = 1}^{0} = \dfrac{0(0 + 1)}{2} = 0
+$$
+
+Having proved the base case is true, we now must prove the second part, the
+**inductive case**. In this case, we must show: For ${n \geq 0,}$
+${P(n) \implies P(n + 1)}$ is true.
+
+Now, recall basic logic. How do we show that an implication is true? There
+is only one situation where the implication is false, and that is when
+${P(n)}$ is true and ${P(n + 1)}$ is false. Thus, to prove this
+implication, we must assume that ${P(n)}$ is true, then determine whether
+${P(n + 1)}$ is true. So, putting together what we have so far:
+
+Let ${P(n)}$ be the proposition that
+${\sum_{i = 1}^{n} = \dfrac{n(n + 1)}{2}.}$ When ${n = 0,}$ then
+${\sum_{i = 1}^{0} = 0.}$ This is the base case. We now prove the inductive
+case: For ${n \geq 0,}$ ${P(n) \implies P(n + 1).}$
+
+Assume ${P(n)}$ is true for purposes of induction. Following this
+assumption, we must prove that
+${\sum_{i = 1}^{n + 1} = \dfrac{(n + 1)(n + 2)}{2}.}$
+
+The last sentence above is arguably the most confusing for
+non-mathematician readers. It seems as if in trying to prove ${P(n),}$ we
+are assuming ${P(n).}$ Isn't this circular? Admittedly, it appears to
+teeter very close. In actuality, it is not at all circular. We are assuming
+${P(n)}$ to prove the necessary condition of the proposition
+${P(n) \implies P(n + 1).}$ Remember, in mathematics, we write a proof one
+step at a time, from one deduction to the next.
+
+We should also be very clear about what we mean when we say something like
+"Assume ${x.}$" We are not saying that ${x}$ is, in fact, true. We are
+saying, "Just pretend for a moment&mdash;for the sake of a
+hypothetical&mdash;that ${x}$ is true." The only purpose of an "Assume
+${x}$" statement is to obtain a non-hypothetical statement of the form
+${x \implies y.}$ For example, remember how we wrote a
+proof-by-contradiction? The same idea is at work here. We want to reach
+some non-hypothetical conclusion: "When we assume ${x,}$ this is what
+happens. And since this is what happens, it must be true that ..."
+
+Returning to the proof, we are now trying to prove that
+${1 + 2 + \ldots + (n + 1) = \dfrac{(n + 1)(n + 2)}{2}.}$ We can rewrite
+this as ${1 + 2 + \ldots + n + (n + 1) = \dfrac{(n + 1)(n + 2)}{2}.}$ Since
+we assumed that ${P(n)}$ is true, we know that:
+
+$$
+	\overbrace{1 + 2 + \ldots + n}^{\dfrac{n(n + 1)}{2}} + (n + 1)
+$$
+
+Thus, we have:
+
+$$
+	\begin{aligned}
+		\dfrac{n(n + 1)}{2} + (n + 1) = \dfrac{n^2 + n + 2n + 2}{2} \\
+		&= \dfrac{n^2 + 3n + 2}{2} \\
+		&= \dfrac{(n + 1)(n + 2)}{2}
+	\end{aligned}
+$$
+
+Putting this all together:
+
+Let ${P(n)}$ be the proposition that
+${\sum_{i = 1}^{n} = \dfrac{n(n + 1)}{2}.}$ When ${n = 0,}$ then
+${\sum_{i = 1}^{0} = 0.}$ This is the base case. We now prove the inductive
+case: For ${n \geq 0,}$ ${P(n) \implies P(n + 1).}$
+
+Assume ${P(n)}$ is true for purposes of induction. Following this
+assumption, we must prove that
+${\sum_{i = 1}^{n + 1} = \dfrac{(n + 1)(n + 2)}{2}.}$ Since ${P(n)}$ is
+true, we can rewrite the expression ${1 + 2 + \ldots + n + (n + 1)}$ as
+${\dfrac{n(n + 1)}{2} + (n + 1).}$ Rewriting this expression, we have
+${\dfrac{n^2 + n + 2n + 2}{2},}$ which is ${\dfrac{n^2 + 3n + 2}{2}.}$
+Factoring this expression, we have ${\dfrac{(n + 1)(n + 2)}{2}.}$
+
+Thus, we have proved that ${P(n + 1)}$ is true. And since ${P(n + 1)}$ is
+true when ${P(n)}$ is true, the implication ${P(n) \implies P(n + 1)}$
+cannot be false. Therefore, the implication ${P(n) \implies P(n + 1)}$ must
+be true. Ergo,
+${\forall n \in \N : \left(\sum_{i = 1}^{n} = \dfrac{n(n + 1)}{2}\right)}$
+is true. ${\blacksquare}$
+
+Let's do another example. Prove the following:
+
+$$
+	\forall n \in \N: (3 \space\vert\space n^3 - n)
+$$
+
+Let's first test the predicate:
+
+$$
+	n = 5 : n^3 - n = (5)^3 - 5 = 125 - 5 = 120
+$$
+
+3 does in fact divide 120.
+
+First, what is our induction hypothesis? It is: Let
+${P(n) = 3 \space\vert\space n^3 - n}$ Next, we should establish that our
+base case is. Our base case is when ${n = 0.}$ Checking:
+
+$$
+	P(0) = (0)^3 - 0 = 0
+$$
+
+Our base case is true; 3 does in fact divide 0. Now we turn to the
+inductive step: For ${n \geq 0,}$ ${P(n) \implies P(n + 1)}$ is true. More
+formally:
+
+$$
+	(\forall n \in \N \mid n \geq 0) : P(n) \implies P(n + 1)
+$$
+
+To prove that this is true, we first assume that ${P(n)}$ is true. In other
+words, we assume that ${3 \space\vert\space n^3 - n}$ is true. Now we
+examine the necessary condition, ${P(n + 1).}$ The proposition ${P(n + 1)}$
+is ${(n + 1)^3 - (n + 1).}$ Exampding this:
+
+$$
+	\begin{aligned}
+		(n + 1)^3 - (n + 1) &= n^3 + 3n^2 + 3n + 1 - n + 1
+		&= n^3 + 3n^2 + 2n
+	\end{aligned}
+$$
+
+Looking at this result, it doesn't really look like ${n^3 + 3n^2 + 2n}$ is
+a multiple of 3. We need to wrtie this a bit more. We want to use the fact
+that ${n^3 - n}$ is a multiple of three (remember, we assumed it).
+Remember, whenever we perform a proof-by-induction, we always want to make
+use of the sufficient condition. So, to make use of our sufficient
+condition, we want to get a ${-n}$ inside the expression. So, we need to
+rewrite the expression so as to incorporate a minus sign:
+
+$$
+	\begin{aligned}
+	(n + 1)^3 - (n + 1) &= n^3 + 3n^2 + 3n + 1 - n + 1 \\
+		&= n^3 + 3n^2 + 2n \\
+		&= n^3 - n + 3n^2 + 3n \\
+		&= (n^3 - n) + 3(n^2 + n)
+	\end{aligned}
+$$
+
+Now it's very clear that ${P(n + 1)}$ is true:
+
+$$
+	\overbrace{(n^3 - n)}^{\text{multiple of 3}} + \overbrace{3(n^2 + n)}^{\text{multiple of 3}}
+$$
+
+We need not always have a base case start at 0. We could have a base case
+${P(b)}$ and then the induction step
+${\forall n \geq b : P(n) \implies P(n + 1).}$
+
+Consider the following problem. We have a ${2^n \times 2^n}$ grid, and we
+want to tile it with an L-shaped tile, ${2 \times 2,}$ such that the
+entirety of the grid is filled with one square open:
+
+<Fig
+	link={"https://res.cloudinary.com/sublimis/image/upload/v1653186973/math/tiling_problem.svg"}
+	caption={"Tiling problem"}
+/>
+
+
+
+It looks like we can from the diagram above. Now we want to prove it for
+all ${n.}$ Here is the proposition:
+
+> ${\forall n \in \N,}$ there exists a way to tile a ${2^n \times 2^n}$
+> region with a center square missing.
+
+First, we establish our induction hypothesis: ${P(n) \coloneqq}$
+${\exists}$ a way to tile a ${2^n \times 2^n}$ region with a center square
+missing. Second, we establish the base case, ${P(0.)}$ Where ${P(0),}$ we
+only have one square, since ${2^0 \times 2^0 = 1.}$ That is the center
+square missing, so ${P(n)}$ is true where ${n = 0;}$ ${P(0)}$ is true.
+
+Now we consider the inductive case: For ${n \geq 0,}$ assume ${P(n)}$ is
+true to verify ${P(n) \implies P(n + 1).}$ Now we must prove that
+${P(n + 1)}$ is true.
+
+Let's consider ${2^{n + 1} \times 2^{n + 1}.}$ It turns out it's very
+difficult to prove when a center square is missing (try it). It is actually
+much easier if we make a stronger assumption &mdash; any square is missing.
+With this assumption, we can place the missing square anywhere. In doing
+so, we can think of any ${2^{n+1} \times 2^{n+1}}$ region as smaller parts
+of ${2^n \times 2^n.}$ And since ${P(n)}$ is true, we can place the missing
+square anywhere in a region ${2^{n+1} \times 2^{n+1}.}$

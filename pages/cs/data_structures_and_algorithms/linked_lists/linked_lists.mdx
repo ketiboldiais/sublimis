@@ -1,0 +1,4780 @@
+<Metadata
+	title={"Linked Lists"}
+	description={"Notes on the linked list data structure."}
+	keywords={
+		"Linked lists, list data structures, pointers, data structures and algorithms"
+	}
+/>
+# The Linked List Data Structure
+
+- [The Linked List Data Structure](#the-linked-list-data-structure)
+  - [Implementing the Node Data Structure](#implementing-the-node-data-structure)
+  - [Instantiating the Node](#instantiating-the-node)
+  - [Aside: Linked List & Pointers](#aside-linked-list--pointers)
+    - [Null & Nonnull Tests](#null--nonnull-tests)
+    - [Foot Test](#foot-test)
+  - [Iterative List Traversal](#iterative-list-traversal)
+  - [Printing a Linked List](#printing-a-linked-list)
+  - [Traversing a Linked List Recursively](#traversing-a-linked-list-recursively)
+  - [Printing in Reverse](#printing-in-reverse)
+  - [Node Constructor](#node-constructor)
+  - [Constructing a List from an Array](#constructing-a-list-from-an-array)
+  - [Length of a Linked List](#length-of-a-linked-list)
+    - [Recursive Implementation](#recursive-implementation)
+  - [Deletion](#deletion)
+    - [Left-shifting](#left-shifting)
+    - [Right-shift](#right-shift)
+    - [General Deletion](#general-deletion)
+  - [Insertion](#insertion)
+  - [Append](#append)
+  - [Prepend](#prepend)
+  - [Get](#get)
+  - [Set](#set)
+  - [Insert](#insert)
+    - [Sorted Insertions](#sorted-insertions)
+  - [List Reversal](#list-reversal)
+    - [Reverse-by-element](#reverse-by-element)
+    - [Reverse-by-link](#reverse-by-link)
+    - [Recursive List Reversal](#recursive-list-reversal)
+  - [Sum of All Elements](#sum-of-all-elements)
+    - [Recursive Approach.](#recursive-approach)
+  - [Peak Finder](#peak-finder)
+    - [Recursive Implementation](#recursive-implementation-1)
+- [Valley Finder](#valley-finder)
+  - [Searching a Linked List](#searching-a-linked-list)
+    - [Recursive Implementation](#recursive-implementation-2)
+  - [Sorted Test](#sorted-test)
+  - [Dedupe a Sorted List](#dedupe-a-sorted-list)
+  - [Concatenating Lists](#concatenating-lists)
+  - [Merging Lists](#merging-lists)
+  - [Loop Detection](#loop-detection)
+
+Before we examine linked list algorithms, we must first understand the
+linked list data structure. We will do so by investigating the mechanics
+behind implementing a linked list.
+
+## Implementing the Node Data Structure
+
+To implement the node data structure, we use a record. The record looks
+something like, in pseudocode:
+
+```rust
+struct Node:
+	T data
+	Node* next
+
+```
+
+Above, the `data` field will store the actual substantive data. Here, it's
+some generic type `T`. The `next` field will store a pointer `next`, which
+points to the next node in the list.
+
+In C:
+
+```c
+struct Node {
+	int data;
+	struct Node* next;
+}
+```
+
+In C++:
+
+```cpp
+struct Node {
+	int data;
+	Node* next;
+}
+```
+
+In Java:
+
+```java
+private class Node {
+	int data;
+	Node next;
+}
+```
+
+In JavaScript, because we'll be using `Node` objects later, we prepend the
+`export` keyword:
+
+```javascript
+export class Node {
+	constructor(data) {
+		this.data = data;
+		this.next = null;
+	}
+}
+```
+
+A linked list's data field determines its type. Thus, `int data` indicates
+a linked list of type `int`, and `int data` a linked list of type `char`. A
+linked list's data type, however, is distinct from its nodes's data type.
+
+A linked list _node_ is of type `Node`. The type node is a recursive sum
+type. ${N.}$ It consists of a type ${t,}$ _and_ a type ${N^*}$—a pointer to
+a value of type ${N.}$ Notice this self-referential structure; linked lists
+provide great opportunities for recursion, as we'll soon see.
+
+Let's get a bit of terminology out of the way. Examine the diagram below:
+
+![The linked list's anatomy.](https://res.cloudinary.com/sublimis/image/upload/v1652820596/cs/linked_list_anatomy.svg)
+
+Above, ${n}$ represents some node. Each node ${n}$ consists of two parts, a
+_data field_, containing of some data value ${v,}$ and a _next field_,
+containing a pointer to some heap memory address ${h.}$ Notice that each
+node stores the address ${h}$ of the next node.
+
+Every linked list has a **root**. This is a pointer to the first node of
+the list, called the **head**. All nodes that are _not_ the head comprise
+the list's **tail**. The last node of the list is called the **foot**.
+Finally, all nodes between the head and the tailend constitute the
+**trunk**.
+
+Question: How much memory does the node data structure take? Well, we know
+that there are two parts to the node; the substantive data and the pointer.
+We'll denote the substantive data ${d,}$ and the pointer ${p.}$ We'll also
+denote the amount of memory a given node consumes as the function ${N:}$
+
+$$
+	N = d + p
+$$
+
+Focusing on the variable ${d}$ first, the amount of memory consumed by
+${d}$ is a function of its type, and number of instances of ${d.}$ We'll
+denote the amount of memory consumed by a value of type ${d}$ as
+${S(t_d),}$ and the number of instances as ${n.}$ Thus,
+${d = n \cdot t_d.}$ Placing this in our equation:
+
+$$
+	N = n(S(t_d)) + p
+$$
+
+Now let's think about ${p.}$ For any given compiler, the memory consumed by
+${p}$ depends on the data type of the value the pointer points to. For
+example, if an `int` value `x` takes ${2}$ bytes, a pointer `p` to `x`
+would take ${2}$ bytes. Thus, we have:
+
+$$
+	N = n(S(t_d)) + S(t_d)
+$$
+
+Simplifying, we have the following formula for the amount of memory a
+single node takes:
+
+$$
+	N = S(t_d) \cdot (n + 1)
+$$
+
+Where ${t_d}$ is the data type of the substantive data value, ${n}$ is the
+number of substantive data values stored in a single node, and ${S(t_d)}$
+is the size of the data type ${t_d.}$
+
+Applying this formula, suppose we have a node storing the `int` value 1. On
+a 64-bit compiler where an `int` takes up 4 bytes, the size of the node
+would be:
+
+$$
+	N = 4 \cdot (1 + 1) = 8 \text{bytes}
+$$
+
+## Instantiating the Node
+
+After creating the node data structure, we want to begin the linking of
+different nodes. To do so, we employ the following fact:
+
+> Linked lists are stored in heap memory.
+
+Thus, to instantiate a node, we must first have a pointer to the node:
+
+```rust
+struct Node:
+	T data;
+	Node* next;
+main():
+	Node* root = NULL;
+```
+
+In C:
+
+```c
+struct Node {
+	int data;
+	struct Node* next;
+};
+
+int main() {
+	struct Node* h = NULL;
+	return 0;
+}
+```
+
+And in C++:
+
+```cpp
+struct Node {
+	int data;
+	Node *next;
+};
+
+int main() {
+	Node* h = NULL;
+	return 0;
+}
+```
+
+Above, we've instantiated a `Node*` pointer, currently pointing to nowhere
+(the list is empty). Importantly, the pointer we've just initialized lives
+in the stack. This is a necessary feature of the linked list because we
+cannot access heap memory ourselves. The pointer `p` serves as our link to
+the heap. We can't go to the heap, but we can use `p` to control what we've
+created there. Now that we've got a head, let's create our first node in
+the heap. In C, we write:
+
+```rust
+struct Node:
+	T data;
+	Node* next;
+main():
+	Node* root = NULL;
+	Node* temp = malloc(sizeof(Node));
+```
+
+In C:
+
+```c
+#include <stdio.h>
+
+struct Node {
+	int data;
+	struct Node* next;
+};
+
+int main() {
+	struct Node* h    = NULL;
+	struct Node* temp = malloc(sizeof(struct Node));
+	return 0;
+}
+```
+
+Notice line 5. Herere, we're allocating space in the heap for a `Node`
+struct. The `malloc()` function takes allocates the requested memory and
+returns a pointer to the address of the memory allocated in the _heap_. Now
+that we have a node, we can initialize its fields by dereferencing `temp`:
+
+```rust
+struct Node:
+	T data;
+	Node* next;
+main():
+	Node* root = NULL;
+	Node* temp = malloc(sizeof(Node));
+	(*temp).data = 1;
+	(*temp).next = NULL;
+```
+
+The same code in C:
+
+```c
+struct Node {
+	int data;
+	struct Node* next;
+}
+
+int main() {
+	struct  Node* h    = NULL;
+	struct  Node* temp = malloc(sizeof(struct Node));
+	(*temp).data       = 1;
+	(*temp).next       = NULL;
+	return 0;
+}
+```
+
+C++ provides derferencing through the arrow pointer (as does C). C++ also
+provides the `new` operator in place of `malloc()`:
+
+```cpp
+struct Node {
+	int data;
+	Node* next;
+}
+
+int main() {
+	Node* h          = 0;
+	Node* temp       = new Node();
+				temp->data = 1;
+				temp->next = 0;
+	return 0;
+}
+```
+
+Now, all that's left to do is to link the address of the newly created node
+to our head:
+
+```rust
+struct Node:
+	T data;
+	Node* next;
+main():
+	Node* root = NULL;
+	Node* temp = malloc(sizeof(Node));
+	(*temp).data = 1;
+	(*temp).next = NULL;
+	root = temp;
+```
+
+In C:
+
+```c
+struct Node {
+	int data;
+	struct Node* next;
+}
+
+int main() {
+	struct  Node* h    = NULL;
+	struct  Node* temp = malloc(sizeof(struct Node));
+	(*temp).data       = 1;
+	(*temp).next       = NULL;
+					h          = temp;
+	return 0;
+}
+```
+
+And in C++:
+
+```cpp
+struct Node {
+	int data;
+	Node* next;
+}
+
+int main() {
+	Node* h          = 0;
+	Node* temp       = new Node();
+				temp->data = 1;
+				temp->next = 0;
+				h          = temp;
+	return 0;
+}
+```
+
+Writing the code above results in the diagram below. Suppose the allocated
+memory in the heap has the address `200`. The pointer `p` resides in the
+stack, and its address is `100`. The address `200`, returned from
+`malloc()`, is stored in `p`.
+
+![The node is now linked.](https://res.cloudinary.com/sublimis/image/upload/v1652821594/cs/linked_node.svg)
+
+Great, we've made our first linked list. Below are some examples of
+creating linked lists with just the node data structure in other languages.
+In C++:
+
+```cpp
+struct Node {
+	int data;
+	Node *next;
+};
+
+int main() {
+	// Head
+	Node* head = 0;
+
+	// First node
+	Node* node1       = new Node();
+				node1->data = 1;
+				node1->next = 0;           // first node is the tail
+				head        = node1;       // link head to first node
+
+	// Second node
+	Node* node2       = new Node();
+				node2->data = 2;
+				node1->next = 0;           // second node is now the tail
+				node1->next = node2;       // link first node to second node
+
+	// Third node
+	Node* node3       = new Node();
+				node3->data = 3;
+				node3->next = 0;           // third node is now the tail
+				node2->next = node3;       // link second node to third node
+	return 0;
+}
+```
+
+In JavaScript:
+
+```javascript
+import { Node } from "./Node.js";
+
+const n1 = new Node(1);
+n1.next = new Node(2);
+n1.next.next = new Node(3);
+n1.next.next.next = new Node(4);
+n1.next.next.next.next = new Node(5);
+
+console.log(n1);
+```
+
+```bash
+Node {
+	data: 1,
+	next: Node { data: 2, next: Node { data: 3, next: [Node] } }
+}
+```
+
+## Aside: Linked List & Pointers
+
+Say we had the following code in C++:
+
+```cpp
+struct Node {
+	int data;
+	Node *next;
+};
+
+int main() {
+	Node* q = NULL;
+	Node* p = 0;
+	Node* n = new Node();
+				n->data = 1;
+				n->next = 0;
+				p       = n;
+	Node* m = new Node();
+				m->data = 2;
+				m->next = 0;
+				n->next = m;
+}
+```
+
+Next, suppose the following:
+
+1. The address in `p` is `0x200`.
+2. The address of `n` is `0x200`.
+3. The address in `n->next` is `0x210`.
+
+What happens if we write the statement below?
+
+```cpp
+q = p;
+```
+
+Well, `q` is just a pointer, so assigning it the value `p` assigns it the
+address `0x200`. This means that the linked list now has _two_ heads, since
+`p` and `q` both point to `n`, the first node.[^pointernote1]
+
+[^pointernote1]: More explicitly: `q = p = &n = 0x200 `
+
+Next, what happens if we write:
+
+```cpp
+q = p->next;
+```
+
+Well, we know that `p` stores the address `0x200`. That's the address of
+`n`. Thus, by writing the above, `q` now stores the address in `n->next`,
+which is `0x210`. This is the address of the node `m`.[^pointernote2]
+
+[^pointernote2]:
+    Expanding: `q = p->next = &n->next = &m;`. It can also be helpful to
+    think in terms of dereferencing in C: `q = (*p).next = &n.next = &m;`
+
+How about this statement:
+
+```cpp
+p = p->next;
+```
+
+Writing the line above, we assign to `p` the address `p->next`. This is the
+address of `m`. Thus, the pointer `p` ceases pointing at `n`, and instead
+points at `m`.[^pointernote3] This statement is particularly useful—it
+allows us to move from the current node to the next node. And if we can
+move from the current node to the next node, we can _iterate_ through a
+list. Because of how useful it is, we state it more explicitly:
+
+[^pointernote3]:
+    Expanding: `rust p = p->next = &n->next = &m ` In C terms:
+    `c p = (*p).next = n.next &m; ` In general, given a head pointer ${H}$
+    pointing to the head ${n_0,}$ to move to ${n_1,}$ we write:
+
+1. `H = H->next`, or
+2. `H = (H).next`
+
+More generally, given a pointer ${P}$ pointing to some node ${n_i,}$ to
+move to ${n_{i+1},}$ we write:
+
+1. `P = P->next`, or
+2. `P = (P).next`
+
+### Null & Nonnull Tests
+
+Compare the two code blocks below. The first:
+
+```cpp
+struct Node {
+	int data;
+	Node *next;
+}
+int main() {
+	*p = NULL;
+}
+```
+
+And the second:
+
+```cpp
+struct Node {
+	int data;
+	Node *next;
+}
+int main() {
+	Node* p       = 0;
+	Node* n       = new Node();
+				n->data = 1;
+				n->next = 0;
+				p       = n;
+	Node* m       = new Node();
+				m->data = 2;
+				m->next = 0;
+				n->next = m;
+}
+```
+
+In Program 1, the pointer `p` is the null pointer. In Program 2, the
+pointer `p` points to the address of `n` (suppose it's `0x200`). Whether a
+pointer is the null address or otherwise corresponds to Boolean values. In
+Program 1, the pointer `p` has the value `0`. In Program 2, the pointer `p`
+has a non-zero value. In C and its descendants—e.g., C++—zero corresponds
+to `false` and non-zero values correspond to `true`. Thus, if some pointer
+${p}$ is not pointing on any node, then it is _false_. Otherwise, it is
+_true_. Because of this fact, we have the following:
+
+> _Null Pointer Test_. A pointer ${p}$ is the _null pointer_—a pointer
+> pointing nowhere—if and only if the following expressions are true:
+>
+> 1. `P == NULL`
+> 2. `P == 0`, or
+> 3. `!P`
+
+For the nonnull pointer, we have the following:
+
+> _Nonnull Pointer Test_. A pointer ${p}$ is the _nonnull pointer_—a
+> pointer pointing to a valid address—if and only if the following
+> expressions are true:
+>
+> 1. `P !== NULL`,
+> 2. `P !== 0`, or
+> 3. `P`,
+
+### Foot Test
+
+Many operations involving linked lists require to test whether a given node
+${n}$ is the **tailend**—the last node in the list. If a given node ${n}$
+is the **tailend**, then there are no other nodes after it. If a given node
+${n}$ is _not_ the **tailend**, then there are nodes after the node ${n}$—
+node ${n}$ is a **parent node**. The test:
+
+> Tailend Test The node `n` is the _tailend_—the last node in the linked
+> list—if and only if:
+
+1. `!(n->next == NULL)`,
+2. `!(n->next == 0)`, or
+3. `!(n->next)`
+
+Otherwise, the node is a _parent node_.
+
+## Iterative List Traversal
+
+Suppose we had the following linked list:
+
+<LinkedList data={[7, 5, 3, 1]} />
+
+Now suppose we want to traverse the linked list—i.e., visiting all of the
+nodes one at a time. To do so, we employ the facts: First, suppose the
+pointer `p` has the pointee `0x200`. This is the address of the first node
+storing `7`. Suppose the next node, storing `5`, has the address `0x210`,
+which is the pointee of the first node's `next` field. From the previous
+section, we know that the first node's `next` field can be expressed as:
+
+```rust
+p->next
+```
+
+Thus, to iterate through the linked list, all we must do is execute
+`p = p->next`, so long as `next` is a nonnull pointer. Accordingly, the
+general form for iteratively traversing the linked list is as follows:
+
+```rust
+while(p != null) {
+	p = p->next;
+}
+```
+
+## Printing a Linked List
+
+Now that we know how to iteratively traverse a linked list, we can perform
+the simple operating of printing the linked list's data fields.
+
+```rust
+	print(List list) -> void:
+		let p := list->head
+		if (p = null):
+			print("empty list")
+		else:
+			while (p != null):
+				print(p->data)
+				p = p -> next
+```
+
+Note how we use a variable `p` to iterate through the linked list. We need
+the temporary pointer `p` because using `root` directly would cause losing
+the address to the head.
+
+In C++:
+
+```cpp
+while(p != 0) {
+	print("%d", p->data);
+	p = p->next;
+}
+```
+
+Testing:
+
+```cpp
+#include <iostream>
+int main() {
+	Node* root = 0;
+
+	// first node
+	Node* n1       = new Node();
+				n1->data = 1;
+				n1->next = 0;
+				root     = n1;
+
+	// second node
+	Node* n2       = new Node();
+				n2->data = 2;
+				n2->next = 0;
+				n1->next = n2;
+
+	// third node
+	Node* n3       = new Node();
+				n3->data = 3;
+				n3->next = 0;
+				n2->next = n3;
+
+	// temporary pointer for traversal
+	Node* p = root;
+
+	// print the node
+	while (p != 0) {
+		std:: cout << temp->data << std:: endl;
+		p = p->next;
+	}
+	return 0;
+}
+```
+
+```bash
+1
+2
+3
+```
+
+This is a pretty useful procedure. Let's encapsulate it in a function:
+
+```cpp
+#include <iostream>
+
+void printList(Node* p)  {
+	while (p != 0) {
+		std::cout << p->data << std::endl;
+		p = p->next;
+	}
+}
+```
+
+## Traversing a Linked List Recursively
+
+Because of the linked list's self-referential nature, we can also traverse
+a linked list recursively. Suppose we had the following linked list:
+
+<LinkedList data={[8,3,7,12,9]}/>
+		
+		
+		
+Like the iterative approach, we need a traversal pointer. Call it
+`p`. Our function's head:
+		
+		
+			
+```rust
+void printList(Node* p)
+```
+			
+		
+		
+As we know, if `p` is not the tail, then there's data to
+print. And after printing that data, we should move on to the next
+node _recursively_. Thus, `printList()` will call
+itself by passing the next node's pointer:
+		
+		
+			
+```rust
+void printList(Node* p) {
+	if (p != 0) {
+		printf("%d", p->data);
+		printList(p->next);
+	}
+}
+```
+			
+		
+That's it. Implementing this in C++:
+
+```cpp
+#include <iostream>
+
+void printList(Node* p)  {
+	if (p != 0) {
+		std::cout << p->data << std::endl;
+		printList(p->next);
+	}
+}
+
+int main() {
+	Node* root = 0;
+
+	Node* n1       = new Node();
+				n1->data = 1;
+				n1->next = 0;
+				root     = n1;
+
+	Node* n2       = new Node();
+				n2->data = 2;
+				n2->next = 0;
+				n1->next = n2;
+
+	Node* n3       = new Node();
+				n3->data = 3;
+				n3->next = 0;
+				n2->next = n3;
+
+	Node* p = root;
+
+	printList(p);
+	return 0;
+}
+```
+
+```bash
+1
+2
+3
+```
+
+Very cool. Let's compare the iterative approach and the recursive approach.
+The iterative approach:
+
+```cpp
+void printList(Node* p)  {
+	while (p != 0) {
+		std::cout << p->data << std::endl;
+		p = p->next;
+	}
+}
+```
+
+And the recursive approach:
+
+```cpp
+void printList(Node* p)  {
+	if (p != 0) {
+		std::cout << p->data << std::endl;
+		printList(p->next);
+	}
+}
+```
+
+The time complexity for either of these approaches is linear— ${O(n).}$
+This is because we're iterating through ${n}$ nodes, and outputting to the
+console and the `p != 0` comparison are basic steps. The space complexity,
+however, is a different story. With the iterative approach, we're only
+calling the function once. And because each function call takes one stack
+frame, the iterative approach has constant space complexity—${O(1).}$ In
+contrast, the recursive approach makes ${n+1}$ calls, given ${n}$ nodes. As
+such, the recursive approach is of linear space complexity—${O(n).}$
+
+## Printing in Reverse
+
+With the recursive approach, printing in reverse is just a matter of
+changing the order:
+
+```cpp
+void printList(Node* p)  {
+	if (p != 0) {
+		printList(p->next);
+		std::cout << p->data << std::endl;
+	}
+}
+```
+
+## Node Constructor
+
+In our previous code examples, we've had some fairly repetitive code. The
+first of which is the way we've been creating new nodes:
+
+```rust
+n       = new Node();
+n->data = 1
+n->next = m;
+```
+
+To make our lives easier, we should write a function for this procedure:
+
+```rust
+fn newNode(int dataVal) -> Node* :
+	Node* node = new Node;
+	node.data = dataVal;
+	node.next = NULL;
+	return node;
+```
+
+This constructor takes an `int` value as a parameter, creates a new `Node`,
+and returns a pointer to that node. Note that all this constructor does is
+create a new node. Nothing more. We will see later how to insert nodes into
+a linked list. For now, we'll use the `newNode()` constructor to clean up
+our code a bit. Here's an implementation in C++:
+
+```cpp
+struct Node {
+	int data;
+	Node* next;
+}
+Node* newNode(int data) {
+	Node* node       = new Node;
+				node->data = data;
+				node->next = 0;
+	return node;
+}
+```
+
+The C implementation is similar to the C++ implementation. The only
+difference is we must use the keyword `struct`:
+
+```c
+#include <stdlib.h>
+#include <stdio.h>
+
+struct Node {
+	int data;
+	struct Node* next;
+};
+
+struct Node* newNode(int data) {
+	struct Node* node = (struct Node*) malloc(sizeof(struct Node*));
+	(*node).data = data;
+	(*node).next = NULL;
+	return node;
+};
+
+int main() {
+	return 0;
+}
+```
+
+## Constructing a List from an Array
+
+For efficiency's sake, we want to create linked lists quickly. One way to
+do so is to construct a linked list from an array argument. Now that we
+have a node constructor, our job is a little easier. First, suppose we have
+the following array (in pseudocode):
+
+```rust
+int arr[] = {1, 2, 3};
+```
+
+We want to write:
+
+```rust
+	arrayToList(arr, 3)
+```
+
+to produce the linked list ${(1, 2, 3).}$ To do so, assume we have our node
+constructor:
+
+```rust
+fn newNode(int data) -> Node* :
+	Node* node = new Node;
+	node.data = data;
+	node.next = 0;
+	return node;
+```
+
+With that, we can now write our list constructor. This function takes as an
+argument an array of type ${t}$ (we'll stick with `int` for now), and a
+size of type `int`. It will then return a pointer to a node:
+
+```rust
+arrayToList(int arr[], int size) -> Node* :
+```
+
+Inside our function, we'll first create a new node storing the first
+element in the array. This is our _head_:
+
+```rust
+arrayToList(int arr[], int size) -> Node* :
+	Node* head = newNode(A[0]);
+```
+
+Let's also create another node pointer for the list's tailend (the last
+node in the list):
+
+```rust
+arrayToList(int arr[], int size) -> Node* :
+	Node* head = newNode(A[0]);
+	Node* tailend;
+```
+
+Finally, we want to ensure the `tailend` is initially at the `head`. The
+`tailend` will move as the list grows, and we need it to start from
+somewhere:
+
+```rust
+arrayToList(int arr[], int size) -> Node* :
+	Node* head = newNode(A[0]);
+	Node* tailend = head;
+```
+
+After all of this, we can now iterate through the array, creating the
+linked list:
+
+```rust
+fn arrayToList(int arr[], int size) -> Node* :
+	Node* head = newNode(A[0]);
+	Node* tailend = head;
+	for (int i = 1; i < size; i++):
+		Node* freshNode = newNode(A[i]);
+		tailend.next = freshNode;
+		tailend = freshNode;
+```
+
+Let's go over each of the lines in the for-loop carefully. First, we wrote:
+
+```rust
+Node* freshNode = newNode(A[i]);
+```
+
+We created a new node, `freshNode`, whose data field contains `A[i]`. Next,
+we wrote:
+
+```rust
+tailend.next = freshNode;
+```
+
+Recall that the `tailend` was initially pointing to the `head`. Writing the
+above, `tailend`'s next pointer now points at `freshNode`. Then, we wrote:
+
+```rust
+tailend = freshNode;
+```
+
+This last line ensures `tailend` is now the recently added `freshNode`. At
+the end of all this, we return the `head`, to be stored by some pointer in
+the stack:
+
+```rust
+arrayToList(int arr[], int size) -> Node* :
+	Node* head = newNode(A[0]);
+	Node* tailend = head;
+	for (int i = 1; i < size; i++):
+		Node* freshNode = newNode(A[i]);
+		tailend.next = freshNode;
+		tailend = freshNode;
+	return head;
+```
+
+Putting it all together, we have:
+
+```rust
+newNode(int data) -> Node* :
+	Node* node = new Node;
+	node.data = data;
+	node.next = 0;
+	return node;
+fn arrayToList(int arr[], int size) -> Node* :
+	Node* head = newNode(A[0]);
+	Node* tailend = head;
+	for (int i = 1; i < size; i++):
+		Node* freshNode = newNode(A[i]);
+		tailend.next = freshNode;
+		tailend = freshNode;
+	return head;
+```
+
+Specific implementations are provided below. Going forward, we will use the
+`arrayToList()` function to create linked lists. In terms complexity, the
+`arrayToList()` function's time complexity depends on the size of the
+array. Given an array of ${n}$ elements, the function will take linear time
+to execute—${O(n).}$
+
+Here's an implementation in C:
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+	int data;
+	struct Node* next;
+};
+
+struct Node* newNode(int data) {
+	struct Node* n = (struct Node*) malloc(sizeof(struct Node));
+	(*n).data = data;
+	(*n).next = NULL;
+	return n;
+}
+
+struct Node* arrayToList(int A[], int n) {
+	struct Node* head    = newNode(A[0]);
+	struct Node* tailend = head;
+	for (int i = 1; i < n; i++) {
+		struct     Node* freshNode = newNode(A[i]);
+		(*tailend).next            = freshNode;
+								tailend         = freshNode;
+	}
+	return head;
+}
+
+void print(struct Node* p) {
+	printf("( ");
+	while (p != NULL) {
+		printf("%d ", (*p).data);
+		p = (*p).next;
+	}
+	printf(")\n");
+}
+
+
+int main() {
+	int    A[]        = {3, 5, 7, 10, 15};
+	struct Node* list = arrayToList(A, 5);
+	print(list);
+	return 0;
+}
+```
+
+```bash
+(3 5 7 10 15)
+```
+
+## Length of a Linked List
+
+One particularly useful operation is to count the number of nodes in a
+linked list. This will return the **length** of a linked list. Say we had
+the following linked list:
+
+<LinkedList data={[8, 3, 7, 12, 9]} />
+
+Implementing the linked list above:
+
+```cpp
+#include <iostream>
+
+struct Node {
+	int data;
+	Node* next;
+};
+
+Node* newNode(int data) {
+	Node* node       = new Node;
+				node->data = data;
+				node->next = 0;
+	return node;
+}
+
+int main() {
+	Node* root = 0;            // create root
+	Node* n1   = newNode(8);   // create nodes
+	Node* n2   = newNode(3);
+	Node* n3   = newNode(7);
+	Node* n4   = newNode(12);
+	Node* n5   = newNode(9);
+
+	root     = n1;  // link nodes
+	n1->next = n2;
+	n2->next = n3;
+	n3->next = n4;
+	n4->next = n5;
+	n5->next = 0;
+}
+```
+
+There are five nodees in the linked list. Thus, we should expect our count
+to return 5.
+
+Counting the number of nodes in a linked list is similar to counting the
+number of elements in an array. We can do so iteratively with a **count**
+variable:
+
+```cpp
+int length(Node* p) {
+	int count = 0;
+	while(p != 0) {
+		count++;
+		p = p->next;
+	}
+	return count;
+}
+```
+
+The time complexity for this procedure is straightforward. We're traversing
+through ${n}$ nodes, incrementing `count`. Hence, we have a time complexity
+of ${O(n).}$
+
+And the space complexity? Constant. This is a single function call, and
+each of the variables used take a fixed amount of memory. Accordingly, this
+approach has a space complexity of ${O(1).}$
+
+### Recursive Implementation
+
+As always, we can implement the same function recursively:
+
+```cpp
+	int length(Node* p) {
+		if (p == 0) {
+			return 0;
+		} else {
+			return length(p->next) + 1;
+		}
+	}
+```
+
+As with all recursive functions, we start with a base case. The base case
+is a list of length ${0}$—${P(0),}$ the empty list. If the list contains
+one element, then it is a list of length ${1}$—${P(1) = P(0) + 1.}$ And if
+the list contains two elements, then it is a list of length
+${2}$—${P(2) = P(1) + 1 = (P(0) + 1) + 1.}$
+
+The function above captures this induction. If the `next` field is ${0,}$
+then we've reached the end of a list; the list of length ${0.}$ However, if
+the `next` field is not ${0,}$ then the list is not empty. In which case we
+must continue until we reach the end of the list.
+
+## Deletion
+
+There are two cases for deleting a node from a linked list:
+
+1. deleting the first node (called **left-shifting**),
+2. deleting the last node (called **right-shifting**),
+3. deleting a node at a given position ${i.}$
+
+Let's consider each in turn.
+
+### Left-shifting
+
+Suppose we have the following linked list:
+
+<LinkedList data={["root", 8, 7, 3]} />
+
+To left-shift this list, we want to remove the list's head, resulting in:
+
+<LinkedList data={["root", 7, 3]} />
+
+This is a special case of deletion because if we remove the list's head,
+then the node immediately after the head must become the new head.
+Otherwise, we lose the linked list.
+
+To left-shift, we must have the pointer to the former-head move to the next
+node. Once we move this pointer, we no longer have access to the
+former-head. It's somewhere in heap memory. And because it's still
+somewhere in heap memory, we must _free_ the allocated space. This means
+that we must have a pointer to the former-head. Accordingly, left-shifting
+a list requires two pointers to the head. One to move to the next node, and
+another for deletion.
+
+Illustrating this in pseudocode, first we ensure there's a pointer to the
+head:
+
+```rust
+Node* p = head;
+```
+
+Then, we have the `head` pointer point to the next node:
+
+```rust
+Node* p = head;
+head = head->next;
+```
+
+Then, we delete the former head:
+
+```rust
+Node* p = head;
+head = head->next;
+delete p;
+```
+
+As a complete function:
+
+```rust
+lop(Node* list):
+	Node* p = list->head;
+	list->head = head->next;
+	delete p;
+```
+
+As we can see, this procedure consists of just three basic steps. Hence,
+the algorithm has a time complexity of ${O(1)}$—constant time.
+
+Here's an implementation in C++:
+
+```cpp
+#include <iostream>
+
+struct Node {
+	int data;
+	Node* next;
+	Node(int newData) {
+		data = newData;
+		next = NULL;
+	}
+};
+
+class List {
+	Node* head; // This is the first node in the list
+	Node* foot; // This is the last node in the list
+	public:
+		List(int newData) {
+			head->data = newData;
+			foot       = head;
+		}
+		List(int arr[], int size) {
+			head = new Node(arr[0]);
+			foot = head;
+			for (int i = 1; i < size; i++) {
+				Node* freshNode  = new Node(arr[i]);
+							foot->next = freshNode;
+							foot       = freshNode;
+			}
+		}
+		void lop() {
+			Node* p    = head;
+						head = head->next;
+			delete p;
+		}
+		void print() {
+			Node* p = head;
+			std::cout << "(";
+			while (p != NULL) {
+				std::cout << p->data << " ";
+				p = p->next;
+			}
+			std::cout << ")\n";
+		}
+};
+
+int main() {
+	int  arr[] = {1,2,3,4,5};
+	List list1 = List(arr, 5);
+	list1.print();
+	list1.lop();
+	list1.print();
+	return 0;
+}
+```
+
+```bash
+( 1 2 3 4 5 )
+( 2 3 4 5 )
+```
+
+### Right-shift
+
+The second case for deletion is deleting the _tailend_—the very last node
+in the list. We traverse the list until the node just before the tailend,
+set that node as the new tailend, and nullify its next pointer.
+
+```rust
+List->shift_right() => List:
+	if (List->head is null):
+		return theList
+	else if (List->length is 1):
+		List->head = null
+		List->tail = null
+		List->length--
+		return theList
+	else:
+		let d = List->head
+		let t = d
+		while (d->next isnt null):
+			t = d
+			d = d->next
+		List->tail = t
+		List->tail->next = null
+		List->length--
+		return List
+```
+
+In JavaScript:
+
+```javascript
+shiftRight() {
+	if (this.#head === null) {
+		return this;
+	} else if (this.#length === 1) {
+		this.#head = null;
+		this.#tail = null;
+		this.#length--;
+		return this;
+	} else {
+		let d = this.#head;
+		let t = d;
+		while (d.next) {
+			t = d;
+			d = d.next;
+		}
+		this.#tail = t;
+		this.#tail.next = null;
+		this.#length--;
+		return this;
+	}
+}
+```
+
+### General Deletion
+
+Recall that a _tail node_ is any node other than the head. Deleting a tail
+node is the second case for deletion. We'll call the tail node deletion
+function `removeAt(${i}$)`, where ${i}$ is the position of the node,
+starting at ${1.}$ For example, if we have the linked list:
+
+<LinkedList data={["root", 8, 3, 7]} />
+
+executing `deleteNodeAt(2)` results in:
+
+<LinkedList data={["root", 8, 7]} />
+
+The procedure here is fairly straightforward. To delete ${n_2,}$ we must
+have two pointers. A pointer to ${n_2,}$ and a pointer immediately before
+${n_2,}$ the node ${n_1:}$
+
+<LinkedList data={["root", 8, 3, 7]} />
+
+The two pointers are necessary because we must delete the allocated space
+used for ${n_2,}$ the node we seek to delete. This is similar to our
+earlier genertal insertion method:
+
+```rust
+fn deleteNodeAt(int position):
+	Node* d = head;
+	Node* t = head;
+	for (int i = 1; i <= position; i++):
+		t = d;
+		d = d->next;
+	t->next = d->next;
+	delete d;
+```
+
+Here's an implementation in C++:
+
+```cpp
+#include <iostream>
+
+struct Node {
+	int data;
+	Node* next;
+	Node(int newData) {
+		data = newData;
+		next = NULL;
+	}
+};
+
+class List {
+	Node* head;
+	Node* foot;
+	public:
+		List(int data) {
+			head = new Node(data);
+			foot = head;
+		}
+		List(int arr[], int size) {
+			head = new Node(arr[0]);
+			foot = head;
+			for (int i = 1; i < size; i++) {
+				Node* freshNode = new Node(arr[i]);
+				foot->next = freshNode;
+				foot = freshNode;
+			}
+		}
+		void deleteNodeAt(int position) {
+			Node* d = head;
+			Node* t = NULL;
+			for (int i = 0; i < position-1; i++) {
+				t = d;
+				d = d->next;
+			}
+			t->next = d->next;
+			delete d;
+		}
+		void print() {
+			Node* p = head;
+			std::cout << "(";
+			while (p != NULL) {
+				std::cout << p->data << " ";
+				p = p->next;
+			}
+			std::cout << ")\n";
+		}
+};
+
+int main() {
+	int arr[] = {1, 2, 3, 4};
+	List listX = List(arr, 4);
+	listX.print();
+	listX.deleteNodeAt(3);
+	listX.print();
+	return 0;
+}
+```
+
+```bash
+(1 2 3 4 )
+(1 2 4 )
+```
+
+The time complexity for this approach depends on which node in the list
+we're deleting. If we're deleting the second node, then the time is
+constant—${O(1).}$ If, however, we're deleting anywhere else, then we must
+traverse over ${n}$ nodes to position our driver and tailer pointers. As
+such, the minimimum running time complexity is ${O(1),}$ and maximum time
+complexity is ${O(n).}$
+
+We can encapsulate tail node deletion and lopping into the single procedure
+of _general deletion_. Doing so is a matter of conditional branching. We'll
+call this function `deleteNode(${p}$)`, where ${p}$ is an `int` argument
+corresponding to position:
+
+```rust
+fn deleteNode(int p):
+	Node* p;
+	Node* q;
+	if (p == 1):
+		p = head;
+		head = p->next;
+		delete p;
+	else:
+		p = head;
+		q = NULL;
+		for (int i = 0; i < p-1 && p; i++):
+			q = p;
+			p = p->next;
+		if (p):
+			q->next = p->next;
+			delete p;
+```
+
+Here's an implementation in C:
+
+```c
+void deleteAt(struct Node** head, int index) {
+	struct Node* headRef;
+	struct Node* previousNode = NULL;
+	if (index < 1 || index > length(*head)) {
+		printf("Invalid index");
+	}
+	if (index == 1) {
+		headRef = *head;
+		*head   = (**head).next;
+		free(headRef);
+	}
+	else {
+		headRef = *head;
+		for (int i = 0; i < index - 1; i++) {
+			previousNode = headRef;
+			headRef      = (*headRef).next;
+		}
+		(*previousNode).next = (*headRef).next;
+		free (headRef);
+	}
+}
+```
+
+Testing:
+
+```c
+#include <stdlib.h>
+#include <stdio.h>
+
+struct Node {
+	int data;
+	struct Node* next;
+};
+
+struct Node* Node(int newData) {
+	struct       Node* freshNode = (struct Node*) malloc(sizeof(struct Node));
+	(*freshNode).data            = newData;
+	(*freshNode).next            = NULL;
+	return freshNode;
+}
+
+struct Node* List(int arr[], int size) {
+	struct Node* head = Node(arr[0]);
+	struct Node* foot = head;
+	for (int i = 1; i < size; i++) {
+		struct  Node* newNode = Node(arr[i]);
+		(*foot).next          = newNode;
+						foot          = newNode;
+	}
+	return head;
+}
+
+void print(struct Node* p) {
+	printf("( ");
+	if (p == NULL) {
+		printf("empty ");
+	} else {
+		while (p != NULL) {
+			printf("%d ", (*p).data);
+			p = (*p).next;
+		}
+	}
+	printf(")\n");
+}
+
+int length(struct Node* p) {
+	int count = 0;
+	if (p == NULL) {
+		return count;
+	} else {
+		while (p != 0) {
+			count++;
+			p = (*p).next;
+		}
+		return count;
+	}
+}
+
+void deleteAt(struct Node** head, int index) {
+	struct Node* headRef;
+	struct Node* previousNode = NULL;
+	if (index < 1 || index > length(*head)) {
+		printf("Invalid index");
+	}
+	if (index == 1) {
+		headRef = *head;
+		*head   = (**head).next;
+		free(headRef);
+	}
+	else {
+		headRef = *head;
+		for (int i = 0; i < index - 1; i++) {
+			previousNode = headRef;
+			headRef      = (*headRef).next;
+		}
+		(*previousNode).next = (*headRef).next;
+		free (headRef);
+	}
+}
+
+int main() {
+	int    arr[]      = {1,2,3,4};
+	struct Node* list = List(arr, 4);
+	deleteAt(&list, 3);
+	print(list);
+	deleteAt(&list, 1);
+	print(list);
+	return 0;
+}
+```
+
+```bash
+( 1 2 4 )
+( 2 4 )
+```
+
+## Insertion
+
+So far, we've been manually linking nodes. At this point, it would be
+helpful to write procedures for inserting new nodes to existing linked
+lists. As with any linear data structure, there are three types of
+insertions:
+
+1. **Prepending**—inserting to the list's head (i.e., inserting a new node
+   as the first node).
+
+2. **Interposing**—inserting to the list's trunk (i.e., inserting a new
+   node somewhere between the first node and the last node).
+
+3. **Appending**—inserting to the list's foot (i.e., inserting a new node
+   as the last node).
+
+With arrays, the compiler provided indices for us to work with. Linked
+lists, however, do not have such indices. But nothing stops us from adding
+indices of our own. Once we have indices for the existing nodes, we can
+create an abstraction for the indices of insertions. With indices, we see
+that there only two cases.
+
+1. Inserting before the first node.
+2. Inserting after a given position ${i.}$
+
+For the first case, all we must pass as an argument to some function is
+${i = 0.}$ In doing so, the node is inserted at the very beginning. This is
+a special case because the head of the list has a unique role—it is the
+only node which is always pointed to from the stack. Lose that connection,
+and the linked list is lost.
+
+For the second case, insertion is merely a matter of passing the index. If
+we pass as an index ${1,}$ then we're inserting after the first node. If we
+pass as an index ${3,}$ then we're inserting after the third node. More
+generally: Given a list of ${n}$ nodes, where the first node has an index
+${i = 1}$ and the last node has an index ${i = n,}$ passing as an insertion
+index ${k}$ will insert the element at ${i = i + 1.}$
+
+All that said, let's now consider the specific procedures.
+
+## Append
+
+Suppose we had the following linked list, called `list1`:
+
+<LinkedList data={["list1", 3]} />
+
+If we write `append(list1, 8)`, we get:
+
+<LinkedList data={["list1", 3, 8]} width={200}/>
+
+And when we write `append(list1, 4)`, we get:
+
+<LinkedList data={["list1", 3, 8, 4]} width={215}/>
+
+We can implement this procedure by using an additional pointer to the
+list's _foot_, or _tailend_—the last node in the list. We'll call the
+tailend's pointer `t`, the head's pointer `h` and consider the simplest
+case—the empty list. With the empty list, we have the following:
+
+<LinkedList data={["list1", ""]} />
+
+Both the head pointer `h` and the tailend pointer `t` point to the same
+node. Why? Because the node in the list above is both the head and the
+foot. Once we append a new node, the tailend pointer `t` changes its
+pointee to the new node, but the head pointer `h` remains the same.
+
+Now, because the head pointer `h` and the tailend pointer `t` are
+additional pointers for a given list, we must ensure that if the list is
+empty—a list with no nodes—`h` and `t` should both be null pointers. To
+ensure this, they must both be initially assigned `0`. Only when the list
+is made non-empty—a new node is inserted—do they become nonnull pointers.
+
+```rust
+Node* h = 0;
+Node* t = 0;
+```
+
+Let's implement this function in pseudocode. First, we'll call this
+function `append()`. What might this function's signature look like? Well,
+it doesn't return anything, because it's directly inserting into a
+particular list. But, it does create a new node. For now, we'll focus on
+`int` lists. Hence, our function signature looks like:
+
+```rust
+fn append(int x) -> void
+```
+
+With that out of the way, we can now think about how to implement this
+function. First, we need to create a new node, with its `data` field
+assigned the argument `x`, and its `next` field initially zero:
+
+```rust
+fn append(int x) -> void
+	Node* n = newNode(data: x, next: 0)
+```
+
+Now we have to consider the cases. Is the list we want to append to the
+empty or non-empty list? An implicit corollary question: How do we
+determine if a list is empty or non-empty? Well, suppose that every linked
+list we create has a pointer called `h`, pointing to the list's head. It
+follows then that if `h = 0`, then we have an empty list. Otherwise, we
+have a non-empty list. Why? Because if `h = 0`, then the list has no head.
+And if the list has no head, then it is the empty list.
+
+Thus, we have two cases:
+
+1. `h == 0`
+2. `h != 0`
+
+Now, if the list is empty—`h == 0`—then we should have `h` and `t` point to
+the new node:
+
+```rust
+fn append(int x) -> void
+	Node* n = newNode(data: x, next: 0)
+	if (n == 0):
+		h = t = n
+```
+
+If the list is non-empty—`h != 0`—then the tailend, `t`'s pointee, should
+point to `n`, and `t` change its pointee to `n`:
+
+```rust
+fn append(int x) -> void
+	Node* n = newNode(data: x, next: 0)
+	if (n == 0):
+		h = t = n
+	else:
+		t->next = n;
+		t = n;
+```
+
+In C++:
+
+```cpp
+#include <iostream>
+
+void List::append(int data) {
+	Node* newNode = new Node(data);
+	if (head == NULL) {
+		head = newNode;
+		return;
+	}
+	Node* temp = head;
+	while (temp->next != NULL) {
+		temp = temp->next;
+	}
+	temp->next = newNode;
+}
+```
+
+In JavaScript:
+
+```javascript
+append(data) {
+	const newNode = new Node(data);
+	if (!this.#head) {
+		this.#head = newNode;
+		this.#tail = this.#head;
+	} else {
+		this.#tail.next = newNode;
+		this.#tail = newNode;
+	}
+	this.#length++;
+	return this;
+}
+```
+
+## Prepend
+
+Say we had the following linked list:
+
+<LinkedList data={["root", 8, 3, 9]} />
+
+In pseudocode:
+
+```rust
+linkedList([8, 3, 9]);
+```
+
+To prepend a new node, we want to insert the new node at the beginning of
+the list. To do so, we first create a new node:
+
+```rust
+linkedList([8, 3, 9]);
+Node* n = newNode(data: 7, next: 0);
+```
+
+Second, we have `n`'s next field point to the first node in the list:
+
+```rust
+linkedList([8, 3, 9])
+Node* n = newNode(data: 7, next: 0)
+n->next = firstNode
+```
+
+Finally, we make the first node the new node `n`:
+
+```rust
+linkedList([8, 3, 9]);
+Node* n = newNode(data: 7, next: 0);
+n->next = firstNode;
+firstNode = n;
+```
+
+The end result:
+
+<LinkedList data={["root", 7, 8, 3, 9]} />
+
+Examining this procedure, we see that each of these steps is a basic
+step—they each take constant time. And because each step takes constant
+time, prepending a new node has time complexity of ${O(1)}$—constant time.
+
+```rust
+list->prepend():
+	Node 𝑛 := new Node(data)
+	if (list->head != null):
+		list->head := 𝑛
+		list->tail := list->head
+	else:
+		𝑛->next := list->head
+		list->head := 𝑛
+	list->length++
+	return list
+```
+
+In C:
+
+```cpp
+#include <iostream>
+
+Node* prepend(Node* p, int data) {
+	Node* n       = newNode(data);
+				n->next = p;
+	return n;
+}
+```
+
+In JavaScript:
+
+```javascript
+prepend(data) {
+	const newNode = new Node(data);
+	if (!this.#head) {
+		this.#head = newNode;
+		this.#tail = this.#head;
+	} else {
+		newNode.next = this.#head;
+		this.#head = newNode;
+	}
+	this.#length++;
+	return this;
+}
+```
+
+## Get
+
+Suppose we have the following linked list:
+
+<LinkedList data={["root", 4, 9, 5, 3]} />
+
+We want a function such that writing:
+
+```rust
+list->get(3)
+```
+
+This will return the data stored at the node in position ${3.}$ In this
+case, the integer `5`. Using the linked list above:
+
+```rust
+list->get(1) ==> 4
+list->get(2) ==> 9
+list->get(3) ==> 5
+list->get(4) ==> 3
+```
+
+In general, `get()` has the following template:
+
+get(𝑝)
+
+where 𝑝 is a positive integer position in the list.
+
+```rust
+list->get(uint index) => TYPE element:
+	let position := index - 1
+	if (position < 0) ∨ (position > list->length):
+		return null
+	else:
+		let i := 0
+		let p := list->head
+		while (i != position):
+			p := p->next
+			i++
+		return p->data
+```
+
+In JavaScript:
+
+```javascript
+get(index) {
+	let position = index - 1;
+	if (position < 0 || position >= this.#length) {
+		return null;
+	} else {
+		let i = 0;
+		let p = this.#head;
+		while (i !== position) {
+			p = p.next;
+			i++;
+		}
+		return p.data;
+	}
+}
+```
+
+## Set
+
+Suppose we have the following linked list:
+
+<LinkedList data={["root", 7, 8, 3, 9]} />
+
+We want to a function that allows us to write:
+
+```rust
+list->set(5, 2)
+```
+
+and results in:
+
+<LinkedList data={["root", 7, 5, 3, 9]} />
+
+Implementing this function follows the same pattern as `get()`.
+
+```rust
+list->set(uint index, TYPE element) -> List:
+	let position := index - 1
+	if (position < 0) ∨ (position > list->length):
+		return null;
+	else:
+		let i := 0
+		let p := list->head
+		while (i != position):
+			p := p->next
+			i++
+		p->data := element
+		return list
+```
+
+In JavaScript:
+
+```javascript
+set(element, index) {
+	let position = index - 1;
+	if (position < 0 || position > this.#length) {
+		return this;
+	} else {
+		let i = 0;
+		let p = this.#head;
+		while (i !== position) {
+			p = p.next;
+			i++;
+		}
+		p.data = element;
+		return this;
+	}
+}
+```
+
+## Insert
+
+Suppose we have the following linked list:
+
+<LinkedList data={[7, 8, 3, 9]} />
+
+We want to write the function:
+
+```rust
+list->insert(5, 2)
+```
+
+such that we obtain the result:
+
+<LinkedList data={[7, 5, 8, 3, 9]} />
+
+To implement this function, we need two pointers: A pointer to the element
+immediately before the insertion position, and a pointer to the element
+immediately after. Using the previous call, we have a pointer `d` for the
+position we want to insert at, and a pointer `t` for the position
+immediately before:
+
+<LinkedList
+	data={[
+		{ val: "root" },
+		{ val: 7, ant: "t" },
+		{ val: 5 },
+		{ val: 8, ant: "d" },
+		{ val: 3 },
+		{ val: 9 },
+	]}
+/>
+
+In code, suppose the insertion position is represented by the variable `i`,
+and the new node is named `n`:
+
+```rust
+linkedList(7, 8, 3, 9)
+Node* n := new Node(5)
+Node* t := pointer @ Node[i]
+Node* d := pointer @ Node[i+1]
+```
+
+Once we have these two pointers, `n`'s next field should point to `d`, and
+`t`'s pointer should point to `n`:
+
+```rust
+linkedList(7, 8, 3, 9)
+Node* n = new Node(5)
+Node* t = pointer @ Node[i]
+Node* d = pointer @ Node[i+1]
+n->next = d
+t->next = n
+```
+
+Note that `n`'s pointer must first point to `d` before we assign `t`'s
+pointer to `n`. If we assigned `t`'s pointer to `n` before assigning `d`'s
+pointer to `n`, we would lose `d`'s address.
+
+In our pseudocode, we wrote `pointer @ Node[i]` and `pointer @ Node[i+1]`.
+Let's flesh these expressions out. How do we get two pointers to point on
+these particular nodes? After all, we don't have indices. Once again,
+because we do not have indices with linked lists, we must traverse the
+linked list. In our function, we will pass a particular argument, `i`, as
+an abstraction for some index. This is what we use to keep track of how
+many times a particular pointer will move.
+
+In the code illustration below, notice that we don't actually need two
+pointers, since the new node we create has a `next` pointer we can use:
+
+```rust
+fn Node* insert(Node* listPtr, int data, int position):
+	Node* p = listPtr;
+	Node* n = newNode(data: data, next: 0);
+	for (int i = 0; i < position-1; i++):
+		p = p->next;
+	n->next = p->next;
+	p->next = n;
+	return n;
+```
+
+In C++:
+
+```cpp
+#include <iostream>
+
+Node* insert(Node* root, int data, int position) {
+	Node* p = root;
+	Node* n = newNode(data);
+	for (int i = 0; i < position-1; i++) {
+		p = p->next;
+	}
+	n->next = p->next;
+	p->next = n;
+	return root;
+}
+```
+
+We could write a more generalized function, `insert()`, which can insert at
+any given position in the linked list:
+
+```cpp
+	Node* insert(Node* p, int data, int position) {
+		Node* m = p;
+		Node* n = newNode(data);
+		if (position == 0) {
+			n->next = m;
+			return n;
+		}
+		else {
+			for (int i = 0; i < position - 1; i++) {
+				m = m->next;
+			}
+			n->next = m->next;
+			m->next = n;
+			return p;
+		}
+	}
+```
+
+Testing:
+
+```cpp
+#include <iostream>
+
+struct Node {
+	int data;
+	Node* next;
+};
+
+void print(Node* n) {
+	std:: cout << "( ";
+	while (n != 0) {
+		std:: cout << n->data << " ";
+		n = n->next;
+	}
+	std:: cout << ")\n";
+}
+
+Node* newNode(int data) {
+	Node* node       = new Node;
+				node->data = data;
+				node->next = 0;
+	return node;
+}
+
+Node* insert(Node* p, int data, int position) {
+	Node* m = p;
+	Node* n = newNode(data);
+	if (position == 0) {
+		n->next = m;
+		return n;
+	}
+	else {
+		for (int i = 0; i < position - 1; i++) {
+			m = m->next;
+		}
+		n->next = m->next;
+		m->next = n;
+		return p;
+	}
+}
+
+int main() {
+	Node* list     = 0;
+	Node* n1       = newNode(3);
+				list     = n1;
+	Node* n2       = newNode(2);
+				n1->next = n2;
+	Node* n3       = newNode(7);
+				n2->next = n3;
+	Node* n4       = newNode(5);
+				n3->next = n4;
+
+	print(list);
+
+	Node* list2 = insert(list, 9, 0);
+
+	print(list2);
+
+	Node* list3 = insert(list2, 1, 4);
+
+	print(list3);
+
+	Node* list4 = insert(list3, 8, 3);
+
+	print(list4);
+
+	return 0;
+}
+```
+
+```bash
+( 3 2 7 5 )
+( 9 3 2 7 5 )
+( 9 3 2 7 1 5 )
+( 9 3 2 8 7 1 5 )
+```
+
+Let's go over the procedure carefully. First, we pass as an argument the
+pointer `listPtr`. This pointer points to the list we want to insert into.
+Next, we passed `int data`. This is what will be used to initialize the new
+node's data field. Then, we passed as an argument `int position`. We use
+this argument to indicate where in the list we want to insert the new node.
+Recall that if we pass the argument `3`, the new node is inserted after the
+existing node at position three.
+
+Inside the body, we create a new node, `n`. This node has its data field
+initialized with the argument `int data`, and a `next` field of `0` (it
+points nowhere at initialization).
+
+After initializing the new node, we then iterate. Notice the loop's head.
+We start at `int i = 0`, and we continue iterating so long as `i` is less
+than `position - 1`. Thus, if we passed as an argument `position = 3`, the
+loop executes: ${\lang 0, 1, 2 \rang}$—three times. At each iteration, we
+move the pointer `p` forward.
+
+For example, say we're inserting into the following linked list, where
+`position = 3`.
+
+<LinkedList data={["root", 7, 8, 3, 9]} />
+
+Initially, the pointer `p` points to the head of the list:
+
+<LinkedList data={["root", { val: 7, ant: "p" }, 8, 3, 9]} />
+
+Then, we enter the for-loop. We start with `int i = 0`. The condition is
+then checked: Is `i < position - 1`? Yes, ${0 < 2.}$ So, we move the
+pointer `p` to the next node:
+
+<LinkedList data={["root", 7, { val: 8, ant: "p" }, 3, 9]} />
+
+We increment our variable `i`. Now we have `i = 1.` We check the condition
+again. Is `i < position - 1`? Yes, ${0 < 1.}$ So we move the pointer `p`
+once more:
+
+<LinkedList data={["root", 7, 8, { val: 3, ant: "p" }, 9]} />
+
+Once more we increment `i`. Now `i = 2`. The condition is checked. Is
+`i < 2`? NO. ${2 \nless 2.}$ So we stop, leaving position `p` right where
+we want it. While `p` was busy traversing, our new node `n` sat waiting.
+Now it's time for it to spring into action. We wrote:
+
+```rust
+n->next = p->next
+```
+
+In doing so, we now have `n` pointing to the node immediately after `p`.
+This means there are now two pointers to the node immediately after `p`.
+`p->next`, and `n->next`. Now `p` comes back into play. We wrote:
+
+```rust
+p->next = n;
+```
+
+In doing so, `p->next` now points to `n`, the new node. This completes the
+linking. `p->next` points `n`, and `n` points to the node that was
+previously `p->next`'s pointee. We've successfully inserted the node.
+
+### Sorted Insertions
+
+Suppose we had the following linked list:
+
+<LinkedList data={["root", 3, 7, 9, 15, 20]} />
+
+Notice that the elements in this list are sorted. Say we wanted to insert a
+node with the data `18`. When we insert into a sorted list, we usually want
+to maintain the list's sorted nature. We call this a _sorted insertion_. In
+this case, we want ${n(18)}$ to come after ${n(15)}$ and before ${n(20).}$
+If we want to insert ${n(10),}$ it should come after ${n(9)}$ and before
+${n(5).}$
+
+Implementing this procedure is fairly straightforward. Consider inserting
+the node ${n(18).}$ We go to the first node, ${n(3),}$ and ask, is
+${n(3) < n(18)?}$
+
+<LinkedList data={["root", { val: 3, ant: "p" }, 7, 9, 15, 20]} />
+
+True. So we move to the next node and ask, is ${n(7) < n(18)?}$:
+
+<LinkedList data={["root", 3, { val: 7, ant: "p" }, 9, 15, 20]} />
+
+Again, true. So we move to the next node:
+
+<LinkedList data={["root", 3, 7, { val: 9, ant: "p" }, 15, 20]} />
+
+Once more, true. So we move the next node:
+
+<LinkedList data={["root", 3, 7, 9, { val: 15, ant: "p" }, 20]} />
+
+True. Move to the next node:
+
+<LinkedList data={["root", 3, 7, 9, 15, { val: 20, ant: "p" }]} />
+
+Finally, we get false. And since we get false, we want to insert ${n(18)}$
+after ${n(15)}$ and before ${n(20).}$ Now, recall that to insert a new node
+into a linked list, we need two pointers—the _driver_, denoted `d`, and the
+_tailer_, denoted `t`. And given that we have need two pointers, we have to
+move the pointers' pointees around in our iteration.
+
+Initially, the pointer `d` has been initialized and points nowhere
+(`t = NULL`). At the first iteration, we see that `n(3) < n(18)` is true.
+
+<LinkedList data={["root", 3, 7, 9, 15, 20]} />
+
+The next iteration, we see that `n(7) < n(18)` is true. So, the pointer `d`
+moves to the second node, and the pointer `t` moves to the first node.
+
+<LinkedList data={["root", { val: 3, ant: "d" }, 7, 9, 15, 20]} />
+
+Next iteration: `n(9) < n(18)` is true. The pointer `d` moves to the third
+node, and the pointer `t` moves to the second node.
+
+<LinkedList
+	data={["root", { val: 3, ant: "t" }, { val: 7, ant: "d" }, 9, 15, 20]}
+/>
+
+Fourth iteration: `n(15) < n(18)` is true. The pointer `d` moves to the
+fourth node, and the pointer `t` moves to the third node.
+
+<LinkedList
+	data={["root", 3, { val: 7, ant: "t" }, { val: 9, ant: "d" }, 15, 20]}
+/>
+
+Fifth iteration: `n(20) < n(18)` is false. The pointer `d` moves to the
+fifth node, and the pointer `t` moves to the fourth node.
+
+<LinkedList
+	data={["root", 3, 7, { val: 9, ant: "t" }, { val: 15, ant: "d" }, 20]}
+/>
+
+Notice that once we get `d` and `t` place, to insert the new node
+${n(18),}$ all we must do is have ${n(18)}$ point to `p` and `t`'s pointee
+point to ${n(18).}$ The function generally:
+
+<LinkedList
+	data={["root", 3, 7, 9, { val: 15, ant: "t" }, { val: 20, ant: "d" }]}
+/>
+
+```rust
+fn sortedInsert(Node* p, int dVal):
+	Node* n = newNode(data: dVal, next: NULL);
+	Node* d = p;
+	Node* t = NULL;
+	while (d && (d->data < dVal)):
+		t = d;
+		d = d->next;
+	n->next = t->next;
+	t->next = n;
+	return p;
+```
+
+With this approach, the time it takes to link the nodes is constant
+—${O(1).}$ But, the time it takes for the driver and the tailer to reach
+their respective positions is ${O(n)}$—linear. This is because both `d` and
+`t` must traverse the list to reach their correct destinations.
+
+Here's an implementation in C:
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+	int data;
+	struct Node* next;
+};
+
+struct Node* newNode(int data) {
+	struct Node* node = (struct Node*) malloc(sizeof(struct Node*));
+	(*node).data = data;
+	(*node).next = NULL;
+	return node;
+}
+
+struct Node* arrayToList(int arr[], int size) {
+	struct Node* head = newNode(arr[0]);
+	struct Node* tailend = head;
+	for (int i = 1; i < size; i++) {
+		struct Node* freshNode = newNode(arr[i]);
+		(*tailend).next = freshNode;
+		tailend = freshNode;
+	}
+	return head;
+}
+
+void print(struct Node* p) {
+	printf("( ");
+	if (p == NULL) {
+		printf("empty");
+	};
+	while (p != NULL) {
+		printf("%d ", (*p).data);
+		p = (*p).next;
+	}
+	printf(")\n");
+}
+
+void sortedInsert(struct Node* p, int dataVal) {
+	struct Node* head = p;
+	struct Node* freshNode = newNode(dataVal);
+	struct Node* tailer;
+	if (p == NULL) {
+		head = freshNode;
+	} else {
+		while (head && (*head).data < dataVal) {
+			tailer = head;
+			head = (*head).next;
+		}
+		if (head == p) {
+			(*freshNode).next = head;
+			head = freshNode;
+		} else {
+			(*freshNode).next = (*tailer).next;
+			(*tailer).next = freshNode;
+		}
+	}
+}
+
+int main() {
+	int arr[] = {3, 5, 8, 9};
+	struct Node* list = arrayToList(arr, 4);
+	print(list);
+	sortedInsert(list, 7);
+	print(list);
+	return 0;
+}
+```
+
+```bash
+(3 5 8 9)
+(3 5 7 8 9)
+```
+
+Here is an implementation of what we have so far as a class in C++:
+
+```cpp
+#include <iostream>
+
+struct Node {
+	int data;
+	Node* next;
+	Node(int data) {
+		this->data = data;
+		this->next = NULL;
+	}
+};
+
+class List {
+	Node* head;
+	Node* foot;
+	int length;
+
+	public:
+		List(int data) {
+			this->head = new Node(data);
+			this->foot = head;
+			this->length = 1;
+		}
+		List(int arr[], int size) {
+			this->head = new Node(arr[0]);
+			this->foot = head;
+			for (int i = 1; i < size; i++) {
+				Node* newNode = new Node(arr[i]);
+				this->foot->next = newNode;
+				this->foot = newNode;
+			}
+			this->length = size;
+		}
+		void append(int data) {
+			Node* newNode = new Node(data);
+			if (this->head == NULL) {
+				this->head->next = newNode;
+				this->length = 1;
+			} else {
+				this->foot->next = newNode;
+				this->foot = newNode;
+				this->length++;
+			}
+		}
+		void prepend(int data) {
+			Node* newNode = new Node(data);
+			if (this->head == NULL) {
+				this->head = newNode;
+				this->length = 1;
+			} else {
+				newNode->next = this->head;
+				this->head = newNode;
+				this->length++;
+			}
+		}
+		void insert(int data, int position) {
+			Node* newNode = new Node(data);
+			if (position == 0) {
+				prepend(data);
+			} else {
+				Node* p = this->head;
+				for (int i = 0; i < position - 1; i++) {
+					p = p->next;
+				}
+				newNode->next = p->next;
+				p->next = newNode;
+				this->foot = newNode;
+				this->length++;
+			}
+		}
+		void print() {
+			Node* ptr = this->head;
+			std::cout << "( ";
+			while (ptr != NULL) {
+				std::cout << ptr->data << " ";
+				ptr = ptr->next;
+			}
+			std::cout << ")\n";
+		}
+		int getLength() {
+			return this->length;
+		}
+};
+```
+
+## List Reversal
+
+Suppose we have the following linked list:
+
+<LinkedList data={["root", 8, 7, 3, 5]} />
+
+When we perform a **list reversal**, we end up with the following list:
+
+<LinkedList data={["root", 5, 3, 7, 8]} />
+
+As we can see, list reversals are useful for quickly reorienting data. If
+we have a list with elements ascendingly sorted, reversing yields a list
+with elements descendingly sorted, and vice versa.
+
+There are two ways to reverse a linked list:
+
+1. _list reversal by element_, or
+2. _list reversal by link_.
+
+### Reverse-by-element
+
+Let's consider the first approach, reversing by element, using the
+following list to illustrate:
+
+<LinkedList data={["root", 3, 6, 8, 9]} />
+
+To reverse by element, we start by focusing on the head and the foot:
+
+<LinkedList
+	data={["root", { val: 3, ant: "head" }, 6, 8, { val: 9, ant: "foot" }]}
+/>
+
+Then, we swap the values stored in the two nodes's data fields:
+
+<LinkedList
+	data={["root", { val: 9, ant: "head" }, 6, 8, { val: 3, ant: "foot" }]}
+/>
+
+After doing so, we move to the next nodes:
+
+<LinkedList
+	data={["root", 9, { val: 6, ant: "head" }, { val: 8, ant: "foot" }, 3]}
+/>
+
+Once more we swap the values stored in the two nodes's data fields:
+
+<LinkedList
+	data={["root", 9, { val: 8, ant: "head" }, { val: 6, ant: "foot" }, 3]}
+/>
+
+This yields our desired result:
+
+<LinkedList data={["root", 9, 8, 6, 3]} />
+
+To implement this procedure, we need a way to store the data values we're
+swapping. The most straightforward way is to use an array: We traverse the
+linked list, and initialize the array's elements with the current node's
+data value. Using the previous list (call it `list0`), we first declare an
+array whose size equals the number of nodes in the list:
+
+```rust
+	List list0 = new List(3, 6, 8, 9)
+	let uint size = List->length
+	let array[size] = []
+	int arr[size]
+```
+
+<LinkedList data={["root", 3, 6, 8, 9]} />
+<Sequence data={["", "", "", ""]} />
+
+Next, we have a pointer `p` point to the head of the list, and assign the
+data value stored in the head to the first index in the array:
+
+```rust
+	List list0 = new List(3, 6, 8, 9)
+	let uint size = List->length
+	let array[size] = []
+	Node* p = list0->head
+	p->data = array[0]
+```
+
+<LinkedList data={["root", { val: 3, ant: "p" }, 6, 8, 9]} />
+<Sequence data={[3, "", "", ""]} />
+
+To completely fill the array, we iterate:
+
+```rust
+	List list0 = new List(3, 6, 8, 9)
+	let uint size = List->length
+	let array[size] = []
+	Node* p = list0->head
+	p->data = array[0]
+	let i = 0
+	while (p isnt null):
+		array[i] = p->data
+		p = p->next
+		i++
+```
+
+After the while loop finishes, we have all of the elements in the array:
+
+<LinkedList data={["root", 3, 6, 8, 9]} />
+
+<Sequence data={[3, 6, 8, 9]} />
+
+Once we've finished initializing all of the array's elements, we bring `p`
+back to the first node:
+
+```rust
+	List list0 = new List(3, 6, 8, 9)
+	let uint size = List->length
+	let array[size] = []
+	Node* p = list0->head
+	p->data = array[0]
+	let i = 0
+	while (p isnt null):
+		array[i] = p->data
+		p = p->next
+		i++
+	p = list->head
+```
+
+<LinkedList data={["root", { val: 3, ant: "p" }, 6, 8, 9]} />
+
+<Sequence data={[3, 6, 8, 9]} />
+
+Then, we want to decrement `i` and use another while-loop to assign the
+contents in the auxiliary array to the list. Since our while loop ended at
+`i = 4`, this results in assigning to `p`'s pointee's `data` field
+`array[3]`, `array[2]`, `array[1]`, and so on:
+
+```rust
+	List list0 = new List(3, 6, 8, 9)
+	let uint size = List->length
+	let array[size] = []
+	Node* p = list0->head
+	p->data = array[0]
+	let i = 0
+	while (p isnt null):
+		array[i] = p->data
+		p = p->next
+		i++
+	p = list->head
+	i--
+	while (p isnt null):
+		p->data = A[i]
+		i--
+		p = p->next
+```
+
+The end result:
+
+<LinkedList data={["root", 9, 8, 6, 3]} />
+<Sequence data={[3, 6, 8, 9]} />
+
+We have several costs with this approach. First, we need additional memory
+for the auxiliary array, equal to the number nodes ${n}$ in the linked
+list. Accordingly, the procedure above has a space complexity of ${O(n).}$
+And in terms of time, we must traverse the linked list twice, yielding a
+running time function of roughly ${T(2n).}$ Asymptotically, this yields a
+time complexity of ${O(n).}$
+
+### Reverse-by-link
+
+Next, let's consider reversing by link. Say we had the following list:
+
+<LinkedList data={["root", 9, 8, 6, 3]} />
+
+With this approach, we just switch the direction of each node's next
+pointer. ${n(3)}$'s next pointer points to ${n(6)}$ (rather than `NULL`),
+${n(6)}$'s next pointer points to ${n(8)}$ (rather than ${n(3)}$), and
+${n(8)'s}$ pointer points ${n(9)}$ (rather than ${n(6).}$)
+
+Two reverse a list by link, we must use the technique of **pointer
+sliding**. The idea is as such: We start with four pointers. One pointing
+at the head called `h`, and three other pointers, `d`, `t1`, and `t2`. The
+driver pointer `d` initially points to the head, while `t1` and `t2` are
+initially `NULL`:
+
+<LinkedList data={["root", { val: 9, ant: "h d" }, 8, 6, 3]} />
+
+Then, as long as `d != NULL`, we want to _slide_ the pointers forward: `t2`
+points to `t1`'s pointee, `t1` points to `d`'s pointee, and `d` points to
+its `next` address. And each time we slide, `t1`'s `next` pointer should
+point to `t2`.
+
+The best way to illustrate pointer sliding is with a trace table.
+Initially, we have:
+
+| `h`    | `t1`   | `t1->next` | `t2`   | `d`    | `d->next` |
+| ------ | ------ | ---------- | ------ | ------ | --------- |
+| `n(9)` | `null` | `null`     | `null` | `n(9)` | `n(8)`    |
+
+Because `d` is not null, we slide. `t2`'s pointee now becomes `t1`'s
+pointee, `t1`'s pointee changes to `d`'s pointee, and `t1`'s pointee's
+`next` pointer should point to `t2`'s pointee.
+
+| `h`    | `t1`   | `t1->next` | `t2`   | `d`    | `d->next` |
+| ------ | ------ | ---------- | ------ | ------ | --------- |
+| `n(9)` | `null` | `null`     | `null` | `n(9)` | `n(8)`    |
+| `n(9)` | `n(9)` | `null`     | `null` | `n(8)` | `n(6)`    |
+
+`d` is still not null, so we slide again. `t2`'s pointee becomes `t1`'s
+pointee, `t1`'s pointee changes to `d`'s pointee, and `t1`'s pointee's
+`next` pointer should point to `t2`'s pointee.
+
+| `h`    | `t1`   | `t1->next` | `t2`   | `d`    | `d->next` |
+| ------ | ------ | ---------- | ------ | ------ | --------- |
+| `n(9)` | `null` | `null`     | `null` | `n(9)` | `n(8)`    |
+| `n(9)` | `n(9)` | `null`     | `null` | `n(8)` | `n(6)`    |
+| `n(9)` | `n(8)` | `n(9)`     | `n(9)` | `n(6)` | `n(3)`    |
+
+Again `d` is not null, we so slide:
+
+| `h`    | `t1`   | `t1->next` | `t2`   | `d`    | `d->next` |
+| ------ | ------ | ---------- | ------ | ------ | --------- |
+| `n(9)` | `null` | `null`     | `null` | `n(9)` | `n(8)`    |
+| `n(9)` | `n(9)` | `null`     | `null` | `n(8)` | `n(6)`    |
+| `n(9)` | `n(8)` | `n(9)`     | `n(9)` | `n(6)` | `n(3)`    |
+| `n(9)` | `n(6)` | `n(8)`     | `n(8)` | `n(3)` | `null`    |
+
+`d` is still not `null`, so we slide once more:
+
+| `h`    | `t1`   | `t1->next` | `t2`   | `d`    | `d->next` |
+| ------ | ------ | ---------- | ------ | ------ | --------- |
+| `n(9)` | `null` | `null`     | `null` | `n(9)` | `n(8)`    |
+| `n(9)` | `n(9)` | `null`     | `null` | `n(8)` | `n(6)`    |
+| `n(9)` | `n(8)` | `n(9)`     | `n(9)` | `n(6)` | `n(3)`    |
+| `n(9)` | `n(6)` | `n(8)`     | `n(8)` | `n(3)` | `null`    |
+| `n(9)` | `n(3)` | `n(6)`     | `n(6)` | `null` | `--`      |
+
+Now we have `d` is null. All that's left to do is set the `h` pointer (it's
+always been pointing at the head), to `t1`:
+
+| `h`    | `t1`   | `t1->next` | `t2`   | `d`    | `d->next` |
+| ------ | ------ | ---------- | ------ | ------ | --------- |
+| `n(9)` | `null` | `null`     | `null` | `n(9)` | `n(8)`    |
+| `n(9)` | `n(9)` | `null`     | `null` | `n(8)` | `n(6)`    |
+| `n(9)` | `n(8)` | `n(9)`     | `n(9)` | `n(6)` | `n(3)`    |
+| `n(9)` | `n(6)` | `n(8)`     | `n(8)` | `n(3)` | `null`    |
+| `n(9)` | `n(3)` | `n(6)`     | `n(6)` | `null` | `--`      |
+| `t1`   | `n(3)` | `n(6)`     | `n(6)` | `null` | `--`      |
+
+Notice how we've essentially reversed the list. Reading from left to right,
+starting from the bottom, we see:
+
+```rust
+(t1   n(3)   n(6)   n(8)   n(9)   null)
+```
+
+In pseudocode:
+
+```rust
+list->reverse() => list:
+	d  = list->head
+	t1 = null
+	t2 = null
+	while (d isnt null):
+		t2       = t1
+		t1       = d
+		d        = d->next
+		t1->next = 2
+	head = t1
+	return list
+```
+
+As we can see, reversing links is the preferred approach for list reversal.
+Why? Because reversing-by-link consumes far less memory. We just need three
+more pointers. Compare that with reverse-by-element, which requires an
+entire array. With our examples, we've been using `int`. But the data field
+for each node in the linked list could very well contain arrays, or even
+larger data structures. This would lead to an even larger memory
+consumption.
+
+Although both approaches take ${O(n)}$ time—since we must traverse the
+linked list—reverse-by-link consumes much less memory. In fact, whenever
+we're called to move nodes in a linked list, our first consideration should
+always be to manipulate links, rather than data fields.
+
+Here's an implementation in JavaScript:
+
+```javascript
+reverse() {
+	let tempNode = this.#head;
+	this.#head = this.#tail;
+	this.#tail = tempNode;
+	let nextNode;
+	let previous = null;
+	for (let i = 0; i < this.#length; i++) {
+		nextNode = tempNode.next;
+		tempNode.next = previous;
+		previous = tempNode;
+		tempNode = nextNode;
+	}
+	return this;
+}
+```
+
+### Recursive List Reversal
+
+With recursive list reversal, we want to reverse the link of each node as
+we're returning from the function call:
+
+```rust
+reverse(Node** head) => void:
+	reverseLink(Node* q, Node* p) => void:
+		if (p isnt null):
+			reverseLink(p, p->next)
+			p->next = q
+		else:
+			*head = q
+	reverseLink(NULL, *head)
+```
+
+The function's call would be written as:
+
+```rust
+	reverse(&list)
+```
+
+To understand how this function works, it's helpful to trace the
+operations. Suppose we called it on this list:
+
+<LinkedList data={["root", 1, 2, 3]} />
+
+Calling `reverse()` results in the following:
+
+```rust
+**head = &list
+```
+
+visually:
+
+<LinkedList data={[{ val: "root", ant: "head" }, 1, 2, 3]} />
+
+Inside `reverse()`, we call `reverseLink()`. This results in `q` pointing
+to nowhere and `p` pointing to the the pointer `head` points to.
+
+```rust
+reverse:
+	**head = &list
+	reverseLink:
+		Node* q = null
+		Node* p = null
+```
+
+<LinkedList data={[{ val: "root", ant: "head p" }, 1, 2, 3]} />
+
+Once these pointers are initialized, we branch. If `p != NULL`, we execute
+the if-block. Otherwise, we execute the else-block. Here, `p` is a nonnull
+pointer, so we make the recursive call `reverseLink(p, p->next)`.
+
+```rust
+reverse:
+	**head = &list
+	reverseLink:
+		Node* q = null
+		Node* p = null
+		reverseLink:
+			Node* q = p         // q is null
+			Node* p = p->next   // p is now n(1)
+```
+
+<LinkedList
+	data={[{ val: "root", ant: "head q" }, { val: 1, ant: "p" }, 2, 3]}
+/>
+
+We again check our test condition. Once more, `p != NULL`, so we make
+another recursive call:
+
+```rust
+reverse:
+	**head = &list
+	reverseLink:
+		Node* q = null
+		Node* p = null
+		reverseLink:
+			Node* q = p             // q is null
+			Node* p = p->next       // p is now n(1)
+			reverseLink:
+				Node* q = p           // q is now n(1)
+				Node* p = p->next     // p is now n(2)
+```
+
+<LinkedList
+	data={[
+		{ val: "root", ant: "head" },
+		{ val: 1, ant: "q" },
+		{ val: 1, ant: "p" },
+		3,
+	]}
+/>
+
+We again check our test condition, and find that `p` is the nonnull
+pointer, so we make another recursive call:
+
+```rust
+reverse:
+	**head = &list
+	reverseLink:
+		Node* q = null
+		Node* p = null
+		reverseLink:
+			Node* q = p                     // q is null
+			Node* p = p->next               // p is now n(1)
+			reverseLink:
+				Node* q = p                 // q is n(1)
+				Node* p = p->next           // p is now n(2)
+				reverseLink:
+					Node* q = p             // q is now n(2)
+					Node* p = p->next       // p is now n(3)
+```
+
+<LinkedList
+	data={[
+		{ val: "root", ant: "head" },
+		1,
+		{ val: 2, ant: "q" },
+		{ val: 3, ant: "p" },
+	]}
+/>
+
+Once more we test whether `p != NULL`. Again, it is not. So we make one
+last recursive call:
+
+```rust
+reverse:
+	**head = &list
+	reverseLink:
+		Node* q = null
+		Node* p = null
+		reverseLink:
+			Node* q = p               // q is null
+			Node* p = p->next         // p is now n(1)
+			reverseLink:
+				Node* q = p             // q is n(1)
+				Node* p = p->next       // p is now n(2)
+				reverseLink:
+					Node* q = p           // q is now n(2)
+					Node* p = p->next     // p is now n(3)
+					reverseLink:
+						Node* q = p         // q is now n(3)
+						Node* p = p->next   // p is now null
+```
+
+<LinkedList
+	data={[{ val: "root", ant: "head" }, 1, 2, { val: 3, ant: "q" }]}
+/>
+
+With this last call, `p` is now the null pointer, so we execute the line
+`p->next = q`.
+
+```rust
+reverse:
+	**head = &list
+	reverseLink:
+		Node* q = null
+		Node* p = null
+		reverseLink:
+			Node* q = p                     // q is null
+			Node* p = p->next               // p is now n(1)
+			reverseLink:
+				Node* q = p                   // q is n(1)
+				Node* p = p->next             // p is now n(2)
+				reverseLink:
+					Node* q = p                 // q is now n(2)
+					Node* p = p->next           // p is now n(3)
+					reverseLink:
+						Node* q = p               // q is now n(3)
+						Node* p = p->next         // p is now null
+					p->next = q                 // n(3)->next = n(2)
+				p->next = q                   // n(2)->next = n(1)
+			p->next = q                     // n(1)->next = null
+```
+
+With the last return call, we have `p == NULL`, so we execute the else
+block: `*head = q`.
+
+```rust
+reverse:
+	**head = &list
+	reverseLink:
+		Node* q = null
+		Node* p = null
+		reverseLink:
+			Node* q = p
+			Node* p = p->next
+			reverseLink:
+				Node* q = p
+				Node* p = p->next
+				reverseLink:
+					Node* q = p
+					Node* p = p->next
+					reverseLink:
+						Node* q = p
+						Node* p = p->next
+						p->next = q => n(3)
+					n(3)->next = n(2)
+				n(2)->next = n(1)
+			n(1)->next = null
+		*head = n(1)
+```
+
+In pseudocode:
+
+```rust
+reverse(Node** head) => void:
+	reverseLink(Node* q, Node* p) => void:
+		if (p isnt null):
+			reverseLink(p, p->next)
+			p->next = q
+		else:
+			*head = q
+	reverseLink(NULL, *head)
+```
+
+Below is an implementation in C. Note that because C does not allow nested
+functions, the helper function `reverseLink()` must be written separately:
+
+```c
+void reverseLink(struct Node **head, struct Node *q, struct Node *p) {
+	if (p != NULL) {
+		reverseLink(head, p, (*p).next);
+		(*p).next = q;
+	} else {
+		*head = q;
+	}
+}
+
+void reverse(struct Node **head) {
+	reverseLink(head, NULL, *head);
+}
+```
+
+Testing:
+
+```c
+#include <stdlib.h>
+#include <stdio.h>
+
+struct Node {
+	int data;
+	struct Node *next;
+};
+
+struct Node *newNode(int newData) {
+	struct       Node *freshNode = malloc(sizeof(struct Node));
+	(*freshNode).data            = newData;
+	(*freshNode).next            = NULL;
+	return freshNode;
+}
+
+struct Node *list(int arr[], int size) {
+	struct Node *head = newNode(arr[0]);
+	struct Node *foot = head;
+	for (int i = 1; i < size; i++) {
+		struct  Node *freshNode = newNode(arr[i]);
+		(*foot).next            = freshNode;
+						foot            = freshNode;
+	}
+	return head;
+}
+
+void print(struct Node *headPtr) {
+	printf("(  ");
+	if (headPtr == NULL) {
+		printf("empty \n");
+	} else {
+		while (headPtr != NULL) {
+			printf("%'d  ", (*headPtr).data);
+			headPtr = (*headPtr).next;
+		}
+	}
+	printf(")\n");
+}
+
+void reverseLink(struct Node **head, struct Node *q, struct Node *p) {
+	if (p != NULL) {
+		reverseLink(head, p, (*p).next);
+		(*p).next = q;
+	} else {
+		*head = q;
+	}
+}
+
+void reverse(struct Node **head) {
+	reverseLink(head, NULL, *head);
+}
+
+
+int main() {
+	int    size        = 5;
+	int    arr[]       = {1,2,3,4,5};
+	struct Node* aList = list(arr, size);
+	print(aList);
+	reverse(&aList);
+	print(aList);
+	return 0;
+}
+```
+
+```bash
+(  1  2  3  4  5  )
+(  5  4  3  2  1  )
+```
+
+## Sum of All Elements
+
+Just as we saw with arrays, given a linked list of numeric type, we can
+find the sum of all its elements through iteration. Suppose we had the
+following linked list:
+
+<LinkedList data={["root", 7, 3, 5, 4]} />
+
+In code:
+
+```cpp
+#include <iostream>
+
+struct Node {
+	int data;
+	Node* next;
+};
+
+Node* newNode(int data) {
+	Node* node       = new Node;
+				node->data = data;
+				node->next = 0;
+	return node;
+}
+
+int main() {
+	Node* root        = 0;
+	Node* node1       = newNode(7);  // First node
+				root        = node1;
+	Node* node2       = newNode(3);  // Second node
+				node1->next = node2;
+	Node* node3       = newNode(5)   // Third node
+				node2->next = node3;
+	Node* node4       = newNode(4)   // Fourth node
+				node3->next = node4;
+
+	return 0;
+}
+```
+
+To sum all of the elements, we use a variable `sum`, set initially to zero.
+Then, we iterate through the linked list, incrementing `sum` by each
+element's `data` field:
+
+```cpp
+int listSum(Node* p) {
+	int sum = 0;
+	while (p != 0) {
+		sum += p->data;
+		p    = p->next;
+	}
+	return sum;
+}
+```
+
+Testing:
+
+```cpp
+#include <iostream>
+
+struct Node {
+	int data;
+	Node* next;
+};
+
+Node* newNode(int data) {
+	Node* node       = new Node;
+				node->data = data;
+				node->next = 0;
+	return node;
+}
+
+int listSum(Node* p) {
+	int sum = 0;
+	while (p != 0) {
+		sum += p->data;
+		p    = p->next;
+	}
+	return sum;
+}
+
+int main() {
+	Node* root        = 0;
+	Node* node1       = newNode(7);  // First node
+				root        = node1;
+	Node* node2       = newNode(3);  // Second node
+				node1->next = node2;
+	Node* node3       = newNode(5);  // Third node
+				node2->next = node3;
+	Node* node4       = newNode(4);  // Fourth node
+				node3->next = node4;
+
+	Node* sumPtr = root;
+	int   sum    = listSum(sumPtr);
+
+	std::cout << sum << std::endl;
+
+	return 0;
+}
+```
+
+```bash
+19
+```
+
+The time complexity for this function is linear, and the space complexity
+is constant. We're iterating through ${n}$ nodes, and the operations of
+`==` and `+=` are basic steps. Accordingly, the function has a time
+complexity of ${O(n).}$ With respect to space, only a single function call
+is made, and each of the variables take a fixed amount of memory. Hence,
+the space complexity is ${O(1).}$
+
+### Recursive Approach.
+
+The same function can be implemented recursively:
+
+```cpp
+int listSum(Node* p) {
+	if (p == 0) {
+		return 0;
+	} else {
+		return listSum(p->next) + p->data;
+	}
+}
+```
+
+With the recursive approach, the time complexity is ${O(n),}$ just as we
+saw with the iterative approach. The space complexity, however, is
+${O(n),}$ given that ${n+1}$ calls must be made.
+
+## Peak Finder
+
+As we saw with arrays, a **peak finder** is an algorithm for finding the
+maximum element in a given collection. In this case, the maximum element in
+a linked list.
+
+Suppose ${n_0}$ is the head, and it contains the peak, ${v_0,}$ in its data
+field. Iterating through the linked list, compare ${v_0}$ against ${v_1,}$
+the value in the data field of the second node, ${n_1.}$ If ${v_0 < v_1,}$
+then ${n_1}$ contains the peak. Otherwise, ${v_0}$ is the peak, and we
+compare it against ${v_2,}$ the value in the data field of the third node.
+The process until we reach the foot of the list: If ${v_i < v_{i+1},}$ then
+${v_{i+1}}$ is the maximum element. Otherwise, compare ${v_i}$ against
+${v_{i+2 \ldots k}.}$
+
+Implementing this procedure:
+
+```cpp
+int findMax(Node* p) {
+	int max = p->data;
+	while (p != 0) {
+		if (p->data > max) {
+			max = p->data;
+		}
+		p = p->next;
+	}
+	return max;
+}
+```
+
+For testing, let's say we had the following linked list:
+
+<LinkedList data={["root", 312, 219, 317, 319]} />
+
+The diagram shows that ${319}$ is the maximum element, so we should expect
+to see ${319}$ as the output. Testing:
+
+```cpp
+#include <iostream>
+
+struct Node {
+	int data;
+	Node* next;
+};
+
+Node* newNode(int data) {
+	Node* p       = new Node;
+				p->data = data;
+				p->next = 0;
+	return p;
+}
+
+int findMax(Node* p) {
+	int max = p->data;
+	while (p != 0) {
+		if (p->data > max) {
+			max = p->data;
+		}
+		p = p->next;
+	}
+	return max;
+}
+
+int main() {
+	Node* root        = 0;
+	Node* node1       = newNode(312);
+				root        = node1;
+	Node* node2       = newNode(219);
+				node1->next = node2;
+	Node* node3       = newNode(313);
+				node2->next = node3;
+	Node* node4       = newNode(319);
+				node3->next = node4;
+
+	Node* temp     = root;
+	int   maxValue = findMax(temp);
+
+	std::cout << maxValue << std::endl;
+
+	return 0;
+}
+```
+
+```bash
+319
+```
+
+Note that there are a variety of ways to implement the same function.
+Another approach is to set the initial `max` to `INT_MIN`, the smallest
+possible `int` value:
+
+```cpp
+int findMax(Node* p) {
+	int max = INT_MIN;
+	while (p != 0) {
+		if (p->data > max) {
+			max = p->data;
+		}
+		p = p->next;
+	}
+	return max;
+}
+```
+
+### Recursive Implementation
+
+The recursive peak finder is somewhat longer:
+
+```cpp
+int findMax(Node* p) {
+	int x = 0;
+	if (p == 0) {
+		return INT_MIN;
+	} else {
+		x = findMax(p->next);
+		if (x > p->data) {
+			return x;
+		} else {
+			return p->data;
+		}
+	}
+}
+```
+
+Of course, we can shorten it with the ternary operator:
+
+```cpp
+int findMax(Node* p) {
+	int x = 0;
+	if (p == 0) {
+		return INT_MIN;
+	}
+	x = findMax(p->next);
+	return x > p->data ? x : p->data;
+}
+```
+
+# Valley Finder
+
+In contrast to peak finding, the **valley finder** is an algorithm for
+finding the mimimum element. The implementation is similar to the peak
+finder; the only difference is we're looking for the smallest element.
+
+```cpp
+int findMin(Node* p) {
+	int min = p->data;
+	while (p != 0) {
+		if (p->data < min) {
+			min = p->data;
+		}
+		p = p->next;
+	}
+	return min;
+}
+```
+
+Testing:
+
+```cpp
+#include <iostream>
+
+struct Node {
+	int data;
+	Node* next;
+};
+
+Node* newNode(int data) {
+	Node* node       = new Node;
+				node->data = data;
+				node->next = 0;
+	return node;
+}
+
+int findMin(Node* p) {
+	int min = p->data;
+	while (p != 0) {
+		if (p->data < min) {
+			min = p->data;
+		}
+		p = p->next;
+	}
+	return min;
+}
+
+int main() {
+	Node* root        = 0;
+	Node* node1       = newNode(3);
+				root        = node1;
+	Node* node2       = newNode(9);
+				node1->next = node2;
+	Node* node3       = newNode(1);
+				node2->next = node3;
+	Node* node4       = newNode(7);
+				node3->next = node4;
+
+	Node* list = root;
+
+	int listMin = findMin(list);
+
+	std::cout << listMin << std::endl;
+
+	return 0;
+}
+```
+
+```bash
+1
+```
+
+## Searching a Linked List
+
+As we saw with arrays, we can search through a linked list. The catch,
+however, is that we cannot employ binary search. This is because with the
+linked list, we do not have indices. There are only pointers. The only way
+for us to know when we've reached some element is by traversing. And
+because we have no choice but to traverse, we cannot access the middle node
+in constant time. As such, binary search on a linked list is no better than
+a linear search.
+
+That said, suppose we had the following linked list:
+
+<LinkedList data={["root", 3, 9, 5, 2, 4]} />
+
+Now suppose our query is `2`. From the linked list above, that's the fourth
+node. Searching for our query is similar to linear searching through an
+array—we just have to pass the value we want found, and a pointer to the
+linked list.
+
+```cpp
+Node* linearSearch(Node* p, int query) {
+	while(p != 0) {
+		if (p->data == query) {
+			return p;
+		}
+		p = p->next;
+	}
+	return 0;
+}
+```
+
+With the implementation above, we're returning a pointer to the query if
+it's found. Otherwise, we return `0`, in which case the pointer to the
+query is null. This, of course, is entirely arbitrary. We could return
+`true`, `false`, `1`, `0`, or print some output to the console.
+
+Testing with the diagram above:
+
+```cpp
+#include <iostream>
+
+struct Node {
+	int data;
+	Node* next;
+};
+
+Node* newNode(int data) {
+	Node* node = new Node;
+				node->data = data;
+				node->next = 0;
+	return node;
+}
+
+Node* linearSearch(Node* p, int query) {
+	while(p != 0) {
+		if (p->data == query) {
+			return p;
+		}
+		p = p->next;
+	}
+	return 0;
+}
+
+int main() {
+	Node* root        = 0;
+	Node* node1       = newNode(3);
+				root        = node1;
+	Node* node2       = newNode(9);
+				node1->next = node2;
+	Node* node3       = newNode(5);
+				node2->next = node3;
+	Node* node4       = newNode(2);
+				node3->next = node4;
+	Node* node5       = newNode(4);
+				node4->next = node5;
+	Node* list        = root;
+	Node* query       = linearSearch(list, 2);
+
+	std::cout << query->data << std::endl;
+
+	return 0;
+}
+```
+
+```bash
+2
+```
+
+As we saw with arrays, however, we can improve linear search through
+_transposition_ or _move-to-head_. Recall that with transposition, whenever
+we search for a particular element, the element moves closer to the
+beginning. And with move-to-head, the element containing the key moves
+immediately to the head after a successful search.
+
+It turns out that transposition isn't a very good idea, but before we
+address why, let's consider move-to-head, the preferred approach with
+linked lists. To start, let's consider the following linked list, supposing
+the key we're searching for is `7`:
+
+<LinkedList data={["root", 8, 3, 7, 4]} />
+
+This is the third node, and we want to make it the list's head. As we saw
+with our implementation of linear search earlier, we used a temporary
+pointer to traverse the linked list, so as to check for equality to our
+key. Thus, conducting linear search on our linked list, the temporary
+pointer, at some point, reaches the node storing `7`. As such, once we
+reach the node storing `7`, we want to bring the node to the head.
+
+To do so, we must modify the second node, since the third node will move.
+In this case, the second node—the node right before our key—should point
+the third node—the node right after our key. To do so, we must have a
+pointer on the node immediately before our key as well.
+
+<LinkedList data={["root", 8, { val: 3, ant: "p" }, 7, 4]} />
+
+How do we get a pointer on the previous node? By using a second pointer.
+Thus, our linear search will use two pointers—`p`, the **traverser**, and
+`q`, the **tailer**, that follows immediately behind `p`. Then, the two
+pointers work together as follows:
+
+1. `p` begins traversing, starting at the first node. If the key is there,
+   stop. Return the node's address. Otherwise, proceed to the next step. In
+   this case, it is not.
+
+2. Since the first node is not the key, `p` moves to the second node _and_
+   `q` points to the first node.
+
+3. Once again, we found no match, so `p` moves to the next node—the third
+   node—and `q` moves to the next node, the second node. At this point
+   we've found our key.
+
+Notice the end result. We have a pointer to the node just before the node
+containing the key, and a pointer to the node containing the key. This is
+exactly where we want to be. The implementation:
+
+```cpp
+Node* linearSearch(Node* root, int key) {
+	Node* current = root;
+	Node* previous = 0;
+	while (current != 0) {
+		if (current->data == key) {
+			previous->next = current->next;
+			current->next = root;
+			root = current;
+			return root;
+		}
+		previous = current;
+		current = current->next;
+	}
+	return 0;
+}
+```
+
+Testing:
+
+```cpp
+#include <iostream>
+
+struct Node {
+	int data;
+	Node* next;
+};
+
+Node* newNode(int data) {
+	Node* node       = new Node;
+				node->data = data;
+				node->next = 0;
+	return node;
+}
+
+void print(Node* p) {
+	while(p != 0) {
+		std::cout << p->data << " --> ";
+		p = p->next;
+	}
+	std::cout << "\n";
+}
+
+Node* linearSearch(Node* root, int key) {
+	Node* current  = root;
+	Node* previous = 0;
+	while (current != 0) {
+		if (current->data == key) {
+			previous->next = current->next;
+			current->next  = root;
+			root           = current;
+			return root;
+		}
+		previous = current;
+		current  = current->next;
+	}
+	return 0;
+}
+
+int main() {
+	Node* root        = 0;
+	Node* node1       = newNode(3);
+				root        = node1;
+	Node* node2       = newNode(5);
+				node1->next = node2;
+	Node* node3       = newNode(7);
+				node2->next = node3;
+	Node* node4       = newNode(9);
+				node3->next = node4;
+	print(root);
+	Node* key = linearSearch(root, 7);
+	std::cout << key->data << std::endl;
+	print(key);
+	return 0;
+}
+```
+
+```bash
+3 --> 5 --> 7 --> 9 -->
+7
+7 --> 3 --> 5 --> 9 -->
+```
+
+### Recursive Implementation
+
+We could've also implemented the linear search function recursively:
+
+```cpp
+Node* recursiveLinearSearch(Node* p, int query) {
+	if (p == 0) {
+		return 0;
+	} else if (query == p->data) {
+		return p;
+	} else {
+		return recursiveLinearSearch(p->next, query);
+	}
+}
+```
+
+## Sorted Test
+
+Many algorithms on linked lists depend on whether a given linked list is
+sorted. By sorted linked list, we mean a linked list whose data fields are
+sorted according to a particular criteria. Most often, that criteria is
+numeric. For example, the following linked list is sorted:
+
+<LinkedList data={["root", 3, 5, 8, 12, 16]} />
+
+To determine if a linked list is sorted, we use a **sorted test**. The
+procedure is as follows.
+
+First, we have a pointer to the first node, and some variable ${m,}$ set to
+the smallest possible valube for the linked list's type. For example, with
+`int`, the smallest possible value is `-32768`. With a pointer on the first
+node, we check if ${m < n(3)?}$
+
+<LinkedList data={["root", { val: 3, ant: "p" }, 5, 8, 12, 16]} />
+
+Clearly yes. So, we change ${m = 3,}$ move the pointer to the next node,
+and test, ${3 < n(5)?}$
+
+<LinkedList data={["root", 3, { val: 5, ant: "p" }, 8, 12, 16]} />
+
+Once more, yes. We mutate ${m}$ to ${m = 5,}$ and we move to the next node.
+Test again: Is ${5 < n(8)?}$
+
+<LinkedList data={["root", 3, 5, { val: 8, ant: "p" }, 12, 16]} />
+
+Once again, yes. We modify ${m}$ to ${m = 8,}$ and we move to the next
+node. Test: ${8 < 12?}$
+
+<LinkedList data={["root", 3, 5, 8, { val: 12, ant: "p" }, 16]} />
+
+Yes. Now ${m = 12.}$ Move to the next and test: ${12 < 16?}$
+
+<LinkedList data={["root", 3, 5, 8, 12, 16]} />
+
+Yes. We've reached the end of the list, so we can determine the list is
+sorted. If any point we found that ${m \nleq n(d),}$ we would have
+concluded that the list is not sorted.
+
+In pseudocode:
+
+```rust
+fn isSorted(Node* head) -> boolean
+int currentMin = MIN_INT;
+Node* p = head;
+while (p != NULL):
+	if (p->data < currentMin):
+		return false;
+	else:
+		currentMin = p->data;
+		p = p->next;
+return true;
+```
+
+Here's an implementation in C++:
+
+```cpp
+bool isSorted() {
+	int min = INT_MIN;
+	Node* p = head;
+	while (p != NULL) {
+		if (p->data < min) {
+			return false;
+		} else {
+			min = p->data;
+			p = p->next;
+		}
+	}
+	return true;
+```
+
+Testing this implementation:
+
+```cpp
+#include <iostream>
+#include <stdbool.h>
+
+struct Node {
+	int data;
+	Node* next;
+	Node() {
+		data = 0;
+		next = NULL;
+	}
+	Node(int newData) {
+		data = newData;
+		next = NULL;
+	}
+};
+
+class List {
+	Node* head;
+	Node* foot;
+	public:
+		List() {
+			head = new Node();
+			foot = head;
+		}
+		List(int data) {
+			head = new Node(data);
+			foot = head;
+		}
+		List(int arr[], int size) {
+			head = new Node(arr[0]);
+			foot = head;
+			for (int i = 1; i < size; i++) {
+				Node* freshNode = new Node(arr[i]);
+				foot->next = freshNode;
+				foot = freshNode;
+			}
+		}
+		bool isSorted() {
+			int min = INT_MIN;
+			Node* p = head;
+			while (p != NULL) {
+				if (p->data < min) {
+					return false;
+				} else {
+					min = p->data;
+					p = p->next;
+				}
+			}
+			return true;
+		}
+		void print() {
+			Node* p = NULL;
+			std::cout << "( ";
+			if (head != NULL) {
+				p = head;
+				while (p->next != NULL) {
+					std::cout << p->data << " ";
+					p = p->next;
+				}
+			} else {
+				std::cout << "empty";
+			}
+			std::cout << ")\n";
+		}
+};
+
+int main() {
+	int arr1[] = {1,2,3,4,5};
+	int arr2[] = {1,2,8,4,5};
+	List aList = List(arr1, 5);
+	List bList = List(arr2, 5);
+	aList.print();
+	bList.print();
+	std::cout << "Sorted: " << aList.isSorted() << std::endl;
+	std::cout << "Sorted: " << bList.isSorted() << std::endl;
+	return 0;
+}
+```
+
+```bash
+( 1 2 3 4 )
+( 1 2 8 4 )
+Sorted: 1
+Sorted: 0
+```
+
+## Dedupe a Sorted List
+
+Suppose we have the following linked list:
+
+<LinkedList data={["root", 2, 4, 4, 8, 8, 8]} />
+
+Notice that the list above is sorted, but we have duplicates: ${4}$ and
+${8.}$ Many procedures require us to **dedupe** (<q>deduplicate</q>) this
+list—removing nodes with duplicate values in their data fields.
+Post-dedupe, we have the list:
+
+<LinkedList data={["root", 2, 4, 8]} />
+
+The most straightforward way to dedupe a linked list is to start with two
+pointers, one pointing to the list's head, the other pointing the node
+immediately after:
+
+<LinkedList
+	data={["root", { val: 2, ant: "t" }, { val: 4, ant: "d" }, 4, 8, 8, 8]}
+/>
+
+Once there, we ask: ${v(d) = v(d)?}$ Where ${v}$ is a function returning
+the data value of the pointee node. If it does not match, then we move `d`
+to its next node, and `t` its next node. With the pointers `d` and `t`
+positioned, we check again, ${v(d) = v(t)?}$
+
+<LinkedList
+	data={["root", 2, { val: 4, ant: "t" }, { val: 4, ant: "d" }, 8, 8, 8]}
+/>
+
+Here, we see that ${v(d) = v(t),}$ since ${v(n_2) = 4 = v(n_3) = 4.}$ If
+the nodes match, we want to delete `d`'s pointee.[^pointeenote] To do so,
+we have `t`'s `next` field point to `d`'s next field. Then, we `delete`
+`d`'s pointee. Then, we make `d`'s `next` point to `t`'s next. More
+explicitly with pseudocode:
+
+[^pointeenote]:
+    We can delete either `t`'s pointee or `d`'s pointee; it makes no
+    difference.
+
+```rust
+fn dedupeSorted() -> void :
+	Node* t = head;
+	Node* d = head->next;
+	while (d != NULL):
+		if (t->data != d->data):
+			t = d;
+			d = d->next;
+		else:
+			t->next = d->next;
+			delete d;
+			d = t->next;
+```
+
+With this implementation, we must scan through the entire list of ${n}$
+nodes to dedupe. As such, this approach has a time complexity of
+${O(n)}$—linear time. Because the procedure must <em>always</em> traverse
+the entire linked list to dedupe, the time complexity is always ${O(n).}$
+
+Here's an implementation in C:
+
+```c
+void dedupe(struct Node **head) {
+	struct Node *t = *head;
+	struct Node *d = (**head).next;
+	while (d != NULL) {
+		if ((*t).data != (*d).data) {
+			t = d;
+			d = (*d).next;
+		} else {
+			(*t).next = (*d).next;
+			free(d);
+			d = (*t).next;
+		}
+	}
+}
+
+// The function call:
+dedupe(&list);
+```
+
+Let's go through this code carefully. First:
+
+```c
+void dedupe(struct Node **head)
+```
+
+The function header provides that `dedupe()` returns nothing, and takes as
+an argument the memory address of a pointer. The identifier `head` is a
+pointer to a pointer. In this case, `**head = &list = &(Node *${p}$)`,
+where ${p}$ is the pointer to some node.
+
+```c
+struct Node *t = *head;
+```
+
+The contents of `head`, i.e., the address stored in `head`, is stored in
+`t`. In other words, `t` points to the address stored in `head`, which is
+`&list`.
+
+```c
+struct Node *d = (**head).next
+```
+
+The pointer `d` points to the address stored in `head`'s `next` field. This
+is the next field of the original list's head.
+
+```c
+while (d != NULL)
+```
+
+"As long as `d`'s pointee is a valid address."
+
+```c
+if ((*t).data != (*d).data)
+```
+
+If the data in `t` (the data in the original list's head) is not equal to
+the data in `d` (in the original list, the node immediately after the
+head).
+
+```c
+t = d
+```
+
+The address in `d` is now the address in `t`. I.e., the pointer `t` now
+points to the node immediately after its previous pointee.
+
+```c
+d = (*d).next
+```
+
+The address stored in `d`'s next field is now the address of `d`.
+
+```c
+(*t).next = (*d).next
+```
+
+If the data in `t` is not equal to the data in `d`, then the address in
+`d`'s next field becomes the address in `t`'s next field.
+
+```c
+free(d)
+```
+
+Free the memory `d` points to.
+
+```c
+d = (*t).next
+```
+
+The address in `t`'s next field becomes the address in `d`.
+
+Testing the implementation above:
+
+```c
+#include <stdlib.h>
+#include <stdio.h>
+
+struct Node {
+	int data;
+	struct Node *next;
+};
+
+struct Node *newNode(int newData) {
+	struct     Node *newNode = malloc(sizeof(struct Node));
+	(*newNode).data          = newData;
+	(*newNode).next          = NULL;
+	return newNode;
+}
+
+struct Node *List(int arr[], int arrSize) {
+	if (arrSize <= 0) {
+		return NULL;
+	} else {
+		struct Node* head = newNode(arr[0]);
+		struct Node* foot = head;
+		for (int i = 1; i < arrSize; i++) {
+			struct Node* freshNode = newNode(arr[i]);
+							foot->next      = freshNode;
+							foot            = freshNode;
+		}
+		return head;
+	}
+}
+
+void print(struct Node *headRef) {
+	struct Node* foot = headRef;
+	printf("( ");
+	while (foot != NULL) {
+		printf("%d ", foot->data);
+		foot = foot->next;
+	}
+	printf(")\n");
+}
+
+void dedupe(struct Node **head) {
+	struct Node *t = *head;
+	struct Node *d = (**head).next;
+	while (d != NULL) {
+		if ((*t).data != (*d).data) {
+			t = d;
+			d = (*d).next;
+		} else {
+			(*t).next = (*d).next;
+			free(d);
+			d = (*t).next;
+		}
+	}
+}
+
+int main() {
+	int    size       = 6;
+	int    arr[]      = {1,3,3,8,8,8};
+	struct Node *list = List(arr, size);
+	print(list);
+	dedupe(&list);
+	print(list);
+	return 0;
+}
+```
+
+```bash
+( 1 3 3 8 8 8 )
+( 1 3 8 )
+```
+
+## Concatenating Lists
+
+Say we had the following lists:
+
+<LinkedList data={["list1", 1, 2, 3]} />
+<LinkedList data={["list2", 4, 5, 6]} />
+
+We want to take these one of these two lists, and _concatenate_ it with the
+other. Suppose the function is called `concat()`. If we call
+`concat(list1, list2)`, we get:
+
+<LinkedList
+	data={["list1", 1, 2, 3, 4, 5, 6]}
+	width={360}
+	containerWidth={110}
+/>
+
+And if we call `concat(list2, list1)`, we get:
+
+<LinkedList
+	data={["list2", 4, 5, 6, 1, 2, 3]}
+	width={360}
+	containerWidth={110}
+/>
+
+The procedure here is straightforward. If we call `concat(list1, list2)`
+the `next` pointer for `list1`'s foot should point to `list2`'s head.
+Hence, all that's required is to have a pointer on the first list
+argument's foot. One way to do so is to initialize a pointer `p` initially
+at `list1`'s head, then traverse the list to the foot. Once there, we have
+`p`'s pointee point to `list2`'s head:
+
+```rust
+fn concat(*Node list1, Node* list2) -> void:
+	Node* p = list1;
+	while (p -> next != NULL):
+		p = p->next;
+		p->next = list2;
+```
+
+Because we must traverse the list to find the first argument's foot, the
+procedure above has a time complexity of ${O(n).}$ We can, of course,
+reduce this to ${O(1)}$ if we ensure that every list we create contains
+pointers to the foot and pointers to the head. In that case, all that's
+required is to have the first list's foot's pointee's `next` field point to
+the second list's head.
+
+Here's an implementation in C:
+
+```c
+struct Node *concat(struct Node *list1, struct Node *list2) {
+	struct Node *ptr;
+	if (list1 == NULL) {
+		list1 = list2;
+		return list1;
+	}
+	if (list2 == NULL) {
+		return list1;
+	}
+	ptr = list1;
+	while ((*ptr).next != NULL) {
+		ptr = (*ptr).next;
+	}
+	(*ptr).next = list2;
+	return list1;
+}
+```
+
+Testing the implementation above:
+
+```c
+#include <stdlib.h>
+#include <stdio.h>
+
+struct Node {
+	int data;
+	struct Node *next;
+};
+
+struct Node *newNode(int newData) {
+	struct Node* freshNode = malloc(sizeof(struct Node));
+	(*freshNode).data = newData;
+	(*freshNode).next = NULL;
+	return freshNode;
+}
+
+struct Node *List(int arr[], int size) {
+	struct Node *head = newNode(arr[0]);
+	struct Node *foot = head;
+	for (int i = 1; i < size; i++) {
+		struct Node *freshNode = newNode(arr[i]);
+		(*foot).next = freshNode;
+		foot = freshNode;
+	}
+	return head;
+}
+
+void print(struct Node *p) {
+	printf("( ");
+	if (p != NULL) {
+		while (p != NULL) {
+			printf("%d ", (*p).data);
+			p = (*p).next;
+		}
+	} else {
+		printf("empty ");
+	}
+	printf(")\n");
+}
+
+struct Node *concat(struct Node *list1, struct Node *list2) {
+	struct Node *ptr;
+	if (list1 == NULL) {
+		list1 = list2;
+		return list1;
+	}
+	if (list2 == NULL) {
+		return list1;
+	}
+	ptr = list1;
+	while ((*ptr).next != NULL) {
+		ptr = (*ptr).next;
+	}
+	(*ptr).next = list2;
+	return list1;
+}
+
+int main() {
+	int arr1[] = {1,2,3};
+	int arr2[] = {6,7,8};
+	int arrSize = 3;
+	struct Node* aList = List(arr1, arrSize);
+	print(aList);
+	struct Node* bList = List(arr2, arrSize);
+	print(bList);
+	struct Node* cList = concat(aList, bList);
+	print(aList);
+	return 0;
+}
+```
+
+```bash
+( 1 2 3 )
+( 6 7 8 )
+( 1 2 3 6 7 8 )
+```
+
+## Merging Lists
+
+<p>We have the following linked lists:</p>
+
+<LinkedList data={["list1", 2, 8, 10, 15]} />
+
+<LinkedList data={["list2", 4, 7, 12, 14]} />
+
+We want to take `list1` and `list2`, and _merge_ them into a single list,
+where each node is sorted in increasing order. **Merging** is the process
+of combining two sorted lists into a single sorted list. Recall that when
+we merged two arrays, we required a third array. With linked lists, there
+is no such requirement. We just have to manipulate the links (of course, we
+could always create a new list to return).
+
+To merge two lists, we need two more pointers, will call one of them `h`
+and the other `t`. The pointer `h` will point to the merged list's head,
+and the pointer `t` will point to the merged list's tailend.
+
+The procedure is as follows: First, compare the data value stored in
+`list1`'s head with the data value stored `list2`'s head.
+
+<LinkedList data={["list1", { val: 2, focus: true }, 8, 10, 15]} />
+
+<LinkedList data={["list2", { val: 4, focus: true }, 7, 12, 14]} />
+
+Between the two data values, the node containing the smaller data value
+becomes the pointee of both `h` and `t`. Here, that node is `list1`'s head:
+
+<LinkedList data={["list1", { val: 2, ant: "h t" }, 8, 10, 15]} />
+
+<LinkedList data={["list2", { val: 4, focus: true }, 7, 12, 14]} />
+
+Then, we move the head pointer of `list1` to the next node:
+
+<LinkedList
+	data={[
+		"list1",
+		{ val: 2, ant: "h t" },
+		{ val: 8, ant: "list1" },
+		10,
+		15,
+	]}
+/>
+
+<LinkedList data={["list2", 4, 7, 12, 14]} />
+
+Then, we go to the node `h` and `t` point to, and sets its `next` field
+`NULL`.
+
+<LinkedList
+	data={[
+		"list1",
+		{ val: 2, ant: "h t", alone: true },
+		{ val: 8, ant: "list1" },
+		10,
+		15,
+	]}
+/>
+
+<LinkedList data={["list2", 4, 7, 12, 14]} />
+
+Then we continue the comparison. We compare the current pointee of `list1`
+against the head of `list2`:
+
+<LinkedList
+	data={[
+		"list1",
+		{ val: 2, ant: "h t", alone: true },
+		{ val: 8, ant: "list1", focus: true },
+		10,
+		15,
+	]}
+/>
+
+<LinkedList data={["list2", { val: 4, focus: true }, 7, 12, 14]} />
+
+Here, we see that `list2`'s pointee stores a lesser data value than
+`list1`'s pointee. Because of this fact, we go to the node that `h` and `t`
+point to, and make its `next` pointer point to `list2`. After doing so, we
+bring `t` `list2`'s pointee.
+
+<LinkedList
+	data={[
+		"list1",
+		{ val: 2, ant: "h", alone: true },
+		{ val: 8, ant: "list1", focus: true },
+		10,
+		15,
+	]}
+/>
+
+<LinkedList data={["list2", { val: 4, ant: "t" }, 7, 12, 14]} />
+
+Then, we'll have `list2` point to its `next` pointee:
+
+<LinkedList
+	data={[
+		"list1",
+		{ val: 2, ant: "h", alone: true },
+		{ val: 8, ant: "list1", focus: true },
+		10,
+		15,
+	]}
+/>
+
+<LinkedList
+	data={["list2", { val: 4, ant: "t" }, { val: 7, ant: "list2" }, 12, 14]}
+/>
+
+Then we make `t`'s pointee's `next` pointer `NULL`:
+
+<LinkedList
+	data={[
+		"list1",
+		{ val: 2, ant: "h", alone: true },
+		{ val: 8, ant: "list1", focus: true },
+		10,
+		15,
+	]}
+/>
+
+<LinkedList
+	data={[
+		"list2",
+		{ val: 4, ant: "t", alone: true },
+		{ val: 7, ant: "list2" },
+		12,
+		14,
+	]}
+/>
+
+We continue the procedure. Compare `list1`'s pointee against `list2`'s
+pointee.
+
+<LinkedList
+	data={[
+		"list1",
+		{ val: 2, ant: "h", alone: true },
+		{ val: 8, ant: "list1", focus: true },
+		10,
+		15,
+	]}
+/>
+
+<LinkedList
+	data={[
+		"list2",
+		{ val: 4, ant: "t", alone: true, focus: true },
+		{ val: 7, ant: "list2" },
+		12,
+		14,
+	]}
+/>
+
+Here, `list2`'s pointee is smaller. So, we move `t` to `list2`'s pointee:
+
+<LinkedList
+	data={[
+		"list1",
+		{ val: 2, ant: "h", alone: true },
+		{ val: 8, ant: "list1", focus: true },
+		10,
+		15,
+	]}
+/>
+
+<LinkedList
+	data={[
+		"list2",
+		{ val: 4, alone: true, focus: true },
+		{ val: 7, ant: "t list2" },
+		12,
+		14,
+	]}
+/>
+
+Then we assign `list2` to as the last node's `next` pointee:
+
+<LinkedList
+	data={[
+		"list1",
+		{ val: 2, ant: "h", alone: true },
+		{ val: 8, ant: "list1", focus: true },
+		10,
+		15,
+	]}
+/>
+
+<LinkedList
+	data={[
+		"list2",
+		{ val: 4, alone: true, focus: true },
+		{ val: 7, ant: "list2" },
+		{ val: 12, ant: "t" },
+		14,
+	]}
+/>
+
+Followed by moving `t` to `list2`'s `next` pointee, and `list2` thereafter
+to `t`'s `next`
+
+<LinkedList
+	data={[
+		"list1",
+		{ val: 2, ant: "h", alone: true },
+		{ val: 8, ant: "list1", focus: true },
+		10,
+		15,
+	]}
+/>
+
+<LinkedList
+	data={[
+		"list2",
+		{ val: 4, alone: true, focus: true },
+		{ val: 7 },
+		{ val: 12, ant: "list2 t" },
+		14,
+	]}
+/>
+
+We then make `t`'s pointee's `next` pointer `NULL`:
+
+<LinkedList
+	data={[
+		"list1",
+		{ val: 2, ant: "h", alone: true },
+		{ val: 8, ant: "list1", focus: true },
+		10,
+		15,
+	]}
+/>
+
+<LinkedList
+	data={[
+		"list2",
+		{ val: 4, alone: true, focus: true },
+		{ val: 7 },
+		{ val: 12, ant: "list2 t", alone: true },
+		14,
+	]}
+/>
+
+We continue the procedure above so long as the pointers `list1` and `list2`
+are nonnull pointers. Otherwise, we stop. Continuing the procedure above,
+we will eventually get to a point where `list2` is `NULL` before `list1`.
+When this occurs, we have `t` pointing to the last node in `list2`. All we
+must do in this case is to have `t`'s pointee point to `list1`'s pointee.
+In doing so, we have the following:
+
+<LinkedList data={[2, 4, 7, 8, 10, 12, 14, 15]} />
+
+Implementing this in pseudocode:
+
+```rust
+fn sortedMerge(Node* list1, Node* list2) -> Node*:
+	Node* newHead = new Node()
+	Node* newTail = newHead;
+	while (list1 != NULL && list2 != NULL):
+		if (list1->data &lt; list2->data):
+			newTail->next = list1;
+			list1 = list1->next;
+		else:
+			newTail->next = list2;
+			list2 = list2->next;
+	if (list1 == NULL):
+		newTail->next = list2;
+	else:
+		newTail->next = list1;
+	return newHead->next;
+```
+
+As we can see, linked lists are suitable for merging. This is because we do
+not require so much additional space, as we see with merging arrays.
+Merging with both linked lists and arrays takes linear time—${O(n)}$—since
+we must traverse the lists or arrays (or, more accurately, ${O(m + n) }$).
+As such, between the two, linked lists have the upper-hand for merging,
+given the reduced amount of space consumed.
+
+Here's an implementation in C:
+
+```c
+struct Node *merge(struct Node *list1, struct Node *list2) {
+	struct Node *newHead = malloc(sizeof(struct Node));
+	struct Node *newTail = newHead;
+	while (list1 != NULL && list2 != NULL) {
+		if ((*list1).data < (*list2).data) {
+			(*newTail).next = list1;
+			list1 = (*list1).next;
+		}
+		else {
+			(*newTail).next = list2;
+			list2 = (*list2).next;
+		}
+		newTail = (*newTail).next;
+	}
+	if (list1 == NULL) {
+		(*newTail).next = list2;
+	} else {
+		(*newTail).next = list1;
+	}
+	return (*newHead).next;
+}
+```
+
+Testing this implementation:
+
+```c
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+
+struct Node {
+	int data;
+	struct Node *next;
+};
+
+struct Node *newNode(int val) {
+	struct Node *freshNode = malloc(sizeof(struct Node));
+	(*freshNode).data = val;
+	(*freshNode).next = NULL;
+	return freshNode;
+}
+
+struct Node *List(int arr[], int size) {
+	struct Node *head = newNode(arr[0]);
+	struct Node *foot = head;
+	for (int i = 1; i < size; i++) {
+		struct Node *freshNode = newNode(arr[i]);
+		(*foot).next = freshNode;
+		foot = freshNode;
+	}
+	return head;
+}
+
+void print(struct Node *list) {
+	if (list != NULL) {
+		printf("( ");
+		while (list != NULL) {
+			printf("%d ", (*list).data);
+			list = (*list).next;
+		}
+		printf(")\n");
+	}
+	else {
+		printf("List is empty.\n");
+	}
+}
+
+struct Node *merge(struct Node *list1, struct Node *list2) {
+	struct Node *newHead = malloc(sizeof(struct Node));
+	struct Node *newTail = newHead;
+	while (list1 != NULL && list2 != NULL) {
+		if ((*list1).data < (*list2).data) {
+			(*newTail).next = list1;
+			list1 = (*list1).next;
+		}
+		else {
+			(*newTail).next = list2;
+			list2 = (*list2).next;
+		}
+		newTail = (*newTail).next;
+	}
+	if (list1 == NULL) {
+		(*newTail).next = list2;
+	} else {
+		(*newTail).next = list1;
+	}
+	return (*newHead).next;
+}
+
+int main() {
+	int arr1[] = {1,3,8,9};
+	int arr2[] = {2,7,11,13};
+	int size = 4;
+	struct Node *aList = List(arr1, size);
+	struct Node *bList = List(arr2, size);
+	struct Node *cList = merge(aList, bList);
+	print(cList);
+	return 0;
+}
+```
+
+```bash
+( 1 2 3 7 8 9 11 13)
+```
+
+## Loop Detection
+
+<p>Consider the following linked list:</p>
+
+<CircularList data={[8, 5, 4, 7, 3, 9]} />
+
+Unlike the other linked lists we've seen, this linked list contains a link
+to itself. If we follow the arrows, we see that ${(n \mid 8)}$ is connected
+to ${(n \mid 5),}$ which is connected to ${(n \mid 4),}$ which is connected
+to ${(n \mid 7),}$ then ${(n \mid 3),}$ then the foot, ${(n \mid 9.)}$ The
+foot, however, has a nonnull next pointer—it points to ${(n \mid 4).}$
+
+In graph theory, we say that this linked list contains a **loop**. With
+linked lists, a loop occurs when the last node in the linked list—the
+foot—points to a node in the linked list. When a linked list contains a
+loop, we say that the linked list is **non-linear**. Otherwise, the linked
+list is **linear**. For example, if the linked list above was linear, we
+would have:
+
+<LinkedList
+	data={["root", 8, 5, 4, 7, 3, 9]}
+	width={320}
+	containerWidth={100}
+/>
+
+Many algorithms depend on the assumption that the linked list it operates
+on is linear or non-linear. Accordingly, it's helpful to have a **loop
+detector**—an algorithm that determines whether or not a linked list
+contains a loop.
+
+Determining whether a given list is linear is simple. We just have to check
+whether the foot's `next` field is the null pointer. This approach,
+however, does not allow us to immediately conclude if the list is
+non-linear. Why? Because we would need to use a loop to traverse the array.
+So far, we've been terminating those loops by relying on the assumption
+that the foot's `next` pointer is the null pointer. We do not have that
+benefit here. If the foot's `next` pointer points to some node in the list,
+we enter an infinite loop. As such, we must think of another approach to
+loop detection.
+
+One approach is to use two pointers, `d` and `t`, both initially at the
+list's head:
+
+<CircularList data={[{ val: 8, ant: "d t" }, 5, 4, 7, 3, 9]} />
+
+With the pointers set, we enter a while loop: At each iteration, we move
+`t` by one node, and `d` by two nodes:
+
+<CircularList
+	data={[{ val: 8, ant: "t" }, { val: 5, ant: "d" }, 4, 7, 3, 9]}
+/>
+
+So long as `d` and `t` are not pointing at the same node, we continue the
+movement:
+
+<CircularList
+	data={[8, 5, { val: 4, ant: "t" }, 7, { val: 3, ant: "d" }, 9]}
+/>
+
+We move again, `t` by one, `d` by two. This brings `d` to ${(n \mid 4),}$
+the node the foot points to:
+
+<CircularList
+	data={[8, 5, { val: 4, ant: "d" }, { val: 7, ant: "t" }, 3, 9]}
+/>
+
+<p>We move once more:</p>
+
+<CircularList data={[8, 5, 4, 7, { val: 3, ant: "t d" }, 9]} />
+
+With this last movement, we've reached a point where both `d` and `t` point
+to the same node. And if that occurs, we know we're dealing with a
+non-linear list—there's a loop.
+
+The procedure:
+
+```rust
+fn isLinear(Node* list) -> bool :
+	Node* d;
+	Node* t;
+	d = t = list;
+	do:
+		t = t->next;
+		d = d->next;
+		t = t ? (*t).next : t;
+		else: d = NULL;
+		while (p && q && p != q);
+	if (p == q): return false;
+	else: return true;
+```
+
+Examining this approach, we can see that the procedure has a time
+complexity of ${O(n).}$ We must traverse ${n}$ nodes to determine whether
+the given linked list is linear or non-linear.[^alternative_note]
+
+[^alternative_note]:
+    As usual, we can perform a loop detection in ${O(1)}$ time if we
+    maintain a pointer to the foot of every list we create. In that
+    situation, all we must do is check if that pointer is equal to `NULL`.
+    The tradeoff, however, is in memory consumption.
+
+Here's an implementation in C:
+
+```c
+int isLinear(struct Node* list) {
+	struct Node* d;
+	struct Node* t;
+	d = t = list;
+	do {
+		t = (*t).next;
+		d = (*d).next;
+		t = t ? (*t).next : t;
+	} while (d && t && d != t);
+	if (d == t) {
+		return 0; // false
+	} else {
+		return 1; // true
+	}
+}
+```
+
+Testing this program:
+
+```c
+#include &lt;stdlib.h&gt;
+#include &lt;stdio.h&gt;
+
+struct Node {
+	int data;
+	struct Node* next;
+};
+
+struct Node* newNode(int val) {
+	struct Node* node = malloc(sizeof(struct Node));
+	(*node).data = val;
+	(*node).next = NULL;
+	return node;
+}
+
+void print(struct Node* p) {
+	printf("( ");
+	while (p != NULL) {
+		printf("%d ", (*p).data);
+		p = (*p).next;
+	}
+	printf(")\n");
+}
+
+int isLinear(struct Node* list) {
+	struct Node* d;
+	struct Node* t;
+	d = t = list;
+	do {
+		t = (*t).next;
+		d = (*d).next;
+		t = t ? (*t).next : t;
+	} while (d && t && d != t);
+	if (d == t) {
+		return 0; // false
+	} else {
+		return 1; // true
+	}
+}
+
+int main() {
+	struct Node* list1 = newNode(8);
+	struct Node* n1 = newNode(5);
+	struct Node* n2 = newNode(4);
+	struct Node* n3 = newNode(7);
+	struct Node* n4 = newNode(3);
+	struct Node* n5 = newNode(9);
+	(*list1).next = n1;
+	(*n1).next = n2;
+	(*n2).next = n3;
+	(*n3).next = n4;
+	(*n4).next = n5;
+	(*n5).next = n2;
+	int list1Linear = isLinear(list1);
+	printf("%d\n", list1Linear);
+	return 0;
+}
+```
+
+```bash
+0
+```
+
+If we comment out the last link, `(*n5).next = n5`, we will see `1` as the
+output—`list1` is linear.

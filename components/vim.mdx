@@ -1,0 +1,132 @@
+# katex
+
+\$\{(\d+|\d+[.;:,])\}\$
+
+# bold
+%s/<b>(.*?)<\/b>/__\1__/g
+%s/<strong>(.*?)<\/strong>//g
+
+# italics
+%s/<i>(.*?)<\/i>/_\1_/g
+%s/<cite>(.*?)<\/cite>/_\1_/g
+%s/<small>(.*?)<\/small>/_\1_/g
+
+# H1 Tag
+%s/<h1>(.*?)<\/h1>/# \1/g
+
+# H2 Tag
+%s/<h2>(.*?)<\/h2>/## \1/g
+
+# Topic Tag
+%s/<span class="topic">(.*?)<\/span>/## \1\n/g
+
+# H3 Tag
+%s/<h3>(.*?)<\/h3>/### \1/g
+
+# H4 Tag
+%s/<h4>(.*?)<\/h4>/#### \1/g
+
+# H5 Tag
+%s/<h5>(.*?)<\/h5>/##### \1/g
+
+# H6 Tag
+%s/<h6>(.*?)<\/h6>/##### \1/g
+
+# Inline <CODE>
+%s/<code>(.*?)<\/code>/`\1`/g
+%s/<var>(.*?)<\/var>/`\1`/g
+
+# DIV
+%s/<div class=".*?">((.|\n)*?)<\/div>/\1/g
+
+# SECTION
+%s/<section id=".*?">((.|\n)*?)<\/section>/\1/g
+
+# DETAILS
+%s/<section id=".*?">((.|\n)*?)<\/section>/\1/g
+
+# list Tag
+%s/<li>((.|\n)*?)<\/li>/\1/g
+%s/<a .*?>((.|\n)*?)<\/a>/\1/g
+%s/<cite>((.|\n)*?)<\/cite>/_\1_/g
+
+# katex
+
+
+
+# <q> Tag
+%s/<q>((.|\n)*?)<\/q>/"\1"/g
+%s/&#8220;((.|\n)*?)&#8221;/"\1"/g
+
+# paragraph
+%s/<p>((.|\n)*?)<\/p>/\1/g
+
+# Mark Tag
+%s/<mark>((.|\n)*?)<\/mark>/\1/g
+
+# Detail Tag with class
+%s/<details class=".*?">((.|\n)*?)<\/details>/\1/g
+
+# Detail
+%s/<details>((.|\n)*?)<\/details>/\1/g
+
+# Figcaption
+%s/<figcaption>((.|\n)*?)<\/figcaption>//g
+%s/<button>((.|\n)*?)<\/button>//g
+%s/<ol class="algc">((.|\n)*?)<\/ol>//g
+
+# Detail Tag with class
+%s/<summary>((.|\n)*?)<\/summary>/\1/g
+
+# UL Tag with class
+%s/<ul class=".*?">((.|\n)*?)<\/ul>/\1/g
+
+# syntax
+%s/<ul class="syntax">((.|\n)*?)<\/ul>/```\1```/g
+
+# UL Tag No Class
+%s/<ul>((.|\n)*?)<\/ul>/\1/g
+
+# Underline Span
+%s/<span class="underlinetext">((.|\n)*?)<\/span>/_\1_/g
+%s/<span class="boldText">((.|\n)*?)<\/span>/__\1__/g
+%s/<span class="term">((.|\n)*?)<\/span>/__\1__/g
+%s/<span class="italicsText">((.|\n)*?)<\/span>/_\1_/g
+%s/<span class=".*?">((.|\n)*?)<\/span>/\1/g
+
+# Var
+%s/<var>((.|\n)*?)<\/var>/`\1`/g
+
+# Em
+%s/<em>((.|\n)*?)<\/em>/_\1_/g
+
+%s/<td>(.*?)<\/td>/$1/g
+%s/<tr>((.|\n)*?)<\/tr>/\1/g
+%s/<th>((.|\n)*?)<\/th>/\1/g
+
+# AMPERSAND
+%s/&amp;/&/g
+
+# Figure
+%s/<figure>((.|\n)*?)<\/figure>/\1/g
+
+# MDASH
+%s/\s&mdash;\s/—/g
+%s/&mdash;/—/g
+
+# lt
+%s/&lt;/</g 
+# gt
+%s/&gt;/>/g 
+# rcub
+%s/&rcub;/}/g 
+# lcub
+%s/&lcub;/{/g 
+
+# <PRE>
+%s/<pre class="language-(.*?)"><code>/```\1/g
+%s/<\/code><\/pre>/```
+
+pseudo
+%s/<ol class="alg">/```rust/g
+

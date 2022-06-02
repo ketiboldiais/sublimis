@@ -1,0 +1,187 @@
+# Traversal Generation
+
+In this section, we examine different ways of generating trees. Since we've
+just gone over traversals, we begin by considering how we might generate a
+tree using the traversal methods.
+
+The idea behind traversal generation can be thought of as "working
+backwards:" If we're given traversal sequences, we can generate the tree
+that results in those sequences. Note the plural &mdash; traversal
+sequences . This is a key point, because with just a single traversal
+sequence, we do not have enough data to generate a tree. For example,
+suppose we're told that the following is a preorder traversal sequence of
+the tree's node values:
+
+<Sequence data={["A", "B", "C"]} />
+
+Without further information, we cannot construct a tree because the
+traversal sequence above could have come from five possible trees:
+
+<Tree
+	data={[
+		{ child: "A", parent: "" },
+		{ child: "B", parent: "A" },
+		{ child: "C", parent: "A" },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "A", parent: "" },
+		{ child: "B", parent: "A" },
+		{ child: "E", parent: "A", display: "none" },
+		{ child: "C", parent: "B" },
+		{ child: "F", parent: "B", display: "none" },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "A", parent: "" },
+		{ child: "B", parent: "A" },
+		{ child: "E", parent: "A", display: "none" },
+		{ child: "F", parent: "B", display: "none" },
+		{ child: "C", parent: "B" },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "A", parent: "" },
+		{ child: "E", parent: "A", display: "none" },
+		{ child: "B", parent: "A" },
+		{ child: "C", parent: "B" },
+		{ child: "F", parent: "B", display: "none" },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "A", parent: "" },
+		{ child: "E", parent: "A", display: "none" },
+		{ child: "B", parent: "A" },
+		{ child: "F", parent: "B", display: "none" },
+		{ child: "C", parent: "B" },
+	]}
+/>
+
+Accordingly, preorder, inorder, and postorder sequences alone are
+insufficient. We need additional sequences. Specifically, we need one of
+the following combinations of data:
+
+1. The preorder sequence and inorder sequence, or
+2. the postorder sequence and inorder sequence.
+
+Notice that in both cases, we need the inorder sequence. To see why we need
+the inorder sequence, let's just go straight to the algorithm with an
+example.
+
+First, we're given two sequences. A preorder traversal sequence:
+
+<Sequence data={[4, 7, 9, 6, 3, 2, 5, 8, 1]} />
+
+and an inorder traversal sequence:
+
+<Sequence data={[7, 6, 8, 3, 4, 5, 8, 2, 1]} />
+
+From the preorder sequence, we know that the node containing `4` is the
+root. Thus, the tree's root is a node containing `4`. Then, from the
+inorder sequence of the tree, we know that all the values to the left of
+`4` form the left-subtree, and all the values to the right of `4` form the
+right-subtree. Thus, we have:
+
+<Tree
+	data={[
+		{ child: "4", parent: "" },
+		{ child: "7,6,9,3", parent: "4", noCircle: true },
+		{ child: "5,8,2,1", parent: "4", noCircle: true },
+	]}
+	containerHeight={23}
+/>
+
+The rest of the algorithm follows this basic step. We continue splitting
+until there's nothing left to split. So, we look at the next element in the
+preorder sequence and see that it's `7`. This tells us that the node
+containing `7` is the root of the left-subtree.
+
+We go to the inorder sequence and look for `7`, and find that it's the
+first element. Inorder sequence then tells us that everything to the left
+of `7` forms its left-subtree, and everything to the right forms the
+right-subtree. Thus, we have:
+
+<Tree
+	data={[
+		{ child: "4", parent: "" },
+		{ child: "7", parent: "4" },
+		{ child: "5,8,2,1", parent: "4", noCircle: true },
+		{ child: "6,9,3", parent: "7", noCircle: true, display: "none" },
+		{ child: "6,9,3", parent: "7", noCircle: true },
+	]}
+	containerHeight={23}
+/>
+
+The algorithm continues. We go to the next element, and see that it's `9`.
+We go to the inorder sequence, look for `9`, and divide accordingly:
+
+<Tree
+	data={[
+		{ child: "4", parent: "" },
+		{ child: "7", parent: "4" },
+		{ child: "5,8,2,1", parent: "4", noCircle: true },
+		{ child: "12", parent: "7", noCircle: true, display: "none" },
+		{ child: "9", parent: "7" },
+		{ child: "6", parent: "9" },
+		{ child: "3", parent: "9" },
+	]}
+	containerHeight={27}
+	containerWidth={70}
+	edgeLength={100}
+	width={350}
+/>
+
+We then move to the next element in the preorder sequence, `6`. Here, we
+see that it's a single element &mdash; there's nothing to its left or
+right. The same goes for `3`. So we go the next element, `2`. Again we
+search for `2` in the inorder sequence, and find that it has `5` and `8` to
+its left, and `1` to its right:
+
+<Tree
+	data={[
+		{ child: "4", parent: "" },
+		{ child: "7", parent: "4" },
+		{ child: "2", parent: "4" },
+		{ child: "12", parent: "7", noCircle: true, display: "none" },
+		{ child: "9", parent: "7" },
+		{ child: "6", parent: "9" },
+		{ child: "3", parent: "9" },
+		{ child: "5,8", parent: "2", noCircle: true },
+		{ child: "1", parent: "2", noCircle: true },
+	]}
+	containerHeight={27}
+	containerWidth={70}
+	edgeLength={100}
+	width={350}
+/>
+
+At this point, the algorithm should be clear. Executing the rest of the
+algorithm, we get:
+
+<Tree
+	data={[
+		{ child: "4", parent: "" },
+		{ child: "7", parent: "4" },
+		{ child: "2", parent: "4" },
+		{ child: "12", parent: "7", display: "none" },
+		{ child: "9", parent: "7" },
+		{ child: "6", parent: "9" },
+		{ child: "3", parent: "9" },
+		{ child: "5", parent: "2" },
+		{ child: "17", parent: "5", display: "none" },
+		{ child: "8", parent: "5" },
+		{ child: "1", parent: "2" },
+	]}
+	containerHeight={50}
+	containerWidth={70}
+	edgeLength={100}
+	width={250}
+/>

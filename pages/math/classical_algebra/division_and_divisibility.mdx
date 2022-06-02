@@ -1,0 +1,374 @@
+# Division & Divisibility
+
+Of the core arithmetic operators, division is the most complex. In any
+discussion of division, we must first begin with two subsets of integers,
+the **even integers**:
+
+$$\{ 2, 4, 6, 8, \ldots \}$$
+
+and the odd integers:
+
+$$\{1, 3, 5, 7, \ldots\}$$
+
+Notice that both the even integers and the odd integers increment by 2. The
+difference, however, is that the even integers start at 2, and the odd
+integers start at 1. A number's property of odd-ness or even-ness is called
+the number's **parity**. Note that parity is a property held only by the
+positive integers. The negative integers are neither even nor odd. We can
+abstract this idea with algebra: An even integer is an integer that can be
+written as ${2k,}$ where ${k}$ is a positive integer. Denoting the set of
+even integers with the symbol ${\Z_{\text{even}},}$ and the set of positive
+integers with the symbol ${\Z_{\text{odd}},}$ we can define an even integer
+more formally as:
+
+> Definition. Let ${x \in \Z.}$ >
+> ${x \in \Z_{\text{even}} \iff x = 2k : k \in \Z^{+}}$ I.e., an integer
+> ${x}$ is even if, and only if, it can be written in the form ${2k,}$
+> where ${k}$ is a positive integer.
+
+For the odd integers, we write:
+
+> Definition. Let ${x \in \Z.}$ >
+> ${x \in \Z_{\text{odd}} \iff x = 2k - 1 : k \in \Z^{+}}$
+
+I.e., an integer ${x}$ is odd if, and only if, it can be written in the
+form ${2k - 1,}$ where ${k}$ is a positive integer. Alternatively, we can
+define odd integers as the following:
+
+> Definition. Let ${x \in \Z.}$ >
+> ${x \in \Z_{\text{odd}} \iff x = 2k + 1 : k \in \N}$
+
+In other words, an integer ${x}$ is odd if, and only if, it can be written
+in the form ${2k + 1,}$ where ${k}$ is a natural number.
+
+The only meaningful difference between the first and second definition is
+whether ${k}$ is a natural number or a positive integer. In other words,
+whether ${k}$ can be 0. If ${k}$ can be 0, then we must change the
+definition from ${2k - 1}$ to ${2k + 1,}$ because if ${k = 0,}$ then
+${2k - 1 = -1.}$ ${-1}$ is neither odd nor even, because parity is a
+property that applies only to positive integers (0 is also neither odd nor
+even).
+
+Knowing the parity of two integers allows us to quickly determine the
+parity of their sums:
+
+> _Lemma_. Let ${a, b \in \Z^{+}.}$ Then:
+>
+> 1. ${a, b \in \Z_{\text{even}} \implies a + b \in \Z_{\text{even}}}$
+> 2. ${[(a \in \Z_{\text{even}}) \land (b \in \Z_{\text{odd}})] \implies a - b \in \Z\_{\text{odd}}}$
+> 3. ${[(a \in \Z_{\text{odd}}) \land (b \in \Z_{\text{even}})] \implies a - b \in \Z\_{\text{odd}}}$
+> 4. ${[(a \in \Z_{\text{odd}}) \land (b \in \Z_{\text{odd}})] \implies a + b \in \Z_{\text{even}}}$
+
+That is, the sum of two even integers is an even integer; the sum of an odd
+integer and an even integer is an odd integer; and the sum of two odd
+integers is an even integer. From the rule of addition by 0, we also have
+the following propositions:
+
+> _Lemma_. Let ${a \in \Z^{+}.}$ Then:
+> ${a \in \Z_{\text{even}} \implies a + 0 \in \Z_{\text{even}}}$ >
+> ${a \in \Z_{\text{odd}} \implies a + 0 \in \Z_{\text{odd}}}$
+
+Let's prove the first property. First, the hypothesis to be proved:
+
+    Let ${a, b \in \Z^{+}.}$ If ${a \in \Z_{\text{even}}}$ and ${b \in \Z_{\text{even},}}$ then ${a + b \in \Z_{\text{even}}.}$
+
+Because ${a}$ and ${b}$ are even integers, then by definition, ${a}$ and
+${b}$ can be written in the forms:
+
+$$a = 2n}$ ${b = 2m}$ where ${n, m \in \Z^{+}.$$
+
+Thus, by substitution, the expression ${a + b}$ can be written as:
+
+$$a + b = 2n + 2m.$$
+
+By distributivity:
+
+$$a + b = 2(n + m).$$
+
+The sum of two positive integers is a positive integer. Accordingly, the
+sum of ${n}$ and ${m}$ is some positive integer ${k.}$ As such, the
+expression ${2(n + m)}$ can be written as:
+
+$$a + b = 2k.$$
+
+Because ${a + b}$ is an expression of the form ${2k,}$ then by definition,
+${a + b}$ is even.
+
+Now let's prove the second. Again, we'll use a direct proof. First, the
+hypothesis to proved:
+
+    Let ${a,b \in \Z^{+}.}$ If ${a}$ is even and ${b}$ is odd, then ${a + b}$ is odd.
+
+Suppose ${a}$ is even and ${b}$ is odd. Then by definition, ${a}$ and ${b}$
+are positive integers of the form:
+
+$$a = 2n, b = 2m + 1.$$
+
+where ${n}$ is a positive integer, and ${m}$ is a natural number. It
+follows that:
+
+$$a + b = 2n + 2m + 1.$$
+
+Then, by commutativity:
+
+$$a + b = (2n + 2m) + 1.$$
+
+And by associativity:
+
+$$a + b = 2(n + m) + 1.$$
+
+Given that ${n}$ is a positive integer and ${m}$ is a non-negative integer
+(since ${m}$ is a natural number), ${n + m}$ is a natural number.
+Accordingly:
+
+$$a + b = 2k + 1,$$
+
+where ${k = n + m,}$ which is some natural number. Hence, ${a + b}$ must be
+odd, by definition.
+
+Parity provides yet another proposition:
+
+> Lemma. Let ${a \in \Z^{+}.}$ Then
+>
+> 1. ${a \in \Z_{\text{even}} \implies a^2 \in \Z_{\text{even}}}$
+> 2. ${a \in \Z_{\text{odd}} \implies a^2 \in \Z_{\text{odd}}}$
+
+The proposition above tells us that the square of an even integer is even,
+and the square of an odd integer is odd. Let's prove it.
+
+The method here is by direct proof. There are two hypotheses to be proved:
+
+1. If ${a}$ is even, then ${a^2}$ is even.
+2. If ${a}$ is odd, then ${a^2}$ is odd.
+
+We prove each hypothesis in turn, beginning with the first.
+
+Suppose ${a \in \Z_{\text{even}}.}$ Since ${a}$ is an even integer, then by
+definition, ${a}$ is a positive integer of the form ${2n,}$ where ${n}$ is
+a positive integer. By substitution:
+
+$$a^2 = (2n)^2$$
+
+Applying the definition of an exponent:
+
+$$a^2 = (2n)(2n)$$
+
+By the associative property of multiplication, we get:
+
+$$a^2 = (2)(2 \cdot n \cdot n)$$
+
+And by the definition of an exponent:
+
+$$a^2 = (2)(2n^2)$$
+
+Because the product of positive integer is a positive integer, the intger
+${2n^2}$ is a positive integer. Hence:
+
+$$a^2 = 2m$$
+
+where ${m}$ is a positive integer. Because ${2m}$ is an even integer by
+definition, ${a^2}$ is even.
+
+Next, we consider the second hypothesis. Suppose ${a \in
+\Z_{\text{odd}}.}$
+Given that ${a}$ is an odd integer, then by definition, ${a}$ is a positive
+integer of the form ${2n + 1,}$ where ${n}$ is a positive integer. By
+substitution:
+
+$$a^2 = (2n + 1)^2$$
+
+By expansion:
+
+$$a^2 = 4n^2 + 4n + 1$$
+
+By associativity:
+
+$$a^2 = (4n^2 + 4n) + 1$$
+
+By distributivity:
+
+$$a^2 = 2(2n^2 + 2n) + 1$$
+
+Because ${n}$ is a positive integer, $$2n^2 + 2n$$ is a positive integer.
+Hence:
+
+$$a^2 = 2k + 1$$
+
+where ${k}$ is a positive integer. Because ${2k + 1}$ is an odd integer by
+definition, ${a^2}$ is odd. The proposition we've just proven yields a
+corollary:
+
+> Corollary. Let ${a \in \Z^{+}.}$ Then:
+>
+> 1. ${a^2 \in \Z_{\text{even}} \implies a \in \Z_{\text{even}}}$
+> 2. ${a^2 \in \Z_{\text{odd}} \implies a \in \Z_{\text{odd}}}$
+
+As with many corollaries, the propositions above are implied by the
+previous theorem. If ${a^2}$ is even, then ${a}$ must be even, for if ${a}$
+is odd, then ${a^2}$ is odd. Similarly, if ${a^2}$ is odd, then ${a}$ must
+be odd, for if ${a}$ is even, then ${a^2}$ is even. This is a
+straightforward example of logical contradiction.
+
+## Divisibility
+
+It is from parity that we generalize the concept of **divisibility**.
+Suppose ${a}$ is a positive integer and ${b}$ is an integer. When we say
+that ${b}$ is divisible by ${a,}$ we mean that ${a}$ divides ${b.}$ We
+denote this proposition with the notation ${a \space\vert\space b.}$ An
+integer ${b}$ is divisible by ${a}$ if, and only if, ${b = an,}$ where
+${n}$ is some integer.
+
+> Definition. Let ${a \in \Z^{+}}$ and ${b \in \Z.}$ Then:
+>
+> $$
+> a \space\vert\space b \iff b = an
+> $$
+>
+> where ${n \in \Z.}$
+
+The definition above yields several useful propositions:
+
+> _Proposition_. Every integer is divisible by 1. Every positive integer is
+> divisible by itself.
+
+The first proposition is implied by the fact that every integer can be
+written as ${n = (1)(n).}$ This in turn implies the second proposition.
+
+## Composites & Primes
+
+![Compounds and primes along the number line](https://res.cloudinary.com/sublimis/image/upload/v1652645939/math/compound_prime_ifd6hq.svg)
+
+From the definition above, there are two subsets within the natural
+numbers. Any natural number that can be grouped into a solid rectangle is
+called a **composite number** (also called _compound numbers_). More
+formally:
+
+> _Definition_. A _composite number_ ${k}$ is a natural number greater than
+> 1, divisible by some positive integer ${n,}$ where ${n \neq 1.}$
+
+The negation of this definition yields the **prime numbers**, numbers that
+cannot be grouped into a solid rectangle.
+
+> _Definition_. A _prime number_ ${m}$ is a natural number greater than 1,
+> divisible only by 1 and itself.
+
+Note that from the definitions above, we see that the numbers 0 and 1 have
+a special property: Both 0 and 1 are neither prime nor compound.
+
+### Division & Rational Numbers
+
+The operation of division is closely tied to the **rational numbers**. A
+rational number is any number that can be written in the form:
+
+$$ \dfrac{m}{n} \text{or} m/n $$
+
+where ${m}$ and ${n}$ are integers, and ${n \neq 0.}$ The last condition is
+crucial, because in this particular world (classical algebra), we cannot
+divide by 0. The rational numbers come in various forms:
+${\ldots, \dfrac{1}{3}, - \dfrac{1}{2}, \dfrac{2}{3}, 1.4, 0.08, 12.0, 0.0, \ldots}$
+
+The rule is, as long as a number can be written as ${m/n,}$ where ${m, n}$
+are integers and ${n \neq 0,}$ then the number is rational
+number.[^rationalnumberscs]
+
+[^rationalnumberscs]:
+    In computer science, the rational numbers are called **floats** or
+    **floating point numbers** (the decimal point "floats" as needed).
+
+Otherwise, the number is an irrational number. Note what this definition
+means. Every integer satisfies the definition rational number definition,
+so we say that the rational numbers are a proper superset of the integers.
+In other words, every integer is a rational number, but not every rational
+number is an integer.
+
+### The Division Algorithm
+
+Question: A six-digit number having 1 as its leftmost digit becomes three
+times bigger if we take this digit off and put it at the end of the number.
+What is this number?
+
+Let the number be $1ABCDE$. Then, $ABCDE1 = 3 \times 1ABCDE$. Rewrite this
+with the multiplication algorithm:
+
+$$
+\begin{array}{cc} & A & B & C & D & E \\ \times & & & & & 3 \\ \hline A & B
+& C & D & E & 1 \end{array}
+$$
+
+Let's focus on $E$. We need a digit $E$ where $3 \times E = n1$, where $n$
+is a digit. This digit must be 7, for $7 \times 3 = 21$. We know that $E$
+is 7, so what might $D$ be? Well, we need a digit $D$ where
+$(D \times 3) + 2 = 7$. Or, rearranging, $D \times 3 = 5$. The only digit
+that would satisfy this condition is $D = 5$ (since $3 \times 5 + 2
+= 17$.
+
+We know that $D$ is 5, so now we look at $C$. We need a digit $C$ such that
+$(C \times 3) + 1 = 5$, or, rearranging, $C \times 3 = 4$. There is only
+one digit that satisfies this condition, 8. Thus, $C = 8$.
+
+Now we look at $B$. What digit satisfies the condition $B \times 3 = 6$? It
+must be 2. Therefore, $B = 2$.
+
+Finally, we look at $A$. What digit results in $A \times 3 = 12$. It must
+be 4, since $3 \times 4 = 12$. Hence, the digits are $A = 4$, $B = 2$,
+$C = 8$, and $D = 5$.
+
+Question: Divide 123123123 by 123. Again, we use the division algorithm:
+
+$$
+\begin{array}{r} 1001001 \\ 123{\overline{\smash{\big)}\,123123123}} \\ - 123 \phantom{123123} \\ \hline 0 123 \phantom{123} \\ - 123 \phantom{123} \\ \hline 0 123 \\ - 123 \\ \hline 0 \end{array}
+$$
+
+We can confirm the result with the multiplication algorithm:
+
+$$
+\begin{array}{cc} \begin{align*} 1001001 \\ \times \phantom{1001} 123
+\\ \hline \phantom{00} 3 003 003 \\ \phantom{00} 2 002 002 \phantom{1} \\
++ \phantom{00} 1 001 001 \phantom{12} \\ \hline 123123123 \end{align*}
+\end{array}
+$$
+
+Question: Can one predict the remainder when ${111
+\ldots 1}$ (100 ones) is
+divided by ${11 11 11 1}$?
+
+$11 11 11 1$ is 7 ones. Consider a simpler case:
+
+$$
+\begin{array}{r} 10 \\ 11 {\overline{\smash{\big)}\, 111}} \\ -11
+\phantom{0} \\ \hline \phantom{0} 01 \\ - \phantom{00} 0 \\ \hline
+\phantom{000} 1 \end{array}
+$$
+
+Question: Divide $1000 \ldots 0$ (20 zeros) by 7.
+
+Consider a simpler case:
+
+$$
+\begin{array}{r} 14 \\ 7 {\overline{\smash{\big)}\, 100}} \\ - 7
+\phantom{0} \\ \hline 30 \\ - 28 \\ \hline 4 \end{array}
+$$
+
+Let's keep adding 0s to see if there's a pattern:
+
+$$
+\begin{array}{r} 142857 \\ 7 {\overline{\smash{\big)}\, 1 000 000}} \\
+- 7 \phantom{000 00} \\ \hline 30 \phantom{000 0} \\ -28 \phantom{000 0}
+\\ \hline 20 \phantom{000} \\ - 14 \phantom{000} \\ \hline 60 \phantom{00}
+\\ - 56 \phantom{00} \\ \hline 40 \phantom{0} \\ - 35 \phantom{0} \\
+\hline 50 \\ - 49 \\ \hline 1 \end{array}
+$$
+
+We return to a remainder of 1. This tells us that if we add another 0,
+we're back at 10, which gives us 30, then 20, then 60, then 40, and so on.
+
+This also tells us that after every six 0s, we return to 10. Thus, for
+twenty 0s, we make 3 "laps" of returning to 10, with two more "runs":
+
+- Lap 1 (six 0s): 142857 remainder 1
+- Lap 2 (twelve 0s): 142857 14285 remainder 7
+- Lap 3 (eighteen 0s): 142857 142857 remainder 1
+- Lap 4 (nineteen 0s): 142857 142857 1 remainder 4
+- Lap 5 (twenty 0s): 142857 142857 14 remainder 2
+
+Hence, the quotient is: 14,285,714,285,714 + 2.

@@ -1,0 +1,88 @@
+# Variable Scope
+
+Functions are good point for us to switch gears and discuss **variable
+scope**. Generally, there are kinds of scope: (1) the **global scope** and
+(2) a **local scope**. Consider the following code:
+
+```cpp
+#include &lt;iostream&gt;
+using namespace std;
+
+int a = 1;
+
+bool isEven(int n) {
+	return (n % 2 == 0);
+}
+
+int main() {
+	int x = 0;
+	cout << x << endl;
+	x += a;
+	if (isEven(x)) {
+		cout << x << " is even." << endl;
+	} else {
+		cout << x << " is not even." << endl;
+	}
+
+	return 0;
+}
+```
+
+```bash
+0
+1 is not even.
+```
+
+In the code above, we have two functions, `main()` and `isEven()`. Outside
+of these functions, we have `int a = 1`. This is a _global variable_.
+Inside `main()`, we have the variable `int x = 0`. This is a _local
+variable_ (more specifically, a variable _local to_ `main`). Inside both
+`main()` and `isEven()`, we have access to `int a`. This is because `int a`
+is a global variable &mdash; it's a variable that can be &#8220;seen&#8221;
+by all the functions following it.
+
+Recall that when we load a function in memory, each function's variables
+are allocated memory in a stack. Those stacks are popped off (i.e., the
+variables are destroyed) once the function finishes executing. This rule is
+true only for local variables (and function variables are local to the
+function). The rule is not true for global variables. Global variables
+exist in memory so long as the program continues running. Where do they
+exist? Not in the stack or the heap. Instead, they are allocated memory in
+the code section, where they stay as long as our program runs.
+
+## Block Level Scope
+
+In addition to the global and local distinction, C++ also distinguishes
+scopes with block levels. A simple rule for block level scope: During
+compilation, C++ can see the variables to the left, but not variables to
+the right. For example:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int x = 1;
+
+int main() {
+	int x = 2;
+	{
+		int x = 3;
+		cout << "x (from block): " << x << endl;
+		cout << "Global x (from block): " << ::x << endl;
+	}
+	cout << "x (from main): " << x << endl;
+	cout << "Global x (from main): " << ::x << endl;
+	return 0;
+}
+```
+
+```bash
+x (from block): 3
+Global x (from block): 1
+x (from main): 2
+Global x (from main): 1
+```
+
+The `::` operator is called the **scope resolution operator**. It allows us
+to access a particular global variable when we have a variable with the
+same name locally.

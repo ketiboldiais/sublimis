@@ -1,0 +1,201 @@
+## Radicals & Rational Expressions
+
+By introducing the exponentiation notation, it would be very helpful to
+have notation that quickly reverses the results. This notation is provided
+by the radical. The syntax:
+
+![Radical notation](https://res.cloudinary.com/sublimis/image/upload/v1652643923/math/radical_notation_tyfjvt.svg)
+
+## The Square Root
+
+Suppose we have a number ${a}$ where ${a \in \R^{+}.}$ The **square root**
+of ${a}$ is the number that, when multiplied by itself, i.e., ${a^2,}$
+returns ${a.}$ Now, that number may be positive or negative, because
+squaring two numbers, positive or negative, yields a positive number.
+
+> _Definition_. Given ${a \in \R^{+},}$ ${\sqrt{a}}$ is the number ${n,}$
+> where ${n \in \R}$ such that ${n^2 = a.}$
+
+From the square root definition, we can begin deriving rules:
+
+|---|---| |Let ${a, b \in \R_{\geq 0}}$| Assumption |
+|${(\sqrt{a})^2 (\sqrt{b})^2 = ab}$ | Definition of Square Root |
+|${(\sqrt{a})^2 (\sqrt{b})^2 = (\sqrt{a} \cdot \sqrt{b})^2}$ | The Power
+Product Rule of Exponents | | ${(\sqrt{a} \cdot \sqrt{b})^2 = ab}$ | The
+Transitive Property of Equality |
+|${\sqrt{a} \cdot \sqrt{b} \in \R_{\geq 0} }$ | The product of non-negative
+numbers is non-negative | | ${ab \in \R_{\geq 0}}$ | Id.; The Transitive
+Property of Equality | | There is exactly one ${n \in \R_{\geq 0}}$ such
+that ${n = (\sqrt{ab})^2 = ab}$ | Definition of Square Root; If
+${a \in \R_{\geq 0},}$ then there is a unique ${n}$ denoted by ${\sqrt{a}}$
+such that ${(\sqrt{a})^2.}$ | | ${n = \sqrt{ab} = \sqrt{a} \sqrt{b}}$ |
+${n}$ is the only number with the property that ${(\sqrt{ab})^2 = ab.}$ | |
+&#8756; ${\sqrt{ab} = \sqrt{a} \sqrt{b}}$ | ${\blacksquare}$ |
+
+Thus, we have the following rule:
+
+> _The Product Rule of Square Roots_. Given ${a \in \R_{\geq 0}}$ and
+> ${b \in \R_{\geq 0},}$ ${\sqrt{ab} = \sqrt{a} \cdot \sqrt{b}}$
+
+When simplifying radical expressions, there is a useful algorithm:
+
+1. Algorithm. Given a square root radical expression:
+2. Factor perfect squares from the radicand.
+3. Write the radical expression as a product of radical expressions.
+4. Simplify.
+
+For example, consider implifying the following radical expression:
+
+$$
+\sqrt{300}
+$$
+
+Factoring the perfect square:
+
+$$\sqrt{100 \cdot 3}$$
+
+By the product rule:
+
+$$\sqrt{100} \cdot \sqrt{3}$$
+
+Then, simplifying:
+
+$$10 \sqrt{3}$$
+
+Here's another example. Consider this square root:
+
+$$\sqrt{162 a^2 b^4}$$
+
+Factoring:
+
+$$\sqrt{81 \cdot 2 \cdot a^4 \cdot a \cdot b^4}$$
+
+Then, by the product rule of square roots:
+
+$$(\sqrt{81}) (\sqrt{2}) (\sqrt{a}) (\sqrt{a^4}) (\sqrt{b^4})$$
+
+And simplifying:
+
+$$(9) (\sqrt{2}) (\sqrt{a}) (a^2) (b^2)$$
+
+By commutativity:
+
+$$9a^2 b^2 \sqrt{2a}$$
+
+Another useful algorithm is combining multiple radical expressions into a
+single radical expression:
+
+1. Combine all the multiple radical expressions into a single expression.
+2. Simplify.
+
+For example, consider the radical expression: ${(\sqrt{12})(\sqrt{3}).}$ We
+can multiply the this expression's terms into a single expression:
+
+$$ (\sqrt{12})(\sqrt{3}) = \sqrt{36}} $$
+
+## The Quotient Rule of Square Roots
+
+The _Quotient Rule of Square Roots_ natural results from multiplication.
+First, suppose the following:
+
+1. ${a, b \geq 0.}$
+2. ${c = \sqrt{\dfrac{a}{b}}.}$
+3. ${x = \sqrt{a}}$ and ${y = \sqrt{b}.}$
+
+This implies that ${x^2 = a}$ and ${y^2 = b.}$ Next, suppose exists a
+nonnegative number ${n}$ such that ${\sqrt{n^2} = n.}$ It follows that, by
+substitution: $$ \left(\dfrac{x}{y}\right)^2 = \dfrac{x^2}{y^2} =
+\dfrac{a}{b} $$
+
+Hence,
+
+$$
+c = \dfrac{x}{y} = \sqrt{\dfrac{a}{b}} =
+\dfrac{\sqrt{a}}{\sqrt{b}}
+$$
+
+by Assumptions 2 and 3. Thus, we have the following rule:
+
+> Property. Let ${a, b \geq 0.}$ Suppose ${n = \sqrt{\dfrac{a}{b}},}$ where
+> ${n \in \R_{\geq 0}.}$ Then:
+> $$n = \sqrt{\dfrac{a}{b}} = \dfrac{\sqrt{a}}{\sqrt{b}}$$
+
+The rule above is particularly useful for rational expressions, which often
+contain radicands. Here's a useful algorithm for handling such expressions.
+Given a radical expression in the form of a quotient:
+
+1. Write the radical quotient has the quotient of two radical expressions.
+2. Simplify the numerator and denominator.
+
+# Adding and Subtracting Square Roots.
+
+We can add or subtract radical expressions only if (1) they have the same
+radicand and (2) they have the same ${n^{\text{\scriptsize{th}}}}$ root.
+For example:
+
+$$\sqrt{2} + 3\sqrt{2} = 4 \sqrt{2}$$
+
+Radican expressions can often be simplified by rewriting the relevant
+expression as a sum, followed by reductions.
+
+$$
+\begin{aligned}
+\sqrt{2} + \sqrt{18} &= \sqrt{2} + \sqrt{2 \cdot 9}} \\
+	&= \sqrt{2} + (\sqrt{2} \cdot \sqrt{9})
+	&= \sqrt{2} + 3 \sqrt{2}
+	&= 4 \sqrt{2}
+\end{aligned}
+$$
+
+Here's a helpful algorithm. Given an expression that adds or subtract
+radical expressions,
+
+1. Simplify each radical expression to yield as many equal radicands as
+   possible.
+2. Add or subtract expressions with equal radicands.
+
+## ${n^{\text{\scriptsize{th}}}}$ Root
+
+The proposition ${a^3 = 8,}$ implies that ${\sqrt[3]{8} = a.}$ Thus, the
+phrase "the ${n^{\text{\scriptsize{th}}}}$ root of ${a}$" implies a number
+that, when raised to the the ${n^{\text{\scriptsize{th}}}}$ power, equals
+${a.}$
+
+If ${a}$ is a real number with at least one ${n^{\text{\scriptsize{th}}}}$
+root, then the **principal ${n^{\text{\scriptsize{th}}}}$ root** of ${a}$
+is the number with the same sign as ${a}$ that, when raised to the
+${n^{\text{\scriptsize{th}}}}$ power, equals ${a.}$
+
+> Definition. Let ${a \in \R,}$ where ${a}$ has at least one
+> ${n^{\text{\scriptsize{th}}}}$ root.
+
+Then the principle ${n^{\text{\scriptsize{th}}}}$ root of ${a,}$ written as
+${\sqrt[n]{a},}$ is the number with the same sign as ${a,}$ such that, when
+raised to the ${n^{\text{\scriptsize{th}}}}$ power, equals ${a.}$ We say
+that ${n}$ is the **index** of ${\sqrt[n]{a}.}$
+
+## Rational Exponents
+
+Rather than using a radical symbol, we can express radical expressions with
+rational exponents. Needless to say, the index of such an exponent must be
+a positive integer:
+
+$$a^{\frac{1}{n}} = \sqrt[n]{a}$$
+
+A useful fact: If the index ${n}$ is even, then ${a}$ cannot be negative.
+
+We can also have rational exponents with numerators other than 1. If the
+numerator is a number other than 1, then we raise the base to a power and
+take an ${n^{\text{\scriptsize{th}}}}$ root. The numerator tells us the
+power, and the denominator tells us the root:
+
+$$a^{\frac{m}{n}} = (\sqrt[n]{a})^{m} = \sqrt[n]{a^{m}}$$
+
+Here's a useful procedure for handling rational exponents. Given an
+expression with a rational exponent:
+
+1. Determine the power by looking at the exponent's numerator. Determine
+   the root by looking at the exponent's denominator.
+
+2. Using the base as the radicand, raise the radicand to the power and use
+   the root as the index.

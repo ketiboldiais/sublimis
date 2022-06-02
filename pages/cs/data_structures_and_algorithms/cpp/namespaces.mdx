@@ -1,0 +1,78 @@
+# Namespaces
+
+Recall that in object-oriented programming, we can group variables and
+functions into a class. A more general container is a **namespace**. We can
+group code into a namespace to prevent confusion. The most common namespace
+we will use in the following materials is `std`, the `C++` standard
+library. This library contains numerous methods and variables, including
+but not limited to: `cout`, `vector`, `queue`, and many more.
+
+Here are some examples of name spaces:
+
+```cpp
+// The Cube.h file
+#pragma once
+
+namespace einLib {
+	class Cube {
+		public:
+			double getVolume();
+			double getSurfaceArea();
+
+		private:
+			double length_;
+	}
+}
+```
+
+```cpp
+// The Cube.cpp file
+#include "Cube.h"
+
+namespace einLib {
+	double Cube::getVolume() {
+		return length_ * length_ * length_;
+	}
+	double Cube::getSurfaceArea() {
+		return 6 * length_ * length_;
+	}
+}
+```
+
+The `namespace` keyword tells `C++`, "Everything inside the curly braces
+following `einLib` belongs to the namespace `einLib`. Now, the class `Cube`
+is no longer class simply called `Cube`. We've now added more specificity:
+`einLib::Cube`.
+
+We can now use the code above to write a program:
+
+```cpp
+#include "Cube.h"
+#include <iostream>
+
+int main() {
+	einLib::Cube c;
+	std::cout << "Volume: " << c.getVolume() << std::endl;
+	return
+}
+```
+
+Takeaway: The whole idea behind namespacing is to define scope. It helps
+avoid collisions between entities of the same name. `C++` has so many short
+identifiers that we need a way to differentiate between all of them.
+Namespaces are the means of ensuring that differentiation. We can directly
+write namespaces inside our source code:
+
+```cpp
+include <iostream>
+
+namespace foo {
+	double e = 1.718;
+}
+
+int main() {
+	double e = 2.0;
+	double a = foo:e + 3.0; // evaluates to 4.718
+	double b = e + 3.0; // evaluates to 5.0
+}
+```

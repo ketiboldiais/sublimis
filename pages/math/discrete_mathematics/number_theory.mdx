@@ -1,0 +1,872 @@
+<Metadata
+	title={"Number Theory"}
+	description={"Notes on number theory"}
+	keywords={
+		"number theory, Euclidean algorithm, prime numbers, divisibility, encryption"
+	}
+/>
+
+# Number Theory
+
+- [Number Theory](#number-theory)
+  - [The Integers](#the-integers)
+  - [Basic Axioms](#basic-axioms)
+  - [Divisibility](#divisibility)
+  - [Quotients & Remainders](#quotients--remainders)
+  - [Modular Arithmetic](#modular-arithmetic)
+  - [Proving Our Motivating Problem](#proving-our-motivating-problem)
+  - [Greatest Common Divisor](#greatest-common-divisor)
+  - [Euclid's Algorithm](#euclids-algorithm)
+  - [Application: Encryption](#application-encryption)
+  - [Encryption Scheme: Turing Code 1](#encryption-scheme-turing-code-1)
+
+_Number theory_ is the study of the integers. Despite being one of the
+oldest fields in mathematics, there is still a great deal to explore. Many
+of those discoveries have widespread implications, most commonly in
+cryptography &mdash; the study of hiding numbers.
+
+> _Motivating Problem_. Here is a simple number theory problem: We have two
+> jugs, one can only hold 3 gallons, the other can only hold 5 gallons.
+> Assume we have an infinite amount of water from a fountain. How do we
+> fill one of the jugs with exactly 4 gallons of water using only the two
+> jugs?
+
+First, we fill up the 3-gallon jug. Second, we pour all of its water into
+the 5-gallon. Third, we fill up the 3-gallon jug again and fill up the
+5-gallon. This means exactly 2 gallons can go into the 5-gallon, leaving 1
+gallon inside the 3-gallon jug. Fourth, we empty the 5-gallon, and pour the
+water inside the 3-gallon into the 5-gallon. Fifth, we fill up the 3-gallon
+and pour all of its water into the 5-gallon, which had previously contained
+just 1 gallon. We now have 4 gallons.
+
+This is a beautiful solution, but the real wonder is how a small change to
+the original problem can drastically change its difficulty. If the 5-gallon
+jug were instead a 6-gallon jug, then there would be no solution, since
+every pouring would be some multiple of 3.
+
+To understand why this occurs, we should construct a proof for why the
+solution works. Before we construct that proof, however, we state a few
+basic concepts in number theory.
+
+## The Integers
+
+Number theory is the study of the properties of _integers_. But what is an
+integer anyway? A simple question on its face, but is actually pretty
+complicated. For starters, there are several definitions we can use:
+
+> _Definition._ A natural number is the difference between two natural
+> numbers.
+
+For example, ${3 - 1 = 2,}$ ${1 - 3 = -2,}$ ${1 + 0 = 1,}$ and so on.
+Here's another definition:
+
+> _Definition_. An integer is a number with no fractional component.
+
+E.g., ${3}$ is an integer, since ${3}$ has no fractional component.
+${3.14,}$ however, is not an integer, since it has the fractional component
+${0.14.}$ Here's another definition:
+
+> _Definition_. The set of integers is the set: $$ \{ \ldots, -2, -1, 0, 1,
+> 2, \ldots \} $$ denoted ${\Z.}$
+
+In these materials, we'll start by just using the informal and colloquial
+definition &mdash; an integer is a number with no fractional component. As
+we move along, we'll slowly build on this definition.
+
+## Basic Axioms
+
+Alongside the information definition of the axiom, we also have several
+proposition we will just assume to be true. In other words, axioms. The
+first is the _Order Axiom_:
+
+> _The Order Axiom_. Where ${~~a,b \in \Z,~~}$ if ${0 < a,~~}$ _and_ >
+> ${0 < b}$ then:
+>
+> $$
+> \begin{aligned}
+> 	  &a + b > 0,~~ \text{and}\\
+> 	  &ab > 0
+> \end{aligned}
+> $$
+
+From the order axioms, we have the following corollary axioms:
+
+> _Axiom_. If ${a < b}$ and ${b < c,}$ then ${a < c.}$
+
+> _Axiom_. If ${a < b,}$ then ${a + c < b + c}$ and ${a - c < b - c.}$
+
+> _Axiom_. If ${a < b}$ and ${c > 0,}$ then ${ac < bc.}$
+
+> _Axiom_. If ${a < b}$ and ${c < 0,}$ then ${ac > bc.}$
+
+We also have the following axioms related to the integers:
+
+> _Axiom_. If ${~~a, b \in \Z,~~}$ then:
+>
+> $$
+> \begin{aligned}
+> 	&a - b \in \Z,~~ \text{and} \\
+> 	&ab \in \Z
+> \end{aligned}
+> $$
+
+> _Axiom_. If ${~~a\in \Z,~~}$ then ${~~\nexists x \in \Z : a < x < a+1}$.
+
+In other words, if ${a}$ is an integer, there is no integer ${x}$ such that
+${x}$ is greater than ${a}$ and less than ${a + 1.}$
+
+## Divisibility
+
+Before we discuss divisibility, we should get some terminology out of the
+way and refresh our memory on division. Recall that these notations are all
+equivalent:
+
+$$
+	a/b \space \equiv \space \dfrac{a}{b} \space \equiv \space a \div b \space \equiv \space b \overline{\smash{\footnotesize)}a}
+$$
+
+We say that ${a}$ is the **dividend** and ${b}$ is the
+**divisor**.[^divisibility_note]
+
+[^divisibility_note]:
+    Some fun facts: The horizontal line in long division (an overline), is
+    called a _vinculum_. The symbol ${\div}$ is called the _obulus_. The
+    forward-slash, as used in division, is called the _solidus_. When used
+    with in-line equations (resulting in a longer and slightly less slanted
+    forward-slash), it is called the _virgule_. For example:
+
+$$
+	15/3 = \dfrac{15}{3} = 15 \div 3 = 3 \overline{\smash{)}15} = 5
+$$
+
+Above, ${15}$ is the divisor, and ${3}$ is the dividend. When we divide an
+integer by a positive integer, we obtain a **quotient** and a
+**remainder**. Remainders are the building blocks for **modular
+arithmetic**, a topic we will explore further in the following materials.
+
+When an integer is divided by a nonzero integer, the quotient may or may
+not be an integer. For example, ${15/5 = 3.}$ However, ${15/2 = 7.5}$
+Suppose ${a}$ and ${b}$ are integers. If ${b / a}$ returns an integer, then
+we say &#8220;${a}$ divides ${b.}$&#8221; Knowing this, we introduce a new
+definition and notation for division:
+
+> _Notation_. Suppose ${a, b \in \Z,}$ and ${a \neq 0.}$ If ${b/a \in \Z,}$
+> then we say that &#8220;${a}$ divides ${b,}$&#8221; denoted:
+>
+> $$
+> 	  a \space\vert\space b
+> $$
+
+If ${a \space\vert\space b}$ is true, then ${a}$ is a **factor**, or
+**divisor**, of ${b,}$ and ${b}$ is a **multiple** of ${a.}$ Further:
+
+$$
+	m \space\vert\space a \iff \exists k \in \Z : (a = k \cdot m)
+$$
+
+In other words, ${m \space\vert\space a}$ is true if, and only if, there
+exists an integer ${k}$ such that ${a}$ can be written as ${(k)(m).}$
+
+For example, ${3 \space\vert\space 6}$ is true, because 6 can be written as
+${(3)(2),}$ and 2 is an integer. Here is an interesting case: If ${a = 0,}$
+then any integer ${k}$ will divide ${a.}$ Thus, the proposition
+${m \space\vert\space 0}$ is true for all integers.
+
+The definition for divisibility implies several other propositions. We
+state these as lemmas:
+
+> _Lemma_. Let ${a, b, c \in \Z.}$ Then:
+>
+> 1. ${a \space\vert\space b \land a \space\vert\space c \implies a \space\vert\space (b + c)}$
+> 2. ${\forall c \in \Z : [(a \space\vert\space b) \implies (a \space\vert\space b \cdot c)]}$
+> 3. ${[(a \space\vert\space b) \land (b \space\vert\space c)] \implies (a \space\vert\space c)}$
+> 4. ${\forall s, t: [(a \space\vert\space b \land a \space\vert\space c) \implies (a \space\vert\space sb + tc)]}$
+
+Because the lemmas above are so important, let's explore them more
+explicitly in words.
+
+> _Lemma_. If ${a}$ divides ${b,}$ and ${a}$ divides ${c,}$ then ${a}$
+> divides ${b + c.}$ For example, 2 divides 10 and 20. Following lemma 1, 2
+> divides 30.
+
+> _Lemma_. If ${a}$ divides ${b,}$ then ${a}$ divides ${b}$ times ${c,}$
+> for any integer ${c.}$ For example, 3 divides 30. It follows that 3
+> divides 2(30), or 60.
+
+> _Lemma_. The third lemma: If ${a}$ divides ${b}$ and ${b}$ divides ${c,}$
+> then ${a}$ divides ${c.}$[^lemma_three_note]
+
+[^lemma_three_note]:
+    E.g., 2 divides 4, and 4 divides 16. It follows that 2 divides 16.
+
+> _Lemma_. If ${a}$ divides ${b}$ and ${a}$ divides ${c,}$ then ${a}$
+> divides some **linear combination** ${sb + tc.}$ Example: 3 divides 6 and
+> 3 divides 9. It follows that 3 divides the linear combination
+> ${6s + 3t.}$
+
+## Quotients & Remainders
+
+We know that division sometimes returns a remainder. This phenomenon is
+encapsulated by the **division algorithm**. The division algorithm is not
+really an algorithm; it's more so a theorem. Its formal statement:
+
+> _Theorem._ Suppose ${a \in \Z}$ and ${a, b \in \Z^{+}.}$ Then:
+>
+> $$
+> 		\exists q, r \in \Z : (a = dq + r) \land (0 \leq r < d)
+> $$
+
+In other words, given two integers ${a,}$ and ${d,}$ ${a}$ and ${d}$ can be
+linearly combined into ${a = dq + r,}$ such that ${q}$ and ${r}$ are unique
+integers and ${r}$ is greater than or equal to 0 but less than ${d.}$ This
+is the formal description of what happens in the long division we performed
+in grade school.
+
+In the equality ${a = dq + r,}$ ${a}$ is called the **dividend**, ${d}$ is
+called the **divisor**, and ${r}$ is called the **remainder**. We use the
+following notation to express these ideas:
+
+$$
+\begin{aligned}
+	q &= a \text{ div } d \\
+	r &= a \bmod d
+\end{aligned}
+$$
+
+The functions ${\text{ div }}$ and ${\bmod}$ are functions only applicable
+to integers. They are what allow us to compute the quotient and the
+remainder from integer division separately. For example, consider the
+integer ${101.}$ We can express the integer as ${101 = 11 \cdot 9 + 2.}$
+Thus, ${101 \text{ div } 11 = 9,}$ and ${101 \bmod 11 = 2.}$
+
+## Modular Arithmetic
+
+A colleague informs us that the next meeting will be 17 days from Tuesday.
+What day of the week will this meeting be on? Laying out these days, we and
+performing the count we have:
+
+```
+Su  Mo  Tu  We  Th  Fr  Sa
+0   1   2   3   4
+5   6   7   8   9   10  11
+12  14  14  15  16  17
+```
+
+We see that the day is Friday. We could also have made the same
+determination by recognizing that each week consists of 7 unique days,
+meaning that the week resets every cycle of 7 days:
+
+```
+Su  Mo  Tu  We  Th  Fr  Sa
+0   1   2   3   4   5   6
+7   8   9   10  11  12  13
+14  15  16  17  18  19
+```
+
+If we take the index of Tuesday, ${2,}$ and add it to ${17,}$ the number of
+days, we get ${19.}$ (${2 + 17 = 19.}$) If we then divided ${19}$ by ${7,}$
+we get ${2 \space r 5}$ (2 remainder 5). That 5 is the index of Friday. We
+can confirm this approach works by computing 18 days from Tuesday.
+${2 + 18 = 20.}$ ${20 / 7 = 2 \space r 6.}$ For 289 days from Tuesday:
+${2 + 289 = 291.}$ ${291 / 7 = 41 \space r 4.}$ 4 is the index for
+Thursday.
+
+Why does this work? Consider the first example, 17 days from Tuesday. The
+sum ${2 + 17 = 19}$ represents the total number of days. When we divide
+this by 7, we get back the total number &#8220;complete cycles.&#8221; In
+this case, the total number of times we get back to Sunday:
+${19 / 7 = 2 \space r 5.}$ The remainder, 5, represents the addition days
+we add after Sunday to give us the total number of days. When we add those
+days to the index of Sunday, 0, we get the the index of the day of the week
+we end on, 5.
+
+Another example: Imagine a clock displaying the time 9:00A.M. If a friend
+informs you their flight is in 6 hours, what time do we deduce? Well, we
+would deduce, 3:00P.M., by simplying adding the 6 hours. However,
+${9 + 6 \neq 3.}$ The fact that we can determine 3:00 P.M. is 6 hours from
+9:00 A.M. goes straight to the heart of modular arithmetic.[mod_note]
+
+[^mod_note]:
+    9 + 6 = 15. If we used the 24-hour clock, we would quickly determine
+    3:00 P.M.
+
+What we're actually doing whenever we add or subtract times on a 12-hour
+clock is _arithmetic modular 12_. In the simplest terms, this means that
+when we get to the number 12, we start the count again. The numbers
+&#8220;wrap around&#8221; like a circle &mdash; exactly like a clock. For
+example, if we instead performed addition with **arithmetic modular 3**, we
+would go ${1, 2, 3, 1, 2, 3, 1, 2, 3, \ldots}$ and so on and so forth.
+Thus, in arithmetic modular 3, ${1 + 3 = 1.}$ Pretty cool!
+
+How does this tie back to divisibility? Think about the original example,
+${9 + 6 = 3.}$ In normal arithmetic, ${9 + 6 = 15.}$ However, within 15 is
+a single group of 12. The difference between 15 and 12 &mdash; the
+_remainder_ &mdash; is 3. Hence, ${9 + 6 = 3.}$ Clearly, however, we can't
+go around saying ${9 + 6 = 3,}$ as most persons do not automatically assume
+modular arithmetic. We instead must explicitly write:
+
+$$
+	9 + 6 = 3 \bmod 12
+$$
+
+Here are a few other examples (think of a clock to confirm):
+
+$$
+	\begin{aligned}
+		9 + 25 &= 10 \bmod 12 \\
+		1 + 17 &= 6 \bmod 12 \\
+		8 + 29 &= 1 \bmod 12 \\
+		11 + 43 &= 5 \bmod 12 \\
+	\end{aligned}
+$$
+
+The notation above looks like the remainder operator. In fact, if we
+computed ${10 \bmod 12,}$ we would get ${10}$ (since ${10 / 12}$ yields no
+remainder).
+
+Now, in regular arithmetic, we might notice that some integers have the
+same remainder when we divide them by a positive integer ${m.}$ For
+example, ${5 / 2}$ is ${2}$ with a remainder of ${1,}$ and ${9 / 2}$ is
+${4}$ with a remainder of ${1.}$ Both ${9}$ and ${5,}$ when divided by the
+positive integer ${2,}$ return the same remainder, ${1.}$ In number theory,
+we have a special definition for this phenomenon:
+
+> _Definition._ Let ${a}$ and ${b}$ be integers and ${m}$ a positive
+> integer. If ${m \space\vert\space a - b,}$ then ${a}$ is congruent to
+> ${b}$ modulo ${m.}$ We denote this expression with:
+>
+> $$
+> 		a \equiv b (\bmod \space m)
+> $$
+
+The expression ${a \equiv b (\bmod \space m)}$ is a **congruence** and
+${m}$ is its **modulus**. If ${a}$ and ${b}$ are not modulo ${m,}$ then we
+write:
+
+$$
+	a \not\equiv b (\bmod \space m)
+$$
+
+To better see what the proposition above communicates, consider our
+previous examples, ${9}$ and ${5.}$ Suppose ${a = 9,}$ ${b = 5,}$ and
+${m = 2.}$ Thus, ${a - b = 9 - 5 = 4.}$ Given that ${2 \mid 4,}$ it follows
+that ${9 \equiv 5(\bmod \space 2).}$
+
+Do not confuse ${a \equiv b(\bmod \space m)}$ with ${a \bmod m = b.}$ The
+expression ${a \equiv b(\bmod \space m)}$ provides that ${a}$ is congruent
+to ${b}$ modulo ${m.}$ The expression ${a \bmod m = b}$ provides that the
+remainder of ${a / m}$ is ${b.}$
+
+While the notations express different ideas, we can see that they are very
+closely related. Because ${9 \bmod 2 = 1,}$ and ${5 \bmod 2 = 1,}$ we
+conclude that ${9 \equiv 5(\bmod \space 2).}$ More formally:
+
+> _Theorem._ Suppose ${a, b \in \Z}$ and ${m \in \Z^{+}.}$ Then:
+>
+> $$
+> 		[a \equiv b(\bmod \space m)] \iff (a \bmod m = b \bmod m)
+> $$
+
+## Proving Our Motivating Problem
+
+Using this idea, **divisibility**, we revisit the jug-filling problem with
+more formality. First, let's state our assumptions:
+
+> There is an ${a-}$gallon jug (in the original jug-filling game,
+> ${a = 3.}$)
+
+> There is a ${b-}$gallon jug (in the original, ${b = 5}$)
+
+Now let's state our hypothesis:
+
+> If ${m \space\vert\space a}$ and ${m \space\vert\space b,}$ then ${m}$
+> should divide any result from pouring, emptying, and filling the jugs.
+
+To prove (or disprove) this hypothesis, we employ a new proving tool. Here,
+we want to think of **modeling** this problem. By modeling, we mean
+outlining the possible **states** the problem can take. A **state** is
+simply the set of all current facts in a problem. This is fairly vague and
+abstract, so let's apply the tool. In our problem, we have several states.
+First, we have the numbers of gallons in the two jugs. We can denote these
+numbers with ordered pairs:
+
+> ${(x, y) \coloneqq}$ the numbers of gallons in the two jugs where,
+>
+> - ${x \coloneqq}$ the number of gallons in the ${a-}$jug, and
+> - ${y \coloneqq}$ the number of gallons in the ${b-}$jug.
+
+We can also define the start state:
+
+> In the start state, there is nothing in each of the jugs. Thus, in the
+> start state, the numbers of gallons in the two jugs is ${(0,0).}$
+
+These look like a sufficient number of states, and we can't really think of
+anything more useful.[^state_note] Let's now think about the
+**transitions** &mdash; the set of all possible ways we can move from one
+state to another. One transition is emptying a jug:
+
+[^state_note]:
+    When writing proofs, it's often best to write out what comes to mind,
+    and if we can't think of anything else immediately, simply move to
+    another thought.
+
+> 1. If we empty the ${a-}$ jug, then: ${(x, y) \to (0, y)}$
+> 2. If we empty the ${b-}$ jug, then: ${(x, y) \to (x, 0)}$
+
+Another transition is filling.
+
+> Where ${a > x}$ and ${b > y,}$
+>
+> - If we fill the ${a-}$ jug, then: ${(x, y) \to (a, y).}$
+> - If we fill the ${b-}$ jug, then: ${(x, y) \to (x, b).}$
+
+Finally, we have pouring. This is a somewhat more complex transition. Let's
+first start with ${(x, y).}$ Let's consider the possibilities. One
+possibility is pouring all of the gallons in ${a}$ into all of the gallons
+in ${b.}$ Thus:
+
+$$
+	(x, y) \to (0, x+y) \implies x+y \geq b
+$$
+
+Notice the caveat we appended to the end, ${x+y \geq b.}$ This is because
+the ${b}$ jug has a finite amount of space for how many gallons it can
+take. For example, if ${b}$ takes only 3 gallons, as was the case in the
+original game, then ${x + y \geq 3.}$ Hence, the possibility
+${(x, y) \to (0, x+y)}$ can occur only if ${x + y}$ is at most ${b.}$ If
+${x + y \geq b}$ is false, then we can only pour some of the contents in
+${a}$ into ${b.}$
+
+How do we generalize _some_ gallons? Well, thinking about the start state,
+${(x, y).}$ The amount of gallons poured into ${b}$ is ${y.}$ This means
+that the amount of gallons poured from ${a}$ into ${b}$ such that ${b}$ is
+completely filled is ${b - y.}$ Accordingly:
+
+$$
+	(x, y) \to (x - (b - y), b) = (x + y - b, b) \implies x + y \leq b
+$$
+
+The caveat in this possibility is ${x + y \leq b.}$ This is the
+complementary of the previous caveat. We are within the realm of this
+possibility only if there are enough gallons in ${b}$ to pour into ${a.}$
+
+By symmetry, we can list the reverse &mdash; pouring the gallons in ${b}$
+into ${a:}$
+
+$$
+	(x, y) \to (x + y, 0) \implies x + y \leq 0 \\
+	(x, y) \to (a, y - (a - x)) = (a, x + y - a) \implies x + y \leq a
+$$
+
+Thus, we now have all the possibilities of pouring:
+
+1. ${(x, y) \to (0, x+y) \implies x+y \geq b}$
+2. ${(x, y) \to (x - (b - y), b) = (x + y - b, b) \implies x + y \leq b}$
+3. ${(x, y) \to (x + y, 0) \implies x + y \leq 0}$
+4. ${(x, y) \to (a, y - (a - x)) = (a, x + y - a) \implies x + y \leq a}$
+
+Let's ensure the propositions we drew above fully describe the original
+game.
+
+We have two jugs that can only store a finite amount of gallons: ${a = 3}$
+and ${b = 5.}$ Suppose the current number of gallons in the jug is
+represented with ${(x, y),}$ where ${x}$ is the number of gallons in the
+${a}$ jug, and ${y}$ is the number of gallons in the ${b}$ jug. At the very
+start, the jugs are empty: ${(x, y) = (0,0).}$
+
+Then, we fill up the ${b}$ jug:
+
+$$
+	(0, 0) \to (0, 5)
+$$
+
+We then pour as much of the gallons in the ${b}$ jug into the ${a}$ jug:
+
+$$
+	(0, 5) \to (3, 2)
+$$
+
+Next, we emptied the ${a}$ jug:
+
+$$
+	(3, 2) \to (0, 2)
+$$
+
+Then we poured all of the ${b}$ jug into the ${a}$ jug:
+
+$$
+	(0, 2) \to (2, 0)
+$$
+
+Then we filled the ${b}$ jug:
+
+$$
+	(2, 0) \to (2, 5)
+$$
+
+After which we poured as much as we would to the ${a}$ jug:
+
+$$
+	(2, 5) \to (3, 4)
+$$
+
+Given that our state machine accurately describes the original game, we can
+now prove our hypothesis:
+
+> If ${m \space\vert\space a}$ and ${m \space\vert\space b,}$ then ${m}$
+> should divide any result from pouring, emptying, and filling the jugs.
+
+To construct this proof, we first define an invariant:
+
+> Let P(n) be defined as: If ${(x, y)}$ is the state after ${n}$
+> transitions, then ${m \space\vert\space x}$ and
+> ${m \space\vert\space y}$.
+
+Now we construct the base case. Here, we want to recall the definition of
+divisiblity. ${m \space\vert\space a}$ is true iff there exists an integer
+${k}$ such that ${a = (k)(m).}$ In this case, the start state,
+${(x, y) = (0,0)}$ complies with our invariant, since ${m}$ divides ${0.}$
+Thus, our base case:
+
+$$
+	P(0) \coloneqq (0,0) \implies m \space\vert\space 0
+$$
+
+We know that ${m \space\vert\space 0}$ is true for all integers, so the
+base case, ${P(0)}$ is true. Now we perform the inductive step. Assume
+${P(n)}$ is true. We now want to prove that ${P(n + 1)}$ is true. This
+amounts to proving, if we move from ${n,}$ a state, to the next state,
+${n + 1,}$ the property ${m \space\vert\space x}$ and
+${m \space\vert\space y}$ is true.
+
+Suppose ${(x,y)}$ is the state after ${n}$ transitions. Since we suppose
+that ${P(n)}$ is true, we know that ${m \space\vert\space x}$ and
+${m \space\vert\space y}$ after ${n}$ transitions. Now, we that after a
+transition, we have the following possibilities:
+
+1. ${(x, y) \to (0, x+y) \implies x+y \geq b}$
+2. ${(x, y) \to (x - (b - y), b) = (x + y - b, b) \implies x + y \leq b}$
+3. ${(x, y) \to (x + y, 0) \implies x + y \leq 0}$
+4. ${(x, y) \to (a, y - (a - x)) = (a, x + y - a) \implies x + y \leq a}$
+
+More generally, after a transition, each of the jugs are either empty (0),
+both jugs are empty (${x}$ and ${y}$), completely filled (${a}$ or ${b}$),
+or partially filled (${x + y - b,}$ or ${x + y - a}$). Now, we also know
+the following: ${m \space\vert\space 0}$ (by definition),
+${m \space\vert\space a}$ (from our base case) and
+${m \space\vert\space b}$ (also from our base case). We also know that
+${m \space\vert\space x}$ (by ${P(n)}$) and ${m \space\vert\space y}$ (also
+from ${P(n)}$). Because ${a,}$ ${b,}$ ${x,}$ and ${y}$ are all divisible by
+${m,}$ it follows that the linear combinations ${x + y,}$ ${x + y - a,}$
+and ${x + y - b}$ are all divisible by ${m.}$ This fact implies that ${m}$
+divides any of the possibilities stated above. This completes the proof.
+
+## Greatest Common Divisor
+
+The **gcd** (greatest common divisor) of numbers ${a}$ and ${b}$ is the
+largest number that divides both ${a}$ and ${b.}$ For example,
+${gcd(10, 5) = 2.}$ Similarly, ${gcd(18, 12) = 6.}$ With 18 and 12, 3 is a
+_common divisor_, but it is not the _greatest_ common divisor.
+
+What is ${gcd(5, 2)?}$ The only divisors of 5 are 1 and 5, and the only
+divisors of 2 are 1 and 2. Accordingly, ${gcd(5, 2) = 1.}$ When the
+greatest common divisor of two numbers is 1, we say that the numbers are
+**relatively prime**.
+
+Recall the theorem we proved above: If ${m \space\vert\space a}$ and
+${m \space\vert\space b,}$ then ${m \space\vert\space \text{ any result}.}$
+The corollary to this theorem is that the gcd of ${a}$ and ${b}$ divides
+any result of our state machine (the jug game).
+
+Let's prove the corollary: Any linear combination, or state, of ${a}$ and
+${b,}$ where the linear combination is ${L = sa + tb}$ and
+${0 \leq L \leq b,}$ can be reached. For example, if ${s = -2}$ and
+${t = 2,}$ then ${L = -2(3) + 2(5) = 4.}$ 4 is a linear combination of
+${a}$ and ${b,}$ and we can reach that state through ${n}$ transitions.
+
+When we prove the corollary above, we will want to keep ${s}$ and ${t}$
+positive (largely because negative integers can be unwieldy). To keep the
+numbers positive, we just have to play around with some natural numbers.
+For example, the linear combination ${L = 4}$ can be constructed with
+${L = (-2)(3) + (5)(3) + (2)(5) - (3)(5) = (3)(3) - (1)(5) = 4.}$
+
+Let's formalize this trick. Currently, ${L = sa + tb.}$ We can rewrite this
+as ${L = (s + mb)a + (t - ma)b.}$ We can then choose an ${m}$ such that
+${m > 0.}$ This proves to us that there exists an ${s'}$ and a ${t'}$ such
+that L can be rewritten as ${L = s'a + t'b}$ where ${s' > 0.}$ Knowing this
+fact, we can write an algorithm that solves the jug problem.
+
+Assume ${0 < L < b.}$ The algorithm will repeatedly fill and pour jugs: To
+obtain ${L_{gallons},}$ we repeat ${s'}$ times the following steps:
+
+1. Fill the ${a}$ jug.
+2. Pour the ${a}$ jug into the ${b}$ jug.
+3. When the ${b}$ jug is full, empty the ${b}$ jug.
+4. Continue pouring the ${a}$ jug until the ${a}$ jug is empty.
+
+To see that this works, consider obtaining the 4 gallons. We want the
+linear combination ${L = (3)(3) - (1)(5).}$ Accordingly, we must repeat the
+process 3 times.
+
+| loop | computation           |
+| ---- | --------------------- |
+| 1    | ${(0, 0) \to (3, 0)}$ |
+| 1    | ${(3, 0) \to (0, 3)}$ |
+| 2    | ${(0, 3) \to (3, 3)}$ |
+| 2    | ${(3, 3) \to (1, 5)}$ |
+| 2    | ${(1, 5) \to (1, 0)}$ |
+| 2    | ${(1, 0) \to (0, 1)}$ |
+| 3    | ${(0, 1) \to (3, 1)}$ |
+| 3    | ${(3, 1) \to (0, 4)}$ |
+
+Let's prove that this algorithm is correct (i.e., prove the corollary). We
+know that we must fill the ${a}$ jug ${s'}$ times. Suppose that the ${b}$
+jug is emptied ${u}$ times. We do not know how many times we have to empty
+the ${b}$ jug, but we will denote it with ${u.}$ Next, let ${r}$ be the
+remainder in the ${b}$ jug.
+
+We know that ${0 \leq r \leq b,}$ since ${r}$ is what is left in the ${b}$
+jug. Furthermore, we know that ${r = s' \cdot a - u \cdot b.}$ Now, we
+assumed that ${0 < L < b.}$ We also know that ${L = s'a + t'b.}$ Thus, we
+want to show that ${r = L.}$ Hence:
+
+$$
+	\begin{aligned} r &= \overbrace{s'a + t'b}^{L} - t'b - ub \\ &= L - (t' - u)b \end{aligned}
+$$
+
+What exactly does ${L - (t' - u)b}$ imply? Well, if ${t' + u \neq 0,}$ then
+${r < 0}$ or ${r > b.}$ Now, it cannot be true that ${[r < 0 \lor r > b],}$
+since ${0 \leq r \leq b.}$ Because ${[r < 0 \lor r > b],}$ it must be the
+case that ${t' + u = 0.}$ Hence, ${u = t'.}$ Because of this fact,
+${r = L.}$
+
+The fact that ${r = L}$ leads to a big conclusion. If ${L = 1,}$ we can
+express ${L}$ as ${L = 1 = (2)(3) - (1)(5).}$ This means that using our
+algorithm above, we can reach any ${L}$ that is a multiple of 1. This
+result is generalized through **Euclid's algorithm.**
+
+## Euclid's Algorithm
+
+Euclid's Algorithm is fairly quick way to find the greatest common
+denominator (GCD) of two integers. We can state the algorithm in pseudocode
+(assume $a$ and $b$ are positive integers).
+
+Here's an iterative version of the algorithm:
+
+<FlowChart data={`
+	a[label="a > b?",width=0.8];
+	a2[label="no"];
+	a1[label="yes"];
+	b[label="r := rem(a,b)",width=1.7];
+	c[label="a := b"];
+	d[label="b := r"];
+	e[label="return a",width=1];
+
+    a->a1;
+    a1->b;
+    b->c;
+    c->d;
+    d->a->a2->e;
+
+`} width={260} height={260} nodeShape="box"/>
+
+And here is a recursive approach:
+
+<FlowChart
+	data={`
+	x[label="call gcd(a,b)",width=1.6];
+	a[label="r := rem(a,b)",width=1.6];
+	b[label="r == 0?",width=1];
+	b1[label="yes"];
+	b2[label="no"];
+	c[label="return b",width=1];
+	d[label="return gcd(a=b,b=r)",width=2.4];
+
+    x->a->b;
+    b->b1;
+    b->b2;
+		b2->d[label="  recurse"];
+		d->x;
+    b1->c;
+
+`} width={260} height={260} nodeShape="box" />
+
+A good way to build some intuition for how this algorithm works is to do
+some tracing. Let's call it for $a = 255$ and $b = 483:$
+
+| $b > 0$ | $a$ | $b$ | $r$ = $\text{rem}(a,b)$ |
+| ------- | --- | --- | ----------------------- |
+| true    | 255 | 483 | 255                     |
+| true    | 483 | 255 | 228                     |
+| true    | 255 | 228 | 27                      |
+| true    | 228 | 27  | 12                      |
+| true    | 27  | 12  | 3                       |
+| false   | 12  | 3   | 0                       |
+| false   | --  | --  | return 3                |
+
+To understand _Euclid's algorithm_, we begin with the following
+proposition:
+
+> _Theorem._ Suppose that ${a,b \in \Z,}$ and ${b \in \Z^{+}.}$ Then there
+> exists a unique quotient ${q,}$ and a remainder ${r}$ of ${a}$ divided by
+> ${b}$ such that ${b = qa + r}$ and ${0 \leq r < b.}$
+
+A fairly long theorem, but the key point is that ${r,}$ the remainder, is
+always smaller than the divisor. This the foundational premise for why
+Euclid's algorithm works. Because the remainder is always smaller than the
+divisor, in our algorithm, ${b}$ gets smaller and smaller (since ${b}$ is
+assigned the remainder).
+
+We will denote ${r,}$ the remainder, with ${rem(b, a).}$ With this theorem,
+we can prove the following lemma:
+
+> _Lemma_. The greatest common denominator of ${a}$ and ${b}$ is the
+> greatest common denominator of the remainder of ${b}$ and ${a}$ and
+> ${a.}$ I.e.,
+>
+> $$
+> 	  gcd(a, b) = gcd(rem(b, a), a)
+> $$
+
+For example, consider the integers 105 and 224. Following the lemma:
+
+$$
+	\begin{aligned}
+		gcd(105, 224) &= gcd(rem(224, 105), 105) \\ &= gcd(14, 105) \\ &= gcd(rem(105, 14), 14) \\ &= gcd(7, 14) \\ &= gcd(rem(14, 7), 7) \\ &= gcd(0, 7) \\ &= 7
+	\end{aligned}
+$$
+
+Applying the lemma repeatedly, as we did above, is called Euclid's
+algorithm. To prove the lemma, we want to show that if
+${m \space\vert\space a}$ and ${m \space\vert\space b,}$ then
+${m \space\vert\space rem(b,a)}$ and ${m \space\vert\space a.}$
+
+Suppose ${m \space\vert\space a}$ and ${m \space\vert\space b.}$ Then it
+must be true that ${m \space\vert\space b - qa}$ and
+${m \space\vert\space a.}$ Now we know that ${b - qa = rem(b, a),}$ so it
+must be the case that ${m \space\vert\space rem(b, a).}$ This proves that
+${gcd(a, b) \space\vert\space gcd(rem(b,a), a).}$ In turn, this implies
+that ${gcd(a, b) \leq gcd(rem(b,a), a).}$
+
+Let's now consider the cases. First case: If ${rem(b, a) \neq 0,}$ then
+${[m \space\vert\space rem(b - a) = b - qa \land m \space\vert\space a] \implies [m \space\vert\space a \land m \space\vert\space b.]}$
+This is because if ${m \space\vert\space a}$ and ${m \space\vert\space b,}$
+then ${m}$ divides any linear combination of ${a}$ and ${b.}$
+
+Second case: If ${rem(b, a) = 0,}$ then ${b - qa = 0.}$ We can rewrite
+${b - qa = 0}$ as ${b = qa.}$ Thus, if ${rem(b, a) = 0,}$ then ${b = qa.}$
+Hence, if ${m \space\vert\space a,}$ then ${m \space\vert\space b.}$
+
+Now, with every algorithm, we must prove that the algorithm is correct. To
+do so, the first point we must establish is that the algorithm halts in a
+finite amount of time. In this case, it does. The algorithm's inputs get
+smaller and smaller, eventually reaching a point where it must halt.
+
+The second point: Resetting the variable values inside the definition of
+${gcd()}$ does not change the value of ${gcd(a, b).}$ The proof for this
+claim is a little more involved. We're effectively stating:
+
+> For any ${a, b \in \Z^{+},}$ ${gcd(a,b) = gcd(b, rem(a, b)).}$
+
+To begin, recall that ${rem(a, b) \implies a = bq + r,}$ where
+${a, b, q, r \in \Z^{+}.}$ Thus, what we want to show is that the largest
+integer that divides ${a}$ and ${b}$ is also the largest integer that
+divides ${b}$ and ${a = bq + r.}$ Let's state this more explicitly. The
+claim we want to prove is the following:
+
+> For all ${a, b, q, r, k \in \Z}$ and ${b \in \Z^{+},}$ if ${a = bq + r}$
+> and ${k \space\vert\space a}$ and ${k \space\vert\space b,}$ then
+> ${k \text{ div } r.}$
+
+The goal is to reach ${ k \space\vert\space r.}$ Let's begin. First,
+suppose that ${a = bq + r,}$ ${k \space\vert\space a,}$ and
+${k \space\vert\space b.}$ Since ${k \space\vert\space a,}$ it follows that
+${a = kn}$ for some ${n \in \Z.}$ And since ${k \space\vert\space b,}$ it
+follows that ${b = km}$ for some ${m \in \Z.}$ We use two different
+integers, ${m}$ and ${n,}$ to recognize the possibility that ${a \neq b.}$
+
+Now, examining the conclusion we want to reach, we see
+${k \space\vert\space r.}$ Let's apply the same analysis just to see the
+possibility. Given that ${k \space\vert\space r,}$ it follows that
+${r = kt}$ for some ${t \in \Z.}$ We'll keep this form, ${r = kt,}$ in mind
+as we continue.
+
+Next, we know that ${a = bq + r.}$ Rearranging, we have ${r = a - bq.}$ We
+know that ${a = kn}$ and ${a = km,}$ so we can rewrite the equation as
+${r = kn - (km)q.}$ Factoring out ${k,}$ we have: ${r = k(n - mq).}$ Now
+comes the coup de grâce: Let ${t = n - mq.}$ Given that ${n, m, q \in \Z,}$
+it follows that ${t}$ must be an integer. It follows that ${r = kt,}$ where
+${t}$ is some integer. Therefore, ${k \space\vert\space r.}$
+
+Having proved the second point, we know the algorithm is correct because of
+the third point: The return value at the definition's end is correct (i.e.,
+${gcd(a, 0) = a}$).
+
+> **Proof**: Every integer ${p}$ divides 0 (i.e., ${0 = (p)(n).}$) When we
+> write ${gcd(a, 0),}$ we are asking for the largest integer that divides
+> ${a}$ and 0. Because every integer ${p}$ divides 0, the largest integer
+> is ${a.}$ Thus, ${gcd(a, 0) = a.}$[^gcd_note]
+
+[^gcd_note]:
+    Note that ${gcd(0,0)}$ is undefined. There are many divisors for 0 and
+    0, but there is no maximum.
+
+## Application: Encryption
+
+**Encryption** is a method, or process, of hiding objects. We'll start with
+a basic scenario. Entities ${A}$ intends to send some message ${m}$ to
+${B.}$ ${A,}$ ${B,}$ and ${m}$ could be anyone or anything. ${A}$ and ${B}$
+could be people, and ${m}$ is a text message or email. ${A}$ and ${B}$
+could be software systems, and ${m}$ is a password or account number.
+Either or, when ${A}$ and ${B}$ send the message ${m,}$ there's always the
+risk of some entity ${C}$ intercepting the message and finding out what
+information it contains.
+
+Encryption is a means of mitigating that risk. Before any substantive
+information is exchanged, **keys** are exchanged between ${A}$ and ${B.}$
+Based on those keys, some encryption algorithm transforms ${m}$ into
+${m'.}$ For now, we can think of ${m'}$ as a "scrambled" &mdash; encrypted
+&mdash; version of ${m.}$
+
+Now, when ${m'}$ reaches the recipient, in this case ${B,}$ she uses the
+key exchanged with ${A}$ to "unscramble" &mdash; decrypt &mdash; the
+message ${m'.}$
+
+Notice how this mitigates the risk. Because ${m'}$ is what actually travels
+between ${A}$ and ${B,}$ if ${C}$ intercepts the message, they don't get
+${m,}$ they get ${m'.}$ If ${C}$ doesn't have the key for decrypting that
+message, they're stuck with ${m',}$ which is essentially nothing more than
+a nonsensical sequence of symbols.
+
+With this high-level overview, let's consider what those "scrambling"
+algorithms are (more formally called _encryption schemes_).
+
+## Encryption Scheme: Turing Code 1
+
+The first encryption scheme we consider is one that might have been made by
+the computer scientist Alan Turing. Turing was the first to propose using
+number theory for encryption, but his ideas were never published (hence the
+"might have been made" in the previous sentence).
+
+_Step 1: Turn the message into some prime number._ For example, consider
+the string `"victory"`. We can represent each letter in this string with an
+integer corresponding to its index in the Latin alphabet sequence. For
+example, the letter `v` is the twenty-second letter of the alphabet, `i` is
+the ninth, `c` is the third, and so on. Mapping all the letters to their
+indices:
+
+<Sequence data={["v", "i", "c", "t", "o", "r", "y"]} />
+
+It turns out that if we pack all of the numbers together:
+
+$$
+	22090320151825
+$$
+
+then just insert a ${13}$ at the end:
+
+$$
+	22090320151825\textcolor{red}{13}
+$$
+
+we get a prime number.

@@ -1,0 +1,52 @@
+# Inequations
+
+Most critical findings in mathematics result from inequalities rather than
+equations. And understandibly so &mdash; it is often easier to determine
+whether particular expressions are greater or less than others, in
+comparison to concluding that they are equal. Whenever we replace the equal
+sign in an equation with one of the symbols ${\leq}$ or ${\geq,}$ we obtain
+an an **inequation**. Both equations and inequations are mathematical
+statements. As such, inequations, like equations, have truth sets &mdash;
+the set of all values that render the inequality true if any member of that
+set is substituted into a variable, or variables, of the inequality.
+
+For example, suppose ${2x - 3 < 8.}$ The value ${x = 5}$ would be a member
+of the inequation's truth set, since ${2(5) - 3 = 7 < 8.}$ The value
+${x = 10,}$ however, would not be a member of that truth set, since
+${2(10) - 3 = 17 \nless 8.}$ We can find the entire truth set for the
+inequation by solving for $x$, using the same techniques for equations:
+
+$$
+	2x - 3 < 8 = 2x - 3 + 3 < 8 + 3 \\
+	2x < 8 + 3 \\
+	2x < 11 \\
+	x < \dfrac{11}{2} \\
+$$
+
+Although inequations can be solved by mostly applying the techniques for
+equations, there are some situations we should take care when handling.
+Particularly, we must be careful whenever we multiply or divide both sides
+of an inequation by the same nonzero number.
+
+For example, suppose ${1 < 3.}$ If we multiplied both sides of the
+inequality by 10, we would obtain ${10 < 30.}$ Clearly this is true. But if
+were to multiply both sides by -5, we would obtain ${-5 < -15.}$ This is
+false. This observation returns 2 general rules:
+
+> _Lemma_. If both sides of an inequation are multiplied or divided by a
+> positive real number, then the inequation is preserved.
+
+> _Lemma_. If both sides of an inequation are multiplied or divided by a
+> negative real number, then the inequation is reversed.
+
+More explicit rules:
+
+> _Lemma_. If ${a < b,}$ then ${a + c < b + c,}$ and ${a - c < b - c.}$
+
+> _Lemma_. If ${a < b}$ and ${c \in \mathbb{R}^+,}$ then ${ac < bc,}$ and >
+> ${\dfrac{a}{c} < \dfrac{b}{c}.}$
+
+> _Lemma_. ${a < b}$ and ${c \in \mathbb{R}^-,}$ then ${ac > bc,}$ and >
+> ${\dfrac{a}{c} > \dfrac{b}{c}.}$
+
+> _Lemma_. If ${a < b}$ and ${b < c,}$ then ${a < c.}$

@@ -1,0 +1,341 @@
+# Inorder Traversal
+
+Inorder traveral is defined as follows:
+
+> _Procedure: Inorder Traversal_. Let ${B}$ be a binary tree. To traverse
+> ${B}$ in inorder:
+>
+> 1. Traverse the left subtree inorder.
+> 2. Visit a node.
+> 3. Traverse the right subtree inorder.
+
+In pseudocode, the procedure looks like:
+
+```rust
+fn inorder_traverse(tree):
+	inorder_traverse(left_subtree);
+	visit(node);
+	inorder_traverse(right_subtree);
+```
+
+To illustrate, let's use the following tree:
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "c", parent: "a" },
+	]}
+/>
+
+We start by executing `inorder_traverse(left_subtree)`. This means we start
+by traversing the left subtree. Here, the left subtree starts at ${n_b.}$
+${n_b}$ has no left subtree, so we call `visit()`.
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a", focus: "red", ant: 1 },
+		{ child: "c", parent: "a" },
+	]}
+/>
+
+After `visit()` finishes executing, we call
+`inorder_traverse(right_subtree)`. But, since ${n_b}$ has no right subtree,
+the call does not execute, and the function call
+`inorder_traverse(left_subtree: ${n_a}$)` finishes. This leads us to
+`visit(node: ${n_a}$)`.
+
+<Tree
+	data={[
+		{ child: "a", parent: "", focus: "red", ant: 2 },
+		{ child: "b", parent: "a", ant: 1 },
+		{ child: "c", parent: "a" },
+	]}
+/>
+
+Once we've visited ${n_a,}$ we then call
+`inorder_traverse(right_subtree: n_a)`. This subtree starts with the node
+${n_c.}$ Because ${n_c}$ has no left subtree, we call
+`visit(node: ${n_c}$)`.
+
+<Tree
+	data={[
+		{ child: "a", parent: "", ant: 2 },
+		{ child: "b", parent: "a", ant: 1 },
+		{ child: "c", parent: "a", focus: "red", ant: 3 },
+	]}
+/>
+
+Putting these calls all together, for a binary tree of order ${3,}$ the
+inorder traversal sequence is:
+
+$$
+	(n_b, n_a, n_c)
+$$
+
+If we had a left-skewed binary tree, the sequence would be ${(n_b, n_a).}$
+
+<Tree
+	data={[
+		{ child: "a", parent: "", ant: 2 },
+		{ child: "b", parent: "a", ant: 1 },
+		{ child: "c", parent: "a", display: "none" },
+	]}
+/>
+
+For a right-skewed binary tree, the sequence would be ${(n_a, n_c).}$ Since
+the root ${n_a}$ has no left subtree, we immediately visit ${n_c,}$ then
+traverse its right subtree. This results in visiting ${n_c.}$
+
+<Tree
+	data={[
+		{ child: "a", parent: "", ant: 1 },
+		{ child: "b", parent: "a", display: "none" },
+		{ child: "c", parent: "a", ant: 2 },
+	]}
+/>
+
+## Implementation
+
+The inorder traversal algorithm is implemented with the following function:
+
+```rust
+fn inorder(Node* root) -> void:
+	if (root != NULL):
+		inorder((*root).left_child);
+		print "{(*root).data}";
+		inorder((*root).right_child);
+```
+
+Suppose we want to inorder-traverse the following tree, named `sequoia`.
+
+<Tree
+	data={[
+		{ child: "3", parent: "", annotate: "root" },
+		{ child: "8", parent: "3", edgeLabel: "F1" },
+		{ child: "9", parent: "3", edgeLabel: "F2" },
+		{ child: "2", parent: "8", edgeLabel: "F3" },
+		{ child: "6", parent: "8", edgeLabel: "F4" },
+		{ child: "1", parent: "9", edgeLabel: "F5" },
+		{ child: "5", parent: "9", edgeLabel: "F6" },
+	]}
+/>
+
+We begin by making the call `inorder((*sequoia).root)`. Suppose `root`
+points to the address `F0`. This results in the call `inorder(F0)`. Making
+this call, the first statement is `inorder((*root).left_child)`. This
+evaluates to `inorder(F0.left_child)`, which evaluates to `inorder(F1)`:
+
+<HTree
+	data={[
+		{ child: "inorder(F0)", parent: "" },
+		{ child: "inorder(F1)", parent: "inorder(F0)" },
+	]}
+	margins={[20, 90, 20, 100]}
+	width={300}
+	height={100}
+	containerHeight={20}
+/>
+
+Calling `inorder(F1)`, we then call `inorder(F1.left_child)`, which
+evaluates to `inorder(F3)`.
+
+<HTree
+	data={[
+		{ child: "inorder(F0)", parent: "" },
+		{ child: "inorder(F1)", parent: "inorder(F0)" },
+		{ child: "inorder(F3)", parent: "inorder(F1)" },
+	]}
+	width={400}
+	height={100}
+	margins={[20, 100, 20, 100]}
+	containerHeight={20}
+/>
+
+The call `inorder(F3)` results in the call `inorder(F3.left_child)`.
+Because `F3` has no left-child, this evaluates to the call `inorder(0)`.
+This does not lead to any further calls, so it completes and we go to the
+next call, `print "{F3.data}"`:
+
+<HTree
+	data={[
+		{ child: "inorder(F0)", parent: "" },
+		{ child: "inorder(F1)", parent: "inorder(F0)" },
+		{ child: "foo", parent: "inorder(F0)", display: "none" },
+		{ child: "inorder(F3)", parent: "inorder(F1)" },
+		{ child: "foo", parent: "inorder(F1)", display: "none" },
+		{ child: "inorder(0)", parent: "inorder(F3)", call: true },
+		{ child: "2", parent: "inorder(F3)" },
+	]}
+	width={400}
+	height={300}
+	margins={[20, 100, 20, 100]}
+	containerHeight={40}
+/>
+
+Once the `print` line finishes executing, we go to the next call,
+`inorder(F3.right_child)`. Here, `F3` has no right-child, so the call
+evaluates to `inorder(0)`.
+
+<HTree
+	data={[
+		{ child: "inorder(F0)", parent: "" },
+		{ child: "inorder(F1)", parent: "inorder(F0)" },
+		{ child: "foo", parent: "inorder(F0)", display: "none" },
+		{ child: "inorder(F3)", parent: "inorder(F1)" },
+		{ child: "foo", parent: "inorder(F1)", display: "none" },
+		{ child: "inorder(0)", parent: "inorder(F3)", call: true },
+		{ child: "2", parent: "inorder(F3)" },
+		{ child: "inorder(0)", parent: "inorder(F3)", call: true },
+	]}
+	width={400}
+	height={300}
+	margins={[20, 100, 20, 100]}
+	containerHeight={40}
+/>
+
+This completes the call to `inorder(F3)`, so we go back to the call
+`inorder(F1)`. The next line is `print "{F1.data}"`, so we print the value
+`8`:
+
+<HTree
+	data={[
+		{ child: "inorder(F0)", parent: "" },
+		{ child: "inorder(F1)", parent: "inorder(F0)" },
+		{ child: "foo", parent: "inorder(F0)", display: "none" },
+		{ child: "inorder(F3)", parent: "inorder(F1)" },
+		{ child: "foo", parent: "inorder(F1)", display: "none" },
+		{ child: "inorder(0)", parent: "inorder(F3)", call: true },
+		{ child: "2", parent: "inorder(F3)" },
+		{ child: "inorder(0)", parent: "inorder(F3)", call: true },
+		{ child: "8", parent: "inorder(F1)" },
+	]}
+	width={400}
+	height={300}
+	margins={[20, 100, 20, 100]}
+	containerHeight={45}
+/>
+
+We then proceed to the next line, `inorder(F1.right_child)`. Because `F1`
+has a right-child, this call evaluates to `inorder(F4)`. Inside this call,
+we make the recursive call `inorder(F4.left_child)`. But `F4` has no
+left-child, so the call evaluates to `inorder(0)`.
+
+<HTree
+	data={[
+		{ child: "inorder(F0)", parent: "" },
+		{ child: "inorder(F1)", parent: "inorder(F0)" },
+		{ child: "foo", parent: "inorder(F0)", display: "none" },
+		{ child: "inorder(F3)", parent: "inorder(F1)" },
+		{ child: "foo", parent: "inorder(F1)", display: "none" },
+		{ child: "inorder(0)", parent: "inorder(F3)", call: true },
+		{ child: "2", parent: "inorder(F3)" },
+		{ child: "inorder(0)", parent: "inorder(F3)", call: true },
+		{ child: "8", parent: "inorder(F1)" },
+		{ child: "inorder(F4)", parent: "inorder(F1)" },
+		{ child: "inorder(0)", parent: "inorder(F4)", call: true },
+	]}
+	width={400}
+	height={300}
+	margins={[20, 100, 20, 100]}
+	containerHeight={45}
+/>
+
+We go to the next line, `print "{F4.data}"`, which prints the value `6`.
+This line is followed by `inorder(F4.right_child)`. And once again, because
+`F4` has no right-child, the call evaluates to `inorder(0)`:
+
+<HTree
+	data={[
+		{ child: "inorder(F0)", parent: "" },
+		{ child: "inorder(F1)", parent: "inorder(F0)" },
+		{ child: "inorder(F3)", parent: "inorder(F1)" },
+		{ child: "inorder(0)", parent: "inorder(F3)", call: true },
+		{ child: "2", parent: "inorder(F3)" },
+		{ child: "inorder(0)", parent: "inorder(F3)", call: true },
+		{ child: "8", parent: "inorder(F1)" },
+		{ child: "inorder(F4)", parent: "inorder(F1)" },
+		{ child: "inorder(0)", parent: "inorder(F4)", call: true },
+		{ child: "6", parent: "inorder(F4)" },
+		{ child: "inorder(0)", parent: "inorder(F4)", call: true },
+	]}
+	width={400}
+	height={300}
+	margins={[20, 100, 20, 100]}
+	containerHeight={45}
+/>
+
+This completes the call to `inorder(F4)`, which in turn completes the call
+to `inorder(F1)`. This brings us back to `inorder(F0)`. We execute the line
+`print "{F0.data}"`, and proceed to `inorder(F0.right_child)`, repeating
+the process we've covered. All of the calls together yield the following
+call trace:
+
+<HTree
+	data={[
+		{ child: "inorder(F0)", parent: "" },
+		{ child: "inorder(F1)", parent: "inorder(F0)" },
+		{ child: "inorder(F3)", parent: "inorder(F1)" },
+		{ child: "inorder(0)", parent: "inorder(F3)", call: true },
+		{ child: "2", parent: "inorder(F3)" },
+		{ child: "inorder(0)", parent: "inorder(F3)", call: true },
+		{ child: "8", parent: "inorder(F1)" },
+		{ child: "inorder(F4)", parent: "inorder(F1)" },
+		{ child: "inorder(0)", parent: "inorder(F4)", call: true },
+		{ child: "6", parent: "inorder(F4)" },
+		{ child: "inorder(0)", parent: "inorder(F4)", call: true },
+		{ child: "3", parent: "inorder(F0)" },
+		{ child: "inorder(F2)", parent: "inorder(F0)" },
+		{ child: "inorder(F5)", parent: "inorder(F2)" },
+		{ child: "inorder(0)", parent: "inorder(F5)", call: true },
+		{ child: "1", parent: "inorder(F5)" },
+		{ child: "inorder(0)", parent: "inorder(F5)", call: true },
+		{ child: "9", parent: "inorder(F2)" },
+		{ child: "inorder(F6)", parent: "inorder(F2)" },
+		{ child: "inorder(0)", parent: "inorder(F6)", call: true },
+		{ child: "5", parent: "inorder(F6)" },
+		{ child: "inorder(0)", parent: "inorder(F6)", call: true },
+	]}
+	width={500}
+	height={500}
+	margins={[20, 100, 20, 100]}
+	containerHeight={65}
+/>
+
+## Iterative Approach
+
+Just as we saw with preorder traversal, we can also implement an iterative
+version of inorder traversal. Recall that with inorder traversal, we want
+to traverse all of the left-subtrees before visiting the node. Thus, the
+iterative procedure looks similar to the `preorderLoop()`, with a few
+modifications:
+
+```rust
+fn inorderLoop(Node* root) -> void:
+	Stack nodeStack;
+	while (root != NULL || !isEmpty(nodeStack)):
+		if (root != NULL):
+			push(nodeStack, root);
+			root = (*root).left_child;
+		else:
+			root = pop(nodeStack);
+			print((*root).data);
+			root = (*root).right_child;
+```
+
+Notice that with `inorderLoop()`, the first arm of the while loop is to
+traverse the entire left-subtree. Only after we've traversed the entire
+left-subtree do we enter the second arm. Once we've arrived at the state
+where there are no left-children, we proceed to the second arm. Here, we
+pop node stack (binding the return value to `root`), then `print()` the
+relevant data. Thereafter, we change `root`'s assigned value to
+`(*root).right_child`.
+
+Notice that, broadly, the changes occur in the same way as
+`preorderLoop()`. This isn't all that odd, the only change we've made is
+moving the `print()` line elsewhere. With `preorderLoop()`, we printed the
+value before moving on to the _left-child_. With `inorderLoop()`, we print
+the value before moving on to the _right-child_. Moving this `print()` line
+does not impact the time complexity of traversing the entire tree—it's
+still ${O(n),}$ where ${n}$ is the number of nodes in the tree.

@@ -1,0 +1,114 @@
+# Introduction to Parsing
+
+Suppose we have the following expression:
+
+```rust
+10 + 5
+```
+
+This expression is called a **binary expression** — it consists of two
+operands, `10` and `2`. Viewing it as a tree:
+
+<PTree
+	data={[[`+`], [`+`, `10`, `5`]]}
+	height={100}
+	width={120}
+	containerWidth={40}
+	containerHeight={35}
+	margins={[20, 20, 20, 20]}
+/>
+
+More generally, binary expressions have the form:
+
+<PTree
+	data={[[`operator`], [`operator`, `operand`, `operand`]]}
+	height={100}
+	width={120}
+	fontSize={7}
+	containerWidth={40}
+	containerHeight={35}
+	margins={[20, 20, 20, 20]}
+/>
+
+We can encapsulate this structure in code with some `struct`:
+
+```rust
+struct expression {
+	type: 'binaryExpression',
+	operator: '+',
+	right: 5,
+	left: 10
+}
+```
+
+Now suppose we have this expression:
+
+```rust
+	10 + (3 ⨉ 1)
+```
+
+This, too, is just a binary expression:
+
+<PTree
+	data={[[`+`], [`+`, `10`, `⨉`], [`⨉`, `3`, `1`]]}
+	height={100}
+	width={120}
+	containerWidth={40}
+	containerHeight={35}
+	margins={[20, 20, 20, 20]}
+/>
+
+So, how do we represent this structure above in terms of code? In other
+words, how do we take a string consisting of the expressions we've seen,
+and structure it in such a way that it yields the visualization above? The
+answer is through a ~lexer~.
+
+## Tokens
+
+The expressions we've seen consist of characters. For example, for the
+expression ${10 + (3 \times 1),}$ we have the characters:
+
+<Sequence
+	data={[
+		{ val: "1", focus: "red" },
+		{ val: "0", focus: "red" },
+		" ",
+		{ val: "+", focus: "red" },
+		" ",
+		{ val: "(", focus: "red" },
+		{ val: "3", focus: "red" },
+		" ",
+		{ val: "⨉", focus: "red" },
+		" ",
+		{ val: "1", focus: "red" },
+		{ val: ")", focus: "red" },
+	]}
+/>
+
+Above, the red squares indicate characters that have inherent meaning
+(according to some language). The whitespace characters — the white boxes —
+have no meaning in our language. When we give the red-boxed characters
+meaning, they become ~tokens~.
+
+Stripping all of the whitespaces, the string we're working with is:
+
+```rust
+10+(3⨉1)
+```
+
+We'll start by creating a class called `Lexer`.[^language_note]
+
+[^language_note]:
+    The examples used in this volume employ pseudocode to keep the
+    discussion general. The pseudocode, however, was constructed with
+    JavaScript in mind.
+
+```rust
+class Lexer:
+	private:
+		stream = "";
+		cursor = 0;
+```
+
+
+

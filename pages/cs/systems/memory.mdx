@@ -1,0 +1,79 @@
+# Computer Memory
+
+So, we know that operations can be performed strictly within certain blocks of time. The question then, is, how do we move information from one block to another? In other words, let's say the block is ${t,}$ and the block before it is ${t-1.}$ How do we move information from ${t-1}$ to ${t?}$ Through a special chip called a _flip-flop_.
+
+To understand how the flip-flop works, it's helpful to consider its cousin, the __SR latch (Set-resest latch)__. The SR latch is a chip with two outputs, `Q` and ${\overline{\texttt{Q}}.}$ The values of these two ouputs depends on its two inputs, `set` and `reset`.
+
+![SR Latch](https://res.cloudinary.com/sublimis/image/upload/v1653172093/cs/SR_latch_em8825.svg)
+
+There are two types of latches: (1) the __active-high SR latch (HSRLatch)__ and (2) the __active-low SR latch (LSRLatch)__. For the HSRLatch, we have the following truth table:
+
+<div id="hsr_latch"></div>
+
+We can obtain this truth table by _cross-coupling_ two nor-gates:
+
+![HSR Latch](https://res.cloudinary.com/sublimis/image/upload/v1653172127/cs/hsrLatch_gkbmdg.svg)
+
+In the truth table above, `NC` indicates _no-change_, meaning that the the outputs of `Q` and ${\overline{\texttt{Q}}}$ remain in their present state &mdash; either `(Q=0, ${\overline{\texttt{Q}}}$=0)`, `(Q=0, ${\overline{\texttt{Q}}}$=1)`, or `(Q=1, ${\overline{\texttt{Q}}}$=0)`. Notice that from the truth table, we see the HSRLatch's mechanism. If `set=1`, then `Q=1`. `Q` stays as `1` until `reset=1`. Only when `reset=1` and `set=1` does `Q` go back to `0`, and `${\overline{\texttt{Q}}}$=1`. Contrast this with the LSRLatch's truth table:
+
+<div id="lsr_latch"></div>
+
+The LSRLatch is implemented by cross-coupling two nand-gates:
+
+![LSR Latch](https://res.cloudinary.com/sublimis/image/upload/v1653172181/cs/lsrLatch_h6a4tc.svg)
+
+Compared to the HSRLatch, the `set` and `reset` inputs for the LSRLatch are always set to `1`. When `set=0`, the `${\overline{\texttt{Q}}}$` output sends `1`. It stays at `1` until `set=0` and `reset=1`.  And when both `set=0` and `reset=0`, the two outputs go back to `1`.
+
+In both of the truth tables, `NC`, which indicates no-change.  If we think about this a little more carefully, we can see that this is effectively a way of _persisting_ data &mdash; `Q` and `${\overline{\texttt{Q}}}$` do not change until either the `set` or `reset` inputs change. Thus, we now have a way of saving, or remembering, data.
+
+The first obvious problem with the SR latch is the fact that we can accidentally change `set` and `reset`, thereby losing the current state. The fact is, the SR latches are fragile chips. It's too easy to lose the current state.
+
+The second problem is indicated by the `⊥` symbols (the logical symbol for a contradiction) in the truth tables. These are considered _indeterminate states_ &mdash; for those particular values of `set` and `reset`, the ouputs `Q` and `${\overline{\texttt{Q}}}$` could be anything.
+
+Because of these two problems, SR latches are not commonly used directly. Instead, they're more of a component for a more common chip &mdash; the __flip flop__. The flip flop is a essentially a latch without the risk of accidentally changing the `set` and `reset` inputs (i.e., a solution to the first problem). To prevent accidental setting or resetting, we need two more nand-gates, and an `enable` pin:
+
+![Flip flop gate](https://res.cloudinary.com/sublimis/image/upload/v1653172223/cs/flipflop_acg9ec.svg)
+
+By using two additional nand-gates and an `enable` pin, we can no longer accidentally set or reset the SR latch. If the `enable` pin is fed the `clock`'s output (inputs oscillating between `0` and `1`), we get the following truth table:
+
+<div id="flip_flop_truth_table"></div>
+
+Notice that when the `clock` feeds `0`, no change occurs &mdash; the current state persists. Only when the `clock` feeds `1` do we have the opportunity to change the current state.  Because of this characteristic, we can write a more expressive truth table:
+
+<div id="flip_flop_truth_table_2"></div>
+
+In the table above, ${\texttt{T}_{n}}$ corresponds to the current state of the SR latch's output (the output `Q`), and ${\texttt{T}_{n-1}}$ corresponds to the previous state of the SR latch's output. We still, however, have the problem of an indeterminate state &mdash; the situation where `clock=1`, `s=1`, and `r=1`.
+
+How might we get around this problem? Well, let's look at the truth table. The indeterminate state occurs when `set=1` and `reset=1`. More generally, we only enter the indeterminate state when `set` and `reset` are the same.  Accordingly, we can get around this problem by: (1) instead of inputs directly into the `set` and `reset` pins, we instead pass a single input to a pin called `in`, (2) the input fed into `in` goes in two directions: (a) to the `set` pin, and (b) to a NOT-gate. The output of the NOT-gate is then fed into the `reset` pin:
+
+![D-flipflop gate](https://res.cloudinary.com/sublimis/image/upload/v1653172265/cs/dflipflop_x3vno1.svg)
+
+Using this approach, we never reach a point where `set` and `reset` are the same. Thus, our truth table now looks like:
+
+<div id="dflipflop_truth_table"></div>
+
+This particular gate is called a __data flip flop)__ or __D flip flop__ (abbrevated __DFF__). Because the D flip-flop is the most basic component for implementing memory, it's generally encapsulated as a single chip with the following diagram:
+
+![Flipflop gate](https://res.cloudinary.com/sublimis/image/upload/v1653172302/cs/flip-flop_gate_eyfccb.svg)
+
+In the diagram, the small triangle corresponds to the `clock` input. Because of this encapsulation, we have the following truth table for the D flip-flop:
+
+<div id="dflipflop_final_truth_table"></div>
+
+In the table above, we see that we still have the ability to persist state. We lose the previous state only if the clock is `1` and we change the input for `in`. If we keep `in` at `0`, then the `out` remains `0`. Only when we we change `out` to `1` and the clock is `1` does the state change to `1`. Accordingly, this truth table can be thought of as:
+
+<div id="dflipflop_simplified"></div>
+
+Viewed in this way, we see that:
+
+$$
+	\large \texttt{out(T)} = \texttt{in(T-1)}
+$$
+
+In other words, the output of the D flip-flop is whatever the previous input was. That's memory. But, as hinted at by this section's title, it's _primitive_. We can only remember what the _previous input_ was. This is useful, but it also means that once we change inputs, the previous output is lost. And for many applications, we _want_ to recall the previous output:
+
+$$
+	\large \texttt{out(T)} = \texttt{out(T-1)}
+$$
+
+This is, in fact, what classical computer storage is. To implement this behavior, we need a special chip called a _register_.

@@ -1,0 +1,98 @@
+# Errors
+
+Errors are unexpected or unintended program results. They fall into four
+categories: (1) **compiler errors**; (2) **linker errors**; (3) **runtime
+errors**; and (4) **logic errors**. We cover them briefly below.
+
+### Compiler Errors
+
+Like a human language, any given programming language has specific rules
+for how we write and use the language. These rules fall into two sets: (a)
+**syntax** and (b) **semantics**. A language's syntax is the set of all
+rules defining how meaning should be conveyed (in other words, how we can
+_write_ in the language). A language's semantics is the set of all rules
+defining when there is _meaning_. For example, below are all syntax errors.
+
+```cpp
+// We neglected to terminate the string (forgetting a quotation * mark).
+//  And neglected to include a semicolon.
+
+std::cout << "errors << std::endl
+```
+
+Next, semantic errors:
+
+```cpp
+// We told the compiler that main() returns an int.
+// But then we're returning a string (a char*).
+// We also omitted the opening brace.
+// This will confuse the compiler; where does the code start and end?
+int main()
+	return "Hello, world!"
+}
+```
+
+When we violate these rules &mdash; syntax and semantics &mdash; we receive
+a **compiler error**. Syntax errors are relatively easy to fix. The
+compiler will usually pinpoint the particular line where the error
+occurred. Semantics errors are a little more difficult, but they should be
+easy to spot as long as we have a good understanding of semantic rules.
+
+Alternatively, the compiler may return a **compiler warning** rather than a
+compiler error. The difference is that the source will still compile, but
+there is an inordinate amount of risk in doing so. A rule of thumb: Treat
+compiler warnings as if they are errors.
+
+### Linker Errors
+
+The process of **linking** is when the _linker_ attempts to piece together
+all of the difference parts of the program in preparation for execution. If
+the linker has trouble linking the program's object files together, we will
+receive a **linker error**. The most common culprit behind linker errors: A
+missing library or object file. Usually, this happens when we use an
+incorrect file path or incorrect name.
+
+```cpp
+#include <iostream>
+
+extern int phi;
+
+int main() {
+	std::cout<<x;
+	return 0;
+}
+```
+
+The code above will compile just fine, but it will return a linker error.
+Why? Because we are using some `int` named `phi`, that supposedly exists
+outside the source code. The problem? There is no file in the directory
+that contains, let alone defines, what `int phi` is. Because the linker
+cannot find the necessary pieces, it returns a linker error. Linker errors
+most commonly occur when we use many libraries and external source code
+files, and they are trickier to fix. We will address them as they arise.
+
+### Runtime Errors
+
+Runtime errors are errors that occur when the program executes. Alongside
+logic errors, runtime errors are some of the most difficult to resolve.
+This is because they've managed to evade the compiler and the linker, and
+as such, there's something much more sinister occurring. The most common
+culprits: dividing by zero (C++ is not among the languages that ascribes a
+value for dividing by zero), memory leaks (running out of memory, leading
+to either a crash or very slow execution), segmentation faults (touching
+memory we shouldn't be touching), stack or heap overflows (e.g., recursive
+functions that never or take too long to reach a base case), hangings
+(infinite loops), and file-not-found errors. Because runtime errors come in
+many forms, we will address them as they occur. As a preface, they are best
+handled with exceptions.
+
+### Logic Errors
+
+Logic errors are without a doubt the most difficult errors to fix. This is
+where there is not something wrong with our code: The code builds and
+executes with no problems, but we're seeing unexpected results. The problem
+is not in the code, but in our thinking. Like runtime errors, logic errors
+are best addressed as they occur, because they come in many forms &mdash;
+fence-post problems, exponential recursions, untraveled branches, and many
+more. For these kinds of errors, debuggers and test suites are extremely
+helpful.

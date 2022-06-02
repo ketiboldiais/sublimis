@@ -1,0 +1,407 @@
+# Preorder Traversal
+
+Preorder traveral is defined as follows:
+
+> Procedure: Preorder Traversal Let ${B}$ be a binary tree. To traverse
+> ${B}$ in preorder:
+>
+> 1. Visit some node ${n}$ in ${B.}$
+> 2. Traverse the left subtree of ${n}$ in preorder.
+> 3. Traverse the right subtree of ${n}$ in preorder.
+
+In pseudocode, the procedure looks like:
+
+```rust
+preorder(tree):
+	visit(node)
+	preorder(left(tree))
+	preorder(right(tree))
+```
+
+Let's illustrate with a few examples. Consider the following tree:
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "c", parent: "a" },
+	]}
+	containerHeight={20}
+/>
+
+We start by executing `visit(node)`. This means visiting the root, ${n_a:}$
+
+<Tree
+	data={[
+		{ child: "a", parent: "", focus: "red", ant: 1 },
+		{ child: "b", parent: "a" },
+		{ child: "c", parent: "a" },
+	]}
+	containerHeight={20}
+/>
+
+Then we execute `preorder_traverse(left_subtree)`. This is simply a
+recursive call of `preorder_traverse()`, with the left subtree of ${n_a}$
+passed as an argument. Passing the left subtree of ${n_a}$ as an argument,
+we again call `visit(node)`. This means visiting the root of the tree,
+${n_b:}$
+
+<Tree
+	data={[
+		{ child: "a", parent: "", ant: 1 },
+		{ child: "b", parent: "a", focus: "red", ant: 2 },
+		{ child: "c", parent: "a" },
+	]}
+	containerHeight={20}
+/>
+
+Because ${n_b}$ has no subrees, we finish the call
+`preorder_traverse(left_subtree)` and go to the next call,
+`preorder_traverse(right_subtree)`. This is the right subtree of ${n_a:}$
+
+<Tree
+	data={[
+		{ child: "a", parent: "", ant: 1 },
+		{ child: "b", parent: "a", ant: 2 },
+		{ child: "c", parent: "a", focus: "red", ant: 3 },
+	]}
+	containerHeight={20}
+/>
+
+Putting these calls all together, for binary tree of order ${3,}$ the
+traversal sequence is:
+
+$$
+	(n_a, n_b, n_c)
+$$
+
+If we had a left-skewed binary tree, the sequence would be ${(n_a, n_b).}$
+
+<Tree
+	data={[
+		{ child: "a", parent: "", ant: 1 },
+		{ child: "b", parent: "a", ant: 2 },
+		{ child: "c", parent: "a", display: "none" },
+	]}
+	containerHeight={20}
+/>
+
+The same goes for a right-skewed binary tree. Since there is no
+left-subtree, the next call is `preorder_traverse(right_subtree)`:
+
+<Tree
+	data={[
+		{ child: "a", parent: "", ant: 1 },
+		{ child: "b", parent: "a", display: "none" },
+		{ child: "c", parent: "a", ant: 2 },
+	]}
+	containerHeight={20}
+/>
+
+### Implementation
+
+Suppose we're given the following tree:
+
+<Tree
+	data={[
+		{ child: "8", parent: "", ant: "root" },
+		{ child: "3", parent: "8", edgeName: "F1" },
+		{ child: "5", parent: "8", edgeName: "F2" },
+		{ child: "4", parent: "3", edgeName: "F3" },
+		{ child: "9", parent: "3", edgeName: "F4" },
+		{ child: "7", parent: "5", edgeName: "F5" },
+		{ child: "2", parent: "5", edgeName: "F6" },
+	]}
+	isDirected={true}
+/>
+
+For preorder traversal, we have the following function:
+
+```rust
+preorder(binaryTree):
+	let root = binaryTree->root
+	if (binaryTree->root isnt null):
+		read(root->data)
+		preorder(root->left)
+		preorder(root->right)
+```
+
+This is a recursive function. If the root is not null, we read the data
+stored in the root. Then, we make a recursive call passing the root's left
+child as an argument. After that recursive call, we make another recursive
+call, passing the root's right-child of as an argument.
+
+For example, suppose our example tree is called `oak`, whose root has the
+address `F0`. To preorder traverse `oak`, we make the call `preorder(oak)`.
+This results in a function call in stack memory, `preorder(F0)`. The first
+line in this call prints the value `8`:
+
+<Stack data={["preorder(F0)"]} frameWidth={150} />
+
+<HTree
+	data={[
+		{ child: "preorder(F0)", parent: "" },
+		{ child: "8", parent: "preorder(F0)" },
+	]}
+	margins={[20, 90, 20, 100]}
+	width={300}
+	height={100}
+	containerHeight={20}
+/>
+
+Inside `preorder(F0)`, we call `preorder((*root).left_child)`. Following
+our diagram, this means making the call `preorder(F1)`:
+
+<Stack data={["preorder(F0)", "preorder(F1)"]} frameWidth={150} />
+
+<HTree
+	data={[
+		{ child: "preorder(F0)", parent: "" },
+		{ child: "8", parent: "preorder(F0)" },
+		{ child: "preorder(F1)", parent: "preorder(F0)" },
+	]}
+	width={300}
+	height={200}
+	margins={[20, 100, 20, 100]}
+	containerHeight={40}
+/>
+
+Given `preorder(F1)`, we print the value `3`, then make the call
+`preorder(F3)`:
+
+<Stack
+	data={["preorder(F0)", "preorder(F1)", "preorder(F3)"]}
+	frameWidth={150}
+/>
+
+<HTree
+	data={[
+		{ child: "preorder(F0)", parent: "" },
+		{ child: "8", parent: "preorder(F0)" },
+		{ child: "preorder(F1)", parent: "preorder(F0)" },
+		{ child: "3", parent: "preorder(F1)" },
+		{ child: "preorder(F3)", parent: "preorder(F1)" },
+	]}
+	width={400}
+	height={300}
+	margins={[20, 100, 20, 100]}
+	containerHeight={40}
+/>
+
+The call `preorder(F3)` then prints the value `4`, and calls
+`preorder((*root).left_child)`.
+
+<Stack
+	data={["preorder(F0)", "preorder(F1)", "preorder(F3)", "preorder(0)"]}
+	frameWidth={150}
+/>
+
+<HTree
+	data={[
+		{ child: "preorder(F0)", parent: "" },
+		{ child: "8", parent: "preorder(F0)" },
+		{ child: "preorder(F1)", parent: "preorder(F0)" },
+		{ child: "3", parent: "preorder(F1)" },
+		{ child: "preorder(F3)", parent: "preorder(F1)" },
+		{ child: "4", parent: "preorder(F3)" },
+		{ child: "preorder(0)", parent: "preorder(F3)" },
+	]}
+	width={500}
+	height={300}
+	margins={[20, 100, 20, 100]}
+	containerHeight={40}
+/>
+
+Because `F3` has no left-child, the call is essentially `preorder(0)` (a
+null pointer). Nevertheless, the call is made and subsequently popped off
+the stack. This takes us to the next call, `preorder((*root).right_child)`.
+Because `F3` has no right-child, this call also results in `preorder(0)`:
+
+<Stack
+	data={["preorder(F0)", "preorder(F1)", "preorder(F3)", "preorder(0)"]}
+	frameWidth={150}
+/>
+
+<HTree
+	data={[
+		{ child: "preorder(F0)", parent: "" },
+		{ child: "8", parent: "preorder(F0)" },
+		{ child: "preorder(F1)", parent: "preorder(F0)" },
+		{ child: "3", parent: "preorder(F1)" },
+		{ child: "preorder(F3)", parent: "preorder(F1)" },
+		{ child: "4", parent: "preorder(F3)" },
+		{ child: "preorder(0)", parent: "preorder(F3)" },
+		{ child: "preorder(0)", parent: "preorder(F3)" },
+	]}
+	width={500}
+	height={300}
+	margins={[20, 100, 20, 100]}
+	containerHeight={40}
+/>
+
+Having executed all of the instructions for `preorder(F3)`, the most recent
+being the call `preorder(F1.left_child)`, the call `preorder(F3)` is popped
+off the stack:
+
+<Stack data={["preorder(F0)", "preorder(F1)"]} frameWidth={150} />
+
+We're now back at `preorder(F1)` to execute `preorder(F1.right_child)`.
+This results in the call `preorder(F4)`. The value `9` is printed, and the
+call `preorder(F4.left_child)` is made.
+
+<HTree
+	data={[
+		{ child: "preorder(F0)", parent: "" },
+		{ child: "8", parent: "preorder(F0)" },
+		{ child: "preorder(F1)", parent: "preorder(F0)" },
+		{ child: "3", parent: "preorder(F1)" },
+		{ child: "preorder(F4)", parent: "preorder(F1)" },
+		{ child: "preorder(F3)", parent: "preorder(F1)" },
+		{ child: "4", parent: "preorder(F3)" },
+		{ child: "preorder(0)", parent: "preorder(F3)", call: true },
+		{ child: "preorder(0)", parent: "preorder(F3)", call: true },
+		{ child: "9", parent: "preorder(F4)" },
+		{ child: "preorder(0)", parent: "preorder(F4)", call: true },
+		{ child: "preorder(0)", parent: "preorder(F4)", call: true },
+	]}
+	width={500}
+	height={400}
+	margins={[20, 100, 20, 100]}
+	containerHeight={50}
+/>
+
+This recursive call evaluates to `preorder(NULL)`, so we make the next
+recursive call, `preorder(F4.right_child)`. This also results in
+`preorder(NULL)`, so `preorder(F4)` is popped off the stack.
+
+With `preorder(F4.right_child)` finished, this completes the call for
+`preorder(F4)`, which completes the call for `preorder(F1)`. This then
+completes the call for `preorder(F1.left_child)`. The process continues for
+`preorder(F1.right_child)`. Putting it all together, we have a call trace
+that looks like:
+
+<HTree
+	data={[
+		{ child: "preorder(F0)", parent: "" },
+		{ child: "8", parent: "preorder(F0)" },
+		{ child: "preorder(F1)", parent: "preorder(F0)" },
+		{ child: "preorder(F2)", parent: "preorder(F0)" },
+		{ child: "3", parent: "preorder(F1)" },
+		{ child: "preorder(F3)", parent: "preorder(F1)" },
+		{ child: "preorder(F4)", parent: "preorder(F1)" },
+		{ child: "4", parent: "preorder(F3)" },
+		{ child: "preorder(0)", parent: "preorder(F3)", call: true },
+		{ child: "preorder(0)", parent: "preorder(F3)", call: true },
+		{ child: "9", parent: "preorder(F4)" },
+		{ child: "preorder(0)", parent: "preorder(F4)", call: true },
+		{ child: "preorder(0)", parent: "preorder(F4)", call: true },
+		{ child: "5", parent: "preorder(F2)" },
+		{ child: "preorder(F5)", parent: "preorder(F2)" },
+		{ child: "preorder(F6)", parent: "preorder(F2)" },
+		{ child: "7", parent: "preorder(F5)" },
+		{ child: "preorder(0)", parent: "preorder(F5)", call: true },
+		{ child: "preorder(0)", parent: "preorder(F5)", call: true },
+		{ child: "2", parent: "preorder(F6)" },
+		{ child: "preorder(0)", parent: "preorder(F6)", call: true },
+		{ child: "preorder(0)", parent: "preorder(F6)", call: true },
+	]}
+	width={500}
+	height={500}
+	margins={[20, 100, 20, 100]}
+	containerHeight={65}
+/>
+
+If we count the number `preorder()` calls, we'll find that there are ${15}$
+calls total, given ${7}$ nodes. Recall from our earlier discussion that
+given ${N}$ nodes, there are ${N}$ non-null pointers and ${N+1}$ null
+pointers. Thus, the total number of calls we make is ${2N + 1.}$ This
+conforms with our data: Given a binary tree of ${7}$ nodes, we have
+${2(7) + 1 = 15}$ calls for preorder traversal.
+
+Now, although there are ${15}$ calls, that does not mean the size of the
+call stack grows to ${15.}$ Indeed, the most the call stack grows up to is
+${4.}$ When we called `preorder(F0)`, that resulted in a call to
+`preorder(F2)`, then a call to `preorder(F5)`, then a call to
+`preorder(0)`. Once `preorder(0)` finishes, it's popped off the stack, then
+we make another call to `preorder(0)`, then that's popped off the stack,
+then back to `preorder(F5)`, and so on. The call stack grows up to
+`preorder(0)`, then back down, and so on.
+
+Because of this up and down movement, the most the call stack grows to is
+${H + 2,}$ where ${H}$ is the height of the binary tree. For our example
+tree, the height is ${H = 2,}$ which yields the call stack size of
+${S_c = H + 2 = 4.}$
+
+### Iterative Approach
+
+Although recursion is the preferred and more common approach for
+implementing tree traversals, we can also traverse through iterative means.
+With an iterative approach, we may have to implement our own stack. To see
+why, let's reuse our `oak` tree to illustrate. We'll use a function that
+(for now) looks like the recursive implementation:
+
+```rust
+fn preorderLoop(Node* root) -> void:
+while (root != NULL):
+	if ((*root).left_child != NULL):
+		print((*root).data);
+		root = (*root).left_child;
+	else if ((*root).right_child != NULL):
+		print((*root).data);
+		root = (*root).right_child;
+	else:
+		print("Finished")
+```
+
+<Tree
+	data={[
+		{ child: "8", parent: "", ant: "root" },
+		{ child: "3", parent: "8", edgeName: "F1" },
+		{ child: "5", parent: "8", edgeName: "F2" },
+		{ child: "4", parent: "3", edgeName: "F3" },
+		{ child: "9", parent: "3", edgeName: "F4" },
+		{ child: "7", parent: "5", edgeName: "F5" },
+		{ child: "2", parent: "5", edgeName: "F6" },
+	]}
+	isDirected={true}
+/>
+
+Suppose `(*oak).root` has the address `F0`. First we make the call
+`preorderLoop((*oak).root)`, which evaluates to `preorderLoop(F0)`. The
+first instruction in this call is `print((*root).data)`, which evaluates to
+`print(F0.data)`. The value `8` is thus printed to the console.
+
+Next, we make a call to `preorderLoop(F0.left_child)`. This evaluates to
+`preorderLoop(F1)`. The first instruction for this call is
+`print(F1.data)`, so the value `3` is logged to the console. Following this
+call, we have `preorderLoop(F1.left_child)`. This evaluates to
+`preorderLoop(F3)`. Again the first instruction is `print(F3.data)`, so we
+output `4` to the console.
+
+Then we have `preorderLoop(F3.left_child)`. There is no left-child, so we
+call `preorderLoop(F3.right_child)`. Now we've got a problem. There is no
+right-child of `F3` &mdash; it's a null pointer. Given the program as is,
+we have no way of "going back" to the previous node, `F1`. Accordingly,
+what we need is an auxiliar data structure to keep track of the nodes we've
+previously visited &mdash; a _stack_.
+
+Suppose we've implemented a `Stack` data structure, with the functions
+`push()` and `pop()`. The function `push()` inserts a new node address onto
+the stack, and the function `pop()` removes the topmost address from the
+stack, returning that address as an output value. We also have a function
+`isEmpty()` which returns `true` if the stack is empty, and `false`
+otherwise. With this auxiliary data structure, we'll write the rewrite our
+`preorderLoop()` function as follows:
+
+```rust
+fn preorderLoop(Node* root) -> void:
+	struct Stack nodeStack;
+	while (root != NULL || !isEmpty()):
+		if (root != NULL):
+			print((*root).data);
+			push(nodeStack, root);
+			root = (*root).left_child;
+		else:
+			root = pop(nodeStack);
+			root = (*root).right_child;
+```

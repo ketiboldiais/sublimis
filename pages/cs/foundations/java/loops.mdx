@@ -1,0 +1,632 @@
+# Loops in Java
+
+The process of repeatedly doing the same thing over and over again is
+called a **loop**. In the previous section, we the most basic data
+structure, an array. Loops are a common way to work with data stored in
+array. There are two types of loops &mdash; while-loops and for-loops.
+
+## The while-Loop.
+
+The simplest loop is the while-loop. It takes the following form in Java:
+
+```rust
+while (<condition>) {
+	<statements>
+}
+```
+
+Where ${c}$ is an expression evaluating to true or false, and
+${s_0, \ldots, s_n}$ are the statements to execute.
+
+In the while-loop, we pass into the parentheses some code that outputs true
+or false. Most often, these are Boolean expressions. _As long as_ the
+condition, in the example above `x`, returns `true`, the code block
+enclosed by the while-loop executes.
+
+In sum, the while-loop has two parts:
+
+1. A condition that must be true each time the loop is entered, called the
+   _test statement_ (represented by `x` in the syntax above); and
+
+2. a block of code to repeat (represented by the set of ellipses above)
+
+As soon as the condition is false, the block of code is not executed, and
+execution continues after the loop. Otherwise, the block of code continues
+executing. In loops, each execution of a loop's block of code is called an
+**iteration**. For example:
+
+```java
+int iteration = 0;
+while (iteration < 4) {
+	System.out.println(iteration);
+	iteration++;
+}
+System.out.println("Done");
+```
+
+```bash
+0
+1
+2
+3
+Done
+```
+
+The operator `++` is the increment-by-1 operator; it adds the integer 1 to
+a particular value. This will cause different inputs for the while-loop,
+allowing it evaluate to either `true` or `false`. We call this the
+_updating statement_. In the code above, the condition is `iteration < 4`.
+Since `iteration = 0`, the condition in plain English is, &#8220;As long as
+`iteration` is less than `4`, execute the following.&#8221; The first time
+we encounter the while-loop, `iteration = 0`; the condition returns `true`.
+So, we print the current value assigned to `increment`, `0`, and then we
+increment: `iteration = 1`. We go back to the condition: Is `1 < 4`? Yes.
+Print `1` and increment: `iteration = 2`. Is `2 < 4`? Yes. Print `2` and
+increment: `iteration = 3`. Is `3 < 4`? Yes. Print `3` and increment:
+`increment = 4`. Is `4 < 4`? No. Java ignores the while-loop's code block
+and moves to the next statement &mdash; print `"Done"`.
+
+## The do-while Loop.
+
+The `do-while` loop takes the following form:
+
+```rust
+	do {
+		⟨_expressions_⟩
+	} while ( ⟨_condition_⟩ )
+```
+
+Compared to the while-loop, the `do-while` loop checks the condition
+_after_ the expressions are executed. In effect, the `do while` loop
+operates similarly to the while-loop (it is still a loop), with the
+difference being the loop's body always executes at least once (in contrast
+to while-loops, where no such requirement exists; the loop body may never
+execute if the first condition check returns `false`).
+
+```java
+// the loops below have the same condition
+// only one will have its body executed
+
+int i = 0;
+while (i < 0) {
+	System.out.println("while " + i);
+	i++
+};
+
+i = 0;
+do {
+	System.out.println("do-while" + i);
+	i++;
+} while (i < 0)
+```
+
+```bash
+do-while 0
+```
+
+## Infinite Loops
+
+If we're going to use a while-loop, we must have code that eventually
+causes its condition to return `false`. In other words, we need to ensure
+that the while-loop will eventually _halt_. Otherwise, the loop becomes an
+_unterminated loop_, which will cause our code to _hang_, or hit a
+_timeout_.
+
+Most often, such code is included in the while-loop's body. If we fail to
+write this code, the while-loop's code block will continue executing
+endlessly &mdash; an infinite loop. Here is an example of an unterminated
+while-loop:
+
+```java
+int index = 0;
+while (index < 4) {
+	System.out.println(index);
+	index--;
+}
+System.out.println("Done");
+```
+
+The while-loop never terminates because its condition will always return
+`true`. The while-loop here will run for as long as it can until the
+console eventually returns a `(Program Timed Out)`. Here is a more explicit
+example of an unterminated loop:
+
+```java
+while (true) {
+	System.out.println("Looping");
+}
+```
+
+This is such a clear example of an unterminated loop that we have a special
+name for it &mdash; the `while true` loop. If we ever feel the need to use
+a `while true` loop, we must always ask ourselves what we're using it for
+&mdash; we're playing with fire.
+
+## while-loops and Arrays
+
+With the while-loop, we can loop through the values in an array:
+
+```java
+char[] word = {'j', 'a', 'v', 'a'};
+int index = 0;
+while (index < 4) {
+	System.out.println(word[index]);
+	index++;
+}
+System.out.println("Done");
+```
+
+```bash
+j
+a
+v
+a
+Done
+```
+
+## The for-loop
+
+Looping through data structures like arrays is so common in programming
+that we have an alternative and cleaner way of looping, the for-loop. The
+syntax is the following:
+
+```java
+for (int i = 0; i < n; i++) {
+	...
+	...
+	...
+}
+
+/*
+where:
+	i is an index (an integer)
+	n is the number of times we want to loop
+	... is a statement to execute
+*/
+```
+
+The for-loop accomplishes the same task as the while-loop &mdash; it's just
+cleaner. Compare the two:
+
+```java
+	int i = 0;
+	while (i < n) {
+		...
+		...
+		...
+	}
+```
+
+```java
+	for (int i = 0; i < n; i++) {
+		...
+		...
+		...
+	}
+```
+
+Notice that in the for-loop, there are four parts:
+
+1. `int i = 0;` is the **counter**, a variable to be used by the test
+   condition. This variable is only available inside the loop. We cannot
+   access it outside the loop.
+
+2. `i < 4;` is the condition to test, called the _test statement_. This is
+   checked every time we enter the loop, _including_ the first time. As
+   long as this condition is true, the block of code is executed, and the
+   loop continues. As soon as the condition is false, the loop terminates,
+   and Java ignores all statements thereafter.
+
+3. `i++` is the code that changes the index, causing different inputs to
+   the test's condition, called the _updating statement_. This code is
+   executed _only_ when we return to the top of the loop. It is not
+   executed the first time.
+
+4. `{ ... }` contain the statements to execute.
+
+The first three parts (the statements contained inside the parentheses), is
+called the for-loop's **header**, and the block of code to execute is
+called the for-loop's body. Bearing these parts in mind, an example:
+
+```java
+char[] word = {'j', 'a', 'v', 'a'};
+for (int index = 0; index < 4; index++) {
+	System.out.println(word[index]);
+}
+System.out.println("Done");
+```
+
+```bash
+j
+a
+v
+a
+Done
+```
+
+Again, a for-loop operates exactly the same as a while-loop, just shorter
+and more concise. Here is a while-loop implementation:
+
+```java
+int[] primes = {2, 3, 5, 7, 11};
+int i = 0;
+
+while (i < 5) {
+	System.out.println(primes[i]);
+	i++;
+}
+
+System.out.println("Done");
+```
+
+```bash
+2
+3
+5
+7
+11
+Done
+```
+
+And here is a for-loop implementation:
+
+```java
+int[] primes = {2, 3, 5, 7, 11};
+
+for (int i = 0; i < primes.length; i++) {
+	System.out.println(primes[i]);
+}
+
+System.out.println("Done");
+```
+
+```bash
+2
+3
+5
+7
+11
+Done
+```
+
+A helpful way to loop through the array is to use the array's `.length`
+property. This spares us from manually counting each of the individual
+elements in the array; a task that may be impossible or cumbersome with
+large arrays.
+
+## For-loop Nuances.
+
+In a for-loop, the _counter_ variable is initialized only once. It does not
+get &#8220;reinitialized&#8221; at each iteration. The value assigned to it
+changes, but there is no new initialization. The loop's _test expression_
+is evaluated every time the loop block is executed, including the first
+time. The loop's _updating statement_ is executed after each time the block
+is executed and before the condition is checked. Putting altogether, the
+algorithm consists of the following steps in order:
+
+1. Evaluate the condition.
+2. If the condition is false, ignore the for-loop's block of code and go to
+   the statement after the for-loop.
+3. If the condition is true, execute the loop's block of code. After the
+   block finishes executing, update the loop variable.
+4. Repeat.
+
+## Changes to a Loop Variable
+
+We can change a variable initialized outside a while-loop with code inside
+the while-loop:
+
+```java
+int i = 0;
+while (i < 10) {
+	i++;
+}
+System.out.println(i);
+```
+
+```bash
+10
+```
+
+The same goes for a for-loop:
+
+```java
+int num = 0;
+for (int i = 0; i < 10; i++) {
+	num++;
+}
+System.out.println(num);
+```
+
+```bash
+10
+```
+
+## Incomplete for-loops
+
+We are not _required_ to provide the counter, test statement, or the update
+statement inside the for-loop's header. They can be stated outside the
+for-loop, and used inside the header, or omitted entirely:
+
+```java
+int i = 0;
+for (; i < 10; i++) {
+	// this will execute 10 times
+}
+for (; i < 10; ) {
+	// this will execute exactly once
+}
+for (;;) {
+	// this will hang
+}
+```
+
+Note, we should not write loops this way unless we have a good reason for
+doing so &mdash; such code is difficult to read and a breeding ground for
+bugs.
+
+## Loop Control.
+
+We can control loops by using the keywords `break` and `continue`. The
+keyword `break` tells Java &#8220;Get out of this loop now&#8221; We might
+use this if our loop eventually returns the data we sought, or if a
+particular condition occurs. For example, we might search a particular
+array, and once a match is found, we `break`, rather than continuing to
+check the remaining values. For example:
+
+Oppositely, the word `continue` tells Java, &#8220;Get back to the top of
+the loop now, perform the update, and continue to the code block.&#8221;
+This keyword is often used when our loop runs, and returns data that isn't
+interesting. For example, we might have an array of user emails, and we
+only want to send a newsletter to those who agreed to receiving
+newsletters. We loop through all of the user emails &mdash; if the user
+opted to receive newsletters, we send the newsletter, otherwise, we
+`continue`.
+
+Here is an example utilizing the two key words:
+
+```java
+int query = 5;
+int[] primes = {2, 3, 5, 7};
+for (int i = 0; i < primes.length; i++) {
+	if (primes[i] == query) {
+		System.out.println("Match found: " + query);
+		break;
+	} else if ((primes[i] != query) && (i < primes.length-1)) {
+		continue;
+	} else {
+		System.out.println("No match: " + query);
+		break;
+	}
+}
+System.out.println("Loop exited");
+```
+
+```bash
+Match found: 5
+Loop exited
+```
+
+## Enhanced for-loop
+
+Going through the values in an array one at a time is so common in
+programming that Java provides syntactic sugar for it. On the left is a
+regular for-loop, and on the right is the enhanced for-loop:
+
+```java
+// Regular for loop
+
+int[] arr = {0, 1, 2, 3};
+for (int i = 0; i < arr.length; i++) {
+	System.out.println(arr[i]);
+}
+```
+
+```java
+// Enhanced for loop
+
+int[] arr = {0, 1, 2, 3};
+for (int element : arr) {
+	System.out.println(element);
+}
+```
+
+If we just want to iterate through the values inside an array, we can use
+the enhanced for-loop. It's cleaner, more concise, and we don't need to
+worry about indexes. The tradeoff: We don't have access to a indices. Thus,
+if our computation needs access to index, we should use the regular
+for-loop.
+
+## While- v. For-loops
+
+If we want to execute a statement or set of statements as long as some
+condition is true, but we do not know how many times the statement should
+execute, a while-loop would be best to use. while-loops are an example of
+an **indefinite loop**. If, however, we know exactly how many times we want
+to iterate or we have data that provides such number, a for-loop is ideal
+&mdash; it is a **definite loop**.
+
+## Fencepost Problem
+
+A very common error when handling for-loops is the _fencepost problem_
+(also called _of-by-one error_). Suppose we wanted to build a fence with 5
+posts and 4 wires between the posts. The fencepost problem is represented
+with the following diagram:
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653612900/cs/fence_post_problem_nhwacg.svg"
+	}
+	caption={"Fencepost Problem"}
+	width={"50"}
+	imwidth={"697"}
+	imheight={"218"}
+/>
+
+In its simplest form, the problem occurs because a procedure involves two
+steps, say $a$ and ${b,}$ and $a$ must be repeated $n$ times, while $b$
+must be repeated ${n - 1}$ times. Whenever we see this procedural pattern,
+we must first execute $b$ before we begin iterating $a$ and $b$ together,
+as seen in the diagram above.
+
+Let's consider some exercises. How many times do the following loops
+execute?
+
+```java
+int counter = 0;
+for (int loop = 4; loop <= 8; loop += 2) {
+	counter++;
+}
+
+System.out.println(counter);
+```
+
+Here, the counter starts at 0. The loop variable starts at 4. As long as it
+is less than or equal to 8, we execute, and update the counter. After each
+execution, the counter updates by 2. Thus, at `loop = 4`, the test
+statement returns `true`. So, `counter = 1`, and `loop = 6`. Is `6 <= 8`?
+Yes. `counter = 2`; `loop = 8`. Is `8 <= 8`? Yes. `counter = 3`;
+`loop = 10`. Is `10 <= 8`? No. We leave the loop and go to the next
+statement, print `counter`. Counter was updated to `3`, so this is the
+value printed out:
+
+```bash
+	3
+```
+
+How about this one:
+
+```java
+int count = 0;
+for (int i = 10; i >= 10; i -= 3) {
+	count++;
+}
+System.out.println(count);
+```
+
+The variable `count` starts at 0, and it is updated by 1 inside the loop.
+The loop's counter starts at `i = 10`. If `i >= 10`, we execute then
+decrement `i` by 3. Thus, the first time: `i = 10`. Condition is true, so
+`count = 1`, and `i = 7`. Test, and the condition is false &mdash;
+${7 \nleq 10.}$ Thus, the loop executes exactly once: `count = 1`.
+
+Now this one:
+
+```java
+int i = 0;
+for (int j = 2; j >= 4; j++) {
+	i++;
+}
+System.out.println(i);
+```
+
+This loop never executes. Remember, the test statement is evaluated the
+first time. In this case, the test statement returns `false` &mdash;
+${2 \nleq 4.}$
+
+```bash
+0
+```
+
+Next, given the array below, print each element with a loop:
+
+```java
+char[] letters = {'a', 'b', 'c', 'd'};
+```
+
+Using a for-loop:
+
+```java
+char[] letters = {'a', 'b', 'c', 'd'};
+
+for (int i = 0; i < letters.length; i++) {
+	System.out.println(letters[i]);
+}
+```
+
+```bash
+a
+b
+c
+d
+```
+
+Or, with an enhanced for-loop:
+
+```java
+char[] letters = {'a', 'b', 'c', 'd'};
+
+for (char elements : letters) {
+	System.out.println(elements);
+}
+```
+
+```bash
+a
+b
+c
+d
+```
+
+Given the array below, print every other element on the same line:
+
+```java
+char[] letters = {'b', 'h', 'y', 'e', 'e', 'y'};
+```
+
+Here is one implementation:
+
+```java
+char[] letters = {'b', 'h', 'y', 'e', 'e', 'y'};
+
+for (int i = 1; i <= letters.length; i+=2) {
+	System.out.print(letters[i]);
+}
+```
+
+```bash
+hey
+```
+
+Given the array below, print only the elements with even indices:
+
+```java
+int[] nums = {1, 2, 3, 4, 5, 6, 7, 8};
+```
+
+Here's one solution:
+
+```java
+int[] nums = {1, 2, 3, 4, 5, 6, 7, 8};
+
+for (int i = 2; i < nums.length; i+=2) {
+	System.out.println(nums[i]);
+}
+```
+
+```bash
+3
+5
+7
+```
+
+Given the array below, print the sum of all its elements:
+
+```java
+int[] primesArr = {2, 3, 5, 7, 11, 13, 17, 19, 23};
+```
+
+Here is one possible implementation:
+
+```java
+int[] primesArr = {2, 3, 5, 7, 11, 13, 17, 19, 23};
+int primesArrSum = 0;
+for (int i = 0; i < primesArr.length; i++) {
+	primesArrSum += primesArr[i];
+}
+System.out.println(primesArrSum);
+```
+
+```bash
+100
+```

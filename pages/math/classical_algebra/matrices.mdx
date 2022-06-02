@@ -1,0 +1,294 @@
+# Matrices
+
+Consider the following network of flight paths:
+
+![Flight network](https://res.cloudinary.com/sublimis/image/upload/v1653176643/math/flight_network_whmu0r.svg)
+
+We can represent the number of direct flights between each point as an
+array of numbers:
+
+|                  | Chuuk | Yap | Guam | Palau | Marshall Islands |
+| ---------------- | ----- | --- | ---- | ----- | ---------------- |
+| Chuuk            | 0     | 0   | 2    | 0     | 0                |
+| Yap              | 0     | 0   | 1    | 0     | 0                |
+| Guam             | 2     | 1   | 0    | 4     | 2                |
+| Palau            | 0     | 0   | 4    | 0     | 1                |
+| Marshall Islands | 0     | 0   | 2    | 2     | 0                |
+
+The array above is called a matrix (plural matrices). We can rewrite, or
+abstract, the matrix above more generally:
+
+$$
+	\begin{pmatrix} 0 & 0 & 2 & 0 & 0 \\ 0 & 0 & 1 & 0 & 0 \\ 2 & 1 & 0 & 4 & 2 \\ 0 & 0 & 4 & 0 & 1 \\ 0 & 0 & 2 & 2 & 0 \end{pmatrix}
+$$
+
+The above notation uses parentheses, but we could also use square brackets:
+
+$$
+	\begin{bmatrix} 0 & 0 & 2 & 0 & 0 \\ 0 & 0 & 1 & 0 & 0 \\ 2 & 1 & 0 & 4 & 2 \\ 0 & 0 & 4 & 0 & 1 \\ 0 & 0 & 2 & 2 & 0 \end{bmatrix}
+$$
+
+Which to use is a matter of style. In mathematics, we tend to use the
+parentheses notation. It has the added benefits of avoiding confusion with
+vertical bars (which denote determinants, a topic we'll cover in due time),
+and it's faster to write by hand. In the sciences and engineering, the
+square bracket notation is more commonly used. For this exposition, we will
+use the parentheses notation.
+
+Because a matrix is an expression, we can equate it to a variable and refer
+to it by that variable. By convention, we usually represent matrices in
+bold capital letters:
+
+$$
+	\textbf{M} = \begin{pmatrix} 0 & 0 & 2 & 0 & 0 \\ 0 & 0 & 1 & 0 & 0 \\ 2 & 1 & 0 & 4 & 2 \\ 0 & 0 & 4 & 0 & 1 \\ 0 & 0 & 2 & 2 & 0 \end{pmatrix}
+$$
+
+Matrices consist of rows and columns, and the entries in the various cells
+are called the matrix's elements. For example, in our matrix
+${\textbf{M},}$ there are 5 rows and 5 columns, for a total of 25 elements.
+Because of these facts, we say that the matrix ${\textbf{M}}$ is a
+${5 \times 5}$ matrix. This description, ${row \times columns,}$ is called
+the order of the matrix.
+
+For example, the matrix:
+
+$$
+	\begin{pmatrix} 1 & -1 & 4 \\ 2 & 1 & 0 \end{pmatrix}
+$$
+
+Is a ${2 \times 3}$ matrix. Along the same reasoning, the matrix:
+
+$$
+	\begin{pmatrix} 1 & 3 \\ 2 & 7 \\ 0 & 5 \end{pmatrix}
+$$
+
+is a ${3 \times 2}$ matrix. We say that two matrices are equal if they have
+same number rows, the same number of columns, and the corresponding entries
+in every position are equal. For example, these two matrices are equal:
+
+$$
+	\textbf{A} =
+	\begin{pmatrix}
+	1 & 0 & 2 \\
+	3 & 8 & 2
+	\end{pmatrix}
+$$
+
+$$
+	\textbf{B} =
+	\begin{pmatrix}
+	1 & 0 & 2 \\
+	3 & 8 & 2
+	\end{pmatrix}
+$$
+
+Special Matrices. Some matrices, or forms of matrices, are so frequent or
+useful that we given them special names. Matrices that have the same number
+of rows and columns are called square matrices. For example, all of the
+following square matrices:
+
+$$
+	\begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 1 & 0 & 0 \end{pmatrix}
+$$
+
+$$
+	\begin{pmatrix} 17 & 35 \\ 98 & 24 \end{pmatrix}
+$$
+
+Among the square matrices, there exists a special square matrix, called the
+identity matrix, which takes the following forms:
+
+$$
+	\begin{pmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{pmatrix}
+$$
+
+$$
+	\begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix}
+$$
+
+$$
+	\begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
+$$
+
+Notice the pattern. This is a square matrix, where each row contains a 1,
+and the rest with 0s. These 1s line up along the matrix's main diagonal. A
+matrix that takes this form is called the identity matrix, and they are
+usually denoted by the bold, capital ${\textbf{I}.}$
+
+$$
+	\textbf{I} = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
+$$
+
+The identity matrix is particularly useful when we're multiplying matrices,
+as we'll soon see. Also useful for multiplication is the zero matrix. The
+zero matrix is a matrix with elements consisting entirely of 0. By
+convention, we denote the zero matrix with the bold and capital
+${\textbf{O}:}$
+
+$$
+	\textbf{O} = \begin{pmatrix} 0 & 0 & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix}
+$$
+
+Equality of Matrices. Two matrices ${\textbf{A}}$ and ${\textbf{B},}$
+${\textbf{A}}$ and ${\textbf{B}}$ are equal if, and only if, both
+${\textbf{A}}$ and ${\textbf{B}}$ are of the same order, and every element
+is the same as the corresponding element in the other. For example, the
+following proposition is true:
+
+$$
+	\begin{pmatrix} 1 & 8 & 7 \\ 3 & 4 & 6 \\ 2 & 2 & 2 \end{pmatrix} = \begin{pmatrix} 1 & 8 & 7 \\ 3 & 4 & 6 \\ 2 & 2 & 2 \end{pmatrix}
+$$
+
+But this proposition is not:
+
+$$
+	\begin{pmatrix} 1 & 8 & 7 \\ 3 & 4 & 6 \\ 2 & 3 & 2 \end{pmatrix} = \begin{pmatrix} 1 & 8 & 7 \\ 3 & 4 & 6 \\ 2 & 2 & 2 \end{pmatrix}
+$$
+
+Nor is this:
+
+$$
+	\begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix} = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}
+$$
+
+## Matrix Arithmetic
+
+Various arithmetic operations can be performed on matrices. Combining these
+operations with various abstractions and concepts, we develop the
+foundations of matrix algebra.
+
+Matrix Addition. Let's first consider addition. Suppose we had the
+following matrices:
+
+$$
+	\textbf{A} =
+	\begin{pmatrix}
+	2 & 4 & 0 \\
+	-1 & 3 & 5
+	\end{pmatrix}
+$$
+
+$$
+	\textbf{B} =
+	\begin{pmatrix}
+	1 & -1 & 4 \\
+	2 & 0 & -5
+	\end{pmatrix}
+$$
+
+The expression ${\textbf{A} + \textbf{B}}$ evaluates to:
+
+$$
+\begin{aligned}
+	\textbf{A} + \textbf{B} &= \begin{pmatrix} \textcolor{blue}{2} & \textcolor{blue}{4} & \textcolor{blue}{0} \\ \textcolor{red}{-1} & \textcolor{red}{3} & \textcolor{red}{5} \end{pmatrix} + \begin{pmatrix} \textcolor{green}{1} & \textcolor{green}{-1} & \textcolor{green}{4} \\ \textcolor{purple}{2} & \textcolor{purple}{0} & \textcolor{purple}{-5} \end{pmatrix} \\ &= \begin{pmatrix} (\textcolor{blue}{2} + \textcolor{green}{1} = 3) & (\textcolor{blue}{4} + (\textcolor{green}{-1}) = 3) & (\textcolor{blue}{0} + \textcolor{green}{4} = 4) \\ (\textcolor{red}{-1} + \textcolor{purple}{2} = 1) & (\textcolor{red}{3} + \textcolor{purple}{0} = 3) & (\textcolor{red}{5} + (\textcolor{purple}{-5}) = 0) \end{pmatrix} \\ &= \begin{pmatrix} 3 & 3 & 4 \\ 1 & 3 & 0 \end{pmatrix} \end{aligned}
+$$
+
+Matrix Subtraction. The same process is performed for subtraction. Suppose:
+
+$$
+	\textbf{W} =
+	\begin{pmatrix}
+	3 & 7 & 8 \\
+	9 & 5 & 3
+	\end{pmatrix}
+$$
+
+$$
+	\textbf{V} =
+	\begin{pmatrix}
+	1 & 2 & 0 \\
+	6 & 4 & 3
+	\end{pmatrix}
+$$
+
+The expression ${\textbf{W} - \textbf{V}}$ evaluates to:
+
+$$
+	\begin{aligned} \textbf{W} - \textbf{V} &= \begin{pmatrix} \textcolor{blue}{3} & \textcolor{blue}{7} & \textcolor{blue}{8} \\ \textcolor{red}{9} & \textcolor{red}{5} & \textcolor{red}{3} \end{pmatrix} - \begin{pmatrix} \textcolor{green}{1} & \textcolor{green}{2} & \textcolor{green}{0} \\ \textcolor{purple}{6} & \textcolor{purple}{4} & \textcolor{purple}{3} \end{pmatrix} \\ &= \begin{pmatrix} (\textcolor{blue}{3} - \textcolor{green}{1} = 2) & (\textcolor{blue}{7} - \textcolor{green}{2} = 5) & (\textcolor{blue}{8} - \textcolor{green}{0} = 8) \\ (\textcolor{red}{9} - \textcolor{purple}{6} = 3) & (\textcolor{red}{5} - \textcolor{purple}{4} = 1) & (\textcolor{red}{3} - \textcolor{purple}{3} = 0) \end{pmatrix} \\ &= \begin{pmatrix} 2 & 5 & 8 \\ 3 & 1 & 0 \end{pmatrix} \end{aligned}
+$$
+
+Note, however, that two add or sbtract two matrices, they must be
+conformable. Two matrices are said to be conformable if, and only if, they
+are of the same order. For example, the matrices above can be added or
+subtracted because they are of the same order. These matrices, however, are
+not of the same order, so they are non-conformable:
+
+$$
+	\textbf{F} =
+	\begin{pmatrix}
+	0 & 1 & 6 & 9 \\
+	2 & 3 & 8 & 3 \\
+	3 & 2 & 1 & 5
+	\end{pmatrix}
+$$
+
+$$
+	\textbf{G} =
+	\begin{pmatrix}
+	3 & 1 & 2 \\
+	6 & 9 & 1
+	\end{pmatrix}
+$$
+
+Scalar Multiplication We can multiply a matrix by a scalar &mdash; a real
+number that is not a vector. For example:
+
+$$
+	2 \begin{pmatrix} 3 & -4 \\ 0 & 6 \end{pmatrix} = \begin{bmatrix} 6 & -8 \\ 0 & 12 \end{bmatrix}
+$$
+
+## Matrix Multiplication
+
+To multiply a matrix by a matrix, we cannot simply multiply a term in one
+matrix by the element in the other with its corresponding position. The
+computation is a tiny bit more involved.
+
+To understand the rationale behind this procedure, let's consider an
+example. In American football, there are 5 ways to score points: A
+touchdown (6 points); an extra point (1 point); a two-point conversion (2
+points); a field goal (3 points); and a safety (2 points). In a game, the
+Chicago Bears score 4 touchdowns, 3 extra points, 2 conversions, 4 field
+goals, and 2 safeties. Based on this fact, the total score is:
+
+$$
+	\begin{aligned} 4(6) + 3(1) + 2(2) + 4(3) + 2(2) &= 24 + 3 + 4 + 12 + 4 \\ &= 47 \end{aligned}
+$$
+
+We can represent the information above in matrices. First, we represent the
+number of touchdowns, extra points, conversions, field goals, and safeties
+as a row. This results in ${1 \times 4}$ matrix.
+
+$$
+	\begin{pmatrix} 4 & 3 & 2 & 4 & 2 \end{pmatrix}
+$$
+
+Next, we represent the number of points for each method of scoring as a
+column. This results in a ${5 \times 1}$ matrix.
+
+$$
+	\begin{pmatrix} & 6 & \\ & 1 & \\ & 2 & \\ & 3 & \\ & 2 & \end{pmatrix}
+$$
+
+When we merge the two matrices, we get a ${1 \times 1}$ matrix:
+
+$$
+	\begin{pmatrix} 4(6) + 3(1) + 2(2) + 4(3) + 2(2) \end{pmatrix} = \begin{pmatrix} 24 + 3 + 4 + 12 + 4 \end{pmatrix} = \begin{pmatrix} 47 \end{pmatrix}
+$$
+
+Merging matrices in this manner is called matrix multiplication, and the
+result is called the product matrix.
+
+$$
+	\begin{aligned} \begin{pmatrix} 4 & 3 & 2 & 4 & 2 \end{pmatrix} \times \begin{pmatrix} & 6 & \\ & 1 & \\ & 2 & \\ & 3 & \\ & 2 & \end{pmatrix} &= \begin{pmatrix} 4(6) + 3(1) + 2(2) + 4(3) + 2(2) \end{pmatrix} \\ &= \begin{pmatrix} 24 + 3 + 4 + 12 + 4 \end{pmatrix} \\ &= \begin{pmatrix} 47 \end{pmatrix} \end{aligned}
+$$
+
+A few key observations from the analysis above: First, given the matrices
+${\textbf{A} = n \times m}$ matrix and ${\textbf{B} = a \times b,}$ when we
+compute ${\textbf{A} \times \textbf{B},}$ we are actually trying to
+construct an ${(n \times m) \times (a \times b)}$ matrix. To do so, it must
+be the case that ${m}$ and ${a}$ are equal. If ${m = a,}$ then we say that
+${\textbf{A}}$ and ${\textbf{B}}$ are conformable for multiplication. If
+${m \neq a,}$ then we cannot compute the product matrix
+${\textbf{A} \times \textbf{B}.}$ If we can compute the product matrix
+${\textbf{A} \times \textbf{B},}$ the order of the resulting product matrix
+is given by ${n \times b.}$

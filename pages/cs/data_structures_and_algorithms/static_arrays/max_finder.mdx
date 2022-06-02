@@ -1,0 +1,55 @@
+# Maximum Finder
+
+Finding the maximum element in a given array is an instance of a **peak
+finding** problem. For example, suppose we had the following array:
+
+<Sequence data={[8, 3, 9, 15, 6, 10, 7, 2, 12, 14]} />
+
+The _peak_, or _maximum_, in the array above is the element ${15.}$ We will
+see in later sections that peak finding extends to many other problem
+domains. For now, we focus on the array data structure.
+
+How do we find the maximum element? It depends on whether the array's
+elements are sorted. Yet another example of why sorting algorithms are so
+important. For unsorted lists, we have no recourse other than to check each
+of the elements one by one. To do so, we first suppose that the maximum is
+the first element in the array—${max = u_0 = 8.}$ We then compare ${u_0}$
+with ${u_1.}$ If ${u_1 > u_0,}$ then ${max = u_1.}$ Otherwise, we compare
+${u_0}$ with ${u_2.}$ If ${max = u_1,}$ then we compare ${u_1}$ with
+${u_2.}$ If ${u_2 > u_1,}$ then ${max = u_2.}$ Otherwise, we compare
+${u_2}$ with ${u_3.}$ We keep doing so until we reach the very last
+element. In pseudocode:
+
+```rust
+max() {
+	max = u[0];
+	for (int i = 1; i < length; i++) {
+		if (u[i] > max) {
+			max = u[i];
+		}
+	}
+	return max;
+}
+```
+
+With this approach, we're effectively performing an instance of a linear
+search. We must traverse the entire array, checking each element (starting
+with the second element) all the way up to the last. Counting the number of
+operations, we have:
+
+```rust
+max() {
+	max = u[0]; &larr; 1 operation
+	for (int i = 1; i < length; i++) { &larr; n operations
+		if (u[i] > max) { &larr; n - 1 operations
+			max = u[i];
+		}
+	}
+	return max; &larr; 1 operation
+}
+```
+
+Thus, there are a total of ${1 + 1 + n + (n - 1)}$ operations, or
+${2n - 1.}$ Accordingly, because the time function is ${f(n) = 2n + 1,}$
+the above approach has a time complexity of ${O(n)}$—linear time. On the
+other hand, if the list is sorted, then the last element is the maximum.

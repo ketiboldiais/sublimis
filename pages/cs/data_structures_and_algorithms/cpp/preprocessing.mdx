@@ -1,0 +1,292 @@
+# Preprocessing
+
+C++ uses a **preprocessor** to process source code before the code goes to
+the compiler. The preprocessor performs several tasks. First, it goes
+through the entire source code, and replaces every comment with a single
+space. Then, it looks for **preprocessor directives** and executes them.
+These directives always start with a hash sign, `#`. Some examples:
+
+- `#include &lt;iostream&gt;`
+- `#include "foo.h"`
+- `#if`
+- `#else`
+- `#endif`
+- `#ifdef`
+- `#ifndef`
+- `#define`
+- `#undef`
+- `#line`
+- `#error`
+- `#pragma`
+
+The most commonly used directive is `#include`. When the preprocessor
+encounters this directive, it replaces the line with the file referred to
+(the preprocessor processes that file as well). Once the directive is
+processed, it is removed.
+
+We can think of `#include` as akin to importing libraries or modules in
+other languages. When we write `#include `${\alpha}$`` into a source code
+file ${\beta}$, C++ essentially dumps, or pastes, all of the contents of
+${\alpha}$ into file ${\beta.}$
+
+## Header Files and Preprocessing
+
+Let's forget about the notion of libraries for a moment, and just talk
+about header files. The basic idea behind a header file is what forms the
+basis for libraries. As aforementioned, by convention, we indicate header
+files with a `.h` extension. E.g., `foo.h`.
+
+To begin, we start by considering the following code, contained in a file
+called `print.cpp`:
+
+```cpp
+#include &lt;iostream&gt;
+
+int main() {
+	char message[] = "Hello world!";
+	std::cout << message << std::endl;
+	return 0;
+}
+```
+
+```bash
+Hello world!
+```
+
+All we're doing is outputting to the console the contents of `message`.
+Let's say we don't want to keep writing the line containing `std::cout` and
+`std::endl`, so we write a `print()` function:
+
+```cpp
+#include &lt;iostream&gt;
+
+void printString(const char* message) {
+	std::cout << message << std::endl;
+}
+
+int main() {
+	char message[] = "Hello world!";
+	printString(message);
+	return 0;
+}
+```
+
+```bash
+"Hello world!";
+```
+
+Now let's say we have another file, `ErrorMessages.cpp`, that prints custom
+error messages. Let's further say that we want to use our `printString()`
+function; it's pretty useful after all:
+
+```cpp
+#include &lt;iostream&gt;
+
+void end_of_file_reached() {
+	printString("End of the file reached during read.");
+}
+
+void negative_integer() {
+	printString("Negative integer detected. Only positive integers permitted.");
+}
+
+void float_detected() {
+	printString("Floating point number detected. Only integers permitted.");
+}
+```
+
+The problem with our `ErrorMessages.cpp` file: The compiler has no idea
+what `printString()` is. In fact, `printString()` just doesn't exist. We
+need a way to tell the compiler that `printString()` actually exists. To do
+so, we must write a function declaration (i.e., a function without its
+body):
+
+```cpp
+#include &lt;iostream&gt;
+
+void printString(const char* message);
+
+void end_of_file_reached() {
+	printString("End of the file reached during read.");
+}
+
+void negative_integer() {
+	printString("Negative integer detected. Only positive integers permitted.");
+}
+
+void float_detected() {
+	printString("Floating point number detected. Only integers permitted.");
+}
+```
+
+The code above compiles just fine. But notice what this means. Do we have
+to write these function declarations in all of our files? The answer is,
+frankly, yes. We have to include the relevant function declarations
+everywhere. As we can surmise, this is tedious. We just have one function
+above, but with larger programs, we could easily have hundreds, if not
+thousands, of functions. This is where header files come to the rescue.
+
+What we can do is create a new file called `print.h`, and place therein our
+function declaration:
+
+```cpp
+// print.h
+#pragma once
+
+void printString(const char* message);
+```
+
+We'll talk about `#pragma once` in a moment. For now, the key point is that
+we're placing our function `printString()` declaration inside the header
+file. Then, inside `ErrorMessages.cpp`, we include the header file:
+
+```cpp
+#include &lt;iostream&gt;
+#include "print.h"
+
+
+void end_of_file_reached() {
+	printString("End of the file reached during read.");
+}
+
+void negative_integer() {
+	printString("Negative integer detected. Only positive integers permitted.");
+}
+
+void float_detected() {
+	printString("Floating point number detected. Only integers permitted.");
+}
+```
+
+Our code compiles just fine. Now, inside `print.cpp`, the `main()` function
+was included for demonstration purposes. `print.cpp` isn't our main driver.
+Instead, `main()` should be placed in a `Main.cpp` file. Accordingly, let's
+place `main()` inside a new file `main.cpp` with some code:
+
+```cpp
+#include &lt;iostream&gt;
+#include "print.h"
+
+int main() {
+	printString("Hello world!");
+	return 0;
+}
+```
+
+```bash
+Hello world!
+```
+
+This works as expected. Next, we can transfer our function declarations in
+`ErrorMessages.cpp` into a header file of its own:
+
+```cpp
+#include "print.h"
+
+void end_of_file_reached();
+void negative_integer();
+void float_detected();
+```
+
+Then, placing `ErrorMessages.h` into our `main.cpp` file:
+
+```cpp
+#include &lt;iostream&gt;
+#include "print.h"
+#include "ErrorMessages.h"
+
+int main() {
+	end_of_file_reached();
+	negative_integer();
+	float_detected();
+	return 0;
+}
+```
+
+```bash
+End of the file reached during read.
+Negative integer detected. Only positive integers permitted.
+Floating point number detected. Only integers permitted.
+```
+
+It works as expected. Let's go back to that `#pragma once` statement.
+`#pragma once` is a preprocessor, and it's essentially a safeguard. To see
+why we need `#pragma once`, suppose `print.h` contained a `struct` called
+`CustomMessages`, and we removed `#pragma once`:
+
+```cpp
+void printString(const char* message);
+
+struct CommonMessages {};
+```
+
+If we tried to compile our program again:
+
+```bash
+make all
+
+./print.h:3:8: error: redefinition of 'CommonMessages'
+struct CommonMessages {};
+			^
+main.cpp:2:10: note: './print.h' included multiple times, additional include site here
+#include "print.h"
+				^
+./ErrorMessages.h:1:10: note: './print.h' included multiple times, additional include site here
+#include "print.h"
+				^
+./print.h:3:8: note: unguarded header; consider using #ifdef guards or #pragma once
+struct CommonMessages {};
+			^
+1 error generated.
+make: *** [main.o] Error 1
+```
+
+We get an error message that we're redefining `CommonMessages`. Why is this
+happening? Well, recall what `#include` does. It essentially tells the
+preprocessor to "copy-and-paste" contents of a file into the file. Thus, by
+omitting `#pragma once`, we have `struct CommonMessages {};` inside
+`print.cpp`, then `struct CommonMessages {};` in `ErrorMessages.cpp`. When
+we include `print.h` and `ErrorMessages.h` inside `main.cpp`, we have two
+`struct CommonMessages {}` inside the same file. This violates C++'s rule
+prohibiting redefinitions. `#pragma once` ensures that this duplication
+doesn't happen. It essentially tells the preprocessor, "Only include this
+once."
+
+Including `#pragma once` in `print.h`, things go back to normal:
+
+```cpp
+#pragma once
+void printString(const char* message);
+
+struct CommonMessages {};
+```
+
+```bash
+End of the file reached during read.
+Negative integer detected. Only positive integers permitted.
+Floating point number detected. Only integers permitted.
+```
+
+As an aside, before `#pragma once` came along, the traditional way to
+ensure duplication doesn't occur is with `ifndef ... endif` block. To
+illustrate:
+
+```cpp
+#ifndef _PRINT_H
+#define _PRINT_H
+void printString(const char* message);
+
+struct CommonMessages {};
+#endif
+```
+
+For our purposes, the code above does the same thing as `#pragma once`. It
+essentially says that if the symbol `_PRINT_H` is not defined, go ahead and
+define. Otherwise, don't define it. This is essentially what `#pragma once`
+does. Modern C++ programs use `#pragma once` because it's cleaner and
+easier, but there are many C++ programs that continue to use the
+traditional method. For most programs, which to use comes down to personal
+preference. Most compilers today support `#pragma once`, but there may be
+situations where a machine uses a compiler that doesn't support the idiom.
+Given how much more widespread `#pragma once` has become, we will use
+`#pragma once`.

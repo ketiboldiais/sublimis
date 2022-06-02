@@ -1,0 +1,171 @@
+# Comparing Traversal Methods
+
+When working with binary tree data structures, we often want to quickly
+sketch in our minds what a particular approach's traversal sequence looks
+like. Having this sketch can be a powerful tool for gainign some traction
+on solving a problem. Accordingly, let's investigate some techniques for
+quickly determining a particular sequence.
+
+First, it's helpful to associate the traversal approaches with a few visit
+sequences. For the visit sequences in the table below, `L` stands for
+"visit the _left_ subtree," `root` stands for "visit the _root_," and `R`
+stands for "visit the _right_ subtree."
+
+| Preorder     | `root L R`                              |
+| ------------ | --------------------------------------- |
+| Inorder      | `L root R`                              |
+| Postorder    | `L R root`                              |
+| Generational | Generation by generation, left to right |
+
+Knowing these sequences can make traversal sequences for more complicated
+trees clearer. For example, consider the following tree:
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "c", parent: "a" },
+		{ child: "d", parent: "b" },
+		{ child: "e", parent: "b" },
+		{ child: "f", parent: "c" },
+		{ child: "g", parent: "c" },
+	]}
+/>
+
+Trying to determine the traversal sequence for any given traversal approach
+can appear daunting. The trick, however, is _divide and conquer_: Break the
+tree down into subtrees. In this case, let's break it down into a
+left-subtree (the nodes in red) and a right-subtree (the nodes in blue):
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a", focus: "red" },
+		{ child: "c", parent: "a", focus: "blue" },
+		{ child: "d", parent: "b", focus: "red" },
+		{ child: "e", parent: "b", focus: "red" },
+		{ child: "f", parent: "c", focus: "blue" },
+		{ child: "g", parent: "c", focus: "blue" },
+	]}
+/>
+
+Let's first consider preorder traversal. For preorder traversal, we have
+`root L R`. So, we write:
+
+$$
+	a, (~~~~~)_{\texttt{L}}, (~~~~~)_{\texttt{R}}
+$$
+
+Now we fill in the parentheses. First, the left subtree, following the same
+sequence, `root L R`:
+
+$$
+	a, (b, d, e)_{\texttt{L}}, (~~~~~)_{\texttt{R}}
+$$
+
+Then the right subtree, following the same sequence, `root L R`.
+
+$$
+	a, (b, d, e)_{\texttt{L}}, (c, f, g)_{\texttt{R}}
+$$
+
+Thus, the inorder traversal sequence for the tree is:
+
+$$
+	(a, b, d, e, c, f, g)
+$$
+
+Using the same method, let's try inorder traversal. For inorder traversal,
+the visit sequence is `L root R`. So we write:
+
+$$
+	(~~~~~)_{\texttt{L}}, a, (~~~~~)_{\texttt{R}}
+$$
+
+Now we fill in the subtree parentheses. Starting with the left subtree, we
+use the same sequence, `L root R`:
+
+$$
+	(d, b, e)_{\texttt{L}}, a, (~~~~~)_{\texttt{R}}
+$$
+
+Then we fill in the right subtree's parentheses, again using `L root R`:
+
+$$
+	(d, b, e)_{\texttt{L}}, a, (f, c, g)_{\texttt{R}}
+$$
+
+Hence, the inorder traversal sequence is:
+
+<Tree
+	data={[
+		{ child: "a", parent: "", ant: 1 },
+		{ child: "b", parent: "a", focus: "red", ant: 2 },
+		{ child: "c", parent: "a", focus: "blue", ant: 5 },
+		{ child: "d", parent: "b", focus: "red", ant: 3 },
+		{ child: "e", parent: "b", focus: "red", ant: 4 },
+		{ child: "f", parent: "c", focus: "blue", ant: 6 },
+		{ child: "g", parent: "c", focus: "blue", ant: 7 },
+	]}
+/>
+
+$$
+	(a, b, d, e, c, f, g)
+$$
+
+Now let's try postorder traversal. The visit sequence is `L R root`, so we
+have:
+
+$$
+	(~~~~~)_{\texttt{L}}, (~~~~~)_{\texttt{R}}, a
+$$
+
+Now we fill in the subtrees, again using `L R root`. For the left subtree:
+
+$$
+	(d, e, b)_{\texttt{L}}, (~~~~~)_{\texttt{R}}, a
+$$
+
+And for the right subtree:
+
+$$
+	(d, e, b)_{\texttt{L}}, (f, g, c)_{\texttt{R}}, a
+$$
+
+This yields the postorder traversal sequence:
+
+<Tree
+	data={[
+		{ child: "a", parent: "", ant: 4 },
+		{ child: "b", parent: "a", focus: "red", ant: 2 },
+		{ child: "c", parent: "a", focus: "blue", ant: 6 },
+		{ child: "d", parent: "b", focus: "red", ant: 1 },
+		{ child: "e", parent: "b", focus: "red", ant: 3 },
+		{ child: "f", parent: "c", focus: "blue", ant: 5 },
+		{ child: "g", parent: "c", focus: "blue", ant: 7 },
+	]}
+/>
+
+$$
+	(d, e, b, f, g, c, a)
+$$
+
+Finally, generational traversal is simple enough that we don't need to
+apply some visit sequence. We merely traverse the tree from the first
+generation to the last generation, visiting each node from left to right:
+
+<Tree
+	data={[
+		{ child: "a", parent: "", ant: 1 },
+		{ child: "b", parent: "a", focus: "red", ant: 2 },
+		{ child: "c", parent: "a", focus: "blue", ant: 3 },
+		{ child: "d", parent: "b", focus: "red", ant: 4 },
+		{ child: "e", parent: "b", focus: "red", ant: 5 },
+		{ child: "f", parent: "c", focus: "blue", ant: 6 },
+		{ child: "g", parent: "c", focus: "blue", ant: 7 },
+	]}
+/>
+
+$$
+	(a, b, c, d, e, f, g)
+$$

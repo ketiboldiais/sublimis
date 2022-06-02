@@ -1,0 +1,88 @@
+import Tab from "@components/Tab/Tab";
+
+# Plus-minus
+
+Given an array of integers, calculate the ratio of its elements that are:
+
+1. positive,
+2. negative, and
+3. zero
+
+Print the decimal value of each fraction on a new line 6 places after the
+decimal.
+
+For example, given:
+
+$$
+	arr = [1,1,0,-1,-1]
+$$
+
+there are ${n = 5}$ elements. Two elements are positive, two elements are
+negative, and on is zero. Their ration are:
+
+$$
+	\begin{aligned}
+		\Z^{+} = \dfrac{2}{5} = 0.400000 \\[1em]
+		\Z^{-} = \dfrac{2}{5} = 0.400000 \\[1em]
+		zero = \dfrac{1}{5} = 0.200000
+	\end{aligned}
+$$
+
+The results should thus be printed as:
+
+```rust
+0.400000
+0.400000
+0.200000
+```
+
+## Solution
+
+One way to solve this problem is to iterate through the input array,
+checking for three conditions:
+
+1. Whether the current element is greater than 0,
+2. Whether the current element is less than 0,
+3. Whether the current element is equal to 0,
+
+For each of these conditions, we keep an accumulator for each condition,
+keeping track of the number of times each condition is true. 
+
+<Tab>
+<section className="JavaScript">
+Here's a JavaScript implementation:
+
+```javascript
+const integerRatios = (arr) => {
+	let positiveIntegerCount = 0;
+	let negativeIntegerCount = 0;
+	let totalElements = arr.length;
+	let zeroCount = 0;
+
+	for (let i = 0; i < totalElements; i++) {
+		if (arr[i] < 0) negativeIntegerCount++;
+		else if (arr[i] === 0) zeroCount++;
+		else if (arr[i] > 0) positiveIntegerCount++;
+		else continue;
+	}
+
+	let positiveIntegerRatio = positiveIntegerCount / totalElements;
+	let negativeIntegerRatio = negativeIntegerCount / totalElements;
+	let zeroRatio = zeroCount / totalElements;
+	let results = [
+		positiveIntegerRatio, 
+		negativeIntegerRatio, 
+		zeroRatio
+	];
+
+	for (let i = 0; i < 3; i++) {
+		console.log(results[i].toFixed(6));
+	}
+}
+
+const arr1 = [1,1,0,-1,-1];
+const result = integerRatios(arr1);
+```
+
+</section>
+</Tab>

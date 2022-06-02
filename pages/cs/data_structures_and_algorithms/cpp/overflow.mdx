@@ -1,0 +1,37 @@
+# Overflow
+
+A value of type `$1` takes 1 byte of memory. Consider the output for the
+following code:
+
+```cpp
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+	char x = 127;
+	cout << (int)x << endl;
+	x++;
+	cout << (int)x << endl;
+	return 0;
+}
+```
+
+```bash
+127
+-128
+```
+
+Strange. By incrementing `x` by 1, the value went from 127 to 128. This
+demonstrates the concept of `$1`. A character can store only 1 byte. This
+means a value of type `$1` can only represent numeric values in the range
+${[127, -128].}$ So what happens when we go beyond 127 or -128? We move to
+the beginning or the end of the range.
+
+We can think of this like a clock. We start at 0, then go up to 127. After
+127 is -128, then -127, then -126, all the way up to 0 and all way up
+to 127. It's cyclical. But why is it cyclical?
+
+Because the numbers are represented as bits. The number 127 is represented
+as `01111111`. When we increment by 1, we get: `10000000`, `-128` in the
+decimal system. This is just binary addition. The first bit is the sign, 0
+for positive, and 1 for negative.

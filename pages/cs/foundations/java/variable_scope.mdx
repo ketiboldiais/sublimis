@@ -1,0 +1,67 @@
+# Variable Scope in Java
+
+As we saw with conditional statements, blocks of code in Java are a set of
+statements. They are enclosed by braces:
+
+```java
+if (...) {
+	// a block of code
+}
+```
+
+A block of code is essentially a "mini" program inside a bigger program.
+And because they are effectively sub-programs, there are rules about what
+we can and cannot do inside or outside blocks of code. In particular:
+Variables declared _inside_ the block are not visible _outside_ the block.
+Once we leave the block of code, Java can no longer see that variable—the
+variable is no longer available for us to access. It is only accessible
+inside the block.
+
+Inversely, if a variable is declared _outside_ a block, then the variable
+is visible _inside_ the block. If we declare a variable outside the block,
+then Java can see that variable inside the block.
+
+```java
+int outsideBlock = 1
+if (true) {
+	int insideBlock = 10;
+	System.out.println(outsideBlock);
+}
+System.out.println(insideBlock);
+```
+
+```bash
+Line 6: error: cannot find symbol
+System.out.println(inside);
+						^
+symbol:   variable inside
+1 error
+```
+
+We get an error because we are telling Java to print the value assigned to
+a variable it cannot see. Once we left the `if` statement's
+block—`insideBlock`'s _enclosing block_ (also called _enclosing
+scope_)—`insideBlock` no longer exists for all intents and purposes.
+However, we can still access `outsideBlock` because it exists outside the
+`if` statement's block:
+
+```java
+int outsideBlock = 1
+if (true) {
+	int insideBlock = 10;
+	System.out.println(outsideBlock);
+}
+```
+
+```bash
+1
+```
+
+This inside-outside-block affair is an implication of **scope**. The scope
+of a variable refers to the areas of a program where we can refer to the
+variable by name. Outside of the variable's scope, we _cannot_ refer to the
+variable by name. Scope is precisely why programming languages require, or
+encourage, indentation. Assuming we follow proper indentation like the
+examples above, the general rule of thumb is: We _can_ access variables "to
+the left" or on the same level; we _cannot_ access variables "to the
+right." (Where the directions are relative to the start of the line).

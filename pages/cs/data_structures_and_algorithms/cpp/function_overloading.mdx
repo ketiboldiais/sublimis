@@ -1,0 +1,88 @@
+# Function Overloading
+
+Notice that the three functions, `print()`, have the same name, but they
+compile just fine:
+
+```cpp
+#include &lt;iostream&gt;
+using namespace std;
+#define SIZEOF(a) sizeof(a)/sizeof(*a)
+
+void print(int arr[], int length);
+void print(char arr[], int length);
+void print(double arr[], int length);
+
+int main() {
+	int intArr[]{1, 2, 3, 4};
+	char charArr[]{'a', 'b', 'c', 'd'};
+	double doubleArr[]{1.2, 2.9, 3.1, 3.10};
+
+	print(intArr, SIZEOF(intArr));
+	print(charArr, SIZEOF(charArr));
+	print(doubleArr, SIZEOF(doubleArr));
+	return 0;
+}
+
+void print(int arr[], int length) {
+	for (int i = 0; i < length; i++) {
+		cout << arr[i] << " ";
+	}
+	cout << endl;
+}
+
+void print(char arr[], int length) {
+	for (int i = 0; i < length; i++) {
+		cout << arr[i] << " ";
+	}
+	cout << endl;
+}
+
+void print(double arr[], int length) {
+	for (int i = 0; i < length; i++) {
+		cout << arr[i] << " ";
+	}
+	cout << endl;
+}
+```
+
+```bash
+1 2 3 4
+a b c d
+1.2 2.9 3.1 3.1
+```
+
+This is an example of **function overloading** &mdash; the phenomenon of
+when different functions performing different tasks, have the same
+identifier. More abstractly, we can think of it as if the function &mdash;
+an operator &mdash; can perform multiple tasks. In C++, we can accomplish
+function overloading by either (a) having different type parameters, (b)
+having a different number of parameters. In general, to accomplish function
+overloading, we have to provide C++ a way to differentiate between the
+functions. In the example of `print()`, this is done by providing different
+arguments.
+
+Things that will not work, on their own, for differentiating: Return type,
+the order the functions are written, and default parameters. Using these
+differences alone are insufficient to allowing C++ to differentiate the
+functions, resulting in a **name conflict**.
+
+Function overloading is tremendously useful. One of the hardest tasks in
+programming is naming things, made all the more difficult when we have
+functions that perform something very similar &mdash; like printing an
+array to the console &mdash; but differ by just one or two things, such as
+argument type. However, as with all features, there are tradeoffs.
+
+Function overloading is a kind of _polymorphism_, a topic we will discuss
+further in later sections. In a nutshell, polymorphism is when we have an
+entity of a particular type behaving like something else of a particular
+type. For example, a person's dog can behave like a loving friend. Yet in
+other situations, a vicious guard. The same idea &mdash; and risk &mdash;
+applies to overloaded functions. We must always be cognizant of what our
+functions are capable of doing, just as a dog owner should be cognizant of
+when and where their dogs are a danger to others. If a function is
+overloaded with too many tasks, we risk losing track of what the function
+does when passed certain arguments. A similar risk occurs when we overload
+a function with tasks that don't intuitively correspond to the identifier.
+For example, it would be a poor choice to allow `print()` to average the
+elements of an `int` array &mdash; it's not clear how averaging something
+relates to `print`.

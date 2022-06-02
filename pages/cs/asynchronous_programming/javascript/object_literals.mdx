@@ -1,0 +1,871 @@
+# Object-literals
+
+If there's anything about JavaScript that merits slander, it's the way it
+uses the word "object." Across most languages, the word "object" refers to
+an instance of an abstract data type (e.g., in languages like Java and
+Python, an instance of a particular class). JavaScript also uses this
+semantic, but confusingly uses the word "object" to refer to any collection
+of individual data items. In other programming languages, the JavaScript
+object data structure would be given one of many specific names: `struct`,
+`record`, or `aggregate`. The JavaScript object data structure is more
+broadly referred to as a _record data type_, or simply a _record_.
+
+There are two interpretations for the word "object" in JavaScript, and we
+will resolve the ambiguity by using different terms. When we use the word
+"object" alone, we are referring to a collection of values. When we use the
+word "object-literal," we are referring to a record-type data structure
+similar to a `struct`.
+
+Recognizing this ambiguity, some JavaScript developers use the term
+"object-literal". This doesn't fix the issue entirely, but we'll use this
+terminology to resolve ambiguities between the object data structure and
+the broader notion of an object: An **object-literal** is a record-type
+data structure. We raise this issue now because many JavaScript newcomers,
+especially those with previous OOP experience, mistakenly adopt a notion
+that JavaScript's object-literal is an instance of some class. It is not.
+It is a record data type like a `struct`. That said, an object-literal is a
+collection of **properties** or **methods**.[^object_note]
+
+[^object_note]:
+    For those coming from Java: The object is not a _class_. It is more
+    like a `struct` in C++.
+
+The object-literal is analogous to the Python _dictionary_.An
+object-literal's property consists of a **key-value pair**—a key (think of
+it as a label, or identifier), and the data paired with it. We call the
+key's name the **property name**. The value paired to the key is called the
+**property value**. With object-literals, the name of a key is always a
+value of one of three types:
+
+1. String
+2. Number
+3. Symbol
+
+We can think of the object-literal as akin to a stack of shelves. Each
+shelf has a label—the key—and an item on that shelf—the value. The label
+and the item together constitute a single shelf—the property.
+
+We will use string value keys first, and later examine number and symbol.
+Importantly, records like the object-literal are distinct from classes in
+OOP. They're an older type of data structure, tracing their origins to C.
+We use object-literals to represent situations in the real world where
+independent pieces of data are all part of single, unified structure.
+Unlike the array, records are often of different types and are identified
+by name rather than index.
+
+For example, suppose we have some data for velocity, acceleration,
+momentum, and weight. Now suppose that we have the same exact kind of data
+for another event. If we modeled the data, we might generate the following
+table:
+
+| Reading | velocity | acceleration | momentum | weight |
+| ------- | -------- | ------------ | -------- | ------ |
+| 1       | 1.14     | 1.09         | 2.33     | 13.4   |
+| 2       | 1.26     | 1.05         | 2.43     | 13.9   |
+
+How do we store this data? One option is to store each of the values
+individually with their own variables. The problem: While that may work for
+a handful of data values, it would quickly become cumbersome, even
+infeasible, for thousands of data values.
+
+Another option is to use an array. We still have a problem: This would
+still be tedious. We would need some sort of key (with comments),
+distinguishing between the data and distinguishing between the events.
+
+The solution to this problem is to use an object literal. Object literals
+allow us to group data together, but more importantly, rather than relying
+on each of the data value's index, we can **label** the data. By labeling
+the data, we can access the assigned values with custom keys, rather than
+with an index.
+
+Object-literals contain a **key-value pair**. A **key** is an identifier
+mapped to a unique **value**. That key can be defined more than once, but
+it can only have one value in any given _execution context_. That value
+itself can be numeric data, textual data, an array, or more key-value
+pairs. The object literal is a **collection** of these key-value pairs.
+
+JavaScript's object-literal syntax is more broadly referred to as
+**JavaScript Object Notation (JSON)**. In JSON, we specify objects simply
+by listing its contents in a sequence of name-value pairs. The name and the
+value are separated by a colon, the name-value pairs are separated by
+commas, and the entire list of name-value pairs is enclosed in curly
+braces. Here's a simple, but very useful object-literal—the abstract data
+type of a **point**:
+
+```javascript
+let p1 = { x: 0, y: 0 };
+```
+
+Notice that we didn't actually surround the keys with double quotes. While
+keys must be strings, we do not have to explicitly declare them as strings.
+JavaScript will coerce these values into strings. We can, however,
+explicitly declare them as strings. This in turn allows us to have
+"identifiers" with spaces and other characters we typically aren't
+permitted:
+
+```javascript
+let p1 = {
+	"x-coordinate": 0,
+	"y-coordinate": 0,
+	"point label": "Point 1",
+};
+```
+
+We can then access the values with square-bracket syntax:
+
+```javascript
+let p1 = {
+	"x-coordinate": 0,
+	"y-coordinate": 0,
+	"point label": "Point 1",
+};
+console.log(p1["x-coordinate"]);
+console.log(p1["y-coordinate"]);
+console.log(p1["point label"]);
+```
+
+```bash
+0
+0
+Point 1
+```
+
+Object-literals can also store arrays (and even other object literals).
+Returning to our previous data table example:
+
+```javascript
+let experiment = {
+	velocity: [1.14, 1.26],
+	acceleration: [1.09, 1.05],
+	momentum: [2.33, 2.43],
+	weight: [13.4, 13.9],
+};
+```
+
+Compared to object-literals, arrays are strict and sharp—they order data
+strictly by index. Object-literals, on the other hand, are more fluid-like.
+As a data structure, they morph into whatever we put into the object.
+
+As can be seen above, just like an array, when an object-literal is
+assigned to a variable, the variable does not store the object itself—it
+stores the object's reference. There are many different kinds of objects.
+For this section, we focus on how to create **object literals**. The
+_object literal_ takes the following form:
+
+```rust
+<object-name> = {
+	<key>: <value>,
+	<key>: <value>,
+	<key>: <value>,
+	...
+	<key>: <value>
+};
+```
+
+When an object literal is created, the keys are automatically converted
+into strings (except for symbols). Just like arrays, when a variable is
+assigned an object, the variable does not actually store the object; it
+stores the object's reference. Thus, if you assign _object $w$_ to a
+variable $x$, then also assign $x$ to another variable $y$, you can make
+changes to _object $w$_ with both variables $x$ and $y$. This is because
+both variables are pointing to the same object.
+
+## Numbers as Keys
+
+Alongside strings, number values can also be used as keys. Specifically,
+the number must a positive number, but it can be float. For example:
+
+```javascript
+const topCities = {
+	0: "Chicago",
+	1: "New York City",
+	2: "Los Angeles",
+	3: "London",
+};
+```
+
+Accessing the values, we must use square-bracket syntax:
+
+```javascript
+const topCities = {
+	0: "Chicago",
+	1: "New York City",
+	2: "Los Angeles",
+	3: "London",
+};
+console.log(topCities[0]);
+```
+
+```bash
+Chicago
+```
+
+Notice the syntax for accessing the value. Look familiar? Arrays are, in
+fact, object-literals in JavaScript. The syntax we use to initialize arrays
+is really just syntactic sugar for writing something like the above.
+
+## The Ordering of an Object-literal's Properties
+
+If an object-literal contains only numbers, as keys, the keys (and their
+paired values) are ordered numerically from least to greatest. If, however,
+the keys contain either (a) only strings or (b) strings and numbers, then
+the keys (and their paired values) are ordered by insertion: The first item
+we inserted is first, and the last item we inserted is last.
+
+## Accessing an Object-literal's Data
+
+There are two ways to access an object-literal's data. One is through dot
+notation:
+
+```rust
+<object>.<key>
+```
+
+The other is through square-bracket-notation:
+
+```rust
+<object>[<key>]
+```
+
+For example:
+
+```javascript
+let experiment = {
+	velocity: [1.14, 1.26],
+	acceleration: [1.09, 1.05],
+	momentum: [2.33, 2.43],
+	weight: [13.4, 13.9],
+};
+console.log(experiment.velocity);
+console.log(experiment["momentum"]);
+```
+
+```bash
+[1.14, 1.26]
+[2.33, 2.43]
+```
+
+The form `<object>[<key>]` (square bracket syntax), is necessary if the
+field name is not a simple identifier or if the name is computed by the
+program.
+
+## Dynamically Accessing Properties
+
+Because we can place expressions inside the brackets for square-bracket
+syntax, we can dynamically access properties in objects. For example:
+
+```javascript
+function parity(n) {
+	if (n % 2 == 0) {
+		return "a";
+	} else {
+		return "b";
+	}
+}
+const obj = {
+	a: "Even",
+	b: "Odd",
+};
+console.log(obj[parity(2)]);
+console.log(obj[parity(3)]);
+```
+
+```bash
+Even
+Odd
+```
+
+Above, we passed a function call into the square brackets to access the
+properties of the object `obj`. With this idiom, we can write functions
+that take user inputs and return object properties.
+
+## Modifying an Object-literal
+
+Because a variable assigned with an object-literal only stores the object's
+reference, we can change an object's properties by simply assigning new
+values to the properties:
+
+```javascript
+let experiment = {
+	velocity: [1.14, 1.26],
+	acceleration: [1.09, 1.05],
+	momentum: [2.33, 2.43],
+	weight: [13.4, 13.9],
+};
+console.log(experiment.velocity);
+
+experiment.velocity[0] = 0.76;
+
+console.log(experiment.velocity);
+```
+
+```bash
+[1.14, 1.26]
+[0.76, 1.26]
+```
+
+To add a property, we write the following:
+
+```javascript
+let experiment = {
+	velocity: [1.14, 1.26],
+	acceleration: [1.09, 1.05],
+	momentum: [2.33, 2.43],
+	weight: [13.4, 13.9],
+};
+console.log(experiment);
+experiment.temperatureIncreasing = true;
+console.log(experiment);
+```
+
+```bash
+{velocity: Array(2), acceleration: Array(2), momentum: Array(2), weight: Array(2)}
+
+{velocity: Array(2), acceleration: Array(2), momentum: Array(2), weight: Array(2), temperatureIncreasing: true}
+```
+
+To remove a property in the object-literal, we use the keyword `delete`:
+
+```javascript
+let experiment = {
+	velocity: [1.14, 1.26],
+	acceleration: [1.09, 1.05],
+	momentum: [2.33, 2.43],
+	weight: [13.4, 13.9],
+};
+console.log(experiment);
+delete experiment.weight;
+console.log(experiment);
+```
+
+```bash
+{velocity: Array(2), acceleration: Array(2), momentum: Array(2), weight: Array(2)}
+{velocity: Array(2), acceleration: Array(2), momentum: Array(2)}
+```
+
+## Object-array Equality
+
+Recall that the _strict equality operator_ `===` tests whether two values
+are strictly equal in both value and type.
+
+Because of the way objects and arrays are stored (i.e., only their
+references are stored), neophytes are often surprised when two arrays or
+objects, consisting of entirely the same values, value types, and keys, are
+not strictly equal.
+
+```javascript
+let primes = [1, 3, 5, 7];
+let morePrimes = [1, 3, 5, 7];
+primes === morePrimes; // This returns false
+primes == morePrimes; // Still false
+
+/*
+This is happening because the arrays _primes_ and _morePrimes_ have different references. The strict equality operator is not checking the actual arrays, it's only checking the references, and those references are different.
+*/
+
+// To check whether the arrays are strictly equal, we must ensure that both _primes_ and _morePrimes_ are storing the same reference:
+let morePrimes2 = primes;
+morePrimes2 === primes; // This returns true
+morePrimes2 == primes; // This returns true
+
+// From the above, if we make changes to morePrimes2, we change the array assigned to primes, since both variables are pointing to the same array:
+morePrimes2.push(11);
+/*
+Now the array looks like: 
+primes = [1, 3, 5, 7, 11]
+*/
+```
+
+## Factories
+
+JSON notation is compact and easy to read, but we can do better. We can
+write functions that create object literals. We call such functions
+**factories**. By convention, these functions have names beginning with an
+uppercase initial letter to distinguish them from other functions. For
+example, here's a function that returns a 3-dimensional point, with a
+default point of `(0,0,0)`:
+
+```javascript
+function Point3d(x, y, z) {
+	if (x === undefined) {
+		x = 0;
+		y = 0;
+		z = 0;
+	}
+	return { x: x, y: y, z: z };
+}
+let point1 = Point3d(1, -4, 9);
+console.log(point1);
+```
+
+```bash
+{x: 1, y: -4, z: 9}
+```
+
+## Shorthand Properties of Objects
+
+Suppose we have variables declared and initialized with values. In many
+situations, we might want to create an object where the key name is the
+name of the variable, and the key's assigned property is the value assigned
+to the variable. **Shorthand properties** provide a concise way of creating
+such an object. For example, one common idiom is to collect all of the
+results from a function in an object. Say we have an array of voltage
+values from an experiment. We then create a function computing various
+statistics from the the values:
+
+```javascript
+const experiment1 = [0.53, 0.58, 0.59, 0.53, 0.61, 0.51, 0.53];
+const experimentStats = (arr) => {
+	const voltageQuantity = arr.length;
+	const maxVoltage = math.max(...arr);
+	const minVoltage = math.min(...arr);
+	const sumVoltages = arr.reduce((sumVoltages, r) => sumVoltages + r);
+	const averageVoltage = sumVoltages / voltageQuantity;
+	const sortVoltageAscending = arr.sort((a, b) => a - b);
+
+	return {
+		maximumVoltage: maxVoltage,
+		minimumVoltage: minVoltage,
+		averageVoltage: averageVoltage,
+		voltagesAscending: sortVoltageascending,
+	};
+};
+console.log(experimentstats(experiment1));
+```
+
+```bash
+{
+	maximumVoltage: 0.61,
+	minimumVoltage: 0.51,
+	averageVoltage: 0.5542857142857143,
+	voltagesAscending: [ 0.51, 0.53, 0.53, 0.53, 0.58, 0.59, 0.61 ]
+}
+```
+
+But, with _shorthand properties_, we can shorten the return statement in
+the example above:
+
+```javascript
+const experiment1 = [0.53, 0.58, 0.59, 0.53, 0.61, 0.51, 0.53];
+const experimentStats = (arr) => {
+	const voltageQuantity = arr.length;
+	const maxVoltage = math.max(...arr);
+	const minVoltage = math.min(...arr);
+	const sumVoltages = arr.reduce((sumVoltages, r) => sumVoltages + r);
+	const averageVoltage = sumVoltages / voltageQuantity;
+	const sortVoltageAscending = arr.sort((a, b) => a - b);
+
+	return {
+		maxVoltage,
+		minVoltage,
+		averageVoltage,
+		sortVoltageascending,
+	};
+};
+console.log(experimentstats(experiment1));
+```
+
+```bash
+{
+	maximumVoltage: 0.61,
+	minimumVoltage: 0.51,
+	averageVoltage: 0.5542857142857143,
+	voltagesAscending: [ 0.51, 0.53, 0.53, 0.53, 0.58, 0.59, 0.61 ]
+}
+```
+
+The catch, of course, is that we cannot use unique variable names (of
+course, we can get around that by assigning those names as keys in the
+first place).
+
+## Computed Properties
+
+_Computed properties_ allow us to write properties of an object literal
+with a _dynamic key_. Recall that when use a variable name as a property
+name in an object, javascript does not check whether the name is actually a
+variable&mdash;it simply treats it as a string:
+
+```javascript
+const negativeCharge = -1;
+const negParticle = "electron";
+
+// if we tried to use the variable name as a property:
+
+const particleDetails = {
+	negParticle: negativeCharge,
+};
+console.log(particleDetails);
+```
+
+```bash
+{ negParticle: -1 }
+```
+
+We see the output above because JavaScript does not check if `negParticle`
+is a variable; it's simply a string. To use a variable name as a property
+name while making sure that javascript evaluates it, we need to use the
+`object[key]` syntax _after_ we initialize the object:
+
+```javascript
+const negativecharge = -1;
+const negparticle = "electron";
+const particledetails = {};
+particledetails[negparticle] = negativecharge;
+
+// test:
+console.log(particledetails);
+// output: { electron: -1 }
+```
+
+But, the _computed properties syntax_ provides a more a concise way of
+accomplishing the same task:
+
+```javascript
+const negativecharge = -1;
+const negparticle = "electron";
+const particledetails = { [negparticle]: negativecharge };
+// test:
+console.log(particledetails); // output: { electron: -1 }
+```
+
+Notice the syntax we used, `[]`:
+
+```javascript
+const variablea = "value1";
+const variableb = "value2";
+const objectc = { [variablea]: variableb };
+// we used the value of variablea as the key name for the value of variableb
+```
+
+We can use the _computed properties syntax_ to more concisely write a
+function that adds a property. Without using the _computed properties
+syntax_, the function looks like:
+
+```javascript
+// this function accepts an object, and returns a copy of that object with a new property inserted:
+function propadder(obj, ky, val) {
+	const objcopy = { ...obj };
+	objcopy[ky] = val;
+	return objcopy;
+}
+// let's test it on an object:
+const objsample = { str: "val", num: 2 };
+let objsamplenew = propadder(objsample, "bool", true);
+
+console.log(objsamplenew); // output: { str: 'val', num: 2, bool: true }
+```
+
+Above, we used the `object[key]` syntax to add the new property. We can
+write the same statements with less characters with the _computed
+properties syntax_:
+
+```javascript
+const propadder = (obj, ky, val) => {
+	return { ...obj, [ky]: val };
+};
+// test:
+const objsample = { str: "val", num: 2 };
+let objsamplenew = propadder(objsample, "bool", true);
+
+console.log(objsamplenew); // output: { str: 'val', num: 2, bool: true }
+```
+
+Or, even shorter with an implicit return:
+
+```javascript
+const propadder = (obj, ky, val) => ({ ...obj, [ky]: val });
+// test:
+const objsample = { str: "val", num: 2 };
+let objsamplenew = propadder(objsample, "bool", true);
+
+console.log(objsamplenew); // output: { str: 'val', num: 2, bool: true }
+```
+
+## Methods: Functions in Objects
+
+We can add functions as properties on objects. Once we add a function to an
+object, it becomes a **method**. The simplest reason for why we would want
+to put functions into objects is that doing so is conducive to better
+organized programs, which in turn leads to more efficient and elegant code.
+Recall that a function, at it is core, is just data, so it can be assigned
+to variables. Likewise, it can be assigned to a key:
+
+```javascript
+// here's a function that computes the circumference of a circle:
+const circumference = (r) => 2 * r * math.pi;
+// we can place this in an object:
+const mathfuncs = {
+	circumference: circumference,
+};
+// once placed inside an object, we can call it with the method syntax:
+console.log(mathfuncs.circumference(3)); // output: 18.84955592153876
+```
+
+In the example above, the function is written outside the object, then
+later placed in the object. This is not how methods are typically written.
+instead, we usually write the functions directly inside the object:
+
+```javascript
+// we can place this in an object:
+const mathfuncs = {
+	circumference: (circumference = (r) => 2 * r * math.pi),
+	circlearea: (circlearea = (r) => math.pi * r * r),
+};
+// once placed inside an object, we can call it with the method syntax:
+console.log(mathfuncs.circumference(4)); // output: 25.132741228718345
+console.log(mathfuncs.circlearea(4)); // output: 50.26548245743669
+```
+
+Note that in the examples, we used the _arrow function_ syntax. This is not
+a common way of writing functions inside objects.
+
+## Shorthand Methods Syntax
+
+Instead of using the key value pairs syntax, we can use the _shorthand
+method syntax_:
+
+```javascript
+// we can place this in an object:
+const mathfuncs = {
+	circumference(r) {
+		return 2 * r * math.pi;
+	},
+	circlearea(r) {
+		return math.pi * r * r;
+	},
+};
+// once placed inside an object, we can call it with the method syntax:
+console.log(mathfuncs.circumference(4)); // output: 25.132741228718345
+console.log(mathfuncs.circlearea(4)); // output: 50.26548245743669
+```
+
+## Why Should We Use Methods?
+
+The best way to see why methods are extremely useful is by example. We want
+a function that draws a card out of the deck (and makes sure that the deck
+is 1 card fewer for each draw).
+
+```javascript
+// first, let's make the deck
+function makeDeck() {
+	const deck = []; // Make an empty deck
+	const suits = ["hearts", "diamonds", "spades", "clubs"]; // The array of suits
+	const values = "2,3,4,5,6,7,8,9,10,J,Q,K,A"; // A string of values
+	// Turn the string of values into an array
+	for (let value of values.split(",")) {
+		// For each array element, do this:
+		for (let suit of suits) {
+			// For each suit, do this:
+			deck.push({ value, suit });
+		}
+	}
+	return deck;
+}
+```
+
+Now suppose we want to draw a card from the deck. We need to write a
+function that draws the card:
+
+```javascript
+function drawCard(deck) {
+	return deck.pop(); // Take a card out of the deck
+}
+const deck = makeDeck();
+```
+
+Let's test:
+
+```javascript
+console.log(drawCard(deck));
+```
+
+```bash
+{ value: 'A', suit: 'clubs' }
+```
+
+To draw another card, we need to pass the argument again:
+
+```javascript
+console.log(drawCard(deck));
+```
+
+```bash
+{ value: 'A', suit: 'spades' }
+
+```
+
+The problem with writing the program this way is that we have to keep
+passing an argument over and over again. And what if we need to shuffle the
+deck? (The pop method is just taking a card from the deck in order) ```
+
+The above example shows a common phenomenon in programming: repetitious
+code. Where there is repetitious code, there are methods laying in ambush.
+The above code written inside an object:
+
+```javascript
+const deck = {
+	deck: [],
+	suits: ["hearts", "diamonds", "spades", "clubs"],
+	values: "2,3,4,5,6,7,8,9,10,J,Q,K,A",
+	makeDeck() {
+		const { suits, values, deck } = this;
+		for (let value of values.split(",")) {
+			for (let suit of suits) {
+				deck.push({ value, suit });
+			}
+		}
+	},
+	drawCard() {
+		return this.deck.pop();
+	},
+};
+deck.makeDeck();
+console.log(deck.drawCard());
+```
+
+```bash
+Output: { value: 'A', suit: 'clubs' }
+```
+
+By storing the functions in an object, we've created methods, which can be
+called upon over and over without having to pass repeatedly pass arguments.
+By using methods, we can do even more things:
+
+```javascript
+const theDeck = {
+	// create the object
+	deck: [], // Variable stores deck
+	drawnCards: [], // Variable stores drawn cards
+	suits: ["hearts", "diamonds", "spades", "clubs"], // the suits
+	values: "2,3,4,5,6,7,8,9,10,J,Q,K,A", // the ranks
+	// Method: make deck
+	makeDeck() {
+		const { suits, values, deck } = this; // stop writing 'this' repeatedly
+		// loop through 'values' string turned into array
+		for (let value of values.split(",")) {
+			// for each element in 'values', loop through 'suits'
+			for (let suit of suits) {
+				// for each suit, push this object into 'deck'
+				deck.push({ value, suit });
+			}
+		}
+	},
+	// Method: draw card
+	drawCard() {
+		const card = this.deck.pop(); // Store drawn card in variable
+		this.drawnCards.push(card); // Store drawn card in the drawnCards array
+		return card; // Output card
+	},
+	// Method: draw multiple cards
+	drawCards(numCards) {
+		const cards = []; // Store drawn cards in variable
+		// run drawCard this many times
+		for (let i = 0; i < numCards; i++) {
+			cards.push(this.drawCard()); // Put drawn cards in cards variable
+		}
+		return cards; // Output cards
+	},
+	// Method: shuffle cards
+	shuffle() {
+		const { deck } = this;
+		// Loop through the array backwards
+		for (let i = deck.length - 1; i > 0; i--) {
+			// Pick a random index before the current element
+			let j = Math.floor(Math.random() * [i + 1]);
+			// Swap elements with destructuring
+			[deck[i], (deck[j] = deck[j]), deck[i]];
+		}
+	},
+};
+```
+
+Let's test:
+
+```javascript
+theDeck.makeDeck();
+console.log(theDeck.drawCard());
+console.log(theDeck.drawnCards);
+console.log(theDeck.drawCards(3));
+theDeck.shuffle();
+console.log(theDeck.drawCard());
+```
+
+```bash
+{ value: 'A', suit: 'clubs' }
+[ { value: 'A', suit: 'clubs' } ]
+[
+	{ value: 'A', suit: 'spades' },
+	{ value: 'A', suit: 'diamonds' },
+	{ value: 'A', suit: 'hearts' }
+]
+{ value: 'K', suit: 'clubs' }
+
+```
+
+## Objects in Memory
+
+Suppose we wrote the following code:
+
+```javascript
+const taxpayer1 = {
+	name: "Al Capone",
+	age: 48,
+	married: true,
+};
+```
+
+Question: How is this object stored in memory? First, it's helpful to
+identify the different parts of the expression above:
+
+1. There's an identifier, `user1`.
+2. There's a collection of properties:
+   1. The key `taxpayer1` is paired with the string value `"Al Capone"`.
+   2. The key `age` is paired with the number value `48`.
+   3. The key `married` is paired with the Boolean value `false`.
+
+Earlier, we said that we can think of the object as a collection of
+shelves. Accordingly, from a higher-level view, we can visualize the object
+above as such:
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653710526/cs/js_object_xybpor.svg"
+	}
+	caption={"JavaScript object at a low level"}
+	width={"50"}
+	imwidth={"374"}
+	imheight={"376"}
+/>
+
+A lower-level view, however, would show that the variable `taxpayer1` is
+actually bound to a reference to the object, and the object itself is a
+collection of references to the properties:
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653710596/cs/js_object_ref_hwth2u.svg"
+	}
+	caption={"JavaScript object reference"}
+	width={"50"}
+	imwidth={"564"}
+	imheight={"376"}
+/>
+
+## The Ubiquity of Objects in JavaScript
+
+Part of the reason why JavaScript falls into the problem of using the word
+"object" confusingly is because everything boils down to the mechanics
+behind object-literals. The exception to this general rule is the primitive
+data types:
+
+1. String
+2. Number
+3. Boolean
+4. Undefined
+5. null
+6. Symbol
+
+There is, however, an exception to the exception: Some of the primitive
+data types have object wrapper that makes them behave like an
+object-literal in certain situations. For example, the `String` data type
+has an object wrapper, which includes the `length` property.

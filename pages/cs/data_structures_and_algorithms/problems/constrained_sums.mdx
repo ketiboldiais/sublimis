@@ -1,0 +1,99 @@
+import Tab from "@components/Tab/Tab";
+
+# Constrained Sums
+
+Given five positive integers, find the mimum and maximum values that can be
+calculated by:
+
+- Summing exactly four of the five integers.
+
+Print the respective minimum and maximum values as a single line of two
+space-separated long integers.
+
+## Example
+
+Suppose the array is:
+
+$$
+	arr = [1,3,5,7,9]
+$$
+
+The minimum sum is:
+
+$$
+	1+3+5+7 = 16
+$$
+
+and maximum sum is:
+
+$$
+	3+5+7+9 = 24
+$$
+
+The function should print:
+
+```rust
+16 24
+```
+
+## Solution
+
+There are several ways to go about this problem. First, note that the array
+always consists of positive integers. We know that addition of the positive
+integers is commutative. In other words, adding:
+
+$$
+	1 + 2 + 3
+$$
+
+is the same as adding
+
+$$
+	3 + 1 + 2
+$$
+
+Thus, given five positive integers, one approach we can take is summing
+everything except the first element, summing everything except the second,
+except the third, except the fourth, and except the fifth. Then we return
+the smallest of these results as the minimum sum, and the largest of these
+results as the maximum sum.
+
+<Tab>
+<section className="JavaScript">
+
+Here's an implementation in JavaScript. This approach uses two for-loops, yielding a time complexity of ${O(n)}$.
+
+```javascript
+const minMax = (arr) => {
+	const length = 5;
+	let max = 0;
+	let totalSum = 0;
+	let reducedSum = 0;
+	for (let i = 0; i < length; i++) {
+		totalSum += arr[i];
+	}
+	let min = totalSum;
+	for (let i = 0; i < length; i++) {
+		reducedSum = totalSum - arr[i];
+		if (reducedSum > max) {
+			max = reducedSum;
+		}
+		if (reducedSum < min) {
+			min = reducedSum;
+		}
+		reducedSum = totalSum;
+	}
+	console.log(`${min} ${max}`)
+}
+
+const arr = [1,2,3,4,5];
+minMax(arr);
+
+```
+```bash
+10 14
+```
+
+</section>
+</Tab>
+

@@ -1,0 +1,64 @@
+.mainContent {
+	background-color: var(--background-color);
+	color: var(--text-color);
+	display: flex;
+	justify-content: center;
+}
+.container {
+	padding: 1em 1.5em;
+	margin-top: 50px;
+	margin-bottom: 32%;
+	width: clamp(450px, 95vw, 650px);
+	border-radius: 20px;
+	background-color: var(--page-color);
+}
+
+.mainContent ::-webkit-scrollbar {
+	width: 10px;
+	height: 7px;
+}
+.mainContent ::-webkit-scrollbar-track {
+	margin: 1em;
+}
+.mainContent ::-webkit-scrollbar-thumb {
+	background-color: #d6dee1;
+	border-radius: 4px;
+	border: 1px solid transparent;
+	background-clip: content-box;
+}
+.mainContent ::-webkit-scrollbar-thumb:hover {
+	background-color: #a8bbbf;
+}
+.mainContent a {
+	position: relative;
+	padding: 0;
+	text-decoration: none;
+	border-bottom: 1px solid var(--text-color);
+	color: inherit;
+}
+.mainContent a {
+	border-bottom: thin dotted var(--text-color);
+}
+.mainContent a:visited {
+	color: none;
+	outline: 0;
+}
+.mainContent a:hover {
+	cursor: pointer;
+}
+.mainContent a::before {
+	content: "";
+	position: absolute;
+	display: block;
+	width: 100%;
+	height: 1px;
+	bottom: 0;
+	left: 0;
+	background-color: var(--text-color);
+	transform: scaleX(0);
+	transition: transform 0.3s ease;
+}
+.mainContent a:hover::before {
+	transform: scaleX(1);
+}
+

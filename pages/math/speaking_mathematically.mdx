@@ -1,0 +1,265 @@
+export const description =
+	"Answers: What is a lemma? What is a conjecture? What is postulate? What is an axiom?";
+
+export const title = "Mathese";
+
+# Speaking Mathematically
+
+Math Wikipedia articles are written in a language only decipherable by
+people who don't need to read the article in the first place.
+
+If we traced a mathematical field's development far enough down history, we
+would find its roots in human responses to external stimuli: Geometry and
+trigonometry grew out of land surveying and astronomy; algebra out of
+accounting; calculus out of describing the physical world. For some,
+development was driven by pressing problems. For others, pure curiosity.
+Regardless of motivation, we harnessed the ability to draw inferences from
+existing inferences. And it is precisely this ability that creates and
+enriches more complex mathematical fields &mdash; abstract algebra, number
+theory, algebraic geometry, topology, the list only grows.
+
+But why mathematics? A realist would say we do not know. However, to the
+poetic mathematician, it is arguably because mathematics is the most human
+response to solving problems.
+
+When we first encounter a problem, our first reaction is usually to
+describe it. For example, the Mesapotamians likely noticed that counting in
+their number system was difficult for large quantities of things. They may
+have then described the problem: Some numbers were so large that to express
+them required signaling the absence of a digit. The solution? Use a symbol
+to represent that absence (we now know this symbol as the number 0). Over
+time, as we studied the phenomenon of counting, and what 0 means and
+implies, we began noticing relationships to other ideas:
+
+- ${x + 0 = x}$
+- ${0 \cdot x = 0}$
+- ${x/0 \implies \text{undefined}}$
+
+With enough relationships, we can create a mathematical model. To do so, we
+first start with definitions &mdash; statements explicitly assigning
+meanings to words or symbols. From those definitions, we produce axioms
+&mdash; statements that we presume true without proof (axioms are also
+referred to as postulates). In a sense, axioms are the basic assumptions
+from which we can draw conclusions, the very inferences that form
+relationships.
+
+These conclusions are drawn through the the powerful tools of logical
+deduction. The conclusions are formally called theorems &mdash; statements
+that we know to be true from the axioms and definitions we started with.
+
+It is at the theorem juncture that we have the great divide of
+mathematicians. One camp stops at the juncture, and its members return to
+the very start of the process to find more theorems elsewhere. These
+explorers are generally referred to as pure mathematicians. Another camp
+takes an additional step &mdash; applying the theorems to nature. They take
+the theorems, and use it in their analysis of data, information from
+reality. These adventurers are generally referred to as applied
+mathematicians.
+
+While being a member of either camp is often fertile ground for jest
+("applied mathematics is soft, pure mathematics is reality-detached"),
+restricting ourselves strictly to one or the other is naive. And in fact,
+most professional mathematicians will wade into the discoveries of the
+other camp, even if only in brief. The pure mathematician neglecting
+application may very well fail to see how her results conflict with the
+findings from the other camp; an observation that more often than not
+reveals errors in axioms and definitions, the very foundations of her
+theorems. The applied mathematician neglecting the work of pure
+mathematicians will end up misapplying theorems, or worse, attempting to
+prove theorems that have already been proven. In their toils, both waste
+the most valuable resource of all &mdash; human time.
+
+For this reason, the materials that follow explore both purity and
+application. We will always begin with grounding axioms and definitions,
+occassionally with an observation from nature for context. We then work our
+way up to theorems, and end with applications. Following this procedure, we
+begin by defining mathematical language. More specifically, we will begin
+with an area more "reality-detached" than pure mathematics itself &mdash;
+the field of philosophy called logic.
+
+# Definitions in Mathematics
+
+Philosophy has demonstrated time and time again that language grounds
+knowledge. And to comprehend language, we must know the meanings of the
+words we use &mdash; definitions. There is, however, a dilemma. When we
+define words, we use other words, and in many instances, we find that our
+definitions are circular. "Dead" means lifeless, "lifeless" means deprived
+of life, and "life" means the quality separating an organism from dead
+bodies. Mathematics suffers the same problem: a "point" is the common part
+of two intersecting lines, a "line" is the figure traced by apoint moving
+along the shortest path between two points.
+
+The solution: Take a smaller number of words and declare them undefined.
+This way, we have words that we can use to build definitions, without ever
+running into the problem of circularity. This medicament is unusual, and it
+often mildly sickens emigres at first dose. It is, however, what separates
+philosophy and mathematics from many other fields. Fortunately, time will
+accustom ourselves to it. As we proceed, whenever we encounter a word taken
+as undefined, we will explicitly state that it is undefined.
+
+Whenever we construct definitions in mathematics, we must ensure that they
+meet the following criteria:
+
+1. the definition describes something we have in mind;
+
+2. the definition includes all of the cases we have in mind;
+
+3. the definition excludes all other cases;
+
+4. the definition is meaningful; and
+
+5. the definition is consistent.
+
+For example, we could define a square as "a shape that exists in space."
+This definition fails the first criterion. It merely tells us that there is
+such a shape, but it gives us no indication of what that shape is. It does
+not describe what we have in mind.
+
+We could define a rectangle as "a four-sided polygon whose vertex angles
+are right angles, and whose sides are equal." This definition would fail
+the second criterion, because it excludes non-square rectangles &mdash; it
+does not include{" "} all of the cases we have in mind.
+
+We may define a square as "a four-sided polygon with equal sides." This
+definition would fail the third criterion, because it would include
+rectangles and rhombuses, which are cases we did not have in mind. It does
+not exclude all other cases.
+
+We could easily define a square as "a line line line line point point point
+point." This definition, however, fails the fourth criterion. It is not
+meaningful.
+
+Similarly, we could easily define a square as "a four-sided polygon with
+five equal sides." This definition fails the fifth criterion. It is not
+consistent.
+
+A better definition would be define a square as "a four-sided polygon is a
+square if, and only if, its sides are all equal and its vertex angles are
+all right angles. The italicized words are logical operators, restricting
+what constitutes a square to two conditions: (1) "sides are all equal," and
+(2) "vertex angles all right angles." The "if" tells us that any case
+satisfying the two conditions is a square, and the "only if" tells us that
+any case failing any one of those two conditions, is not a square. This
+definition effectively meets all of the criteria: it is descriptive, it
+includes all of the cases we have in mind and excludes all others, it is
+meaninful, and it is consistent.
+
+## Propositions in Mathematics
+
+Once we have defined words, we can begin to form sentences with those
+words. If we think about the sentences we use daily, we might observe that
+there are two kinds, or classes, of sentences: sentences that can be said
+to be true or false, and sentences that can not. For example, the sentences
+"Koror is the capital of Palau," and "Dogs are mammals," are sentences that
+can be given the value true or false, and in fact, it is true. However, the
+sentence "The weather is nice today," is not a sentence that can be given
+the value true or false &mdash; a hot summer's day is heaven to those of us
+who surf, but it may very well be hell to our friends nursing hangovers.
+
+Sentences that can ascribed the value true or false are called
+propositions. For example, the following statements are propositions in
+mathematics:
+
+- "The sum of the measures of the interior angles of any plane square is
+  equal to 360 degrees." (True).
+- ${12 + 5 = 11}$. (False).
+
+The following sentences are not propositions:
+
+- "Mathematics tastes sweet." (Nonsensical, formally).
+- "A triangle consists of three lines and three points." (Vague).
+- "It is sunny outside." (Requires us to qualify place).
+- ${x + 5 = 0}$. (Truth cannot cannot be determined until $x$ is given a
+  value).
+
+We state explicitly here that we've encountered some undefined terms, and
+they will remain undefined: sentences, true and false. From these undefined
+terms, we state our first axioms:
+
+- There exists a class $C$ of sentences.
+
+- A sentence is a member of $C$ if, and only if, it can be assigned the
+  words true or false.
+
+- The members of $C$ are called propositions.
+
+- Propositions can be assigned one, and only one, of the words true or
+  false.
+
+We will study what "class" and "members" are shortly.
+
+## Notation of Propositions
+
+A common practice in mathematics, and many other fields, is to use
+notation. This is done as a matter of both efficiency and generalization.
+Accordingly, we represent propositions in mathematics with small letters,
+the most commonly used being $p$, $q$, $r$, $s$, and $t$.
+
+We will also represent the values true and false with the capital letters T
+for true, and F for false. Both T and F are referred to as truth values.
+Thus, when we analyze a proposition $p$, we can say "$p$ has a truth value
+of T," or "$p$ has a truth value of F."
+
+In some situations, we will also use the symbol verum for the truth value
+true: ${\top.}$ And the symbol falsum for the truth value false: ${\bot.}$
+
+## Axioms in Mathematics
+
+A chief task in mathematics &mdash; one might say _the_ task of mathematics
+&mdash; is determining the truth values of propositions. This is done by
+(1) gathering the propositions whose truth values we have determined, then
+(2) using logic to derive, or evaluate, the truth values of other
+propositions.
+
+However, this feat can only be accomplished if we have some propositions to
+begin with. Moreover, those propositions, the initial propositions, must be
+true. The trouble is, we cannot evaluate the truth value of these initial
+propositions because they are the propositions that ignite the whole
+process. The solution: Assume the initial propositions to be true.
+Accordingly, let's make this clear with a definition.
+
+> Definition. An axiom is an initial proposition assumed to be true.
+
+## Sets
+
+The idea that all propositions are statements but not all statements are
+propositions evidences a key idea in mathematics: The concept of a set. We
+can think of a set as akin to a box. The box is the set, and everything we
+place inside that box is a member, or element, of that box. For example, if
+we placed a bunch of Valentine's Day cards in a red box, all the cards are
+members of the red box. If we placed the red box in a white box, all the
+cards are members of the red box and the white box. If, after sending the
+box to a loved one, our friend tells us they placed a funeral card in the
+white box, should we be worried? Certainly! The fact that the card was
+placed in the white box doesn't tell us whether the card is in the white
+box or in the red box. The card could be a member of the red box, or it
+could be a member of the white box but not the red box.
+
+This same idea extends to propositions. If some communication ${p}$ is a
+proposition, then ${p}$ is also a statement. But the fact that some
+communication ${q}$ is a statement does not tell us whether it's a
+proposition. It could be a proposition, or it might not be.
+
+The notion of a set is primitive. It has no definition. The best we can do
+is describe it, as we did above: It's a collection of &#8220;things.&#8221;
+Those things could be cards, numbers, people, propositions, expressions,
+points, triangles, laws, theorems, and even other collections.
+
+Some sets have no members in them. For example, the set of all persons born
+in 1700 and still alive is empty (at least to our knowledge). The set of
+all squirrels that live underwater is also empty (barring those fastened
+with high-tech equipment). We denote these sets with the symbol
+${\emptyset,}$ we call this set the empty set (also called the null set or
+the void set).
+
+Some sets only have one element. For example, the set ${\{ 1 \}}$ is a set
+with only one element. Note that the expression ${\{ 1 \}}$ is different
+from the expression ${1.}$ When we write ${1,}$ we are referring to the
+number ${1.}$ When we write ${\{ 1 \},}$ we are referring to a
+&#8220;box&#8221; &mdash; a set &mdash; that contains the number ${1.}$
+This may not seem like much of a difference, but we will see that it has
+enormous implications. To hint at why this distinction is important: When
+we order an item off of Amazon, the item comes in a box. If the box is lost
+in the mail, we aren't necessarily upset about the box. We're upset about
+losing the item inside the box. The box containing the item and the item
+itself are two very different things!

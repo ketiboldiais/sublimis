@@ -1,0 +1,1007 @@
+# Pointers
+
+We can think of pointers as a special kind of variable. More formally, a
+**pointer** is a variable—a number—that stores an address in RAM. That
+address could be the address of a location in memory where specific data is
+stored, or it could be an address to some random piece of data. To tighten
+this definition, we assume the following: There are two categories of
+variables—(1) a **data variable** and (2) an **address variable**. A data
+variable stores a particular piece of data. An address variable stores a
+particular memory address.
+
+Say we write the following:
+
+```cpp
+int x = 1;
+```
+
+Suppose, for the sake of example, that `int` takes 2 bytes of memory.
+Writing the line above, we instruct the compiler to allocate 2 bytes in
+memory for the value `1`, and we are going to call that address `x`. The
+effect of doing so is storing the bits comprising `10` in memory. Suppose
+the address of that byte is 1000—1001 (addresses 1000 to 1001). We have
+stored the bits comprising `1` in the address 1000—1001, and that address
+will be referred to as `x` (assume the memory allocated is denoted by the
+first address, 1000).
+
+Now, say we want to store the address of behind `x`, not the value assigned
+to `x` itself. To do so, we need a pointer:
+
+```cpp
+int x = 1;
+int *p;
+```
+
+Notice the asterisk. This is the syntax for declaring a pointer. Now, to
+assign the address behind `x` to `p`, we use the following syntax:
+
+```cpp
+int x = 1;
+int *p;
+p = &x;
+```
+
+Notice the ampersand. The address behind `x` is now assigned to the pointer
+`p`. To see the difference between `x` and `&x`, consider the following
+output:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+
+int main(int argc, char *argv[]) {
+	int x = 1;
+	int *p;
+	p = &x;
+
+	cout << "x = " << x << endl;
+	cout << "&x = " << &x << endl;
+	cout << "p = " << p << endl;
+
+	return 0;
+	}
+```
+
+```bash
+x = 1
+&x = 0x7ffee689a18c
+p = 0x7ffee689a18c
+```
+
+Notice the difference. The value assigned to `x` is the data we stored in
+memory, `1`. The value assigned to `p`, however, is `0x7ffee3fc118c`, the
+address where `1` is stored (i.e., the address we've named `x`). We can
+confirm this by comparing `&x`, which reveals the address named `x`, and
+`p`, the pointer to the address named `x`.
+
+Question: What about would the output of `&p` and `*p` look like? Well,
+let's try it:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+
+int main(int argc, char *argv[]) {
+	int x = 1;
+	int *p;
+	p = &x;
+
+	cout << "x = " << x << endl;
+	cout << "&x = " << &x << endl;
+	cout << "p = " << p << endl;
+
+	cout << "*p = " << *p << endl;
+	cout << "&p = " << &p << endl;
+
+	return 0;
+}
+```
+
+```bash
+x = 1
+&x = 0x7ffee97c618c
+p = 0x7ffee97c618c
+*p = 1
+&p = 0x7ffee97c6180
+```
+
+It looks like `*p` stores the data stored in `x`. And `&p` looks like it
+stores an address. This output logically follows from our definition of a
+poiner. The pointer `p` is just another variable. And because it is a
+variable, it really is just a name for an address in memory. In this case,
+`0x7ffee97c6180`. That address, however, stores an address in memory, the
+address behind `x`. So what's going on with `*p`? This is where we have to
+distinguish betwen `p` and `*p`. The variable `p` stores an address.
+However, writing `*p` is called a **dereference**. In other words, `*p`
+tells the compiler to retrieve the value stored in the address stored in
+`p`. In sum: When we first use `*p`, we are declaring the pointer. When we
+use `*p` in subsequent code, we are _dereferencing_ that pointer.
+
+Following this discussion, there are three checkboxes to tick whenever we
+use pointers:
+
+- Declaration
+- Initialization
+- Dereferencing
+
+An important thing to note about pointers is that they are just integers.
+Specifically, they are integers for a specific address that stores an
+address. On modern compiles, the pointer must have a type that "agrees" or
+"conforms" with the type of the value stored in the address the pointer
+stores. For example, if we write `double var = 1.23941,` then a subsequent
+pointer `ptr` must have the type `double*`. This is intended more as a
+safeguard than anything else. Many features in C++ respond to the dangers
+of programming in C. In C, we could very well declare the pointer to have
+the type `int*`. The response to doing so in C is a _warning_ rather than
+an _error_ (what a modern C++ compiler would return). The problem with
+doing so, however, is that it's often the case that an `int` pointer simply
+isn't large enough to accomodate a `double` value. The result: Losing parts
+of the `double` value.
+
+## Why are there pointers?
+
+Recall that all of our programs primary source code is placed in the
+`main()` function. When run our program, the `main()` function's machine
+code is loaded in the code section of memory. Now, if we have other
+functions in our program that the code in `main()` calls, those functions
+are also loaded in the code section.
+
+The `main()` function has access to everything in the code section, and
+everything in the stack. However, we know that there is another section in
+memory relevant to our program—the heap. `main()`, however, cannot directly
+access the heap. But, it can _indirectly_ access the heap with a _pointer_.
+
+Although pointers are most commonly associated with values stored in the
+heap, they are not limited to such application. Files outside of our
+program are accessed with pointers. Our program's connection to a network
+is made with a pointer. Our program's access to printers, keyboards,
+monitors, speakers, and other external devices is provided with
+pointers.[^pointernote]
+
+[^pointernote]:
+    Not every language provides pointers. Most high-level languages like
+    Java, Python, JavaScript, and many others, do not provide any means to
+    use pointers. In contrast, because languages like C and C++ provide
+    pointers, they are often referred to as **systems-programming
+    languages**; languages that can be used for constructing system-level
+    programs like device drivers and operating systems.
+
+Why restrict direct access to these entities and require pointers? Because
+our program isn't the only thing using these entities. We might have other
+programs using these shared entities, and we don't want one program to
+potentially wreck everything for all the others. This is why entities like
+the heap, external devices, and networks require the use of pointers.
+
+## Allocating Memory in the Heap
+
+In the previous example, `int x = 1` assigns `1` to a memory location in
+the stack. Accordingly, our pointer `p` pointed to a stack memory address.
+How do we allocate things to the heap? Again, we use the pointer syntax:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+
+int main(int argc, char *argv[]) {
+	int x = 1;
+
+	int *p;
+	p = new int;
+	*p = 1;
+
+	return 0;
+}
+```
+
+In the code above, `int x = 1` stores `1` in a memory address in the stack
+segment. `*p = 1`, however, stores another `1` in a memory address in the
+heap segment. To see the differences:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+
+int main(int argc, char *argv[]) {
+	int x = 1;
+	int *s;
+	s = &x;
+
+	cout << "s = " << s << endl;
+
+	int *p;
+	p = new int;
+	*p = 1;
+
+	cout << "p = " << p << endl;
+
+	return 0;
+}
+```
+
+```bash
+./main
+s = 0x7ffee69b418c
+p = 0x7ff430c05c00
+
+./main
+s = 0x7ffee46f518c
+p = 0x7fd160c05c00
+```
+
+We cannot know from the address alone whether an address is in the stack or
+the heap, but notice that the addresses are different. This tells us that
+`s` and `p` store different addresses. Both addresses store `1`, but they
+are different addresses.
+
+A word of caution: When we allocate memory in the stack, the data occupying
+those addresses are automatically destroyed when they are no longer needed.
+This is not the case with the heap. Data stored in the heap will always
+stay in the heap as long as our program runs. This means that the heap can
+grow very large without our noticing. If the heap grows large enough, it
+will at some point collide with the stack, and we are greeted with a **heap
+overflow**. We never want heap overflows—the end result is the program
+crashing.
+
+Because of this issue, we must always **de-allocate** memory we've
+instructed the compiler to allocate. We can think of this as sort
+"clearing" the memory we've allocated.[^clearingnote]
+
+For example, suppose we allocated memory in the heap for an array. To
+de-allocate, we write the following:
+
+[^clearingnote]:
+    This is such an important point that we denote it as a commandment:
+    Heap memory _must_ be de-allocated.
+
+```cpp
+#include <iostream>
+using namespace std;
+
+
+int main(int argc, char *argv[]) {
+	int *p = new int[3] { 1, 2, 3 };
+
+	for (int i = 0; i &lt; 3; i++) {
+		cout &lt;&lt; " " &lt;&lt; p[i] &lt;&lt; " " &lt;&lt; endl;
+	}
+
+	delete []p;
+	return 0;
+}
+```
+
+The second to last line, `delete []p`, is what we use to de-allocate `p`.
+Notice that we also used a new piece of syntax,
+`int *p = new int[3] { 1, 2, 3 };`, to both declare and initialize the
+pointer `p`. The syntax above is equivalent to:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+
+int main(int argc, char *argv[]) {
+	int *p;
+	p = new int[3] {1, 2, 3};
+
+	for (int i = 0; i < 3; i++) {
+		cout << " " << p[i] << " " << endl;
+	}
+
+	delete []p;
+	return 0;
+}
+```
+
+Briefly returning to why pointers are useful, suppose we have a program
+that requires the use of an array. Suppose we wrote the following:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+
+int main(int argc, char *argv[]) {
+	int arr[10];
+
+	return 0;
+}
+```
+
+The problem with the code above is that arrays in C++ cannot be mutated.
+Thus, the array `arr` cannot later include more than 10 elements. One way
+to fix this is by having the user specify the size of the array:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+
+int main(int argc, char *argv[]) {
+	int size;
+	cout << "Enter number of elements: ";
+	cin >> size;
+	int arr[size];
+	size_t arrLength = (sizeof arr) / 4;
+	cout << "Size of array: " << arrLength << endl;
+	return 0;
+}
+```
+
+```bash
+Enter number of elements size: 10
+Size of array: 10
+```
+
+We've now managed to get around hard-coding the size of an array, but we're
+still left with the problem: Once the user enters the size of `arr`, we
+cannot change its size.
+
+The fix is with a pointer:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main(int argc, char *argv[]) {
+	int size;
+	cout &lt;&lt; "Enter array's size: ";
+	cin >> size;
+	int *p = new int[size];
+
+	// various code using arr
+	// done using arr --> user selects new size
+
+	cout &lt;&lt; "Enter new size: ";
+	cin >> size;
+	delete []p;
+	p = new int[size];
+	return 0;
+}
+```
+
+## Pointer Arithmetic
+
+When we assign an address of an array to a pointer, the address stored in
+the pointer is actually the address of the first element in the array. This
+raises the question: What happens when we use the increment operator `++`
+on a pointer? Let's try it:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main(int argc, char *argv[]) {
+	int arr[3] {7, 13, 17};
+	int *p = arr;
+	cout << *p << endl;
+	p++;
+	cout << *p << endl;
+
+	return 0;
+}
+```
+
+```bash
+7
+13
+```
+
+Notice that we obtained the first element of `arr` when we used `*p`, then
+we obtained the second element of `arr`, when we used `*p` after
+incrementing `p`. This leads to our first, and most important insight, of
+pointer arithmetic. When we add a number to a pointer, we move the pointer
+to the next memory address. In this case, we have an array of `int`, so
+when we increment by 1, the pointer moves to the next `int` in the array.
+Note that this does not mean we move by exactly 1 byte. When we increment a
+pointer to an array, how much we move depends on the size of the array's
+elements. So, when we incremented above, we moved the pointer by 4 bytes,
+since an `int` takes up 4 bytes of memory. We can confirm this with the
+following:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main(int argc, char *argv[]) {
+	int arr[3] {7, 13, 17};
+	int *p = arr;
+	cout << *p << endl;
+	cout << p << endl;
+	p++;
+	cout << *p << endl;
+	cout << p << endl;
+
+	return 0;
+}
+```
+
+```bash
+7
+0x7ffee1ea318c
+13
+0x7ffee1ea3190
+```
+
+In the output above, the `int` 7 is stored at the address `0x7ffee1ea318c`.
+The `int` 13, in contrast, is stored at `0x7ffee1ea3190`. These are
+hexadecimal numbers. Converting them to decimal, we have: `140732688642444`
+and `140732688642448`. These two numbers have a difference of exactly 4.
+
+We aren't limited to incrementing. Pointers can be decremented as well.
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main(int argc, char *argv[]) {
+	int arr[3] {7, 13, 17};
+	int *p = arr;
+	cout << *p << endl;
+	cout << p << endl;
+	p++;
+	cout << *p << endl;
+	cout << p << endl;
+	p--;
+	cout << *p << endl;
+	cout << p << endl;
+
+	return 0;
+}
+```
+
+```bash
+7
+0x7ffee018518c
+13
+0x7ffee0185190
+7
+0x7ffee018518c
+```
+
+What happens when we subtract a pointer from another pointer? Consider the
+following code:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main(int argc, char *argv[]) {
+	int arr[3]{7, 13, 17};
+	int size = sizeof(arr[0]);
+
+	int *a = arr;
+	int *b = &arr[0];
+	int *c = &arr[1];
+	int *d = &arr[2];
+	int diff = d - b;
+
+	cout << "size of int: " << sizeof(int) << " bytes" << endl;
+	cout << "size of arr[0]: " << size << " bytes" << endl;
+	cout << "a : " << (long int)a << endl;
+	cout << "b : " << (long int)b << endl;
+	cout << "c : " << (long int)c << endl;
+	cout << "d : " << (long int)d << endl;
+	cout << "d - b = " << diff << endl;
+
+	return 0;
+}
+```
+
+```bash
+size of int: 4 bytes
+size of arr[0]: 4 bytes
+a : 140732903379340
+b : 140732903379340
+c : 140732903379344
+d : 140732903379348
+d - b = 2
+```
+
+Let's carefully consider the code above. First we created a pointed call
+`*b` just to confirm that the pointer to an array points to the first
+element in the array. In this case, we outputted the address pointed to by
+the pointer as a `long int`. Notice that `*a`, which points to the array,
+and `*b`, which points to the first element in the array, are the same.
+
+Next, we confirmed that each element in the array are separated by 4 bytes.
+We confirm this by showing that `int` has a size of 4 bytes, and the first
+element in the array, an `int`, has a size of 4 bytes. Examining the
+decimal form of the memory address, they all differ by exactly 4 bytes.
+
+Now the tricky part. When we subtracted the address `d` (the address of the
+third element in the array) from the address `b` (the address of the first
+element), we got back `2`. Why is it 2? Let's consider some more code:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main(int argc, char *argv[]) {
+	int arr[3]{7, 13, 17};
+	int size = sizeof(arr[0]);
+	int sizeInt = sizeof(int);
+
+	int *a = arr;
+	int *b = &arr[0];
+	int *c = &arr[1];
+	int *d = &arr[2];
+
+	int e = (d - b) * sizeInt;
+	int f = d - b;
+	int g = e / sizeInt;
+
+	cout << "size of int: " << sizeInt << " bytes" << endl;
+	cout << "size of arr[0]: " << size << " bytes" << endl;
+	cout << "a : " << (long int)a << endl;
+	cout << "b : " << (long int)b << endl;
+	cout << "c : " << (long int)c << endl;
+	cout << "d : " << (long int)d << endl;
+	cout << "Difference in memory:  " << e << endl;
+	cout << "Abstraction: " << f << endl;
+	cout << "Distance in memory: " << g << endl;
+
+	return 0;
+}
+```
+
+```bash
+size of int: 4 bytes
+size of arr[0]: 4 bytes
+a : 140732783632780
+b : 140732783632780
+c : 140732783632784
+d : 140732783632788
+Difference in memory:  8
+Abstraction: 2
+Distance in memory: 2
+```
+
+In the code above, we've changed a few things. First, `e` stores the value
+resulting from subtracting `d` and `b`, and multiplying it by the size of
+an `int`. This gives us the exact difference between `d`, the address of
+the third element, and `b`, the address of the first element—8 bytes.
+Indeed, the _actual_ difference between `d` and `b` is 8 bytes. In other
+words, `b` is 8 bytes away from `d`. If we divide that by the size of an
+`int`, 4 bytes, we get 2. That 2 is the _abstracted_ distance between the
+first element and the third element (index at 0 to index at 2). I.e., the
+third element is exactly 2 blocks of memory away from the first element.
+
+Thus, in pointer arithmetic, subtracting two pointers ${a}$ and ${b}$ gives
+you the _abstracted_ distance between ${a}$ and ${b,}$ not the _exact_
+distance, in memory, between the two addresses. To confirm, consider the
+following:
+
+```cpp
+#include <iostream>
+using namespace std;
+
+
+int main(int argc, char *argv[]) {
+	int arr[5]{7, 13, 17, 22, 19};
+	int size = sizeof(arr[0]);
+	int sizeInt = sizeof(int);
+
+	int *a = arr;
+	int *d = &arr[4];
+
+	int e = (d - a) * sizeInt;
+	int f = d - a;
+	int g = e / sizeInt;
+
+	cout << "size of int: " << sizeInt << " bytes" << endl;
+	cout << "size of arr[0]: " << size << " bytes" << endl;
+	cout << "a : " << (long int)a << endl;
+	cout << "d : " << (long int)d << endl;
+	cout << "Difference in memory:  " << e << endl;
+	cout << "Abstraction: " << f << endl;
+	cout << "Distance in memory: " << g << endl;
+
+	return 0;
+}
+```
+
+```bash
+size of int: 4 bytes
+size of arr[0]: 4 bytes
+a : 140732787970432
+d : 140732787970448
+Difference in memory: 16
+Abstraction: 4
+Distance in memory: 4
+```
+
+Above, we subtracted the address of the first element from the address of
+the last element. This is a difference of 16 bytes in memory (confirmed by
+the decimal representation of the addresses). However, the actual output
+from `d - b`, a pointer subtraction, is 4. Why? Because in C++, the result
+of a pointer subtraction is the actual difference, 16, divided by the
+number of bytes the datum takes (for an `int`, 4 bytes). This results in 4,
+corresponding to index 4 minus index 0.
+
+Why does C++ use this abstraction of dividing the actual difference by the
+size of the data type? Because by and large, programmers aren't working
+with bytes (with the exception of the data types that take only 1 byte).
+Most data types take up more than 1 byte of memory, so C++ made the
+decision to return the result of pointer arithmetic in terms of units of
+bytes (i.e., blocks of memory). Had C++ decided not to, its users would
+have to constantly remember to include the sizes of the relevant types,
+leading to more verbose code. And where there is longer, more verbose code,
+there is a greater likelihood of bugs.
+
+Note that performing pointer arithmetic allows us to draw several
+inferences: Suppose ${p}$ and ${q}$ are pointers to elements in an array.
+Suppose ${p}$ points to element ${m,}$ and ${q}$ points to element ${n.}$
+If the result of ${q - p}$ is positive, then ${m}$ comes before ${n}$ If
+the result of ${q - p}$ is negative, then ${n}$ comes before ${n.}$ If
+${q - p}$ is 0, then ${p}$ and ${q}$ are pointing to the same element.
+Furthermore, if we divide ${q - p}$ by 2, then we obtain the index of the
+element in the middle of the array.
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main(int argc, char *argv[]) {
+	int arr[5]{7, 13, 17, 22, 19};
+
+	int *a = arr;
+	int *b = &arr[4];
+	int f = b - a;
+	int g = a - b;
+	int h = (b - a) / 2;
+
+	cout << "b - a = " << f << endl;
+	cout << "a - b = " << g << endl;
+	cout << "first element: " << arr[0] << endl;
+	cout << "middle element: " << arr[h] << endl;
+	cout << "last element: " << arr[4] << endl;
+
+	return 0;
+}
+```
+
+```bash
+b - a = 4
+a - b = -4
+first element: 7
+middle element: 17
+last element: 19
+```
+
+The code above confirms our previous analysis. The element `7` comes before
+`19`, so the positive result of `b - a` indicates that `b`, the pointer to
+the address storing `19`, comes after `a`, the pointer to the address
+storing `7`. Computing `a - b` is the mirror image. Further, dividing the
+difference by 2 returns the index of the middle element of the array.
+
+What happens if the array has an even number length?
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main(int argc, char *argv[]) {
+	int arr[6]{7, 13, 17, 22, 19, 21};
+
+	int *a = arr;
+	int *b = &arr[5];
+	int g = (b - a) / 2;
+
+	cout << "first element: " << arr[0] << endl;
+	cout << "middle element: " << arr[g] << endl;
+	cout << "last element: " << arr[5] << endl;
+
+	return 0;
+}
+```
+
+```bash
+first element: 7
+middle element: 17
+last element: 21
+```
+
+We get back `17`. Understandably so. Indexing into an array requires using
+a whole number, so the result of dividing 5 by 2—2.5 —is truncated to 2
+(it's implicitly cast into an `int`).
+
+## Pointer Dangers
+
+Some dangers always lurk with pointers: (1) uninitialized pointers; (2)
+memory leaks; and (3) dangling pointers. These are the three most common
+problems with pointers.
+
+An uninitialized pointer occurs when we simply declare a pointer— e.g.,
+`int *p;`—and do not assign to it an address. When we do so, the pointer
+`p` will point to some address. That address likely contains **garbage
+value**—values that may or may not belong to our program. Because we do not
+know what that address contains, uninitialized pointers can cause serious
+problems.
+
+The fix is to ensure that upon declaring a pointer, there is always an
+assignment following thereafter. One way to do this is to momentarily have
+the pointer immediately point to an existing variable. Another way is to
+dynamically allocate some memory immediately after the pointer's
+declaration. E.g.,
+
+```cpp
+int *p;
+p = new int;
+```
+
+The second problem, memory leaks, occurs when we fail to de-allocate
+pointers. If we've ever used an application and it suddenly crashes while
+we're working, a likely culprit is the memory leak. This happens because
+the program may contain hundreds of pointers, some of which may not be
+de-allocated after use, or not de-allocated soon enough.
+
+The fix is to ensure that every pointer is de-allocated when no longer in
+use:
+
+```cpp
+int *p = new int[5];
+
+// some code using p
+
+// de-allocate:
+delete []p;
+p = nullptr;
+```
+
+Note that when de-allocating, we can also write `p = NULL;` or `p = 0;`.
+However, because `nullptr` is a special literal in C++, it is best practice
+to use `nullptr`. Furthermore, always ensure that the pointer is deleted
+_before_ assigning `nullptr`.
+
+The third problem, a dangling pointer, is best explained with an example:
+
+```cpp
+void func(int *q) {
+	// func is a function that takes an int pointer
+	// coding using q
+	delete []q;
+}
+int main() {
+	int *p = new int[5];
+	/*
+		* some code using p
+	*/
+	func(p); // call to func
+}
+```
+
+In the code above, the function `func()` takes a pointer as an argument.
+Inside `main()`, we have a pointer `p` pointing to some address in the
+heap. We then pass `p` as an argument to `func()`. Now, inside `func`, the
+parameter `q` is assigned the pointer `p`. This means that `q` and `p` are
+pointing to the same address in the heap. When we delete the pointer `q`,
+we effectively de-allocate the memory we set aside in the heap. This in
+turn means that `p`, inside `main()`, is now pointing to some garbage
+address. `p` has now become a _dangling pointer_, tantamount to an
+uninitialized pointer.
+
+## References
+
+This discussion on pointers presents an ideal segue to
+**references**—aliases to variables. To understanding how this works,
+examine the output of the following code:
+
+```cpp
+#include <iostream>
+
+#define println(x) std::cout<< x << std::endl
+
+int main() {
+	int a = 5;
+	int &b = a;
+	println(a);
+	println(b);
+	return 0;
+}
+```
+
+```bash
+5
+5
+```
+
+Notice that `a` and `b` output the same value. This is because the `&`
+operator is a _referencing_ operator. In other words, by appending an
+ampersand to `b` and assigning it the existing variable `a`, `b` has become
+an _alias_ of `a`.
+
+This operation relates closely to pointers. The identifier `a` is just a
+name for the memory address that stores the bits comprising `10`. When we
+write `&b`, we instruct C++: "This identifier, `y`, is another name for the
+address identified as `x`." Thus, we can change the value of `a` through
+`b` and vice versa:
+
+```cpp
+#include <iostream>
+
+#define println(x) std::cout << x << std::endl;
+
+int main() {
+	int a = 5;
+	int &b = a;
+	println(a);
+	println(b);
+
+	b = 6;
+
+	println(a);
+	println(b);
+
+	a = 5;
+
+	println(a);
+	println(b);
+	return 0;
+}
+```
+
+```bash
+5
+5
+6
+6
+5
+5
+```
+
+To understand why C++ provides references, recall the distinction between
+pass-by-value and pass-by-reference. Suppose we had a variable `int x = 5`
+in `main()`. We want to square `x` with a function. If we tried to do so:
+
+```cpp
+#include <iostream>
+
+#define println(x) std::cout << x << std::endl
+#define print(x) std::cout << x
+
+int square(int n) {
+	return n = n * n;
+}
+
+int main() {
+	int x = 5;
+	square(x);
+	print("x = ");
+	println(x);
+	return 0;
+}
+```
+
+```bash
+x = 5
+```
+
+We get `x = 5` because functions, by default, are pass-by-value. This means
+that `square()` receives a copy of `x`, not the original. Accordingly,
+whatever `square()` computes, it remains inside the `square()`'s frame in
+memory. And as we know, once `square()` finishes executing, it's frame is
+popped off the stack.
+
+How can we pass the original value of `x` to `square()`? With a pointer.
+So, instead of passing `x` to the function, we'll pass the _address_ of
+`x`, and instead of storing the parameter storing that address, we'll have
+the parameter be a _pointer_ to that address. That pointer can then be
+passed into the function's body, and _dereferenced_:
+
+```cpp
+#include <iostream>
+
+#define println(x) std::cout << x << std::endl
+#define print(x) std::cout << x
+
+int square(int* n) {
+	return *n = (*n) * (*n);
+}
+
+int main() {
+	int x = 5;
+
+	print("x = ");
+	println(x);
+
+	square(&x);
+
+	print("x = ");
+	println(x);
+
+	return 0;
+}
+```
+
+```bash
+x = 5
+x = 25
+```
+
+The value of `x` has changed, as expected. The reference operator, `&`,
+makes this whole process much easier and cleaner:
+
+```cpp
+#include <iostream>
+
+int square(int &n) {
+	return n = n * n;
+}
+
+int main() {
+	int x = 5;
+	square(x);
+	std::cout << "x = " << x << std::endl;
+	return 0;
+}
+```
+
+```bash
+x = 25
+```
+
+In the parameter list for `square()`, we wrote `&n`. Thus, when the
+function `square()` is executed, what actually happens as a whole is:
+
+```
+main()
+=================
+int x = 5;
+square(x);
+=================
+&darr;
+square(int &n)
+=================
+int &n = x;
+return n = n * n;
+=================
+```
+
+In other words, the parameter `n` has become an alias of `x`, and `x` is
+the identifier for the memory address storing `5`. Thus, when we modify
+`n`, we also modify `x`.
+
+The moment we've declared a reference, it is bound to its **referee**—the
+variable the reference references. For example, observe the output below:
+
+```cpp
+#include <iostream>
+
+int main() {
+	int x = 5;
+	int y = 6;
+	std::cout << "x = " << x << std::endl;
+	std::cout << "y = " << y << "\n" << std::endl;
+
+	int& ref = x;
+	std::cout << "x = " << x << std::endl;
+	std::cout << "y = " << y << std::endl;
+	std::cout << "ref = " << ref << "\n" << std::endl;
+
+
+	ref = y;
+	std::cout << "x = " << x << std::endl;
+	std::cout << "y = " << y << std::endl;
+	std::cout << "ref = " << ref << "\n" << std::endl;
+
+	return 0;
+}
+```
+
+```bash
+x = 5
+y = 6
+
+x = 5
+y = 6
+ref = 5
+
+x = 6
+y = 6
+ref = 6
+```

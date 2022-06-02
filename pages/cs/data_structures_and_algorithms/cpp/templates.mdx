@@ -1,0 +1,379 @@
+<meta
+	name="description"
+	content="What are templates in C++? Function templates, class templates, and metaprogramming."
+/>
+<title>C++ Templates</title>
+
+# Templates in C++
+
+Templates are one of the most powerful features of C++. They're similar to
+generics in Java, but they are much, much more powerful. Understanding
+templates is critical to learning C++. They are used throughout the
+standard library, and they make numerous tasks previously tedious in C++
+much easier. To begin, let's consider the `swap()` function:
+
+```cpp
+#include <iostream>
+void swap(int &var1, int &var2) {
+	int temp = var1;
+	var1 = var2;
+	var2 = temp;
+}
+int main() {
+	int a = 0;
+	int b = 1;
+	std::cout << "a = " << a << std::endl;
+	std::cout << "b = " << b << std::endl;
+	swap(a, b);
+	std::cout << "a = " << a << std::endl;
+	std::cout << "b = " << b << std::endl;
+	return 0;
+}
+```
+
+```bash
+a = 0
+b = 1
+a = 1
+b = 0
+```
+
+If we wanted to swap `double` type values, we'd have to write a separate
+function for that, since our `swap()` function takes `int` type arguments.
+More generally, we'd have to write separate swapping functions for swapping
+values not of type `int`. We can give the functions the same name
+`print()`—overloading—to avoid having to remember different function names.
+The problem, however, is that this is pretty repetitive. We're copying and
+pasting code, and changing just a few things. As we know, we generally
+despise repetitive tasks in programming.
+
+This repetition is precisely what templates are intended to remedy:
+
+```cpp
+#include <iostream>
+
+template<typename T>
+void swap(T &var1, T &var2) {
+	T temp = var1;
+	var1 = var2;
+	var2 = temp;
+}
+
+int main() {
+	int a = 0;
+	int b = 1;
+	std::cout << "a = " << a << std::endl;
+	std::cout << "b = " << b << std::endl;
+	swap(a, b);
+	std::cout << "a = " << a << std::endl;
+	std::cout << "b = " << b << std::endl;
+	return 0;
+}
+```
+
+```bash
+a = 0
+b = 1
+a = 1
+b = 0
+```
+
+The new piece of syntax is the `template<typename T>`. This is called a
+**template**. The general syntax for the template:
+
+```cpp
+template <typename t_0 ... typename t_n>
+```
+
+Note that `typename` can be replaced with `class`. We use `typename` for
+clarity. When we use a template with a function, as is the case with
+`swap()`, the resulting function is called a **template function**.
+
+When we write a template function and call that function, we are
+effectively telling the compiler to write the function for us, then execute
+the function. For example, let's say we wrote:
+
+```cpp
+template<typename T1, typename T2>
+void foo(T1 a, T2 b) {
+	...
+};
+
+int n = 1;
+double m = 2;
+foo(n, m);
+```
+
+When the compiler reaches `foo(n, m)`, it replaces `T1` with `int`, the
+type for `n`, and it replaces `T2` with `double`, the type for `m`. This
+results in the function:
+
+```cpp
+void foo(int a, double b) { ... };
+```
+
+The compiler effectively wrote the function for us, then executed it. We
+can think of the template function as a blueprint for the function we want.
+For example, returning to our swapping example, we have several lines for
+printing out the results of the swap. We can write a template function,
+`print()`, for that task:
+
+```cpp
+#include <iostream>
+#include <string>
+
+template<typename T>
+void swap(T &var1, T &var2) {
+	T temp = var1;
+	var1 = var2;
+	var2 = temp;
+}
+
+template<typename T0, typename T1>
+void print(T0 message, T1 x) {
+	std::cout << message << x << std::endl;
+}
+
+int main() {
+	int a = 0;
+	int b = 1;
+	print("a = ", a);
+	print("b = ", b);
+	swap(a, b);
+	print("a = ", a);
+	print("b = ", b);
+	return 0;
+}
+```
+
+```bash
+a = 0
+b = 1
+a = 1
+b = 0
+```
+
+Here, we see two template parameters, `T0` and `T1`. When the compiler gets
+to `print()`, it replaces `T0` with whatever type is passed, in this case
+`string`, and it replaces `T1` with whatever type is passed. In this case,
+`int`.
+
+Examining this process, we can see that template functions work only if C++
+knows the function arguments' types. We can ensure this condition is met by
+explicitly stating the type, or by relying on type inference. Of the two
+options, templates are almost always used in reliance of type inference.
+
+Importantly, template functions do not exist unless we call them. For
+example, consider the following template function that outputs to the
+console the elements of an array:
+
+```cpp
+#include <iostream>
+
+template<typename T>
+void print(T &arr) {
+	int arraySize = sizeof(arr) / sizeof(arr[0]);
+	std::cout << "[ ";
+	for (int i = 0; i < arraySize; i++) {
+		if (i > 0) {std::cout << ", ";}
+		std::cout << arr[i];
+	}
+	std::cout << " ]" << std::endl;
+}
+
+int main() {
+	int arr[] = {1, 2, 3, 4};
+	print(arr);
+	return 0;
+}
+```
+
+```bash
+[ 1, 2, 3, 4 ]
+```
+
+Let's deliberately place a bug in the template function by removing the
+index's type `int` from the for-loop, and remove the call `print()` in
+`main()`:
+
+```cpp
+#include <iostream>
+
+template<typename T>
+void print(T &arr) {
+	int arraySize = sizeof(arr) / sizeof(arr[0]);
+	std::cout << "[ ";
+	for (i = 0; i < arraySize; i++) {
+		if (i > 0) {std::cout << ", ";}
+		std::cout << arr[i];
+	}
+	std::cout << " ]" << std::endl;
+}
+
+int main() {
+	int arr[] = {1, 2, 3, 4};
+	return 0;
+}
+```
+
+For some compilers, the code above will compile just fine. Why? Because
+there was no call `print()`, so the compiler didn't have construct and
+execute it.[^compilernote] This evidences a crucial point about template
+functions: They do not exist unless we call them. They're just blueprints.
+On the other hand, whenever we call a template function, the compiler will
+write a function based on the facts we provide. This in turn means that if
+we provide different facts, the compiler will create different functions.
+For example, if we used our `print()` function for different arrays of
+different types:
+
+[^compilernote]:
+    This phenomenon is entirely compiler dependent. Compilers like clang
+    will compile the template function, even if we do not call the
+    function.
+
+```cpp
+#include <iostream>
+
+template<typename T> void print(T &arr) { int arraySize = sizeof(arr) /
+sizeof(arr[0]); std::cout << "[ "; for (int i = 0; i < arraySize; i++) { if
+(i > 0) {std::cout << ", ";} std::cout << arr[i]; } std::cout << " ]" <<
+std::endl; }
+
+int main() { int arr1[] = {1, 2, 3, 4}; double arr2[] = {1.1, 1.2, 1.3,
+1.4}; print(arr1); print(arr2); return 0; }
+
+```
+
+```bash
+[ 1, 2, 3, 4 ]
+[ 1.1, 1.2, 1.3, 1.4 ]
+```
+
+the actual code would look like:
+
+```cpp
+#include <iostream>
+
+void print(int &arr) {
+	int arraySize = sizeof(arr) / sizeof(arr[0]);
+	std::cout << "[ ";
+	for (int i = 0; i < arraySize; i++) {
+		if (i > 0) {std::cout << ", ";}
+		std::cout << arr[i];
+	}
+	std::cout << " ]" << std::endl;
+}
+
+void print(double &arr) {
+	int arraySize = sizeof(arr) / sizeof(arr[0]);
+	std::cout << "[ ";
+	for (int i = 0; i < arraySize; i++) {
+		if (i > 0) {std::cout << ", ";}
+		std::cout << arr[i];
+	}
+	std::cout << " ]" << std::endl;
+}
+
+int main() {
+	int arr1[] = {1, 2, 3, 4};
+	double arr2[] = {1.1, 1.2, 1.3, 1.4};
+	print(arr1);
+	print(arr2);
+	return 0;
+}
+```
+
+## Class Templates
+
+The real power behind templates is when they're used with classes. Much of
+the standard library's classes, like `vector`, are implemented with
+templates. To see this in action, let's create a simple class called
+`List`.
+
+For `List` class, we want to create a C-style array in the stack. As we
+know, to create these arrays, we have to indicate their size. Using a
+template:
+
+```cpp
+#include <iostream>
+
+template<int N>
+class List {
+	private:
+		int m_list[N];
+	public:
+		int GetSize() const { return N; }
+};
+
+int main() {
+	List<8> arr;
+	std::cout << arr.GetSize() << std::endl;
+	return 0;
+}
+```
+
+```bash
+8
+```
+
+Here, we have a slight variance from the syntax we used with functions.
+Instead of writing `typename`, we instead passed an explicit type, `int`,
+followed by an identifier `N`. When we write `List<8>` in `main()`, we
+create an instance of `List`: an array of size `N == 8`.
+
+As evidence of the standard library's extensive use of templates, notice
+that `List<8>` looks the same as the syntax `vector<int>`. This is no
+coincidence; vectors are implemented via templates.
+
+Returning to our example, we can go a step further and make our `List`
+type's array be of any type. Let's also add a function for inserting and
+retrieving a value at a given index:
+
+```cpp
+#include <iostream>
+
+template<typename T, int N>
+class List {
+	private:
+		T m_list[N];
+	public:
+		int GetSize() const { return N; }
+		int ValueAt(int i) {
+			return m_list[i];
+		}
+		void Insert(int i, T val) {
+			m_list[i] = val;
+		}
+};
+
+int main() {
+	List<int, 8> arr;
+	arr.Insert(0, 22);
+	std::cout << arr.ValueAt(0) << std::endl;
+	return 0;
+}
+```
+
+```bash
+22
+```
+
+Think carefully about what we're doing here. We're essentially writing code
+instructing the compiler to write code. This is a form of
+**metaprogramming**—the programming technique of writing programs that take
+other programs as their data.
+
+As we can probably tell, the idea of writing programs that output programs
+can get very, very crazy. In fact, it's so easy to go overboard with
+metaprogramming that some software companies outright prohibit their
+employees from using the technique. This is not because metaprogramming is
+some "dark art." It's more so because metaprograms can be enormously
+difficult to prove. Reasoning through a metaprogram is essentially
+reasoning through two different systems and their interactions: (1) the
+program the human writes, and (2) the program the compiler writes.
+Human-written programs can be difficult as it is; bad or non-existent
+comments, poor naming, unhygienic practices, among other sins. With
+metaprogramming, we're adding another layer of difficulty: the
+compiler-written program. With a large enough program, we need a strong
+understanding of the type-inference system to reason through the
+code—something even the most accomplished programmers may not have.

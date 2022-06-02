@@ -1,0 +1,78 @@
+<Metadata
+	title={"Asynchronous Programming"}
+	description={"Introduction to asynchronous programming with JavaScript"}
+	keywords={"Asynchronous programming, JavaScript"}
+/>
+
+# Asynchronous Programming: JavaScript
+
+The name "JavaScript" is a product of history and marketing. JavaScript was
+originally referred to by its developers as "Mocha," but because the
+language was created to entice Java developers, the marketing experts
+concluded that JavaScript was a better fit, as "script" was the word du
+jour for "easy of use." While there are some similarities between Java and
+JavaScript, they are two completely different and unrelated
+languages&mdash;Java is to JavaScript what ham is to hamster.
+
+JavaScript is a dynamically- and weakly-typed programming language. Thus,
+unlike languages like C++ and Java, JavaScript is compiled and executed at
+runtime. Undoubtedly, that execution most commonly occurs as part of a
+webpage in a browser, but thanks to various JavaScript libraries, we can
+execute also JavaScript directly on a machine through a host environment.
+To begin understanding why JavaScript exists and how it works, we should
+talk about the internet from a very high-level overview.
+
+## JavaScript & Webpages
+
+From our our understanding of networks, we know the following: When a user
+types a URL into their browser's address bar and hits enter, an HTTP
+request is sent to the server hosting that webpage. That server then sends
+a response back to the browser. Let's say the the URL entered is to an HTML
+file on that server, and let's say that HTML file displays a small
+registration form for some event. When the user completes the fields and
+hits "submit", another request is sent to the server. What the server does
+with that request depends on what the programmer has coded for when that
+particular request is received. The server might verify the field's
+contents, store the data, or return a new page. It's entirely up the
+programmer. Nevertheless, once it's done, the server will send a response,
+like a confirmation page (or at least it should; it would be a poor website
+for the submit button not to display any output when it's clicked).
+
+Where does JavaScript fit in this picture? JavaScript provides the dynamic,
+or reactive, nature of a webpage. It can also, however, be used to handle
+the server side code. It's most common use case, however, is to add more
+dynamic elements to a webpage. Webpages based purely off of HTML and CSS
+are generally called **static webpages**. We can think of static webpages
+as akin to PDF files (but they can be more sophisticated, with CSS
+animations, buttons, and links). The webpages don't exactly change their
+structures in response to user interaction. JavaScript is what transforms
+the static webpage into a **dynamic webpage**: A webpage that changes its
+structure and content depending on the user or the user's actions.
+
+For example, consider a webpage that only displays some blog content. When
+you're in Sendai, the content is in Japanese. When you're in Warsaw, it's
+in Polish. And when you're in Nuku'alofa, it's in Tongan. This is an
+example of a dynamic webpage—one whose content changes depending on some
+external factor. In this case, the user's location. If instead the webpage
+dispalyed English wherever you went—nothing else—it would be accurately
+described as a static webpage.
+
+Now, it's not necessarily the case that JavaScript is what provides the
+language translation services for the webpage (it could be another language
+like PHP), but JavaScript is a possibility. This phenomenon of dynamically
+changing webpages is what JavaScript is used most often for.
+
+
+## JavaScript Libraries & Frameworks
+
+Because of how pervasive JavaScript is in web development, JavaScript has one of the largest collections of libraries and frameworks, or more broadly, <b>codebases</b>. This is both a gift and a curse. For starters, when we work on large programs, we should always consider if a particular problem is already solved by an codebase. More often than not, the thorniest problems have existing solutions.[^lib_note].
+
+
+[^lib_note]: A helpful resource for quickly finding and researching existing codebases is the website [JavaScripting.com](https://www.javascripting.com/).
+
+Although this can significantly cut down development time, it can also lead to unexpected, and potentially disastrous, bugs. These bugs can be extraordinarily difficult to exterminate. A framework for dynamically reordering some buttons might rely on the assumption that containers can overflow, but if we globally restrict containers not to overflow, the framework may fail or cause problems elsewhere. Worse, that assumption might not be explicitly stated in the codebase. It takes just a single line of code to violate that assumption, wreaking havoc on everything we've built like a bat out of hell. Accordingly, before using any codebase, we must always take the time to study the codebase thoroughly.
+
+
+The second problem with so many codebases is relying on a codebase when plain JavaScript &mdash; often called <i>vanilla JavaScript</i> &mdash; would suffice. The most obvious example of this problem is using jQuery &mdash; a JavaScript framework intended to reduce some of the more verbose aspects of vanilla JavaScript. One of the more annoying aspects of JavaScript is trying to find solutions to a particular problem in vanilla JavaScript, only to find a plethora of results employing jQuery. Fortunately, with modern JavaScript's improvements, jQuery is slowly going away in favor of vanilla JavaScript. This all to say: Err on the side of using vanilla JavaScript whenever possible, but don't reinvent the wheel.
+
+

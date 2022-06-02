@@ -1,0 +1,17 @@
+.container {
+	border-collapse: collapse;
+}
+
+/* .container li {
+	display: flex;
+	padding: 0;
+	justify-content:space-between;
+}
+.container ul:first-child ul {
+	margin: 0 5px;
+	padding: 0 5px;
+}
+.container ul:first-child ul:first-child {
+	border-left: solid thin grey;
+	flex: 1;
+} */

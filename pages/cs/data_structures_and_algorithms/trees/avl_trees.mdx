@@ -1,0 +1,1007 @@
+# AVL Trees
+
+1. [Rotations](#rotations)
+   1. [Right rotation](#right-rotation)
+   2. [Left rotation](#left-rotation)
+   3. [Right-left Rotation](#right-left-rotation)
+   4. [Left-right Rotation](#left-right-rotation)
+2. [General Form of AVL Rotations](#general-form-of-avl-rotations)
+
+In this section, we examine **Adelson-Velsky &amp; Landis trees**, commonly
+known as **AVL-trees**.[^avlnote] AVL-trees are _height-balanced binary
+search trees._ Accordingly, they are a subset of balanced binary trees:
+
+[^avlnote]:
+    AVL-trees were invented in 1962, and named after their inventors,
+    Soviet mathematicians Georgy Adelson-Velsky (8 January 1922&ndash;26
+    April 2014) and Evgenii Mikhailovich Landis (6 October 1921&ndash;12
+    December 1997).
+
+    Born in Samara, Russia, Adelson-Velsky is known for introducing
+    _bitboards_, a bit array data structure now widely used to represent
+    game positions in computer chess. Adelson-Velsky's chess program
+    participated and won the first chess match between computer programs
+    in 1966. The AVL-tree, in particular, was borne out of Adelson-Velsky's
+    work in artificial intelligence.
+
+    His colleague, Evgenii Landis, was equally accomplished. Born in
+    Kharkiv, Ukraine, Landis fought in Finland as a lieutenant in the Red
+    Army, where he was wounded, frost-bitten, and severely shell-shocked.
+    The traumas of war impaired his ability to hear high-pitched tones, to
+    which Landis lamented his inability to hear violin flageolets. Despite
+    these difficulties, Landis made numerous contributions to the field of
+    partial differential equations, alongside his collaboration with
+    Adelson-Velsky in inventing the AVL-tree.
+
+<div id="avl_tree_set"></div>
+
+Given this fact, we might guess that there are various ways of defining
+what it means to be "balanced." And in fact, we would guess correctly. The
+term _balanced tree_, without more, could mean many things. Do we mean
+balanced in terms of weight? Height? Depth? Order? Node categories?
+
+For AVL-trees, we define "balanced" in terms of height. And to construct
+that definition, we need a way of quantifying _balance_. We do so by
+defining a **height balance factor**:
+
+> _Definition: Height Balance Factor_. Let ${n}$ be a node in some tree.
+> The _height balance factor_ of ${n}$ is defined as:
+>
+> $$
+> 	\textit{\textsf{BF}}(n) = \textit{\textsf{H}}(\textit{\textsf{LST}}(n)) - \textit{\textsf{H}}(\textit{\textsf{RST}}(n))
+> $$
+>
+> where:
+>
+> - ${\textit{\textsf{BF}}(n)}$ is the height balance factor of the node
+>   ${n,}$
+> - ${\textit{\textsf{H}}(\textit{\textsf{LST}}(n))}$ is the height of the
+>   left-subtree of the node ${n,}$ and
+> - ${\textit{\textsf{H}}(\textit{\textsf{RST}}(n))}$ is the height of the
+>   right-subtree of the node ${n.}$
+
+To understand this definition, it's important to recall the definitions for
+height:
+
+> _Definition: Height of a Node_. Let ${n}$ be a node in some rooted tree.
+> The height of ${n,}$ denoted ${\textit{\textsf{H}}(n),}$ is the number of
+> nodes, including the starting and end nodes, along the longest strictly
+> downward path from ${n}$ to a leaf.
+
+Note that there are two different definitions for the height of a node. An
+alternative definition is:
+
+> _Definition: Height of a Node_. Let ${x}$ be a node in some tree ${T.}$
+> The height of ${x,}$ denoted ${\textit{\textsf{H}}(x),}$ is the number of
+> edges in the longest strictly-downward path from ${x}$ to a leaf.
+
+The key difference between this definition and the one we will use is
+whether a leaf has a height of ${0}$ or ${1.}$ The existence of two
+differing definitions for node height is similar to the situation of
+natural numbers in mathematics—does the set of natural numbers include
+${0?}$ Some say yes, others no.
+
+In response to this debate, we take the pragmatic approach. In some
+situations, it's more convenient to define the height of a node as the
+number of edges along the path, since this implies that a balanced binary
+tree of height ${H}$ has ${2^H}$ leaves. If we defined it as the number of
+nodes along the path (number of edges plus ${1}$), we would have ${H + 1}$
+or ${H-1}$ leaves. For the purposes of AVL-trees, we use the definition
+presented in the main text.
+
+> _Definition: Height of a Tree_. Let ${\textsf{T}}$ be some rooted tree.
+> The height of ${\textsf{T},}$ denoted
+> ${\textit{\textsf{H}}(\textsf{T}),}$ is the height of its root node.
+
+From the height balance factor ${\textit{\textsf{BF}},}$ we have the
+definition of an AVL tree:
+
+> _Definition: avl-tree_. Let ${A}$ be a binary tree. ${A}$ is an
+> _AVL-tree_ if, and only if, for every node ${n \in A,}$
+>
+> <figure>$$ \textit{\textsf{BF}}(n) \in \{ -1, 0, 1 \} $$</figure>
+>
+> Or, alternatively:
+>
+> <figure>$$\lvert \textit{\textsf{BF}}(n) \rvert \leq 1 $$</figure>
+
+Following the definition above, if the absolute value of the balance factor
+of some node ${x}$ is greater than or equal to ${1,}$ we say that the node
+${x}$ is _height-imbalanced._ Moreover, to determine if a particular tree
+${T}$ is an AVL-tree, we must calculate the height balance factor for each
+node in ${T.}$ If a single node in ${T}$ is imbalanced, we conclude that
+${T}$ is height-imbalanced. If the tree is imbalanced, we can attempt to
+balance the tree by performing _rotations_, as we'll see later.
+
+That said, let's consider a few examples. Below are several binary trees,
+with their heights indicated.
+
+<Tree data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "c", parent: "a" },
+		{ child: "d", parent: "b" },
+		{ child: "e", parent: "b" },
+		{ child: "f", parent: "c" },
+		{ child: "g", parent: "c", display: "none" },
+
+]} markHeight={true}/>
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "c", parent: "a" },
+		{ child: "d", parent: "b" },
+		{ child: "e", parent: "b", display: "none" },
+		{ child: "f", parent: "c", display: "none" },
+		{ child: "g", parent: "c" },
+	]}
+	markHeight={true}
+/>
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "c", parent: "a" },
+		{ child: "d", parent: "b" },
+		{ child: "e", parent: "b", display: "none" },
+		{ child: "h", parent: "d" },
+		{ child: "i", parent: "d", display: "none" },
+	]}
+	markHeight={true}
+/>
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "c", parent: "a" },
+		{ child: "d", parent: "b" },
+		{ child: "e", parent: "b", display: "none" },
+		{ child: "h", parent: "d", display: "none" },
+		{ child: "i", parent: "d" },
+		{ child: "j", parent: "i" },
+		{ child: "k", parent: "i", display: "none" },
+	]}
+	markHeight={true}
+/>
+
+Examining each tree, we have the following tables of balance factors:
+
+<table>
+	<thead>
+		<tr>
+		<th>Tree</th>
+		<th>
+			<div>
+				<span>Node</span>
+			</div>
+		</th>
+		<th>
+			<div>
+				<span>Height of Left-subtree</span>
+			</div>
+		</th>
+		<th>
+			<div>
+				<span>Height of Right-subtree</span>
+			</div>
+		</th>
+		<th>
+			<div>
+				<span>Balance Factor</span>
+			</div>
+		</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td rowSpan="6">A</td>
+			<td>a</td>
+			<td>2</td>
+			<td>2</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>b</td>
+			<td>1</td>
+			<td>1</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>c</td>
+			<td>1</td>
+			<td>0</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>d</td>
+			<td>0</td>
+			<td>0</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>e</td>
+			<td>0</td>
+			<td>0</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>f</td>
+			<td>0</td>
+			<td>0</td>
+			<td>0</td>
+		</tr>
+	</tbody>
+</table>
+
+<table>
+	<thead>
+		<tr>
+		<th>Tree</th>
+		<th>
+			<div>
+				<span>Node</span>
+			</div>
+		</th>
+		<th>
+			<div>
+				<span>Height of Left-subtree</span>
+			</div>
+		</th>
+		<th>
+			<div>
+				<span>Height of Right-subtree</span>
+			</div>
+		</th>
+		<th>
+			<div>
+				<span>Balance Factor</span>
+			</div>
+		</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td rowSpan="5">B</td>
+			<td>a</td>
+			<td>2</td>
+			<td>2</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>b</td>
+			<td>1</td>
+			<td>0</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>c</td>
+			<td>0</td>
+			<td>1</td>
+			<td>-1</td>
+		</tr>
+		<tr>
+			<td>d</td>
+			<td>0</td>
+			<td>0</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>g</td>
+			<td>0</td>
+			<td>0</td>
+			<td>0</td>
+		</tr>
+	</tbody>
+</table>
+
+<table>
+	<thead>
+		<tr>
+		<th>Tree</th>
+		<th>
+			<div>
+				<span>Node</span>
+			</div>
+		</th>
+		<th>
+			<div>
+				<span>Height of Left-subtree</span>
+			</div>
+		</th>
+		<th>
+			<div>
+				<span>Height of Right-subtree</span>
+			</div>
+		</th>
+		<th>
+			<div>
+				<span>Balance Factor</span>
+			</div>
+		</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td rowSpan="5">C</td>
+			<td>a</td>
+			<td>3</td>
+			<td>1</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>b</td>
+			<td>2</td>
+			<td>0</td>
+			<td>2</td>
+		</tr>
+		<tr>
+			<td>c</td>
+			<td>0</td>
+			<td>0</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>d</td>
+			<td>1</td>
+			<td>0</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>h</td>
+			<td>0</td>
+			<td>0</td>
+			<td>0</td>
+		</tr>
+	</tbody>
+</table>
+
+<table>
+	<thead>
+		<tr>
+		<th>Tree</th>
+		<th>
+			<div>
+				<span>Node</span>
+			</div>
+		</th>
+		<th>
+			<div>
+				<span>Height of Left-subtree</span>
+			</div>
+		</th>
+		<th>
+			<div>
+				<span>Height of Right-subtree</span>
+			</div>
+		</th>
+		<th>
+			<div>
+				<span>Balance Factor</span>
+			</div>
+		</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td rowSpan="6">D</td>
+			<td>a</td>
+			<td>4</td>
+			<td>1</td>
+			<td>3</td>
+		</tr>
+		<tr>
+			<td>b</td>
+			<td>3</td>
+			<td>0</td>
+			<td>3</td>
+		</tr>
+		<tr>
+			<td>c</td>
+			<td>0</td>
+			<td>0</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>d</td>
+			<td>0</td>
+			<td>2</td>
+			<td>-2</td>
+		</tr>
+		<tr>
+			<td>i</td>
+			<td>1</td>
+			<td>0</td>
+			<td>1</td>
+		</tr>
+		<tr>
+			<td>j</td>
+			<td>0</td>
+			<td>0</td>
+			<td>0</td>
+		</tr>
+	</tbody>
+</table>
+
+From the tables above, we can see that trees ${\texttt{C}}$ and
+${\texttt{D}}$ are imbalanced. The same trees are presented below with
+their balance factors indicated (red for imbalanced, green for balanced).
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "c", parent: "a" },
+		{ child: "d", parent: "b" },
+		{ child: "e", parent: "b" },
+		{ child: "f", parent: "c" },
+		{ child: "g", parent: "c", display: "none" },
+	]}
+	markBalanceFactor={true}
+/>
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "c", parent: "a" },
+		{ child: "d", parent: "b" },
+		{ child: "e", parent: "b", display: "none" },
+		{ child: "f", parent: "c", display: "none" },
+		{ child: "g", parent: "c" },
+	]}
+	markBalanceFactor={true}
+/>
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "c", parent: "a" },
+		{ child: "d", parent: "b" },
+		{ child: "e", parent: "b", display: "none" },
+		{ child: "h", parent: "d" },
+		{ child: "i", parent: "d", display: "none" },
+	]}
+	markBalanceFactor={true}
+/>
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "c", parent: "a" },
+		{ child: "d", parent: "b" },
+		{ child: "e", parent: "b", display: "none" },
+		{ child: "h", parent: "d", display: "none" },
+		{ child: "i", parent: "d" },
+		{ child: "j", parent: "i" },
+		{ child: "k", parent: "i", display: "none" },
+	]}
+	markBalanceFactor={true}
+/>
+
+Now that we know what it means for a tree to be imbalanced, let's examine
+_rotating_—the act of correct height imbalances.
+
+## Rotations
+
+If we think carefully about height-imbalanced trees, we find that there are
+really only four situations where a binary tree is height-imbalanced. Why?
+Because to have a height-imbalanced binary tree, we need, at a minimum,
+three nodes. This follows from the definition of a height-balanced binary
+tree—to determine if a binary tree is height-balanced, we must compare the
+left- and right-subtrees of the root. And to reach the conclusion that a
+binary tree is height-imbalanced, the root must have a right- and
+left-child to begin with; three nodes total.
+
+As we know from the _Catalan number formula_, given three nodes, there are
+five possible binary trees:
+
+<Tree
+	data={[
+		{ child: "a", parent: "", label: "none" },
+		{ child: "b", parent: "a", label: "none" },
+		{ child: "1", parent: "a", display: "none" },
+		{ child: "c", parent: "b", label: "none" },
+		{ child: "2", parent: "b", display: "none" },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "a", parent: "", label: "none" },
+		{ child: "1", parent: "a", display: "none" },
+		{ child: "b", parent: "a", label: "none" },
+		{ child: "2", parent: "b", display: "none" },
+		{ child: "c", parent: "b", label: "none" },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "a", parent: "", label: "none" },
+		{ child: "1", parent: "a", display: "none" },
+		{ child: "b", parent: "a", label: "none" },
+		{ child: "c", parent: "b", label: "none" },
+		{ child: "2", parent: "b", display: "none" },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "a", parent: "", label: "none" },
+		{ child: "b", parent: "a", label: "none" },
+		{ child: "1", parent: "a", display: "none" },
+		{ child: "2", parent: "b", display: "none" },
+		{ child: "c", parent: "b", label: "none" },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "a", parent: "", label: "none" },
+		{ child: "b", parent: "a", label: "none" },
+		{ child: "c", parent: "a", label: "none" },
+	]}
+/>
+
+Of the possibilities above, only ${\texttt{P5}}$ is balanced. Given that
+all subtrees of a binary tree are binary trees, it follows that there are
+only four possible cases for height-imbalanced trees:
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "1", parent: "a", display: "none" },
+		{ child: "c", parent: "b" },
+		{ child: "2", parent: "b", display: "none" },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "1", parent: "a", display: "none" },
+		{ child: "b", parent: "a" },
+		{ child: "2", parent: "b", display: "none" },
+		{ child: "c", parent: "b" },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "1", parent: "a", display: "none" },
+		{ child: "b", parent: "a" },
+		{ child: "c", parent: "b" },
+		{ child: "2", parent: "b", display: "none" },
+	]}
+/>
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "1", parent: "a", display: "none" },
+		{ child: "2", parent: "b", display: "none" },
+		{ child: "c", parent: "b" },
+	]}
+/>
+
+Because there are only four possible cases, there are only four methods for
+height-balancing some binary tree. These methods are called **rotations**:
+_right rotation_, _left rotation_, _right-left rotation_, and _left-right
+rotation_.
+
+### Right rotation
+
+Suppose some user is entering a binary tree traversal sequence to construct
+a tree ${T.}$ After the first two entries, the binary tree appears as:
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "c", parent: "a", display: "none" },
+	]}
+/>
+
+The user then enters another element:
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "d", parent: "a", display: "none" },
+		{ child: "c", parent: "b" },
+		{ child: "e", parent: "b", display: "none" },
+	]}
+/>
+
+At this point, the tree is imbalanced. Why? Because ${\texttt{node(a)}}$
+has a left-subtree of height ${2,}$ and a right-subtree of height ${0.}$
+Thus, the tree has an overall balance factor of
+${\textit{\textsf{BF}} = 2 - 0 = 2.}$ We demarcate this situation as
+${T:LL_i}$ to convey the proposition that the tree ${T}$ is
+_left-left-imbalanced_, which in turn conveys: An imbalance occurred at the
+left-subtree of the left-subtree of ${T.}$
+
+Now, because we have ${T:LL_i,}$ we perform an **right-rotation**:
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a", focus: "red" },
+		{ child: "d", parent: "a", display: "none" },
+		{ child: "c", parent: "b" },
+		{ child: "e", parent: "b", display: "none" },
+	]}
+/>
+
+<figure>$$ \Large \overset{\texttt{right-rotate}}{\curvearrowright} $$</figure>
+
+<Tree
+	data={[
+		{ child: "b", parent: "", focus: "red" },
+		{ child: "c", parent: "b" },
+		{ child: "a", parent: "b" },
+	]}
+/>
+
+<div id="rotate4"></div>
+
+The RR-rotation consists of the following steps:
+
+1. ${\texttt{node(b)},}$ the node just before the imbalance-causing node—in
+   this case, ${\texttt{node(c)}}$—becomes the new root. We call
+   ${\texttt{node(b)}}$ the **pivot**.
+
+2. ${\texttt{node(a)},}$ formerly the root, becomes the right-child of
+   ${\texttt{node(b)},}$ with ${\texttt{node(b)}'s}$ right-child as its
+   left-child. In the case above, ${\texttt{node(b)}}$'s right-child is
+   ${\texttt{NULL}.}$
+
+3. ${\texttt{node(a)}}$ remains the left-child of ${\texttt{node(b)}.}$
+
+One way to think about the right-rotation operation is to imagine holding
+down the pivot, and pulling the node to its right down. (Hence the term
+_pivot_). Alternatively, we can think of the right-rotation as it sounds
+like—the nodes move towards the right, transitioning from the shape
+${~~/~~}$ to the shape ${~~\land~~.}$
+
+The right-rotation operation works regardless of how many nodes there are.
+For example, suppose we have the following tree:
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "d", parent: "a", type: "subtree" },
+		{ child: "c", parent: "b" },
+		{ child: "e", parent: "b", type: "subtree" },
+		{ child: "f", parent: "c", type: "subtree" },
+		{ child: "g", parent: "c", type: "subtree" },
+	]}
+	edgeLength={100}
+/>
+
+In the diagram above, the nodes without circles indicate that there are
+further subtrees. Importantly, the fact that the pivot,
+${\texttt{node(b)},}$ has a balance factor of ${1}$ indicates that this
+tree is left-heavy. Accordingly, we have a right-rotation:
+
+<Tree
+	data={[
+		{ child: "b", parent: "" },
+		{ child: "c", parent: "b" },
+		{ child: "a", parent: "b" },
+		{ child: "e", parent: "a", type: "subtree" },
+		{ child: "d", parent: "a", type: "subtree" },
+		{ child: "f", parent: "c", type: "subtree" },
+		{ child: "g", parent: "c", type: "subtree" },
+	]}
+/>
+
+### Left rotation
+
+Now suppose the user enters the tree:
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "1", parent: "a", display: "none" },
+		{ child: "b", parent: "a" },
+		{ child: "2", parent: "b", display: "none" },
+		{ child: "c", parent: "b" },
+	]}
+/>
+
+Here, we have an **RR-imbalanced tree**. To balance this tree, we must
+perform a **left-rotation**:
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "d", parent: "a", display: "none" },
+		{ child: "b", parent: "a", focus: "red" },
+		{ child: "e", parent: "b", display: "none" },
+		{ child: "c", parent: "b" },
+	]}
+/>
+
+<figure>$$ \Large \overset{\texttt{left-rotate}}{\curvearrowleft} $$</figure>
+
+<Tree
+	data={[
+		{ child: "b", parent: "", focus: "red" },
+		{ child: "a", parent: "b" },
+		{ child: "c", parent: "b" },
+	]}
+/>
+
+The procedure:
+
+1. The pivot ${\texttt{node(b)},}$ becomes the new root. .
+
+2. ${\texttt{node(a)},}$ formerly the root, becomes the
+
+3. <em>left-child</em> of ${\texttt{node(b)}.}$
+
+${\texttt{node(c)}}$ remains the right-child of ${\texttt{node(b)}.}$
+
+### Right-left Rotation
+
+Now we examine the third case. Suppose the user enters:
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "1", parent: "a", display: "none" },
+		{ child: "b", parent: "a" },
+		{ child: "c", parent: "b" },
+		{ child: "2", parent: "b", display: "none" },
+	]}
+/>
+
+We say that this tree is **right-left imbalanced**. To balance this tree,
+we perform a right-left rotation:
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "1", parent: "a", display: "none" },
+		{ child: "b", parent: "a" },
+		{
+			child: "c",
+			parent: "b",
+			focus: "red",
+		},
+		{ child: "2", parent: "b", display: "none" },
+	]}
+/>
+
+<figure>$$ \Large \overset{\texttt{right-rotate}}{\curvearrowright} $$</figure>
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "1", parent: "a", display: "none" },
+		{
+			child: "c",
+			parent: "a",
+			focus: "red",
+		},
+		{ child: "2", parent: "c", display: "none" },
+		{ child: "b", parent: "c" },
+	]}
+/>
+
+<figure>$$ \Large \overset{\texttt{left-rotate}}{\curvearrowleft} $$</figure>
+
+### Left-right Rotation
+
+Now we examine the final case. Suppose the user enters:
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "1", parent: "a", display: "none" },
+		{ child: "2", parent: "b", display: "none" },
+		{ child: "c", parent: "b" },
+	]}
+/>
+
+We say that this tree is **left-right imbalanced**. To balance this tree,
+we perform a left-right rotation:
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "1", parent: "a", display: "none" },
+		{ child: "2", parent: "b", display: "none" },
+		{ child: "c", parent: "b", focus: "red" },
+	]}
+/>
+
+<figure>$$ \Large \overset{\texttt{left-rotate}}{\curvearrowleft} $$</figure>
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "c", parent: "a", focus: "red" },
+		{ child: "1", parent: "a", display: "none" },
+		{ child: "b", parent: "c" },
+		{ child: "2", parent: "c", display: "none" },
+	]}
+/>
+
+<figure>$$ \Large \overset{\texttt{right-rotate}}{\curvearrowright} $$</figure>
+
+<Tree
+	data={[
+		{ child: "c", parent: "", focus: "red" },
+		{ child: "b", parent: "c" },
+		{ child: "a", parent: "c" },
+	]}
+/>
+
+## General Form of AVL Rotations
+
+AVL tree rotations have a general form. Consider the following tree:
+
+<Tree
+	data={[
+		{ child: "A", parent: "" },
+		{ child: "B", parent: "A" },
+		{ child: "AR", parent: "A", noCircle: true },
+		{ child: "C", parent: "B" },
+		{ child: "BR", parent: "B", noCircle: true },
+		{ child: "CL", parent: "C", noCircle: true },
+		{ child: "CR", parent: "C", noCircle: true },
+	]}
+	markBalanceFactor={true}
+	edgeLength={100}
+/>
+
+The nodes without circles indicate that the child node is the root to some
+larger subtree. In this case, we see that `Node(A)` is imbalanced — it has
+a balance factor of 2. Given that `Node(B)` has a balance factor of 1, we
+see that the rotation should be an LL-rotation. If `Node(B)` had a balance
+factor of -1, the rotation would be an LR-rotation.
+
+More generally:
+
+<table>
+	<thead>
+		<tr>
+			<th style={{ width: "50%" }}>Tree</th>
+			<th>Imbalance</th>
+			<th>Procedure</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<Tree
+					data={[
+						{ child: 2, parent: "", label: "none", ant: "2" },
+						{ child: 1, parent: 2, label: "none", ant: "1" },
+						{ child: 0, parent: 2, label: "none", ant: "0" },
+						{ child: 3, parent: 1, label: "none", ant: "0" },
+						{ child: 4, parent: 1, display: "none" },
+					]}
+					containerWidth={100}
+					containerHeight={40}
+				/>
+			</td>
+			<td>Left-left</td>
+			<td>Left-left rotation</td>
+		</tr>
+		<tr>
+			<td>
+				<Tree
+					data={[
+						{ child: 2, parent: "", label: "none", ant: "2" },
+						{ child: 1, parent: 2, label: "none", ant: "-1" },
+						{ child: 0, parent: 2, label: "none", ant: "0" },
+						{ child: 3, parent: 1, label: "none", ant: "0" },
+						{ child: 4, parent: 1, display: "none" },
+					]}
+					containerWidth={100}
+					containerHeight={40}
+				/>
+			</td>
+			<td>Left-right</td>
+			<td>Left-right rotation</td>
+		</tr>
+		<tr>
+			<td>
+				<Tree
+					data={[
+						{ child: 2, parent: "", label: "none", ant: "2" },
+						{ child: 1, parent: 2, label: "none", ant: "0" },
+						{ child: 0, parent: 2, label: "none", ant: "1" },
+						{ child: 4, parent: 0, display: "none" },
+						{ child: 3, parent: 0, label: "none", ant: "0" },
+					]}
+					containerWidth={100}
+					containerHeight={40}
+				/>
+			</td>
+			<td>Right-right</td>
+			<td>Right-right rotation</td>
+		</tr>
+		<tr>
+			<td>
+				<Tree
+					data={[
+						{ child: 2, parent: "", label: "none", ant: "2" },
+						{ child: 1, parent: 2, label: "none", ant: "0" },
+						{ child: 0, parent: 2, label: "none", ant: "-1" },
+						{ child: 4, parent: 0, display: "none" },
+						{ child: 3, parent: 0, label: "none", ant: "0" },
+					]}
+					containerWidth={100}
+					containerHeight={40}
+				/>
+			</td>
+			<td>Right-left</td>
+			<td>Right-left rotation</td>
+		</tr>
+	</tbody>
+</table>
+
+Returning to our imbalanced tree, how do we balance this tree knowing it
+potentially has thousands of other nodes in those subtrees? The idea is to
+just momentarily ignore the fact that those subtrees exist. Performing the
+LL-rotation, we get:
+
+<Tree
+	data={[
+		{ child: "B", parent: "" },
+		{ child: "C", parent: "B" },
+		{ child: "A", parent: "B" },
+	]}
+	markBalanceFactor={true}
+	containerHeight={20}
+/>
+
+Now we see that it's balanced. The subtrees are now:
+
+<Tree
+	data={[
+		{ child: "B", parent: "" },
+		{ child: "C", parent: "B" },
+		{ child: "A", parent: "B" },
+		{ child: "BR", parent: "A", noCircle: true },
+		{ child: "AR", parent: "A", noCircle: true },
+		{ child: "CL", parent: "C", noCircle: true },
+		{ child: "CR", parent: "C", noCircle: true },
+	]}
+	markBalanceFactor={true}
+	containerHeight={50}
+/>
+
+Ok hang on. How did those subtrees move? A helpful way to think about how
+the subtrees got to their positions is to imagine the links between each
+node as a thread:
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653782339/cs/avl_tree_pull_pa1lkc.svg"
+	}
+	caption={"Imagining the links between each node as a string"}
+	width={"100"}
+	imwidth={"915"}
+	imheight={"199"}
+/>
+
+Notice that by pulling the thread, the subtree slowly goes up, until it
+arrives at its final location.

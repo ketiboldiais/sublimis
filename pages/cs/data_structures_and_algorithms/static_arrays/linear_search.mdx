@@ -1,0 +1,150 @@
+# Linear Search
+
+Searching for a particular element ${x}$ in a array depends on the search
+algorithm employed. There are two algorithms available: (1) _linear search_
+and (2) _binary search_. We consider linear search first.
+
+Under **linear search**, we iterate over each of the array's elements,
+checking if the element matches our query. Say we had the following array
+`A`:
+
+<Sequence data={[8, 9, 4, 7, 6, 5, 10, 2, 11]} />
+
+With the linear search approach, we go through each of the elements of `A`
+checking if the element matches the key. Suppose the key is the integer
+`5`. We start with `A[0]` and ask, "`A[0] = 5`" False. So we continue to
+`A[1]`. Again we ask, "`A[1] = 5`?" False again. So we go to `A[2]`. We
+continue all the way up to `A[5]` wherein `A[5] = 5` is true. Because our
+key was found, we say that the search was _successful._
+
+Now, what if the key was the integer `22` In that case, we go all the way
+up to `A[length]` or `A[8]` to determine that `22` is not in the array.
+This is an example of an _unsuccessful search_.
+
+Implementing linear search is straightforward. We are simply traversing the
+array. We start with `A[0]` then continue to the last element of the list,
+`A[length]`.
+
+```rust
+arrayLinearSearch(x) {
+	for (i = 0; i < length; i++) {
+		if (key == A[i]){
+			return i;
+		}
+	}
+	return -1;
+}
+```
+
+What is the time complexity for linear search? Well, in the worst-case
+scenario, the array does not contain our key. In which case we would have
+to perform the comparison operation `key == A[i]` on all the array's
+elements. Thus, given an ${n-}$array not containing our key, we have time
+complexity of order ${O(n).}$ This is linear time.
+
+In the best-case scenario, `A[0]` is our key, in which case only one
+comparision operation is performed. Accordingly, in the best-case scenario,
+linear search has a time complexity of order ${\Omega(1)}$ —constant time.
+
+What about the average-case scenario? To determine the average-case
+scenario, we ask, how many comparisons are needed to determine whether
+${i = 1}$ matches our key? We must perform 1 comparison. We again ask, how
+many comparisons are needed to determine whether the element at ${i = 2}$
+matches our key? We must perform 2 comparisons. We ask the same question
+for ${i = 3,}$ ${i = 4,}$ ${i = 5,}$ and so on. The sum of comparisons is
+the sum of arithmetic sequence of the positive integers:
+
+$$
+	1 + 2 + 3 + \ldots + n = \dfrac{n(n + 1)}{2}
+$$
+
+Thus, the total amount of time for all possible cases is
+${\dfrac{n(n+1)}{2}.}$ Dividing this by the total number of cases, ${n,}$
+provides us with the average case:
+
+$$
+	\begin{aligned} \dfrac{ \dfrac{n(n + 1)}{2} }{n} &= \dfrac{
+	\dfrac{\cancel{n}(n + 1)}{2} }{\cancel{n}} \\[1.2em] &= \dfrac{n +
+	1}{2} \end{aligned}
+$$
+
+Hence, in the average-case scenario, linear search has a complexity of
+${\Theta\left(\dfrac{n+1}{2}\right).}$ Or, asymptotically, ${\Theta(n).}$
+Notice that both the average-case runtime and the worst-case runtime are
+the same. With linear search, we're almost always running on linear time.
+We can, however, optimize the linear search algorithm.
+
+## Transposition
+
+The first method to improving linear search is with **transposition**. The
+idea behind transposition is best understood via analogy. Suppose you're
+conducting research, and you know there's a particular book relevant to a
+topic. You proceed to the shelf and retrieve the book. Instead of returning
+the book to the original place, you might leave the book on a particular
+table, or place it somewhere closer to your work space. Why? Because
+there's a high likelihood of you needing to use the same book again.
+
+This same idea extends to linear search. In search for some key ${k,}$
+there's a likelihood of searching for ${k}$ again, so we bring it closer to
+${i = 0.}$ For example, say we have the array:
+
+<Sequence data={[8, 9, 4, 6, 7, 3, 2, 11]} />
+
+and our key is ${6.}$ A linear search for 6 returns a successful search, so
+we swap 6 and 4 (swap ${T[3]}$ and ${T[2]}$):
+
+<Sequence data={[8, 9, 6, 4, 7, 3, 2, 11]} />
+
+Search for 3 again, and we swap ${T[1]}$ and ${T[2]}$:
+
+<Sequence data={[8, 6, 9, 4, 7, 3, 2, 11]} />
+
+Search 3 one more time, and we swap ${T[1]}$ and ${T[0]}$:
+
+<Sequence data={[6, 8, 9, 4, 7, 3, 2, 11]} />
+
+Notice that 6 is now at the head of the array. Now whenever we search for
+${6,}$ we have a runtime of ${O(1)}$—constant time. Of course, 6 will only
+get to the array's head if we search for it enough times.
+
+```rust
+arrayLinearSearch(x) {
+	for (i = 0; i < length; i++) {
+		if (key == T[i]) {
+			swap(T[i], T[i-1])
+			return i - 1;
+		}
+	}
+	return -1;
+}
+```
+
+## Move-to-head
+
+With transposition, we do not reach ${O(1)}$ unless we search for the key
+${k}$ ${n}$ times, where ${n}$ is the index of ${k.}$ This means that the
+key ${k}$ can take a fair amount of time to get to the list's head.
+Moreover, if ${k}$ is not searched, it slowly moves towards the tail-end.
+To get to the head faster, we can use the **move-to-head** approach. With
+move-to-head, after a successful search, we immediately place the key at
+${i = 0.}$
+
+```rust
+T = [8, 9, 4, 6, 7, 3, 2, 11]
+arrayLinearSearch(6)
+T = [6, 9, 4, 8, 7, 3, 2, 11]
+```
+
+In pseudocode:
+
+```rust
+arrayLinearSearch(x) {
+	for (i = 0; i < length; i++) {
+		if (key == T[i]) {
+			swap(T[i], T[0])
+			return 0;
+		}
+	}
+	return -1;
+}
+```

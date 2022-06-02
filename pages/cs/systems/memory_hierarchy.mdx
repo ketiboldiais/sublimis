@@ -1,0 +1,85 @@
+# Memory Hierarchy
+
+Thinking about how the assembler might translate these symbols into memory
+addresses, we notice an additional factor we have to consider when
+designing the computer system's instruction set &mdash; _addressing_. If
+the computer system has a large amount of memory, then our computer must
+work with long memory addresses. And the longer a memory address is, the
+longer it takes for the CPU to perform its operations, since it can only
+execute its instructions once it's received all of the addresses bits. This
+time delay is further increased by the fact that the CPU also has to access
+the long address.
+
+Fortunately, von Neumann provided a solution to this problem: Instead of
+implementing main memory as just one giant block, we implement it as a
+**memory hierarchy**:
+
+![Memory hierarchy](https://res.cloudinary.com/sublimis/image/upload/v1653173749/cs/memory_hierarchy_dxnguc.svg)
+
+Memory hierarchy is system for organizing memory. The idea is that we take
+all of the computer's registers, and divvy them up into four places. A
+small amount of registers are given to the CPU. These registers are called
+the **processor registers**. A slightly larger amount of registers are
+placed immediately next to the CPU. These registers are called **caches**.
+A large amount of registers are placed in _main memory_, close to the cache
+but further from the CPU. The largest amount of registers are found in the
+_disk_ (i.e., secondary memory); close to main memory but the furthest from
+the CPU.
+
+When arranged in this sequential manner, we see that the closer we are to
+the CPU, the shorter the address. Thus, the processor registers are the
+fastest registers to read and write, followed by the cache and main memory.
+The disk's registers are the furthest from the CPU, and take the longest to
+read and write.
+
+## Processor Registers
+
+Given how fast processor registers are, they're used for a few key
+operations. Some of the registers are **data registers**. These registers
+are used to store the necessary data for completing an operation's
+execution. For example, if the CPU must execute `ADD x y`, the data
+contents of `x` and `y` are stored inside the data registers to perform the
+computation.
+
+Some of the registers are **address registers**. These registers are used
+to store some address outside the CPU, perhaps in main memory. For example,
+suppose the instruction `DEF x y` means "assign the value in `y` to the
+address `x`." To execute this instruction, the CPU might store the value
+stored in `y` in some data register, then store the address correspoding to
+`y` inside an address register.
+
+## Addressing Modes
+
+Using memory hierarchy, we have different ways to read and write registers,
+called **addressing modes**. These modes are triggered by the way the
+assembly language instructions are written.
+
+**Immediate addressing** is the fastest addressing mode. We're explicitly
+providing data to the CPU:
+
+```rust
+ADD 1 2
+```
+
+**Register addressing** is the next fastest addressing mode. If the data's
+already stored inside the CPU's data registers, we can simply provide the
+Assembly language's instruction representing the registers:
+
+```rust
+ADD R1 R2
+```
+
+**Direct addressing** is the next fastest. Here, we're explicitly
+specifying the address:
+
+```rust
+ADD R1 M[321]
+```
+
+Finally, the slowest form of addressing is indirect addressing. Here, we're
+using symbols to denote addresses, so the CPU must wait to receive the
+addresses:
+
+```rust
+ADD x y
+```

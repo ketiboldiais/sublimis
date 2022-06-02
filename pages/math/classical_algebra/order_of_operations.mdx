@@ -1,0 +1,47 @@
+# Order of Operations
+
+Arithmetic allows us to combine numbers, through the operations listed
+above, to form other numbers. The way we order operations matters in
+mathematics. Otherwise, we run into problems. For example, consider the
+following:
+
+$$2 + 3 \times 4$$
+
+What does this expression mean? Well, it could be: (1) Add 2 and 3, then
+(2) multiply the sum by 4. Or, it could mean: (1) Multiply 3 and 4, and (2)
+add 2 to the product. This ambiguity is unacceptable in mathematics. We
+need be clear and precise with our words. For these reason, mathematics
+follows a few conventions on how to write mathematical expressions:
+
+1. Evaluate expressions in parentheses first, working from the inner most
+   to the outer most, applying the rules below.
+2. Perform all exponentiations.
+3. Perform all multiplications and divisions from left to right.
+4. Perform all additions and subtractions from left to right.
+
+The conventions above are collectively called the **order of operations**.
+Again, these are conventions. They are not universal truths; they're simply
+what mathematicians have come to agree to about how mathematics is
+communicated and understood.
+
+## Operations as Trees
+
+One way to think about the order of operations is that it is a way for us
+to distinguish between different "trees" (the diagrams below are called
+**binary trees**, to be covered in further detail in later sections). For
+example, suppose we had the following expression:
+
+$$2 \times 4 + 6$$
+
+Without the order of operations, the expression above could be
+${(2 \times
+4)+6}$, which can be visualized as:
+
+Or, it could be $2 \times (4+6)$:
+
+The order of operations tells us that we perform additions and subtractions
+from left to right, so the "correct" tree is $(2 \times 4) + 6$, the first
+tree. Really, the order of operations is governed by one rule, evaluate
+expressions inside the parentheses first, and the remaining rules tell us
+_where_ to place parentheses when they are absent. The parentheses, in
+turn, allow us to distinguish between different _trees_.

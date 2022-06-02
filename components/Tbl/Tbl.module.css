@@ -1,0 +1,8 @@
+.Tbl p {
+	display: inline;
+	margin: 0;
+	padding: 0;
+}
+.Tbl li {
+	list-style: none;
+}

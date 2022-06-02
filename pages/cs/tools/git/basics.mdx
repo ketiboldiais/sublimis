@@ -1,0 +1,1632 @@
+# Git
+
+As a new developer, the best time to learn Git is yesterday. Git is a time
+machine &mdash; it's a tool that's used everywhere in computer science and
+software development. What exactly is Git? Git is a version control
+system&mdash;software that tracks and changes files over time. As we know,
+files contain programs, and programs can be modified. There are many
+version control systems, but it is undoubtedly the most widely used version
+control system.
+
+But what exactly does Git do? What do we get out of using Git? Several
+things:
+
+1. **Track changes across multiple files**. Made a change to a file but do
+   not know what change you made? Git allows you to see all of the changes
+   you've made for you to see.
+2. **Compare versions of a project**. Projects change over time. They can
+   multiple different versions, particularly when we have multiple people
+   working on the same project. Git allows us to compare those versions.
+3. **"Time travel" to older versions of a file or project**. Project and
+   file versions do not just vary across groups. They also vary across
+   time. Git allows us to look at older versions.
+4. **Revert to a previous version**. We've made a version of a project or
+   file, and we've worked for a very long time on it. After looking at the
+   route we took, we realize, this was not a very good idea in the first
+   place. Git allows us to go back to the previous version.
+5. **Collaborate and share changes**. Large projects require multiple
+   hands. But, we need a way to make sure we're all on the same page, and
+   to make sure that our changes don't conflict. Git ensures that
+   everything is kept in order, while allowing us to share and collaborate.
+6. **Combine changes**. We've made changes, and our other team members have
+   made changes. We both look at what we've done, and we like them. Git
+   makes it easy for us to take the next step&mdash;merging the changes.
+
+Nearly every company and research group with an engineering team use Git.
+Tech-adjacent roles, such as designers and writers, use Git. Even
+governments use Git. Washington D.C. and other United States governments
+collaborate on drafting with Git, even taking input from citizens.
+
+An extremely useful aspect of Git is _branching_, a topic to be discussed
+later. A common practice among novice programmers is to write a program,
+then, upon finding a bug, decide to either (a) duplicate the source code
+file, then experiment with changes there; (b) code alternatives then
+comment out other sections as needed; or (c) some combination of both. This
+is a painful ordeal that can lead to even more bugs and confusion. Git
+provides a solution: We simply create branches exploring other approaches,
+and if it turns out they do not work, we simply go back to the original
+file and make another branch. And if that branch works, we can merge
+changes. This may seem abstract at the moment, but it will become clearer
+in the sections on branching and merging.
+
+**Git** is a version control system that runs locally on our machines.
+I.e., it's a program that runs just like any other program that runs in our
+computer, be it Word or Garageband. We do not need to register an account
+to use Git, nor do we need an internet connection. We can use Git without
+ever touching Github.
+
+**Github**. is a service that hosts Git repositories ("repos") in the cloud
+and makes it easier to collaborate with others. To use Github, we need to
+register an account. In sum, Github is an online service that allows us to
+share our work with others and our future selves.
+
+## Installation
+
+On newer Macs, Git is preinstalled. But, to install the latest version of
+Git for macOS, follow the "Binary installer"
+[here](https://git-scm.com/download/mac), and download the later release.
+
+For windows, click on the relevant Downloads portion
+[here](https://git-scm.com/downloads).
+
+To verify that Git is installed on your computer and to check what version
+of Git you have installed, run:
+
+```bash
+git --version
+```
+
+The above code should output a string that looks like:
+
+```bash
+git version 2.31.0
+```
+
+## Configuring Git
+
+Once Git is installed, we need to set up two things: (1) our username and
+(2) our email. To set up our user name, enter in our terminal:
+
+```bash
+git config --global user.name "<My Name>"
+```
+
+To verify that we've set up a username, enter:
+
+```bash
+git config user.name
+```
+
+Running that command should display our username. Once we've set up our
+username, the next thing is to set up our email. We do so by entering in
+our terminal:
+
+```bash
+git config --global user.email <myEmail@email.com>
+```
+
+Like our username, to verify that we've set up a Git email, we run the
+command:
+
+```bash
+git config user.email
+```
+
+Doing so should display our configured email.
+
+## Git Terminology
+
+To use Git, we need to have a basic understanding of some Git terminology
+and concepts
+
+### The Git Repo
+
+A Git repository ("repo" in programming parlance) is a workspace that
+tracks and manages files within a folder. Whenever we use Git with a file,
+we must create a new git repo. Every Git repo has its own history and
+content. Again, Git does not work with our files unless we create a git
+repo for that file. Thus, if we had 6 different folders containing 6
+different projects, for Git to work with these folders, we need to create 6
+different repos for each of these folders. Each of those Git repos are
+completely separate&mdash;they are not connected in any way.
+
+### The Git Status Command
+
+If there is one command most often used in Git, it's git status. This
+command gives us information on the current status of a git repo and its
+contents. We will see git status in action in the next sections, but for
+now, just be aware that it's an extremely useful command that we will
+always be using.
+
+### The Git Init Command
+
+The `git init` command is what we run to create a new git repo. Again,
+before we do anything with git on a file, we have to initialize a repo
+first.
+
+Because git init creates a new repo for a file, we only need to do it once.
+The moment we run git init, we have created a new git repo, and we do not
+need to worry about recreating it.
+
+### Where do we run git init?
+
+To ensure that our file is read by Git, we must run git init in the
+directory our file is located. So, for example, suppose that we have a
+directory named git_foo, and inside that directory, we have a file named
+bar.txt. While we are inside that directory in the terminal, we run the
+command:
+
+```bash
+git status
+
+fatal: not a git repository (or any of the parent directories): .git
+```
+
+We get an error. This is because there is no git repo in the git_foo
+directory. This tells us we need to create a git repo:
+
+```bash
+git init
+
+Initialized empty Git repository in /Users/mathlab/git_foo/.git/
+```
+
+The output tells us that we've initialized a new git repo. Let's check to
+verify:
+
+```bash
+git status
+
+On branch main
+
+No commits yet
+
+Untracked files:
+(use "git add <file>..." to include in what will be committed)
+	bar.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+```
+
+We can see that we've created a new git repo. If look inside the git_foo
+folder in the GUI, there's nothing there other than our bar.txt file. So
+what exactly happened? Isn't there supposed to be a folder?
+
+The folder is there, but it's just hidden. We can see it in the terminal:
+
+```bash
+ls -a
+.	..	.git	bar.txt
+```
+
+There it is. A hidden folder (recall that hidden folders are always
+prefaced with a .) named .git. If we delete this folder, all of our git
+history disappears. This is why the folder is hidden&mdash;we do not want
+to delete that folder accidentally.
+
+## Nested Folders
+
+A very common mistake made by novice git users is failing to realize that
+git will monitor everything we do inside the initialized directory. For
+example, we've created a git repo in the git_foo directory. If we were to
+create a directory inside git_foo named git_bang, the git repo we
+initialized for git_foo will record that we've created a directory called
+git_bang. Likewise, if we create another folder called git_zing inside
+git_bang, the git repo we initialized for git_foo will record that change
+as well. We can see this by running:
+
+```bash
+cd git_bang
+git status
+On branch main
+
+No commits yet
+
+Untracked files:
+(use "git add <file>..." to include in what will be committed)
+	../bar.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+```
+
+We can see that git is monitoring the changes made in git_bang. Similarly:
+
+```bash
+cd git_zing
+git status
+On branch main
+
+No commits yet
+
+Untracked files:
+(use "git add <file>..." to include in what will be committed)
+	../../bar.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+```
+
+Git is monitoring everything nested inside the folder git_foo. Because of
+this fact, we do not want to initialize a new repo inside of a repo.
+Always, always use git status to check that we are not currently inside a
+repo. This is because it is critical that we keep repos separate.
+Initializing a repo inside a repo is a surefire way to encounter problems
+down the line. We might not notice it, but at some point, Git will get
+confused&mdash;we're telling it to track a git folder, which is itself
+tracking another folder, when Git's already tracking that folder.
+
+### The Git Commit Command
+
+A `git commit` is a point in time where we explicitly told Git, "Record
+this change." That commit is effectively a version of our file with all of
+the changes made up to that point in time&mdash;a snapshot of all of the
+work we've done up to that point. Alongside that snapshot, we add a message
+briefly explaining what we did. Thus, a git commit is, at its core, a
+snapshot of our work thus far, with a caption to help us identify what we
+did.
+
+Note, however, that a git commit is not the same as saving a file. Changing
+and saving a file is a necessary condition to making a git commit. If there
+are no changes or no save, there's nothing for Git to do. Git isn't
+necessarily concerned with whether we've saved our files. It assumes that
+we've done that. What Git is concerned with is taking the changes we've
+made and saved, grouping them together, and storing it as a _version_ of
+our work. For example, suppose we're working on a website, and we have the
+following files site.html, site.css, and site.js. We write some content in
+the site.html file, make some style changes in site.css, and revise code in
+site.js. Then we save all of those changes. After doing all of that work,
+we _commit_ the changes&mdash;take a snapshot of all of the work we've
+done.
+
+Making a git commit consists of multiple steps:
+
+1. Work - make changes
+2. Add changes - group the changes together
+3. Commit - commit everything that we added in step 2.
+
+## Grouping Changes
+
+Git is premised on the idea that the changes we make are connected in
+someway. For example, suppose that site.html contains a sudoku game. We go
+into the file, and begin inserting the elements for the grid. Then, we go
+into site.css, and begin styling that grid. Finally, we go into site.js and
+begin writing the code generating that grid. All of these changes relate to
+one thing&mdash;"create grid." Thus, we can group those changes together.
+Visualizing the work flow:
+
+```bash
+working directory --> git add --> staging area --> git commit --> repository
+```
+
+## The Git Add Command
+
+The `git add` command is what we execute in the terminal to _stage_ changes
+for a commit. Suppose that we make changes to our file, bar.txt, located in
+our folder, git_foo. Specifically, we write the following:
+
+```bash
+	hello world.
+	I am bar. I come in peace.
+```
+
+We've made a change, and Git can see it. We see this is the case by running
+the following in the terminal while we are in git_foo:
+
+```bash
+git status
+
+On branch main
+
+No commits yet
+
+Untracked files:
+(use "git add <file>..." to include in what will be committed)
+	bar.txt
+nothing added to commit but untracked files present (use "git add" to track)
+```
+
+Git is saying, "Untracked files: ... bar.txt" Let's create another file in
+git_foo called zoom.txt, and we'll add some text to that file while we're
+at it:
+
+```bash
+	touch zoom.txt
+	echo "Zoom zoom" > zoom.txt
+```
+
+Let's run git status again:
+
+```bash
+git status
+
+On branch main
+
+No commits yet
+
+Untracked files:
+(use "git add <file>..." to include in what will be committed)
+bar.txt
+zoom.txt
+
+nothing added to commit but untracked files present (use "git add" to track)
+```
+
+Now Git is saying that there are two untracked files: bar.txt and zoom.txt.
+To understanding what is going on, we need to have a clear understanding of
+a few terms: _working directory_, _staging area_, and _repository_.
+
+The working directory is the directory, or place, we are working on with
+our project. In the example above, our working directory is git_foo. Our
+working directory git_foo contains two files, bar.txt and zoom.txt.
+
+The repository is the Git folder itself&mdash;what we saw as .git. That
+repository is inside git*foo. Once we make a \_git commit*, Git will
+actually change the contents of the .git directory inside our git_foo
+folder. Those changes are additions of commits. Thus, whenever we make a
+commit, we are updating the contents of the repository.
+
+The staging area is where we add our changes before we make a commit.
+Recall that the Git workflow is premised on grouping changes together. The
+staging area is where that grouping occurs. We can think of the Git
+workflow as akin to running a busy restaurant. The chef prepares the
+dishes, one by one. Some of those dishes are the same, take similar amounts
+of time to make, were ordered as appetizers, or have some other shared
+characteristic, so they are grouped together to be served. Git employs the
+same process.
+
+Thus, when we make changes to files, we group the changes together, then we
+_stage_ them. Once they're staged, then we can make a commit.
+
+## The git add Command
+
+The `git add` command is what we use to stage changes. The syntax generally
+looks like:
+
+```bash
+git add file1 file2
+```
+
+As the syntax above shows, we can stage multiple files by separating the
+file names with spaces. Let's apply this syntax by staging the changes we
+made to bar.txt and zoom.txt:
+
+```bash
+git add bar.txt zoom.txt
+```
+
+No output should display from running the code above. But, we can verify
+that our command executed properly (the files were staged), by using git
+status:
+
+```bash
+git status
+
+No commits yet
+
+Changes to be committed:
+(use "git rm --cached <file>..." to unstage)
+	new file:   bar.txt
+	new file:   zoom.txt
+```
+
+Running the above code, we can see that the two files were staged. Whenever
+we see Changes to be committed: followed by the file names, that should be
+our que that there are files in the stagine area, ready to be committed.
+
+All that's left to do is committing the files we've staged.
+
+## The git commit Command
+
+The git commit command is the command we use to make a commit the files
+we've added to the staging area. Whenever we make a commit, we must include
+a **commit message**&mdash;a brief note that summarizes and describes the
+changes and work decided to group together.
+
+For example, for the files we committed above, we should add a commit
+message. The changes we made with those files are really just a creation of
+those files. So, for our files, a commit message might be something like,
+"Started zoom." (Of course, the files we made our nonsensical, so a commit
+message in this instance is nonsensical). If, however, we were working
+with, say, an HTML file, and we were working on the website's navigation
+menu, our commit message would be "Changed navigation menu links." The
+point is, our commit messages should be descriptive&mdash;ask yourself, "6
+months from today, would I be able to understand what I did here?"
+
+To include a message in our commit, we use the syntax:
+
+```bash
+git commit -m "my message"
+```
+
+## The git log Command
+
+The git log command shows us the most recent commits we've made in the
+current working directory. Running the git log command, we get a large
+amount of information:
+
+```bash
+commit a98abc11ce52ad97f4382dc46417814632eacfbc (HEAD -> main)
+Author: Foo Bar <foo@gmail.com>
+Date:   Sat Aug 21 10:45:29 2021 -0500
+
+	changes made
+```
+
+The large string of characters and digits is called a **git hash code**. We
+will explore this hash code in further detail later, but for now, we can
+think of it as an identification code for a particular commit. We can then
+use that identification code to refer to a particular commit. Because this
+is a lot of information, we might want to simply view the commit history in
+single lines. To do so, we use the oneline option:
+
+```bash
+git log --oneline
+a98abc1 (HEAD -> main) changes made
+```
+
+## Atomic Commits
+
+Whenever possible, a git commit should pertain to a single feature, change,
+or fix &mdash; the commit should focus on just one particular change. The
+smaller (atomic) our commits are, the easier it is to see where exactly a
+change was made in the future. The larger and more encompassing commits
+are, the more difficult it is to both identify specific changes.
+
+## Commit Messages
+
+Every commit must include a commit message. When writing a message, always
+use the present tense. Programmers are split on this issue (rightly so,
+changes were made in the past, so past tense should be used), but really it
+makes no difference. One reason to stick with present tense is because git
+generates its own messages, and they are in present tense. Otherwise, we
+should use the present tense as the documentation provides, or whatever our
+team or employer requires.
+
+## Amending Immediately Previous Commit.
+
+If we make a commit but forgot to include a file, we can amend the commit.
+Note that with this method, we can only amend the previous commit. We
+explore another method for correcting a mistake several commits earlier.
+
+To include the file we forgot, we simply git add the file, then include:
+
+```bash
+git commit --amend
+```
+
+As with all commits, this will open our text editor to edit the commit
+message.
+
+## Git Ignore
+
+Working on projects, we often have files inside working directories that we
+never want to commit. For example: API keys, credentials, operating system
+files, log files, dependencies, packages, libraries &mdash; these are all
+things that we (a) have no intention of changing, or (b) have no intention
+of sharing. To ensure these files are completely ignored by git, we use a
+.gitignore file. The .gitignore file is a hidden file. We will not see it
+on our GUI by default.
+
+To use a .gitignore file, simply create that file (e.g., via Vim) and then
+include whatever file or directory names should be ignored.For example, we
+can write inside the .gitignore file the following:
+
+First, we create a .gitignore file. By convention, we want to include the
+.gitignore file inside the root directory for our project.
+
+```bash
+touch .gitignore
+```
+
+Inside that file, we include whatever we want Git to ignore:
+
+```bash
+# ignore all files named .DS_Store
+
+.DS_store
+
+# ignore entire directory named archive
+
+archive/
+
+# ignore all files with .log extension
+
+*.log
+```
+
+Once we create the .gitignore file, we stage and commit the file. Now all
+future commits will ignore the files and directories listed in the
+.gitignore file.
+
+## Branching
+
+Arguably, the most important Git topic is **branching**. Every major
+project will inevitably raise branching issues, and as such, we must be
+familiar with it.
+
+## What is branching?
+
+We can envision the way commits are structured with the following diagram:
+
+<img
+	src="{% static 'images/git_commit_pointers.svg'%}"
+	alt="commit pointers"
+	loading="lazy"
+	class="sixty-p"
+/>
+
+This structure is linear &mdash; it only goes in one direction. The
+problem, however, is that projects seldom ever proceed in a linear fashion.
+For example, we might be implementing a new feature, where the user can use
+a part of the program without the other. However, this would require a
+significant change to some existing parts of the program. Instead of
+proceeding in a linear way, we _branch_. We assign one part of the team to
+take that route, going all the way and implementing the experimental
+feature, while allowing the other part of the team to keep working on the
+original plan.
+
+In essence, branching allows us to safetly make changes to a program while
+destroying other parts of the program. We can establish a branch at some
+point ${t_0}$, leading to the destruction of other parts of the program at
+some point ${t_1}$. If it turns out that the destruction was a bad idea, we
+can simply go back to ${t_0.}$ For this reason, we can think of branching
+as creating alternative timelines:
+
+<img
+	src="{% static 'images/git_branching.svg'%}"
+	alt="git branch"
+	loading="lazy"
+	class="sixty-p"
+/>
+
+The changes we make on one branch does not impact the changes we make on
+other branches, unless we _merge_ them (more on this later.) In git, we are
+always working on a branch. We can this is the case by simply entering git
+status:
+
+```bash
+On branch main
+nothing to commit, working tree clean
+```
+
+The branch main is the default branch created when we make a new git repo.
+This is also called the **trunk**. All other branches stem from branch
+main. From git's perspective, branch main is just like any other branch.
+So, we can create our own branch and treat it as the _master branch_. Many
+developers, however, treat branch main as sort of the &#8220;final
+copy,&#8221; i.e., the official, finalized source code, where everything
+works.
+
+## (HEAD->main)
+
+Before we begin creating branches, we should discuss what the following
+syntax means:
+
+```bash
+commit 9ec800e8cc1662b4f74f724f71d9a239c083ac5c (HEAD->main)
+```
+
+Particularly, what (HEAD->main) means. What does HEAD mean? The HEAD is a
+pointer referring to the current location in the repository. From HEAD,
+there is a pointer to a particular branch _reference_, in this case, a
+reference to main. More specifically, HEAD points to the last commit on
+branch main. This last reference is called the **tip**.
+
+<img
+	src="{% static 'images/git_head_pointer.svg'%}"
+	alt="head pointer"
+	loading="lazy"
+	class="seventy-p"
+/>
+
+If we switch to another branch, say a branch named x, then HEAD points to
+the tip of x &mdash; (HEAD->x). If we switch to a branch named y, HEAD then
+points to the tip of y &mdash; (HEAD->y). The names main, x, and y are all
+references. So, to make changes in a particular branch, we simply change
+HEAD to point to a particular reference. If we are making changes on branch
+main but then want to make changes to branch y, we make HEAD point to
+branch y. And if we want to go back to making changes to branch main, we
+make HEAD point to branch main.
+
+### The Git Branch Command
+
+To view all of our existing branches, we use the git branch command. So
+far, we haven't made any branches, so when we run git branch, we get the
+following:
+
+```bash
+git branch
+
+* main
+```
+
+The **active branch**&mdash;the branch we are currently on &mdash; is
+denoted by an asterisk \*.
+
+## Making a New Branch.
+
+To make a new branch in git, we use the following syntax:
+
+```bash
+	git branch _branch-name_
+```
+
+The command is simply git branch with an append branch name, the name we
+give our branch. Note that this only creates a new branch. It does not
+switch the active branch to the new branch (i.e., HEAD continues pointing
+at branch main). The branch name should not include spaces, and it should
+be descriptive and concise (we do not want to have to write whole sentences
+to switch between branches). So, for example:
+
+```bash
+git branch bugfix
+git branch
+
+bugfix
+* main
+```
+
+We can see that there's a new branch. If we type git log:
+
+```bash
+git log
+
+commit 9b9df7c76b0ef093212a944ac2a04a07092139b8 (HEAD -> main, bugfix)
+Author: Foo Bar <foo@gmail.com>
+Date:   Thu Aug 26 11:10:03 2021 -0500
+
+	change change
+
+commit 9ec800e8cc1662b4f74f724f71d9a239c083ac5c
+Author: Foo Bar <foo@gmail.com>
+Date:   Thu Aug 26 10:30:31 2021 -0500
+
+	test
+
+commit a98abc11ce52ad97f4382dc46417814632eacfbc
+Author: Foo Bar <foo@gmail.com>
+Date:   Sat Aug 21 10:45:29 2021 -0500
+
+	changes made
+```
+
+We can see HEAD is still point to main, but we have a new reference called
+bugfix. This tells us that the two branches, main and bugfix, are pointing
+to the same commit.
+
+## Switching Branches
+
+To switch branches, we use the following syntax:
+
+```bash
+	git switch _branch-name_
+```
+
+In this case, if we want to switch to the branch bugfix, we simply write:
+
+```bash
+git switch bugfix
+
+Switched to branch 'bugfix'
+```
+
+Now HEAD points to the reference bugfix. If we run git status:
+
+```bash
+git status
+
+On branch bugfix nothing to commit, working tree clean
+```
+
+And if we run git log, we can see that HEAD now points bugfix:
+
+```bash
+git log
+
+commit 9b9df7c76b0ef093212a944ac2a04a07092139b8 (HEAD -> bugfix, main)
+Author: Foo Bar <foo@gmail.com>
+Date:   Thu Aug 26 11:10:03 2021 -0500
+
+	change change
+
+commit 9ec800e8cc1662b4f74f724f71d9a239c083ac5c
+Author: Foo Bar <foo@gmail.com>
+Date:   Thu Aug 26 10:30:31 2021 -0500
+
+	test
+
+commit a98abc11ce52ad97f4382dc46417814632eacfbc
+Author: Foo Bar <foo@gmail.com>
+Date:   Sat Aug 21 10:45:29 2021 -0500
+
+	changes made
+```
+
+Now, let's make changes to the file foo.txt. If we run git status:
+
+```bash
+On branch bugfix
+Changes not staged for commit:
+(use "git add <file>..." to update what will be committed)
+(use "git restore <file>..." to discard changes in working directory)
+	modified:   foo.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+We are still on the bugfix branch. Let's add and commit, then run git log:
+
+```bash
+commit 672f27c44431ee1bbfabb652047984e003753460 (HEAD -> bugfix)
+Author: Foo Bar <foo@gmail.com>
+Date:   Thu Aug 26 11:21:03 2021 -0500
+
+	more changes
+
+commit 9b9df7c76b0ef093212a944ac2a04a07092139b8 (main)
+Author: Foo Bar <foo@gmail.com>
+Date:   Thu Aug 26 11:10:03 2021 -0500
+
+	change change
+
+commit 9ec800e8cc1662b4f74f724f71d9a239c083ac5c
+Author: Foo Bar <foo@gmail.com>
+Date:   Thu Aug 26 10:30:31 2021 -0500
+
+	test
+
+commit a98abc11ce52ad97f4382dc46417814632eacfbc
+Author: Foo Bar <foo@gmail.com>
+Date:   Sat Aug 21 10:45:29 2021 -0500
+
+	changes made
+```
+
+## Caution with Git Branch Command
+
+A very important aspect of the git branch _branch-name_ command is that it
+creates a new branch based on the current HEAD. This means if HEAD is
+currently pointing to bugfix, and we run git branch _tests_, we create a
+new branch called tests on the branch bugfix.
+
+## Switching Branches
+
+When we create a new branch, we often want to immediately begin working on
+that branch. We can do so by including the option -c:
+
+```bash
+git switch -c bugfix_tests
+```
+
+The command above creates a new branch called bugfix_tests, and switches to
+that branch once created.
+
+## Git Checkout
+
+Another way to switch branches is with the git checkout _branch-name_
+command. This is the old way of switching branches, and has been replaced
+with git switch _branch-name_. git checkout _branch-name_, however, will
+still work. The replacement was made because git checkout has numerous
+other uses, so a separate command for simply switching branches was made.
+
+## Switching Branches with Uncommited Changes.
+
+Suppose we are on the bugfix branch, make changes, but then switch to main
+while those changes have not yet been added or committed. What happens?
+
+```bash
+git switch main
+
+error: Your local changes to the following files would be overwritten by checkout:
+		foo.txt
+Please commit your changes or stash them before you switch branches.
+Aborting
+```
+
+We get an error message telling us that if we try and switch without adding
+or committing any of the work done on the bugfix, then we will lose all of
+that work. The error message tells us to either (a) commit the changes or
+(b) stash the changes. We will discuss stashing in due course, but for now
+we must commit before making a switch (again, stashing provides an
+alternative).
+
+There is, however, an exception to this rule. If we create a new branch
+called bugfix2, and create a file on that branch called bar.txt, we will
+not get an error message when we switch without making any commits. This is
+because the file bar.txt exists only on the branch bugfix2, so git does not
+have to worry about any conflicts. Instead, when we make the switch to say,
+main, that file will come with us to main.
+
+## Deleting and Renaming Branches.
+
+Often, we want to delete and rename branches. Maybe we accidentally created
+a new branch, we decided against creating a branch, or we named the branch
+poorly at first. The solution to the first two is to delete the branch, and
+the solution to the last is to rename the branch.
+
+To delete a branch, we must ensure we are not on the branch. We cannot
+delete a branch while we are on the branch to be deleted. Once we are
+outside the branch, we use the git branch command with the -d option:
+
+```bash
+	git branch -d _branch-name_
+```
+
+Note that if branch-name is not actually merged, git will not allow us to
+delete the branch as a precautionary measure. To bypass this measure, we
+force delete:
+
+```bash
+	git branch -D _branch-name_
+```
+
+To rename a branch, we must first ensure we are on the branch to be
+renamed. Once we are on that branch, we use the following syntax to rename:
+
+```bash
+	git branch -m _branch-name_
+```
+
+## Merging Branches
+
+### Fast Forwarded Merge.
+
+When we make changes in a branch ${\alpha}$ and combine them with changes
+made a branch ${\beta}$, we **merge** branches ${\alpha}$ and ${\beta.}$
+There are two underlying principles for merging: (1) We do not merge
+commits, we merge branches. (2) We always merge to the current HEAD branch.
+These two principles are made apparent in the following discussion. To
+merge branches, we use the git merge command with the following syntax:
+
+```bash
+git merge
+```
+
+## Merge to Current Head
+
+If we want to merge branch x_branch to y_branch, we switch to y_branch, and
+from there, merge x_branch.
+
+Suppose we have a main branch, and another branch named x_branch. We have
+done work on x_branch, and we are now read to merge x_branch to main. To do
+so, we first switch to main:
+
+```bash
+git switch main
+```
+
+Then, we use the git merge command, followed by the name of the branch we
+want to merge. In this case, x_branch:
+
+```bash
+git switch main
+git merge x_branch
+
+Fast-forward
+foobar.txt | 5 +++++
+1 file changed, 5 insertions(+)
+```
+
+Importantly, merging does not delete a branch. The x_branch still exists,
+and we can still go back to that branch to make changes.
+
+This is the simplest kind of merge, called a **fast-forward merge**. We
+call this a fast foward merge because there was no work done on main. We
+simply continued working on x_branch, then merged it into main (we
+fast-forwarded).
+
+Most of the time, however, we will have work being done on main, while
+there is work being done on x_branch. We will discuss how to handle these
+kinds of merges later.
+
+## Merge Commit
+
+In a _fast-forward merge_, we have the following timeline:
+
+<img
+	src="{% static 'images/git_fast_forward_merge.svg'%}"
+	alt="fast foward merge"
+	loading="lazy"
+	class="fifty-p"
+/>
+
+But, what if instead we had the following:
+
+<img
+	src="{% static 'images/git_non_forward.svg'%}"
+	alt="non fast foward"
+	loading="lazy"
+	class="sixty-p"
+/>
+
+Now the timeline has changed. We have changes in branch main that branchx
+does not have, and changes in branchx that main does not have. The problem
+in this situation: there is room for conflict. Suppose there are changes
+made on line 10 of foo.txt in branch main, and there are also changes made
+on line 10 of foo.txt in branch branchx. Which change do we keep? This is a
+**conflict**.
+
+We will address conflicts in a later section, but for now, assume that
+there is no conflict. If there is no conflict, i.e., neither branchx nor
+main share changes, then we can merge the two branches with a **merge
+commit**:
+
+<img
+	src="{% static 'images/git_merge_commit.svg'%}"
+	alt="merge commit"
+	loading="lazy"
+	class="sixty-p"
+/>
+
+To perform a merge commit, we simply execute the same command we saw with
+the fast foward merge. The only difference is that we must include a commit
+message.
+
+## Merge Conflicts
+
+Now suppose that there are conflicts. How do we merge? First, if we try to
+merge while there is a conflict, Git may not automatically merge. Instead,
+it will prompt us to manually resolve the conflicts.
+
+Suppose in the file foo.txt, we wrote a new line and saved the change while
+on branch main. Next, suppose we then switched to branch branch_y and
+deleted that line. Let's try running git merge:
+
+```bash
+git switch main
+git merge branch_y
+
+Auto-merging foo.txt
+CONFLICT (content): Merge conflict in foo.txt
+Automatic merge failed; fix conflicts and then commit the result.
+```
+
+Git gives us a conflict message. The message also tells us we need to
+resolve the conflicts then commit the result. To do so, we complete the
+following steps:
+
+1. Open the file(s) with merge conflicts.
+2. Edit the file(s) to remove the conflicts, deciding which branch's
+   content to keep in each conflict, or keep the content from both.
+3. Remove the conflict markers in the file.
+4. Add the changes and commit.
+
+This is a very important and delicate procedure. We need to go through each
+of the conflicts one by one with meticulous scrutiny. If we open our
+foo.txt, we see the following:
+
+```bash
+x^2 + y^2 = 1
+<<<<<<< HEAD
+a + 0 = a
+=======
+(a)(b) = (ab) = (b)(a)
+>>>>>>> branch1
+```
+
+In the output above, everything below HEAD is what we had in the main
+branch originally.After the equal sign divider, we have all of the changes
+from branch1. Here, the changes are all unique, it just so happens that
+they were made on the same line. Thus, to resolve the conflict, we simply
+remove the markers (assuming we want to keep everything we've written).
+
+```bash
+x^2 + y^2 = 1
+a + 0 = a
+(a)(b) = (ab) = (b)(a)
+```
+
+Now all we do is add and commit:
+
+```bash
+git add foo.txt
+git commit
+
+[main cc2810a] Merge branch 'branch1'
+```
+
+## The Git Diff Command
+
+The git diff command allows us to view changes between commits, branches,
+files, the working directory, among others. Without using any options, the
+git diff command lists all the changes in the working directory that have
+not yet been staged.
+
+Suppose we have a file called bang.txt with the following content:
+
+```bash
+cat bang.txt
+
+elephants
+tigers
+lions
+hyenas
+```
+
+We add and commit then changes, then make more changes:
+
+```bash
+elephants
+tigers
+lions
+pandas
+penguins
+deer
+```
+
+We don't add these changes, and we run git diff:
+
+```bash
+git diff
+
+diff --git a/bang.txt b/bang.txt
+index de94fdb..4405717 100644
+--- a/bang.txt
++++ b/bang.txt
+@@ -1,4 +1,6 @@
+elephants
+tigers
+lions
+-hyenas
++pandas
++penguins
++deer
+```
+
+The first line of the output, we see:
+
+```bash
+diff --git a/bang.txt b/bang.txt
+```
+
+This tells us which files are being compared. In this case, a/bang.txt, the
+version of the file when last committed, and b/bang.txt, the current
+version of the file. The next line:
+
+```bash
+index de94fdb..4405717 100644
+```
+
+This line tells us the file's metadata. For most developers, this line
+isn't particularly useful. The first two numbers, de94fdb..4405717 are the
+hashes for the two files being compared. In this case, de94fdb, is the hash
+for a/bang.txt, and 4405717 is the hash for b/bang.txt. The second number,
+100644, is the _mode identifier_. Again, most developers do not use this
+information.
+
+Next, we have _markers_:
+
+```bash
+--- a/bang.txt
++++ b/bang.txt
+```
+
+This tells line tells us that changes to a/bang.txt are indicated with a
+minus sign, and changes made in a/bang.txt are indicated with a plus sign.
+
+Next, we have **chunks**:
+
+```bash
+@@ -1,4 +1,6 @@
+elephants
+tigers
+lions
+-hyenas
++pandas
++penguins
++deer
+```
+
+These chunks tell us where changes were made. They are called chunks
+because with extremely large files, git diff will only show the relevant
+chunk of the file where the change was made. In this case, we removed
+hyenas from a/bang.txt, so the change is colored red and prefaced with a
+minus sign. The changes made in b/bang.txt, adding pandas, penguins, and
+deer, are indicated in green and prefaced with a plus sign.
+
+At the beginning of each chunk, we have the chunk header:
+
+```bash
+@@ -1,4 +1,6 @@
+```
+
+In the chunk header, we see two pairs of numbers: -1,4 and +1,6. The minus
+sign indicates a change to a/bang.txt, and the plus sign indicates a change
+to b/bang.txt. Thus, -1,4 pertains to a/bang.txt, and +1,6 pertains to
+b/bang.txt.
+
+What do the numbers mean? The number -1,4 tells us that, in a/bang.txt, 4
+lines were extracted starting from line 1. The number +1,6 tells us, in
+b/bang.txt, 6 lines were extracted starting from line 1. In other words,
+the numbers simply tell us how big the chunk is.
+
+The real power in git diff is with its options. The most commonly used
+commands:
+
+## The Git Stash Command
+
+Recall a previous scenario: Suppose we are working on the branch main,
+making commits to foo.txt. Then, we created and switched to a new branch
+called twig. On twig, we create a new file called zing.txt, do some work,
+but have not yet committed. After working on zing, we find out we need to
+switch back to main. What happens when we switch? Earlier, we saw two
+outcomes: (1) The changes come with us when we switch to main. (2) If there
+are conflicts, Git won't let us switch unless we (a) commit our changes, or
+(b) _stash_ them. We focus on option (b).
+
+The git stash command allows us to stash uncommitted changes so we can
+return to them later. By stashing, we avoid unnecessary commits. When we
+run git stash, we tell Git: "Hide these changes &mdash; but remember where
+they are &mdash; so I can go elsewhere and come back to them later."
+
+With the changes stashed, we can come back to the relevant branch, and run
+git stash pop. Running git stash pop, we tell Git: "Retrieve (more
+accurately, remove) the stashed changes and put them back in the working
+copy." Now, the working copy could be anywhere. This means we could stash
+changes in twig, then put them in working copy on main.
+
+### The Git Stash Apply Command
+
+A potential downside to git stash pop is that it removes the changes in the
+stash. In some situations, we might want to apply the changes in not just
+one working copy, but multiple copies. To do so, we use the git stash apply
+command. Doing so, we apply the changes in the working copy, but do not
+clear the stash. This allows us to apply the changes to working copies in
+other branches.
+
+## Time Traveling
+
+One of Git's most useful features is time traveling &mdash; moving
+backwards and forwards along the timeline. With this ability, we can undo
+changes, view previous changes, discard changes, restore changes, etc. We
+explore the most commonly used features in turn.
+
+### Git Checkout
+
+To start, we have a file called ein.txt in a directory baz. We've
+initialized a Git repo, added ein.txt, and committed changes. ein.txt, on
+first commit, contains the following line:
+
+```bash
+1 + 1 = 2
+```
+
+Then, we make another change in ein.txt:
+
+```bash
+1 + 1 = 2
+1 + 2 = 3
+```
+
+Again, we add and commit. Running git log:
+
+```bash
+git log --oneline
+
+6c451c6 (HEAD -> main) added second line
+91efaf2 add new file, add first equation
+```
+
+Suppose I want to see what ein.txt looked like on first commit. To do so,
+we use the syntax:
+
+```bash
+git checkout _commit-hash_
+```
+
+The commit-hash is the sequence of numbers we see above (or, the entire
+series of numbers we see for each commit when we run just git log; Git only
+needs the first seven numbers). So, to see the first commit of ein.txt, use
+the commit hash 91efaf2:
+
+```bash
+git checkout 91efaf2
+
+
+Note: switching to '91efaf2'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+	git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+	git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+HEAD is now at 91efaf2 add new file, add first equation
+```
+
+Git returns a message, telling us we are in a _detached head_ state. If we
+run git log --oneline:
+
+```bash
+91efaf2 (HEAD) add new file, add first equation
+```
+
+We only see the first commit. This is because we have gone back in time. At
+this point in time, there was no second commit. If we take a look at the
+contents of the file:
+
+```bash
+cat ein.txt
+
+1 + 1 = 2
+```
+
+We only see the last change we made before the first commit. Very cool. Why
+is it called _detached head_? Recall the way Git works. HEAD always points
+to a reference to a branch we are currently one, and that branch reference
+always points to the tip of the branch. When we travel backwards in time,
+HEAD points to a specific commit, rather than a branch reference. Because
+HEAD normally points to a branch reference, Git describes it as being
+&#8220;detached&#8221; when it is no longer pointing to a branch reference.
+
+## Reattaching the Head
+
+To get out of the detached head state, we simply switch to a branch. Here,
+we only have one branch, main, so we use git switch main:
+
+```bash
+git switch main
+
+Previous HEAD position was 91efaf2 add new file, add first equation
+Switched to branch 'main'
+```
+
+Now, let's say we make some more changes and commits to ein.txt:
+
+```bash
+9364fe0 (HEAD -> main) add fifth line
+5943f03 add third, fourth lines
+6c451c6 add second line
+91efaf2 add new file, add first line
+```
+
+## Creating a Branch at a Past Point in Time
+
+Now let's say that on the third commit, we want to create a new branch.
+First, let's time travel to the third commit, 5943f03.
+
+```bash
+git checkout 5943f03
+```
+
+HEAD now points to the third commit. Now that we're on the third commit, we
+can simply use the git branch command to create a new branch:
+
+```bash
+git branch twig_3
+```
+
+Now we have a branch called twig_3 stemming from the third commit, and we
+can switch to it just like any other branch, and we can start working on
+that branch:
+
+```bash
+git switch twig_3
+```
+
+## Discarding Changes
+
+Let's say we've made and saved some changes to a file but it turns out we
+do not want to keep the changes. We can undo these changes by _reverting_
+the file to whatever it looked like when we last committed with the
+following syntax:
+
+```bash
+git checkout HEAD _file-name_
+```
+
+Suppose we wrote some gibberish to our ein.txt:
+
+```bash
+1 + 1 = 2
+1 + 2 = 3
+2 + 3 = 5
+3 + 5 = 8
+adfasdfadfs
+```
+
+We saved and closed this file, then went to bed, woke up, and realized we
+do not like what we saved. We could manually delete the line, but this
+would not be a good idea if we've made hundreds, if not thousands, of
+changes. Instead, we can simply revert to changes made on the last commit:
+
+```bash
+git checkout HEAD ein.txt
+
+Updated 1 path from 091ffbf
+```
+
+If we examine the contents of ein.txt:
+
+```bash
+cat ein.txt
+
+1 + 1 = 2
+1 + 2 = 3
+2 + 3 = 5
+3 + 5 = 8
+```
+
+Alternatively, we can just use the git restore command. If we want to
+revert to changes in a specific commit, we use the following syntax:
+
+```bash
+git restore --source <HEAD>~<number-of-commits-ago> <filename>
+```
+
+The option HEAD~${n}$ means "The commit ${n}$ commits before HEAD." So, the
+command:
+
+```bash
+git restore --source HEAD~2 ein.txt
+```
+
+means, "Revert to the changes made in ein.txt 2 commits ago."
+
+## Unchanging Stages
+
+There are times where we unintentionally stage a change. How do we remove
+these changes from the staging area? By using the git restore command:
+
+```bash
+	git restore --staged ein.txt
+```
+
+Now the changes we made have been removed from the staging area. The
+general syntax:
+
+```bash
+git restore --staged <filename>
+```
+
+## Undoing Commits
+
+There are then times where unintentionally make a commit. To undo a commit,
+we use the git reset command. The general syntax:
+
+```bash
+git reset <commit-hash>
+```
+
+The git reset command wil reset a repo back to the `<commit-hash>` we
+passed as an argument. The command above will only remove the commits, but
+it will not remove the changes we made. If we want to remove those changes,
+then we must use a hard reset:
+
+```bash
+git reset --hard <commit-hash>
+```
+
+## Git Revert
+
+Both git revert and git reset undo a commit, but they accomplish it in
+different ways. With git reset, we actually move the branch pointer
+backwards and eliminate commits. With git revert, however, we create a
+brand new commit which reverses the changes from a commit. Thus, in
+contrast to git rest, the command git revert will create a new commit,
+thereby prompting us to enter a commit message.
+
+## Github
+
+Github is a service providing a common place, a cloud, to share Git repos.
+We can put our Git repos on Github and share them with others, as well as
+view other people's Git repos. Additionally, Github allows its users to
+collaborate on projects, as well as displaying static websites.
+
+### Cloning
+
+With Git, we can create our own repos. As we work on larger and larger
+projects, we often want to obtain pre-existing code. Whether its a Python
+module, a C library, or a Java package, a substantial part of programming
+is reusing code. That pre-existing code is likely hosted on Github or some
+other website.
+
+To obtain a local copy of a pre-existing repo, we use the git clone command
+and the URL for that repo:
+
+```bash
+git clone <repo-url>
+```
+
+When we clone a repo, we initialize a new repo in the current working
+directory. As such, we absolute must ensure that we are not in a repo when
+we clone. The `<repo-url>` is simply the URL for the page hosting the repo.
+For example, if we search for "MathJax github" on Google, the first result
+has the link https://github.com/mathjax/MathJax. Clicking on this page, we
+see the page hosting the MathJax repo. The URL for this page is what we use
+to clone the repo.
+
+### Getting Code On Github
+
+The next sections assume that an SSH key for the relevant machine has been
+added to a Github account. This assumption is met if the following steps
+have been completed:
+
+1. A Github account has been made. See [this link](https://github.com/)
+   link to make a Github account.
+
+2. An SSH key has been generated. See
+   [this link](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+   to generate an SSH key. Be sure to first
+   [check](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/checking-for-existing-ssh-keys)
+   if an SSH key doesn't already exist.
+
+3. An SSH key has been added to the Github account. See
+   [this link](https://docs.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+   to add an SSH key.
+
+## Pushing a Repo to Github
+
+The first thing we want to know is how to get our code on Github. We have
+two options: (1) Getting an existing repo on Github, and (2) start from
+scratch.
+
+## I have an existing repo
+
+If we have an existing repo locally, we can get our code on Github with the
+following steps:
+
+1. create a new repo on Github
+2. connect the local repo (add a remote).
+3. push changes to Github.
+
+To create a new repo on Github, simply go to the repositories tab, and
+click the green icon for a new repo. Name the repo and add a description.
+We will discuss the other options later.
+
+Once a new repo is created, we need add a remote. A remote is simply a URL
+for the hosted repo. At the moment, Git on our local machine has no idea
+where the Github repo we just created is. A remote is what gives Git the
+necessary information.
+
+## Creating a Remote
+
+To create a remote, we use the git remote -v command. This command simply
+tells us the current remotes we have. Since we do not have any remotes
+currently, running this command will not output anything. To create a new
+remote, we use the following syntax:
+
+```bash
+git remote add <remote-label> <github-repo-url>
+```
+
+The two things we must pass as arguments are `<remote-label>` (the "name"
+of our remote) and `<github-repo-url>` (the URL of the Github repo we
+created). A standard name for a remote is origin. So, for example:
+
+```bash
+git remote add origin  https://github.com/fuxaxar/repo-test
+```
+
+If we do not see any output after running that command, then it worked
+successfully. To ensure, we run git remote -v:
+
+```bash
+git remote -v
+
+origin	https://github.com/fuxaxar/repo-test.git (fetch)
+origin	https://github.com/fuxaxar/repo-test.git (push)
+```
+
+Great, we've connected our local repo to the Github repo.
+
+## Pushing
+
+With the local repo connected to the Github repo, we can now actually get
+our code onto the the Github repo. To do so, we use the git push command.
+The command has the following syntax:
+
+```bash
+git push <remote-label> <branch-name>
+```
+
+Thus, to push our example local repo:
+
+```bash
+git push origin main
+```
+
+Running this command, we are prompted to enter our Github username and
+password. Here, simply enter the username, but for the password, you may
+need to generate a token. To do so, see
+[this link](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token).
+
+Once a token is generated, enter that token as the password. Save the token
+in a special place, it is what you will use to push changes. Assuming all
+goes well, we should see some data output, followed by a clean prompt. If
+we go on our Github account, and click on our repos tab, we should see the
+local repo now on Github.
+
+## I'm Starting from Scratch
+
+If we are starting from scratch, we follow these steps:
+
+1. create a new repo on Github.
+2. clone said repo locally
+3. do work locally
+4. push changes to Github
+
+## Fetching & Pulling
+
+The norm in software development is working with a team of developers.
+Github provides a useful means of coordinating the team's labor force: So,
+we've seen how a team can get their changes to a common place. But how does
+a team member ${A}$ get the changes made by a team member ${B?}$ ${A}$ must
+_pull_ the changes made. To understand how pulling works, we first go over
+_remote-master_ distinction.
+
+### Remote v. Master
+
+Let's say we create a new git repo. We make a few changes and commits,
+resulting in the following:
+
+<div id="commit_history_0"></div>
+
+On `commit3`, we our repo to Github:
+
+<div id="commit_history_1"></div>
+
+Then, we continue making changes, without pushing to their Github repo:
+
+<div id="commit_history_2"></div>
+
+Notice that now the `main` branch is ahead of the `remote` branch. If we
+run `git status`, we'll find that the branch `main` is ahead of the
+`remote` branch (the branch on Github) by ${2}$ commits. Because of this
+diffference, we have to run `git push` to publish their local commits.
+
+### Working with Remote Branches
+
+Suppose some library has the following git repo structure on its github:
+
+<div id="multi_branch1"></div>
+
+Notice that there are three branches total. If we simply `clone` the
+repository without more, by default, we get the `main` branch. To
+illustrate, suppose the Github repository is
+`https://github.com/foo/repo/main.git` (this is a dummy URL). Running the
+following in the terminal:
+
+```bash command-line"
+git clone https://github.com/foo/repo/prj.git
+ls
+folder1     folder2
+git status
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+```
+
+We see that we're on the `main` branch. How do we get `branch1` and
+`branch2` so we can work on them? Well, we can actually see those branches
+by running `git branch -r`:
+
+```bash command-line" data-output="2-5
+git branch -r
+
+origin/HEAD -> origin/main
+origin/branch1
+origin/branch2
+```
+
+So the branches are in fact there. It turns out to be very straightforward.
+We just have to run the `git switch` command. Suppose we want to work on
+`branch2`. We can just write:
+
+```bash command-line" data-output="2-4
+git switch branch2
+
+Branch 'branch2' set up to track remote branch 'branch2' from 'origin'
+Switched to a new branch 'branch2'
+```
+
+Now we have `branch2` locally, with its remote set to `branch2` on Github.

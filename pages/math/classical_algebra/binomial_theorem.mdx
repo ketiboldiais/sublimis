@@ -1,0 +1,236 @@
+# Expanding Binomials: The Binomial Theorem
+
+Recall that a binomial is a polynomial consisting of the sum of two
+monomials. In other words, a polynomial with two terms. For example, the
+expression:
+
+$$
+	ax^m - bx^n
+$$
+
+is a binomial, where ${a}$ and ${b}$ are numbers, ${m}$ and ${n}$ are
+distinct, nonnegative integers, and ${x}$ is a variable (or more formally,
+the indeterminate). Taking higher powers of binomials and expanding them is
+a process that quickly grows tedious. To see how, let's consider a few
+examples.
+
+First, let's expand ${(a + b)^0.}$ This is straightforward; it's just
+${1:}$
+
+$$
+	(a + b)^0 = 1
+$$
+
+Similarly, ${(a + b)^1}$ isn't so bad either:
+
+$$
+	(a + b)^1 = a + b
+$$
+
+$(a + b)^2$ isn't terrible if we know our expansions by heart:
+
+$$
+	(a + b)^2 = a^2 + 2ab + b^2
+$$
+
+How about ${(a + b)^3}$? Well, we can carry it out:
+
+$$
+	\begin{aligned}
+		(a + b)^3 &= (a + b)(a + b)(a + b) \\ &= (a + b)(a^2 +
+		2ab + b^2) \\ &= a^3 + 2a^2b + ab^2 + a^2b + 2ab^2 + b^3 \\ &= a^3 + 3a^2b +
+		3ab^2 + b^3
+	\end{aligned}
+$$
+
+And ${(a + b)^4:}$
+
+$$
+\begin{aligned}
+	(a + b)^4 &= (a + b)(a^3 + 3a^2b + 3ab^2 + b^3) \\ &= a(a^3 + 3a^2b + 3ab^2 + b^3) + b(a^3 + 3a^2b + 3ab^2 + b^3)\\ &= a^4 + 3a^3b
+	+ 3a^2b^2 + ab^3 + a^3b + 3a^2b^2 + 3ab^3 + b^4 \\ &= a^4 + 4a^3b + 6a^2b^2 + 4ab^3 + b^4
+\end{aligned}
+$$
+
+Notice how these expressions are getting more and more tedious. Laying out
+the expansions in a table:
+
+| expression    | expansion                                           | term count |
+| ------------- | --------------------------------------------------- | ---------- |
+| ${(a + b)^0}$ | 1                                                   | 1          |
+| ${(a + b)^1}$ | ${a + b}$                                           | 2          |
+| ${(a + b)^2}$ | ${a^2 + 2ab + b^2}$                                 | 3          |
+| ${(a + b)^3}$ | ${a^3 + 3a^2b + 3ab^2 + b^3}$                       | 4          |
+| ${(a + b)^4}$ | ${a^4 + 4a^3b + 6a^2b^2 + 4ab^3 + b^4}$             | 5          |
+| ${(a + b)^5}$ | ${a^5 + 5a^4b + 10a^3b^2 + 10a^2b^3 + 5ab^4 + b^5}$ | 6          |
+
+Needless to say, expanding binomials with higher powers by hand is tedious
+and prone to error. Attempting to expand something like ${(a + b)^{100}}$
+would take a very, very long time. And then after we're done, we must still
+go through the process of checking if our algebraic manipulation is
+correct.
+
+Fortunately, there's a theorem to make our lives easier. But, before we
+examine this theorem, let's segue briefly into the world of counting.
+
+# The Factorial
+
+A common operation in counting is the factorial. It is defined as follows:
+
+> _Definition: Factorial_. Let ${n}$ be a positive integer. Then ${n!,}$
+> read ${n}$ factorial, is denoted:
+>
+> $$
+> 	n! = n \cdot (n - 1) \cdot (n-2) \cdot \ldots \cdot 3 \cdot 2 \cdot 1
+> $$
+
+Alongside the definition above is the following axiom:
+
+> _Axiom: Zero Factorial_. The factorial of zero is one: $$ 0! = 1 $$
+
+To illustrate, ${6!}$ is computed as:
+
+$$
+\begin{aligned}
+6! &= (6)(6-1)(6-2)(6-3)(6-4)(6-5)\\[1em]
+&= (6)(5)(4)(3)(2)(1) \\[1em]
+&= (6)(5)(2)(4)(3) \\[1em]
+&= (6)(10)(12) \\[1em]
+&= (6)(120) \\[1em]
+&= 720
+\end{aligned}
+$$
+
+## Binomial Coefficients
+
+Suppose we had the following balls:
+
+Our friend Leibniz comes up to us and says, Pick ${1.}$ How many possible
+choices do we have? Well, we would have ${4}$ possible choices: A, B, C,
+and D. Now what if Leibniz said, Pick ${2.}$ How many choices do we have
+here? Well, we can count the number of possible choices: AB, AC, AD, BC,
+BD, CD. These are six possible choices. In fact, we can layout these
+possibilities:
+
+Choose Possibilities Number of Possibilities
+
+In mathematics, we have special syntax for expressing our thought process
+above. When Leibniz says, Pick 1, we express this as:
+
+$$
+	\dbinom{4}{1}
+$$
+
+This notation is read "Four choose one." There are four balls, and we are
+to pick one. When Leibniz says, Pick 2, we write this as:
+
+$$
+	\dbinom{4}{2}
+$$
+
+"Four choose two." And when Leibniz says, Pick 3, we have:
+
+$$
+	\dbinom{4}{3}
+$$
+
+"Four choose three." The notation ${\dbinom{n}{k}}$ is called a _binomial
+coefficient_, and it is read as ${n}$ choose ${k.}$ Formally:
+
+> Definition: Binomial Coefficient. For nonnegative integers ${n}$ and
+> ${k,}$ where ${n \geq k,}$ the expression ${\binom{n}{k},}$ also written
+> as ${_cC_k,}$ is called a binomial coefficient, and it is defined as:
+>
+> $$
+> 	\dbinom{n}{k} = \dfrac{n!}{k!(n - k)!}
+> $$
+>
+> Otherwise, where ${k > n,}$ the binomial coefficient is defined as:
+>
+> $$
+> 	\dbinom{n}{k} = 0
+> $$
+
+To understand where the binomial coefficient comes from, it's helpful to
+illustrate by example. Suppose we had the following ingredients for a cup
+of coffeee: coffee, milk, sugar. Now suppose we were asked, how many
+possible ways are there to make a cup of sweet coffee? Well, we can
+enumerate the number of ways with a table (where ${c}$ is for coffee, ${m}$
+is for milk, and ${s}$ is for sugar):
+
+| pick | possible picks         | number of possibilities |
+| ---- | ---------------------- | ----------------------- |
+| 0    | 1                      |
+| 1    | A, B, C, D             | 4                       |
+| 2    | AB, AC, AD, BC, BD, CD | 6                       |
+| 3    | ABC, ABD, ACD, BCD     | 4                       |
+| 4    | ABCD                   | 1                       |
+
+Reading the table above, we count six different orders. For example,
+${(c, m, s)}$ is coffee, then milk, then sugar, and ${(s,m,c)}$ is sugar,
+then milk, then coffee. This result follows directly from the
+multiplication rule in counting. Since we have three different ingredients,
+the number of recipes is yielded by:
+
+$$
+	3 \times 2 \times 1 = 6
+$$
+
+Generalizing the multiplication rule, given ${n}$ ingredients and ${k}$
+choices, we have:
+
+$$
+	n \times (n - 1) \times (n - 2) \ldots \times (n - k + 1) = \dfrac{n!}{(n - k)!}
+$$
+
+Importantly, the question of how many different recipes there are is
+distinct from asking: How many combinations of coffee, sugar, and milk are
+there? The former requires a distinct order, while the latter does not. The
+latter question &mdash; how many different combinations are there
+(disregarding order) &mdash; is what the binomial coefficient attempts to
+capture.
+
+Hence, using our sweet coffee example, when write ${\dbinom{3}{2},}$ we are
+expressing the number of combinations of two ingredients among three, where
+order does not matter. If we enumerated all of the possibilities out on a
+table:
+
+Counting the number of possibilities, we have ${6.}$ But because we're
+disregarding order, the table above is incorrect because we've overcounted.
+Some of the possibilities are duplicated. As such, we must eliminate the
+duplicates:
+
+| ingredient | combination | combination |
+| ---------- | ----------- | ----------- |
+| ${c}$      | ${(c, m)}$  | ${(c, s)}$  |
+| ${m}$      | ${(m, c)}$  | ${(m, s)}$  |
+| ${s}$      | ${(s, c)}$  | ${(s, m)}$  |
+
+Notice that eliminating the overcount leaves us with three possibilities.
+Further notice that this is half of our original count. This is no
+coincidence. Looking back at our general formula for the multiplication
+rule, we can see that eliminating the overcount is a matter of dividing by
+a ${k!}$ term (since we've overcounted by a factor of ${k!}$):
+
+$$
+\begin{aligned} n \times (n - 1) \times (n - 2) \ldots \times (n - k +
+1) &= \dfrac{n!}{(n - k)!} \\[2em] \dfrac{n \times (n - 1) \times (n - 2)
+\ldots \times (n - k + 1)}{k!} &= \dfrac{\dfrac{n!}{(n - k)!}}{k!} \\[2em]
+&= \dfrac{n!}{k!(n - k)!} \end{aligned}
+$$
+
+And there it is &mdash; the binomial coefficient definition.
+
+## Pascal's Triangle
+
+Do we notice any patterns in this triangle? There are several. The Binomial
+Theorem This is where the binomial theorem comes in handy:
+
+> _Binomial Theorem_. For any positive integer ${n,}$ the following is
+> true:
+>
+> $$
+> \begin{aligned} (a + b)^n &= \sum\limits_{k = 0}^{n} \dbinom{n}{k}
+> a^{n - k}b^k \\[2em] &= \dbinom{n}{0}a^n + \dbinom{n}{1}a^{n - 1}b +
+> \dbinom{n}{2}a^{n-2}b^2 + \ldots + \dbinom{n}{n}b^n \end{aligned}
+> $$

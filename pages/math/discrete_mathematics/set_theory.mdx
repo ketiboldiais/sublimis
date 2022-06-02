@@ -1,0 +1,1253 @@
+# Set Theory
+
+1. [Subsets](#subsets)
+   1. [Proper Subsets](#proper-subsets)
+2. [Classes](#classes)
+3. [The Empty Set](#the-empty-set)
+   1. [Vacuous Truth](#vacuous-truth)
+4. [Set Notation](#set-notation)
+   1. [Intervals](#intervals)
+5. [Set Identity](#set-identity)
+6. [1-to-1 Correspondence](#1-to-1-correspondence)
+7. [Cardinality](#cardinality)
+   1. [Comparing Cardinalities](#comparing-cardinalities)
+   2. [Countable Sets](#countable-sets)
+8. [Foundational Operations](#foundational-operations)
+   1. [Set Union](#set-union)
+      1. [Cardinality of Unions](#cardinality-of-unions)
+   2. [Set Intersection](#set-intersection)
+   3. [Cardinalities of Intersections and Unions](#cardinalities-of-intersections-and-unions)
+   4. [Set Difference](#set-difference)
+   5. [Complements](#complements)
+      1. [Set Identities](#set-identities)
+   6. [Symmetric Difference](#symmetric-difference)
+9. [Power Sets](#power-sets)
+10. [Unions & Intersections Generally](#unions--intersections-generally)
+11. [Special Number Sets](#special-number-sets)
+12. [The Number Line](#the-number-line)
+13. [Ordered Pairs](#ordered-pairs)
+    1. [Equality of Ordered Pairs](#equality-of-ordered-pairs)
+14. [Tuples](#tuples)
+15. [Cartesian Products](#cartesian-products)
+16. [Relations](#relations)
+    1. [Reflexive Relations](#reflexive-relations)
+    2. [Symmetric Relations](#symmetric-relations)
+    3. [Transitive Relations](#transitive-relations)
+    4. [Equivalence Relations](#equivalence-relations)
+
+There are two versions of set theory: (1) **naive set theory**, and (2)
+**axiomatic set theory**. We explore aspects of both theories in the
+materials that follow. What are the differences? Naive set theory is the
+version of set theory as originally constructed by the German mathematician
+Georg Cantor.[^cantor_note] Axiomatic set theory is the version of set
+theory constructed in response to several paradoxes, the most famous of
+which is _Russell's Paradox_. Axiomatic set theory itself consists of
+several versions—_Zermelo set theory_ and _Zermelo-Fraenkel set theory_.
+The paradoxes these more modern theories attempted to resolve will appear
+as we explore the basic concepts of naive set theory.
+
+[^cantor_note]:
+    When Cantor first introduced set theory, the math community largely
+    ridiculed him. Over time, however, the theory gained big-name
+    mathematicians like David Hilbert. Nevertheless, the ridicule remained
+    and affected Cantor deeply. Comments at the time captured the split:
+    David Hilbert famously said, "No one will drive us from the paradise
+    which Cantor created for us." To which Wittgenstein&mdash;a philosopher
+    and one of Hilbert's most formidable opponents&mdash;responded, "If one
+    person can see it as a paradise of mathematicians, why should not
+    another see it as a joke?"
+
+In mathematics, a **set** is a collection of objects. Those objects might
+be dogs, people, trees, numbers, values, variables, or more abstractly,
+propositions. For example, the set of all coins includes nickels, sterling,
+and yen. The set of all countries includes Japan, Palau, and Uruguay. The
+set of all integers includes 1 and -117. We can visualize a set as:
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653358194/math/set_intro_hky0d0.svg"
+	}
+	caption={"Basic sets"}
+	width={"40"}
+	imwidth={"239"}
+	imheight={"95"}
+/>
+
+Sets can be finite (there are only so many countries), or infinite (there
+are infinitely many of numbers). Each object in a set is called a
+**member** of that set.
+
+We say that a set is **well-defined** if, for any given ${x,}$ we can
+determine whether ${x}$ is a member of the set. For example, the set
+${L = \{x \in \R \mid x > 4\}}$ is a well-defined set. Given any ${x,}$ we
+can determine whether ${x}$ is a member of ${L.}$ ${x}$ must be a real
+number, and it must be greater than 4. The set
+${G = \{ 1, 4, 3, 9, \pi, \ldots \},}$ however, is not a well-defined set.
+Is ${3.2}$ a member of ${G?}$ We do not have enough conditions to make a
+determination.
+
+The elements of a set do not have any inherent order. For example, the set
+$\{ 1, 2, 3 \}$ is the same as the set $\{ 2, 1, 3 \}$, and the same set as
+$\{ 2, 2, 3, 1 \}$. The **axiom of extension** provides that a set is
+completely determined by what its elements are—it is irrelevant whether the
+elements are in order, or whether an element is listed more than once.
+
+## Subsets
+
+Some sets are themselves elements of another set. These sets are called
+**subsets**.[^subsets_note] For example, the set of all Herefords is a
+subset of the set of all cows, and the set of all bonobos is a subset of
+the set of all great apes. More formally:
+
+[^subsets_note]:
+    A set consisting of only one member is called a **singleton**.
+
+> _Definition_. Suppose ${A}$ and ${B}$ are sets. The set ${A}$ is a
+> _subset_ of ${B}$ if, and only if, _every_ element of ${A}$ is also an
+> element of ${B.}$ To denote this relationship, we write:
+>
+> $$
+>   A \subseteq B
+> $$
+>
+> If $A$ is not a subset of $B$, then we write:
+>
+> $$
+>  A \nsubseteq B
+> $$
+
+If ${A \subseteq B}$ is true, then we can infer: For every element ${x,}$
+if ${x \in A,}$ then ${x \in B.}$ We describe ${A}$ and ${B's}$
+relationship with statements such as "${A}$ is contained in $B$" and "${B}$
+contains ${A.}$"
+
+$$
+  A \subseteq B \iff \forall x(x \in A \implies x \in B)
+$$
+
+If $A \nsubseteq B$ is true, then we can infer: There is at least one
+element $x$ such that $x \in A$ and $x \notin B$. In other words, if $A$ is
+not a subset of $B$, then there is at least one element in $A$ that is not
+an element of ${B.}$
+
+From the definition above, if we are asked to prove that ${A}$ is a subset
+of ${B,}$ we must show that if ${x}$ belongs to ${A,}$ then ${x}$ also
+belongs to ${B.}$ If we are asked to prove that ${A}$ is _not_ a subset of
+${B,}$ we must find a single ${x}$ that belongs to ${A}$ but does not
+belong to ${B.}$
+
+The definition above implies that the empty set is a subset of all sets,
+and a given set is a subset of itself. In other words, for the set ${A,}$
+the sets ${\varnothing}$ and ${A}$ are subsets of ${A.}$ We say that ${A}$
+and ${\varnothing}$ are **trivial subsets** of ${A.}$
+
+This follows directly from the definition. The proposition
+${\varnothing \subseteq A}$ if, for all ${x \in \varnothing,}$ ${x \in A.}$
+Because the sufficient condition, ${x \in \varnothing}$ is false, it
+follows that ${x \in A}$ is true. This is an example of a **vacuous
+proof**.
+
+The case of ${A \subseteq A}$ straightforward. Given that ${A}$ and ${A}$
+are the same sets, every ${x \in A}$ implies that ${x \in A.}$ Because the
+sufficient condition is true and the necessary condition is true, it
+follows that ${A \subseteq A}$ by definition.
+
+### Proper Subsets
+
+If a subset ${B}$ of ${A}$ is such that ${B \neq A}$ and
+${B \neq \varnothing,}$ then we say that ${B}$ is called a proper subset of
+${A.}$ For example, the set of all potatoes is a subset of all root
+vegetables. It certainly isn't empty—you've got Yukon Golds, Russet
+potatoes, Japanese sweet potatoes, LaRette potatoes, and so on. But it also
+doesn't comprise the entire set of all root vegetables either, because
+there are other root vegetables: taro, yams, tapioca, turmeric, ginseng,
+ginger, beets, and so on. Thus, we say that, "Potatoes are a proper subset
+of root vegetables," and write:
+${\text{taro} \subset \text{root vegetables}.}$
+
+$$
+ A \subset B \iff [\forall x(x \in A \implies x \in B) \land \exists x (x \in B \land x \notin A)]
+$$
+
+A subset is a general concept. When we say that ${A}$ is a "subset" of
+${B,}$ we allow the possibility of ${A}$ and ${B}$ being equal. For
+example, the set of all aardvarks is a subset of all Orycteropodidae, and
+the set of all Orycteropodidae is a subset of all Tubulidentata. However,
+aardvarks comprise all the members of Orycteropodidae, and Orycteropodidae
+comprise all the members of Tubulidentata. Thus, these sets are all equal,
+but are also subsets.[^bio_note]
+
+[^bio_note]:
+    In biology, a taxon (an instance of a taxonomy level, e.g., kingdom,
+    phylum, class, etc.) with only one superset is called **monotypic**.
+    Aardvarks, the Albany pitcher plant, the hyacinth macaw, among others
+    are all monotypic.
+
+Now, if some extinct species of Orycteropodidae comes back to life or some
+new species is discovered, then the aardvarks would not comprise all of
+Orycteropodidae. In that situation, aardvarks are no longer _just_ a subset
+of Orycteropodidae. We can still refer to aardvarks as a subset of
+Orycteropodidae, but we are now also permitted to more specifically say
+that aardvarks are a **proper subset** of Orycteropodidae.
+
+> _Definition_. Suppose ${A}$ and ${B}$ are sets. ${A}$ is a **proper
+> subset** of ${B}$ if, and only if, every element of ${A}$ is in ${B,}$
+> but there is at least one element in $B$ that is not in $A$. If $A$ is a
+> proper subset of $B$, we write:
+>
+> $$
+>   A \subset B
+> $$
+
+If ${A \subset B}$ is true, we can infer: All of the elements of ${A}$ are
+elements of $B$, but there is at least one element of ${B}$ that is not an
+element of ${A.}$ We can also infer that all the elements of ${A}$ have
+some property in common that separate it from other subsets of ${B.}$
+
+A helpful way to distinguish between the two symbols is noticing how they
+share similarities to the symbols ${\leq}$ and ${<.}$ ${\subseteq }$ means
+"subset or equal" and ${\subset}$ means "subset but not equal;" the former
+is more general than the latter.
+
+If $A \subset B$ is false (i.e., $A$ is not a proper subset of $B$), we
+write:
+
+$$
+ A \not\subset B
+$$
+
+If $A \not\subset B$ is true, then either $A \not\subseteq B$ is true, or
+$A \subseteq B$ is true, but no elements in $B$ are not in $A$.
+
+## Classes
+
+A set, or collection, of sets is called a **class of sets**. For example,
+the class of all undergraduate students includes the sets of freshmen,
+sophomores, juniors, seniors, super-seniors. The class of English sentences
+includes the sets of declarative, interrogative, imperative, and
+exclamative sentences.
+
+> _Definition_. A set whose members are sets is called a **class**.
+
+We generally denote classes with fancy script letters: ${\mathscr{A},}$
+${\mathscr{B},}$ ${\mathscr{C},}$ etc.
+
+Some classes have a special property where a member set of the class is
+associated, or defined, in terms of a particular index. For example, the
+set ${\Z^{+}}$ can be viewed as a class, whose member sets are the positive
+even integers and the positive odd integers. Moreover, ${\Z^{+}}$ itself is
+defined in terms of a larger class—the set of integers ${\Z.}$ This larger
+class is called the **index set** of the class of positive integers.
+
+> _Definition_. A class ${\mathscr{C}}$ is called an **indexed class** if
+> there exists a set ${S}$ such that for each element ${i \in S,}$ there
+> exists a unique member ${A_i}$ in ${\mathscr{C}}$ associated with ${i}$
+> and ${\mathscr{C} = \{ A_i : i \in S \}.}$ In this case, the set ${S}$ is
+> called the **index set**.
+
+## The Empty Set
+
+> "All of my friends laugh at my jokes about vacuous truths."
+
+Some sets have no members. For example, the set of all positive integers
+greater than their squares is the empty set. If there is even a single
+element in the set, then the set is not the empty set. Such a set (a set
+with a single member) is called a **singleton**. Do not confuse the lack of
+an element with the lack of a subset. The empty set does have a subset—the
+empty set. But the fact that it has a subset does not imply that it has an
+element. We will see why this is the case shortly.
+
+The empty set is both an interesting and useful concept to have. Proferred
+by George Boole, the empty set embodies the concept of _nothingness_.
+Nothingness is a difficult concept to think about, but as with many things
+in mathematics, the idea is encapsulated—abstracted away—into a single
+symbol: ${\varnothing.}$ The abstraction allows us to reason about
+nothingness differently. Usually, when we think of filling an empty pint
+with beer, we tend to think that we are somehow negating the glass's
+emptiness; sort of "removing" the nothingness inside the pint.
+${\varnothing,}$ however, is a member of every set except itself. We cannot
+remove nothingness from the set of all natural numbers—it's always there.
+
+Importantly, the empty set is a common source of mistakes among novices.
+First, we always denote the empty set with the null symbol:
+${\varnothing.}$ At no point do we ever write:
+
+$$
+ \{ \}
+$$
+
+This is equivalent to a spelling mistake in mathematics. Second, the set
+containing an empty set is _not_ the same as the empty set:
+
+$$
+ \varnothing \neq \{ \varnothing \}
+$$
+
+Once more, these are two very different things. One is an actual object
+(${\varnothing}$), the other is a box containing a single object
+(${\{ \varnothing \}}$). The empty set can be thought of as representing an
+empty folder. If we place an empty folder ${A}$ inside an empty folder
+${B,}$ then the folder ${A}$ is no longer empty: It contains a folder. The
+distinction between elements and subsets is a critical distinction. Think
+of it this way: There's a meaningful difference between giving someone a
+beautifully wrapped present with nothing inside, and a beautifully wrapped
+present with something inside.
+
+### Vacuous Truth
+
+The empty set offers an opportunity to revisit the notion of **vacuous
+truth**. Here's the question: Suppose we had a set ${A.}$ Is the empty set
+a subset of ${A?}$ The tempting answer is "It depends. What's in ${A?}$"
+Unfortunately, the temptation is wrong—it does not depend. Recall the
+definition of a subset:
+
+$$
+ B \subseteq A \space \iff \space \forall x(x \in B \implies x \in A)
+$$
+
+The key point to consider is the condition ${x \in B.}$ Now substitute
+${B}$ with ${\varnothing.}$ Is the statement ${x \in \varnothing}$ true? Of
+course not. The empty set is empty—there's nothing in it. This means that
+the sufficient condition for the definition of a subset is always false
+when we consider the empty set as a subset. And what happens when a
+sufficient condition is false? The conditional proposition is always true!
+This is a vacuous truth: The empty set is a subset of ${A.}$ In fact, the
+empty set is a subset of every set, including itself (since the condition
+is still false if we substitute ${A}$ with ${\varnothing}$).
+
+The notion of vacuous truth may seem strange, but it follows directly from
+logic. Consider the negation of the definition for a subset:
+
+$$
+ B \nsubseteq A \space \iff \space \exists x(x \in B \land x \notin A)
+$$
+
+In other words, ${B}$ is not a subset of ${A}$ if there's an ${x}$ in ${A}$
+that's not in ${B.}$ We know there's nothing in the empty set, so there can
+never be an ${x}$ in ${B}$ that's not in ${A.}$ There are no ${xs}$ to
+begin with.
+
+This discussion leads to some helpful points regarding proofs concerning
+sets:
+
+1. To prove that ${A \subseteq B,}$ show that ${A}$ and ${B}$ are just
+   trenchcoats: If ${x}$ is inside ${A,}$ then ${x}$ is also inside ${B.}$
+
+2. To prove that ${A \nsubseteq B,}$ find a culprit: There's at least one
+   ${x}$ inside ${A}$ that's not inside ${B.}$
+
+3. If we think a little more carefully about the definition for subsets,
+   we'd realize that this whole idea of the empty set being a subset of
+   itself extends to a more general conclusion:
+
+> _Theorem_. For every set ${S:}$
+>
+> $$
+> \begin{aligned}
+>   &\varnothing \subseteq S ~~\text{and}
+>   &S \subseteq S
+> \end{aligned}
+> $$
+
+Why is this true? Well, we know that since ${\varnothing}$ has no members,
+the sufficient condition for the definition of a subset is always false, so
+it follows that ${\varnothing \subseteq S}$ is always true. Next, by the
+law of identity, every statement implies itself. Thus,
+${x \in S \implies x \in S.}$ This implies that every element of ${S}$ is
+an element of ${S.}$ And since every element of ${S}$ is an element of
+${S,}$ it follows that ${S \subseteq S.}$
+
+## Set Notation
+
+To more efficiently discuss sets, mathematicians have come up with **set
+notation**. Let's go over some of the most common notation.
+
+> _Definition_. Suppose that ${S}$ is a set. The notation ${x \in S}$ means
+> "${x}$ is an element of ${S}$."
+
+A set may be made more explicit through **set roster notation**. For
+instance, $\{ 0, 1, 2 \}$ is a set containing the elements 0, 1, and 2. If
+the set has too many elements to list, ellipses may be used. For example,
+the set of all integers from 0 to 100 may be written as:
+$\{ 0, 1, 2, \ldots , 100 \}$. Likewise, the set of all positive integers
+may be written as $\{ 1, 2, 3, \ldots \}$.
+
+We can also specify sets in **set builder notation**. Suppose that $S$ is a
+set, and $P(x)$ is a property that elements of $S$ may or may not satisfy.
+We can define a new set that contains all the elements of $S$ such that
+$P(x)$ is true:
+
+$$
+ \{ x \in S \mid P(x) \}
+$$
+
+The pipe character, |, is shorthand for "such that." Thus, above notation
+refers to all the elements of ${S}$ with the property $P(x)$. Note that in
+some mathematical contexts, the phrase "such that" is often abbreviated
+"s.t." or $\ni$. Thus, the above set may appear in some texts as:
+
+$$
+ \{ x \in S \ni P(x) \}, \space \text{or} \\[1em] \{ x \in S \text{ s.t. } P(x) \}
+$$
+
+As an exercise, consider the following problem:
+
+> _Problem_. What are all the subsets and proper subsets of
+> ${\{ 1, 2, 3 \}?}$
+
+Listing all of the subsets are:
+
+<div>
+<div>
+ ${\{ 1, 2, 3 \}}$
+ ${\{ 1, 2 \}}$
+ ${\{ 1, 3 \}}$
+ ${\{ 2, 3 \}}$
+</div>
+<div>
+ ${\{ 1 \}}$
+ ${\{ 2 \}}$
+ ${\{ 3 \}}$
+ ${\varnothing}$
+</div>
+</div>
+
+Of these subsets, are proper subsets except for ${1,2,3.}$
+
+### Intervals
+
+We might recall from calculus the need to define domains and ranges. For
+example, the function ${f(x) = \sin x}$ has a domain of ${\R,}$ and a range
+of ${-1 \leq f(x) \leq 1.}$ The range can alternatively be written as
+${[1, -1].}$ Or, in _Bourbaki notation_, ${]1,-1[.}$ This notation
+inherently represents a set:
+
+$$
+ [-1, 1] = \{ f(x) : -1 \leq f(x) \leq b \}
+$$
+
+Why a set? Because intervals are in fact sets. Formally:
+
+> _Definition_. An interval is a subset ${I}$ of ${\R,}$ i.e.,
+> ${I \subset R,}$ such that:
+>
+> $$
+>  (x < y < z) \land (x, z \in I) \implies y \in I
+> $$
+
+From this definition, we can see how the intervals we encounter in other
+mathematical fields translate to sets:
+
+- ${(a, b) = \{ x \in \R : a < x < b \}}$
+- ${(a, b] = \{ x \in \R : a < x \leq b \}}$
+- ${[a, b) = \{ x \in \R : a \leq x < b \}}$
+- ${[a, b] = \{ x \in \R : a \leq x \leq b \}}$
+
+## Set Identity
+
+Consider the following sets:
+
+$$
+ A = \{ 1, 2, 3 \}\\ B = \{ 3, 2, 1 \}\\ C = \{ 2, 1, 3 \}
+$$
+
+By the axiom of extension, ${A,}$ ${B,}$ and ${C}$ all have the same
+elements. Observing this, we have the following definition:
+
+> _Definition_. Two sets ${A}$ and ${B}$ are **identical** if, and only if,
+> every element of ${A}$ an element of ${B,}$ and every element of ${B}$ is
+> an element of ${A.}$
+>
+> $$
+>    A = B \iff \forall x(x \in A \iff x \in B)
+> $$
+
+From the definition above, given to sets ${A}$ and ${B,}$ to prove that
+${A}$ is equal to ${B,}$ we prove that ${A \subseteq B}$ and
+${B \subseteq A.}$ In other words, we must prove the following
+propositions:
+
+> ${\forall x(x \in A \implies x \in B)}$ >
+> ${\forall x(x \in B \implies x \in A)}$
+
+## 1-to-1 Correspondence
+
+When Oliver Twist asked for more gruel, the master grew pale and aimed a
+blow at Oliver's head. Why? Because at meal time, each child was to receive
+one, and only one, serving of gruel. Suppose each boy is a member of the
+set ${\text{workers},}$ and each serving of gruel is a member of the set
+${\text{servings}.}$ Then, each element of ${\text{workers}}$ gets one, and
+only one, element of ${\text{servings}.}$ In mathematics, we call this
+**1-to-1 correspondence**.
+
+> _Definition_. Let ${A = \{ a_1, a_2, \cdot, a_n \}}$ and
+> ${B = \{ b_1, b_2, \cdot, b_n \}.}$ Sets ${A}$ and ${B}$ are in _1-to-1
+> correspondence_ if there exists a pairing of the elements of ${A}$ to the
+> elements of ${B,}$ such that each ${a}$ corresponds to one and only one
+> ${b,}$ and each ${b}$ corresponds to one and only one ${b.}$
+
+## Cardinality
+
+Suppose we have the following set, called ${A:}$
+
+$$
+ \{ a, b, c, d \}
+$$
+
+How many elements are in this set? There are 4. The number of elements in a
+set is called the set's **cardinality**. The term _cardinality_ is derived
+from the term _cardinal number_ (a number used for counting, rather than
+ordering). Cardinality plays a special role in both mathematics and
+programming. For example, in computer science, an **uncountable function**
+is a function where no computer program can be written to find all its
+values. In other words, there are some functions that we, as programmers,
+cannot write simply because the _cardinality_ of the function's set of
+outputs is either too large to count or cannot be counted at all.
+
+> _Definition_. Given a set ${A,}$ if there are exactly ${m}$ elements in
+> ${A,}$ where ${m \in \N,}$ then ${A}$ is a _finite set_ with a
+> _cardinality_ of ${m.}$ We denote this fact with:
+>
+> $$
+>   n(A) = m
+> $$
+
+The notation ${n(A)}$ is not the only one way to denote cardinality. Some
+texts denote cardinality with ${\lvert A \rvert }$ and ${\text{card}(A) .}$
+We use ${n(A),}$ but will switch notations as necessary for clarity. Note
+that when analyzing cardinality, the axiom of extension applies. The set
+${A = \{ 1, 1, 2 \}}$ and ${B = \{ 1, 2 \}}$ are the same sets. Thus, both
+${A}$ and ${B}$ have a cardinality of 2 (i.e., ${n(A) = n(B) = 2.}$)
+
+Another useful fact when handling cardinality: The empty set is the only
+set with a cardinality of 0:
+
+> _Definition_. Given a set ${A,}$ if ${n(A) = 0,}$ then ${A}$ is the empty
+> set, ${\varnothing.}$
+
+Further note that because sets denote the number of elements in a set, for
+our purposes, we follow the axiom that cardinality can never be
+negative.[^neg_note] Because we're discussing set algebra, we are careful
+to state this axiom explicitly:
+
+[^neg_note]:
+    Negative cardinality is a concept explored in modern mathematics, but
+    it is beyond the scope of these materials.
+
+> _Definition_. Given a set ${A,}$ ${n(A) \geq 0.}$
+
+### Comparing Cardinalities
+
+When we study functions later, we'll see that a critical trait of functions
+is whether they are one-to-one. Such functions are called _injective
+functions_. This classification is governed by the notion of two sets,
+${A}$ and ${B,}$ having the same cardinality.
+
+> _Definition_. Let ${A}$ and ${B}$ be sets. ${A}$ and ${B}$ have the same
+> cardinality if, and only if, there is a one-to-one correspondence from
+> ${A}$ to ${B.}$ If ${A}$ and ${B}$ have the same cardinality, we write
+> ${n(A) = n(B).}$
+
+More generally, we can compare the cardinalities of sets with the classical
+comparison operators. For example, when we write ${n(A) < n(B)}$, we are
+stating, "Set ${A}$ is smaller than set ${B.}$" When we write
+${n(A) \geq n(B),}$ we are stating, "Set ${A}$ is smaller or the same size
+as set ${B.}$"
+
+### Countable Sets
+
+Careful thought into sets reveals that there are some sets we can't count.
+For example, intuitively, we might think that because there are infinitely
+many integers, there are infinitely many odd positive integers, so we
+simply can't count all of the odd positive integers. This intuition,
+however, is wrong. Why? Because mathematics has a very strict definition of
+"countable":
+
+> _Definition_. A set ${A}$ is _countable_ iff:
+>
+> 1. ${A}$ is finite; or
+> 2. ${n(A) = n(\Z^{+})}$
+
+Otherwise, ${A}$ is _uncountable._ If ${A}$ is an infinite set and
+countable, we denote the cardinality of ${A}$ by writing
+${n(A) = \alef_0,}$ and say that ${A}$ has cardinality "aleph null."
+
+Based on this definition, we can see that the set of odd positive integers,
+${\Z_{\text{odd}},}$ is a countable set. Why? Well consider the function
+${f(n) = 2n - 1,}$ where ${n \in \Z^{+}.}$ This function maps the set of
+positive integers to the set of odd numbers. Now, recall the definition for
+when two sets are considered equal. They are equal iff there is a
+one-to-one correspondence between ${\Z^{+}}$ and ${\Z_{\text{odd}}.}$ Two
+sets have one-to-one correspondence if they are both (a) one-to-one and (b)
+onto.
+
+The first requirement, (a), is satisfied. Suppose that ${f(n) = f(m).}$
+From this assumption, it follows that ${2n - 1 = 2m - 1.}$ It then follows
+that ${n = m.}$ This proves that the set is onto.
+
+The second requirement, (b), is satisfied. Let's say there's some odd
+positive integer ${s.}$ Since ${s}$ is an odd positive integer, it is a
+positive integer of the form ${2k - 1,}$ where ${k \in \Z^{+}.}$ This in
+turn means that ${s}$ will always be less than an even positive integer
+${2k.}$ As such, it follows that ${s = 2k - 1 = f(k).}$ And given this
+fact, no ${s,}$ an odd positive integer, can map to even integer. It
+follows then that the odd positive integers will always map to the positive
+integers.
+
+Satisfying both (a) and (b), the function ${f}$ is a one-to-one
+correspondence from ${\Z^{+}}$ to ${\Z_{\text{odd}}.}$ And because it is of
+one-to-one correspondence, it follows that
+${n(\Z_{\text{odd}}) = n(\Z^{+}).}$ This satisfies the definition of
+countability above—the set of odd positive integers is countable.
+
+## Foundational Operations
+
+Suppose there exists a set ${A.}$ If an entity or discrete mathematical
+object ${a}$ belongs to ${A,}$ we write ${a \in A}$ (read "${a}$ is an
+element of ${A}$"). If ${a}$ does not belong to ${A}$, we write
+${a \notin A}$ (read "$a$ is not an element of ${A}$"). If the set ${A}$
+has no elements, then it is the empty set ${\varnothing}$, and we write
+${A = \varnothing.}$
+
+Sets can be alluded to verbally, in set roster notation (where all its
+elements are individually listed), or in set notation (where the set is
+described in general). For example, the following sets are all identical:
+
+- "The set of all integers whose square is between, and includes, one and
+  nine."
+- ${A = \{ x \in \mathbb{Z} : x^2 \leq 9 \}}$
+- ${B = \{ x \in \mathbb{Z} : \lvert x \rvert \leq 3 \}}$
+- ${C = \{ -3, -2, -1, 0, 1, 2, 3 \}}$
+
+### Set Union
+
+> ${A \cup B = \{ x \mid x \in A \lor x \in B \}}$
+
+Suppose there are two sets, $A$ and $B$. The **union** of $A$ and $B$,
+denoted ${A \cup B,}$ is the set of all elements of both $A$ and $B$.
+Visually:
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653359101/math/A_union_B_hno9qb.svg"
+	}
+	caption={"The union of A and B"}
+	width={"40"}
+	imwidth={"81"}
+	imheight={"61"}
+/>
+
+A **Venn diagram**. Venn diagrams are named after the English mathematician
+John Venn, who introduced their usage in 1881. More formally:
+
+> _Definition_. Given sets ${A}$ and ${B,}$ ${A \cup B}$ is the set of all
+> elements in either ${A,}$ ${B,}$ or both ${A}$ and ${B.}$
+
+#### Cardinality of Unions
+
+Working with set theory, knowing the size of a union is tremendously
+useful. However, we must be careful when counting the elements. Because
+${A \cup B}$ consists of all the elements in ${A,}$ ${B,}$ and the elements
+in both ${A}$ and ${B,}$ the elements in both ${A}$ and ${B}$ are counted
+twice. Accordingly, we must subtract the intersection of ${A}$ and ${B}$ to
+retrieve the correct cardinality. This is called the **principle of
+inclusion-exclusion**:
+
+> _Principle of Inclusion-exclusion_. Given ${A \cup B,}$
+>
+> $$
+>   n(A \cup B) = n(A) + n(B) - n(A \cap B)
+> $$
+
+### Set Intersection
+
+The intersection of two sets ${A}$ and ${B}$ is set of elements that are
+(1) members of ${A}$ and ${2}$ also members of ${B.}$ This is a deceptively
+simple definition. For example, ${\{ 1, 2, 3 \} \cap \{ 2, 3, 4 \}}$ very
+clearly yields the intersection ${\{ 2, 3 \}.}$ But here's a slighly more
+devilish one: ${\{ 1, 2, 3 \} \cap \{ 3, 4, 5 \}.}$ It's very tempting to
+say 3. The correct answer, however, is ${\{ 3 \}.}$ The slip is forgetting
+the fact that the intersection operation _always_ returns a set.
+
+$$
+ A \cap B = \{ x \mid x \in A \land x \in B \} \\ (A \cap B = \varnothing) \implies disjoint(A, B)
+$$
+
+Given two sets $A$ and $B$, the **intersection** of $A$ and $B$, denoted
+${A \cap B,}$ is the set of all elements in both $A$ and $B$. Visually:
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653359232/math/A_intersect_B_gha4ac.svg"
+	}
+	caption={"The intersection of A and B"}
+	width={"40"}
+	imwidth={"81"}
+	imheight={"61"}
+/>
+
+We say that two sets, ${A}$ and ${B,}$ are **disjoint** if, and only if,
+${A \cap B = \varnothing.}$
+
+### Cardinalities of Intersections and Unions
+
+Suppose we had the following sets ${A}$ and ${B:}$
+
+$$
+ \begin{aligned} A &= \{ 2, 4, 5, 6, 10, 11, 14, 22 \} \\ B &= \{ 1, 2, 3, 5, 7, 8, 11, 12, 13 \} \end{aligned}
+$$
+
+As a Venn diagram, sets ${A}$ and ${B}$ are visualized as such:
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653359316/math/cardinality_intersection_mp0b1m.svg"
+	}
+	caption={"An explicit intersection"}
+	width={40}
+	imwidth={314}
+	imheight={220}
+/>
+
+We see that the union of ${A}$ and ${B}$ is:
+
+$$
+ A \cup B = \{ 5, 2, 11 \}
+$$
+
+The cardinalities of the sets and the union:
+
+$$
+ \begin{aligned} n(A) &= 8 \\ n(B) &= 9 \\ n(A \cup B) &= 14 \\ n(A \cap B) &= 3 \end{aligned}
+$$
+
+Notice that the cardinality of the union is not simply ${n(A) + n(B).}$
+This is because simply adding ${n(A)}$ and ${n(B)}$ results in counting the
+elements in the intersection twice. Accordingly, to compute the cardinality
+of ${A \cup B,}$ we must subtract ${A \cap B.}$ This yields the following
+formula:
+
+> _Formula_. Let ${A}$ and ${B}$ be non-empty, finite sets. The cardinality
+> of ${A \cup B}$ is given by the formula:
+>
+> $$
+>    n(A \cup B) = n(A) + n(B) - n(A \cap B)
+> $$
+
+From the above formula, we can derive a second formula for the cardinality
+of the intersection:
+
+> _Formula_. Let ${A}$ and ${B}$ be non-empty, finite sets. The cardinality
+> of ${A \cap B}$ is given by the formula:
+>
+> $$
+>  n(A \cap B) = n(A) + n(B) - n(A \cup B)
+> $$
+
+### Set Difference
+
+Let $A$ and $B$ both be sets. The difference of $A$ and $B$, denoted
+${A \setminus B}$ (read "$A$ set minus $B$) is the set of all elements in
+$A$ and not in $B.$ In other words,
+${A \setminus B = \{ x : (x \in A) \land (x \notin B) \}.}$
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653359559/math/A_setMinus_B_hpc3xw.svg"
+	}
+	caption={"The difference of A and B"}
+	width={"40"}
+	imwidth={"127"}
+	imheight={"95"}
+/>
+
+More formally:
+
+> _Definition: Set Difference_. Given sets ${A}$ and ${B,}$ >
+> ${A \setminus B}$ is the set containing all the elements in ${A}$ that
+> are not contained in ${B.}$
+
+We say that ${A \setminus B}$ is the **complement** of ${B}$ with respect
+to ${A.}$
+
+### Complements
+
+The complement of a set ${S}$ more generally refers to the set of all
+elements not contained in ${S.}$ If we have a defined universal set ${U}$
+and ${A \subset U,}$ then the complement of ${A}$ is the set of all
+elements in ${U}$ that are not inside ${A.}$
+
+> _Definition: Complement_. Suppose ${U}$ is the universal set. The
+> complement of the set ${A,}$ denoted ${\overline{\rm A},}$ is the
+> _complement_ of ${A}$ with respect to ${U.}$ Hence:
+>
+> $$
+>   \overline{\rm A} = U \setminus A
+> $$
+>
+> Or, alternatively:
+>
+> $$
+>    \overline{\rm A} = U - A
+> $$
+
+#### Set Identities
+
+Knowing the set operations, it's often helpful to know several _set
+identities_ by heart to quickly perform deductions. These identities are
+presented below:
+
+| Name                | Identity                                                             |
+| ------------------- | -------------------------------------------------------------------- |
+| Identity Law 1      | ${A \cap U = A}$                                                     |
+| Identity Law 2      | ${A \cup \varnothing = A}$                                           |
+| Domination Law 1    | ${A \cup U = U}$                                                     |
+| Domination Law 2    | ${A \cap \varnothing = \varnothing}$                                 |
+| Indempotent Law 1   | ${A \cup A = A}$                                                     |
+| Indempotent Law 1   | ${A \cap A = A}$                                                     |
+| Complementation Law | ${\overline{\rm (\overline{\rm A})} = A}$                            |
+| Commutative Law 1   | ${A \cup B = B \cup A}$                                              |
+| Commutative Law 2   | ${A \cap B = B \cap A}$                                              |
+| Associative Law 1   | ${A \cup (B \cup C) = (A \cup B) \cup C}$                            |
+| Associative Law 2   | ${A \cap (B \cap C) = (A \cap B) \cap C}$                            |
+| Distributive Law 1  | ${A \cup (B \cap C) = (A \cup B) \cap (A \cup C)}$                   |
+| Distributive Law 2  | ${A \cap (B \cup C) = (A \cap B) \cup (A \cap C)}$                   |
+| De Morgan's Law 1   | ${\overline{\rm A \cap B} = \overline{\rm A} \cup \overline{\rm B}}$ |
+| De Morgan's Law 2   | ${\overline{\rm A \cup B} = \overline{\rm A} \cap \overline{\rm B}}$ |
+| Absorption Law 1    | ${A \cup (A \cap B) = A}$                                            |
+| Absorption Law 2    | ${A \cap (A \cup B) = A}$                                            |
+| Complement Law 1    | ${A \cup \overline{\rm A} = U}$                                      |
+| Complement Law 2    | ${A \cap \overline{\rm A} = \varnothing}$                            |
+
+### Symmetric Difference
+
+The **symmetric difference** between two sets ${A}$ and ${B}$ is defined
+as:
+
+$$
+ A \Delta B = (A \setminus B) \cup (B \setminus A)
+$$
+
+That is to say, the symmetric difference of sets ${A}$ and ${B}$ is the set
+made up of all the elements which are in ${A}$ or ${B}$ but not both. We
+can think of this as akin to the "exclusive or."
+
+The symmetric difference has the following properties:
+
+> _Lemma_. ${A \Delta B = B \Delta A}$
+
+> _Lemma_. ${A \Delta (B \Delta C) = (A \Delta B) \Delta C}$
+
+> _Lemma_. ${A \Delta \varnothing = A}$
+
+> _Lemma_. ${A \Delta A = \varnothing}$
+
+> _Lemma_. ${A \Delta A' = \mathbb{U}}$
+
+## Power Sets
+
+A mathematician requested a VISA to enter the United States with his family
+(him, his wife, and his son). The embassy replied, "Please submit passport
+photos of your family." Unsure whether multiple persons were supposed to be
+in each photo, the mathematician took one for every combination. Each on
+their own, him and his wife, him and his son, his wife and his son, etc.
+Photos taken, the mathematician returned to the embassy.
+
+The clerk was dumbfounded. After several minutes she said, "There's no one
+in this photo."
+
+"Yes. That is a photo of the empty set."
+
+Consider the set ${B = \{ 0, 1 \},}$ the set of binary digits. Using our
+definition of subsets, what are all the different possible subsets of
+${B?}$ We can lay them out:
+
+- ${\varnothing }$
+- ${\{ 0 \}}$
+- ${\{ 1 \}}$
+- ${\{ 0, 1 \}}$
+
+There are four different possible subsets. Suppose we place all these
+possible subsets in an entirely new set:
+
+$$
+ \{ \varnothing, \{ 0 \}, \{ 1 \}, \{ 0, 1 \} \}
+$$
+
+We call the set above the **power set** of ${B.}$ We denote this power set
+as such:
+
+$$
+ \mathcal{P}(B) = \{ \varnothing, \{ 0 \}, \{ 1 \}, \{ 0, 1 \} \}
+$$
+
+The symbol ${\mathcal{P}}$ is used in these notes, but other symbols are
+used throughout mathematics: ${\mathscr{P}, \mathbb{P}, \wp,}$ and a few
+others. Defining the power set more formally:
+
+> _Definition_. Given a set ${S,}$ the _power set_ of ${S}$ is the set of
+> all subsets of the set ${S.}$ The power set of ${S}$ is denoted
+> ${\mathcal{P}(S).}$
+
+One peculiar application of the definition above is with the empty set.
+What is the size of the power set of ${\mathcal{P}(\varnothing)?}$ It is 1,
+since the only subset of ${\varnothing}$ is ${\{\varnothing\}.}$ Next, what
+is the size of the power set of ${ \{ \varnothing \}?}$ It is 2, since
+${\mathcal{P}(\{ \varnothing \}) = \{ \varnothing, \{ \varnothing \} \}.}$
+If we continue this pattern:
+
+$$
+ \begin{aligned}
+  &n(\mathcal{P}(\varnothing)) = 1 \\
+  &n(\mathcal{P}(\mathcal{P}(\varnothing))) = 2 \\
+  &n(\mathcal{P}(\mathcal{P}(\mathcal{P}(\varnothing)))) = 3 \\
+  &n(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\varnothing))))) = 4 \\
+  &n(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\varnothing)))))) = 5 \\
+  &n(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\varnothing))))))) = 6 \\
+  &n(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\varnothing)))))))) = 7 \\
+  &n(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\varnothing))))))))) = 8 \\
+  &n(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\varnothing)))))))))) = 9 \\
+  &n(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\mathcal{P}(\varnothing))))))))))) = 10 \\
+ \end{aligned}
+$$
+
+The pattern above yields to a direct corollary (as well as several other
+ideas we will explore in the sections on number theory):
+
+> _Corollary_. If as set ${A}$ has ${n}$ elements, where ${n \in \N,}$ then
+> ${\mathcal{P}(A) = 2^n.}$
+
+The proof of this corollary: Let ${A}$ be a set. For every subset of ${A,}$
+there are two possibilities for each element ${x \in A:}$ Either (1) ${x}$
+is in the subset, or ${x}$ is not in the subset. Therefore, it follows that
+for ${n}$ elements, there are ${2^n}$ possibilities in making a subset of
+${A.}$ From the definition of the powerset, it follows that the number of
+subsets of ${A}$ is ${2^n.}$
+
+## Unions & Intersections Generally
+
+At this point, we have a much better understanding of basic set theory. We
+can now introduce the generalized forms of unions and intersections.
+Because sets comply with the laws of associativity, the sets
+${A \cup B \cup C}$ and ${A \cap B \cap C}$ are unambiguous. In other
+words, we don't need parentheses to communicate what we mean.
+${A \cup B \cup C}$ is the same set as ${(A \cup B) \cup C}$ which is the
+same set as ${A \cup (B \cup C).}$ The same goes for ${A \cap B \cap C.}$
+
+For example, suppose ${A = \{ 1, 2 \},}$ ${B = \{ 1, 4 \},}$ and
+${C = \{ 1, 7 \}.}$ Then ${A \cup B \cup C = \{ 1, 2, 4, 7 \},}$ and
+${A \cap B \cap C = \{ 1 \}.}$ The set ${A \cup B \cup C}$ is the set
+containing all the elements that occur in at least one of ${A,}$ ${B,}$ and
+${C.}$ The set ${A \cap B \cap C}$ contains all the elements in all three
+of ${A,}$ ${B,}$ and ${C.}$ We can extend this idea to any ${n}$ number of
+sets:
+
+> _Definition_. Let ${A_1, A_2, \ldots, A_n}$ be sets. The union of these
+> sets is denoted:
+>
+> $$
+>   A_1 \cup A_2 \cup \ldots \cup A_n = \bigcup\limits_{i = 1}^{n} A_i
+> $$
+
+From the definition above, it follows that the notation
+${\bigcup\limits_{i = 1}^{n} A_i}$ represents a set. Accordingly, when we
+write ${x \in \bigcup\limits_{i = 1}^{n} A_i,}$ we imply that ${x}$ is a
+member of at least one of ${A_1, A_2, \ldots, A_n.}$ This idea also applies
+to intersections:
+
+> _Definition_. Let ${A_1, A_2, \ldots, A_n}$ be sets. The _intersection_
+> of these sets is denoted:
+>
+> $$
+>  A_1 \cap A_2 \cap \ldots \cap A_n = \bigcap\limits_{i = 1}^{n} A_i
+> $$
+
+## Special Number Sets
+
+Certain number sets are used so frequently in mathematics that we denote
+them with symbols.
+
+| Symbol               | Set                                                                                                                                                                          |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| $\mathbb{R}$         | The set of all real numbers. E.g., $\{ -2, 0, 1, \pi, \sqrt{2}, \ldots \}$                                                                                                   |
+| $\mathbb{R}^-$       | The set of all negative real numbers. E.g., $\{ - \sqrt{3}, -1, -117, \ldots \}$. This set does not include 0.                                                               |
+| ${\R_{\leq 0}}$      | The set of all nonpositive real numbers. This is the set of negative real numbers including 0.                                                                               |
+| $\mathbb{R}^+$       | The set of all positive real numbers. E.g., $\{ 2, \pi, e, \frac{1}{2}, \ldots \}$. This set does not include 0.                                                             |
+| ${\R_{\geq 0}}$      | The set of all nonnegative positive real numbers. This is the set of all positive real numbers including 0.                                                                  |
+| $\mathbb{Q}$         | The set of all rational numbers. These are numbers that can be expressed as $\frac{a}{b}$, where $a$ and $b$ are integers. E.g., $\{ 3, 0, -2, 0.75, \ldots \}$.             |
+| $\mathbb{I}$         | The set of all irrational numbers. This is the set of all numbers that are not rational numbers. E.g., $\{ - \sqrt{2}, \pi, \phi, e, \ldots \}$.                             |
+| $\mathbb{Z}$         | The set of all integers. This is the set of what we refer to as the counting numbers, and their negative counterparts. E.g., $\{ \ldots -3, -2, -1, 0, 1, 2, 3, \ldots \}$.  |
+| $\mathbb{Z}^-$       | The set of all negative integers. This is a subset of $\mathbb{Z}$. It consists of all the negative integers. E.g., $\{ -1, -2, -3, \ldots \}$. This set does not include 0. |
+| $\mathbb{Z}^+$       | The set of all positive integers. Another subset of $\mathbb{Z}$. It consists of all the positive integers. E.g., $\{ 1, 2, 3, 4, \ldots \}$. This set does not include 0.   |
+| ${\N_{\mathcal{E}}}$ | The set of all even numbers. This is the set of all integers that can be written in the form $2k$, where $k$ is an integer. E.g., $\{ 0, 2, 4, 6, 8, 10 \}$.                 |
+| ${\N_{\mathcal{O}}}$ | The set of all odd numbers. This is the set of all integers that can be written in the form $2k + 1$, where $k$ is an integer. E.g., $\{ 1, 3, 5, 7, 9, \ldots \}$           |
+| $\mathbb{N}$         | The set of all natural numbers. This is the set of all counting numbers (equivalent to the set of positive integers). E.g., $\{ 1, 2, 3, 4, \ldots \}$.                      |
+| $\mathbb{P}$         | The set of all prime numbers. E.g., $\{ 2, 3, 5, 7, \ldots \}$.                                                                                                              |
+
+## The Number Line
+
+We usually think of numbers as lying along a number line.
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653361169/math/number_line_rbz14e.svg"
+	}
+	caption={"A number line"}
+	width={100}
+	imwidth={580}
+	imheight={100}
+/>
+
+The number 0 is the middle point of the number line, and because of that
+property, we refer to it as the **origin**. Every number to the left of 0
+is a a negative number. Every number to the right is a positive number. 0
+itself is neither positive nor negative.
+
+The real number line is **continuous** because it has no holes (i.e., areas
+where there is nothing). There are points all along the number line. Thus,
+whenever we refer to a set of numbers (e.g., the integers, the rationals,
+the naturals, etc.), we are referring to those points along the number line
+corresponding to those numbers.
+
+Some of the numbers are separated from one another at specific, constant
+distances. For example, the set of integers consists of numbers separated
+by exactly 1 unit of distance. Because the integers are all separated from
+one another, we say that the set of integers is **discrete**. This is where
+the name of **discrete mathematics** comes from. Discrete mathematics is
+the study of _discrete mathematical objects_, while **continuous
+mathematics** is the study of _continuous mathematical objects_.
+
+## Ordered Pairs
+
+When set theory was first introduced, it faced a major issue—how do you
+represent ordered pairs? The axiom of extension renders order irrelevant
+for defining sets. For example, $\{ a, b \}$ is the same set as
+$\{ b, a \}$. This is problematic if we are referring specifically to "$a$
+then b", rather than "$b$ then $a$."
+
+The patch was to define ordered pairs as sets. An ordered pair is a set of
+the form $\{ \{ a \}, \{ a, b \} \}$. The set has two elements: $\{ a \}$
+and $\{ a, b \}$. If $a \neq b$, then the two sets are distinct, and $a$ is
+in both sets but $b$ is not. With this definition, we can differentiate
+between $a$, and $b$. If $a = b$, then we can say that $a$ is both the
+first and second element of the pair.
+
+Eventually, however, mathematicians learned that writing
+$\{ \{ a \}, \{ a,b \} \mid a = b \}$ was too cumbersome. So, the syntax
+was shortened: $(a, b)$.
+
+Formalizing the discussion above: Let $a$ and $b$ be elements. The notation
+$(a, b)$ means the **ordered pair** consisting of $a$ and $b$ together,
+such that $a$ is the first element of the pair and $b$ is the second
+element.
+
+### Equality of Ordered Pairs
+
+Suppose $(a, b)$ and $(c, d)$ are ordered pairs. The ordered pairs are
+equal if, and only if, $a = c$ and $b = d$. Thus, the statement
+$(a, b) = (c, d)$ implies that $a = c$ and $b = d$.
+
+## Tuples
+
+While $n \in \mathbb{Z}_{\geq 0} $, let $x_1, x_2, \ldots x_n$ be elements.
+An $n$-tuple consists of $x_1, x_2, \ldots x_n$, ordered as: first $x_1$,
+second $x_2$, third $x_3$, and so on, up to $x_n$.
+
+Ordered pairs are more generally called **tuples**, specifically 2-tuples.
+The name "tuple" is derived from the English nomenclature for multiple
+things: 2 for couple, 3 for triple, 4 for quadruple, etc. In mathematics, a
+tuple is a finite list of _ordered_ elements. An **${n-}$tuple** is a
+sequence of ${n}$ elements, where $n \in \mathbb{Z}_{\geq 0}$ (a
+non-negative integer). An **ordered 2-tuple** is an*ordered pair*. An
+**ordered 3-tuple** is an*ordered triple,* and so on and so forth.
+
+> _Definition: Equality of Tuples_. Let A be the ordered $n$-tuple
+> $(x_1, x_2, x_3, \ldots x_n)$, and B the ordered $n$-tuple
+> $(y_1, y_2, y_3, \ldots y_n)$.
+
+> _Corollary_. A and B are equal if, and only if,
+> ${x_1 = y_1, x_2 = y_2, x_3 = y_3, \ldots x_n = y_n}$.
+
+Tuples allow us to conclude that an object has the same properties as
+another. For example:
+
+- Jane = ${(female, 27, Wisconsin)}$
+- Alice = ${(female, 27, Wisconsin)}$
+
+The elements in the tuples above are said to be equal. We say that tuples
+are equal if, and only if, every element in the tuple is the same as the
+element with the same position in the other tuple(s).
+
+> _Definition_. Suppose $n \in \mathbb{Z}^+$. Let $x_1, x_2, \ldots x_n$ be
+> elements. The **ordered $n$-tuple** consists of $x_1, x_2, \ldots x_n$,
+> with the ordering: first $x_1$, second $x_2$, and so on up to $x_n$.
+
+An **ordered 2-tuple** is an ordered pair, and an **ordered 3-tuple** is an
+ordered triple. Two ordered $n$-tuples ($x_1, x_2, \ldots x_n$) and
+($y_1, y_2, \ldots y_n$) are equal if, and only if, $x_1 = y_1$,
+$x_2 = y_2$, $\ldots$, $x_n = y_n$.
+
+## Cartesian Products
+
+Many objects have multiple properties. For example, a deck of cards can be
+described as a set of 52 cards. Each card has a property in common with all
+other cards—a face value. That face value itself has two properties—(A) a
+suit, and (B) a rank. We can denote these sets as such:
+
+- ${A = \{ ♠, ♥, ♣, ♦ \}}$
+- ${B = \{ 2, 3, 4, 5, 6, 7, 8, 9, 10, J, Q, K, A \}}$
+
+Every card in the deck can be represented as an ordered pair of 1 element
+from ${A}$ and 1 element from ${B:}$
+
+| _Rank_ | ♠       | ♥       | ♣       | ♦       |
+| ------ | ------- | ------- | ------- | ------- |
+| 2      | (♠, 2)  | (♥, 2)  | (♣, 2)  | (♦, 2)  |
+| 3      | (♠, 3)  | (♥, 3)  | (♣, 3)  | (♦, 3)  |
+| 4      | (♠, 4)  | (♥, 4)  | (♣, 4)  | (♦, 4)  |
+| 5      | (♠, 5)  | (♥, 5)  | (♣, 5)  | (♦, 5)  |
+| 6      | (♠, 6)  | (♥, 6)  | (♣, 6)  | (♦, 6)  |
+| 7      | (♠, 7)  | (♥, 7)  | (♣, 7)  | (♦, 7)  |
+| 8      | (♠, 8)  | (♥, 8)  | (♣, 8)  | (♦, 8)  |
+| 9      | (♠, 9)  | (♥, 9)  | (♣, 9)  | (♦, 9)  |
+| 10     | (♠, 10) | (♥, 10) | (♣, 10) | (♦, 10) |
+| J      | (♠, J)  | (♥, J)  | (♣, J)  | (♦, J)  |
+| Q      | (♠, Q)  | (♥, Q)  | (♣, Q)  | (♦, Q)  |
+| K      | (♠, K)  | (♥, K)  | (♣, K)  | (♦, K)  |
+| A      | (♠, A)  | (♥, A)  | (♣, A)  | (♦, A)  |
+
+**Ordered pairs** are a clean and concise way of describing the properties
+an object has. In mathematics, all of the pairings above are called a
+**Cartesian product**. More formally:
+
+> _Definition_. The _Cartesian product_ of two sets ${A}$ and ${B,}$
+> denoted ${A \times B}$, is the set of all ordered pairs ${(a, b)}$, where
+> ${a \in A}$ and ${b \in B}$.
+
+Symbolically,
+$A_1 \times A_2 \times \ldots \times A_n = \{ (a_1, a_2, \ldots , a_n) \mid a_1 \in A_1, a_2 \in A_2, \ldots , a_n \in A_n \}$
+Particularly,
+$A_1 \times A_2 = \{ (a_1, a_2) \mid a_1 \in A_1, a_2 \in A_2 \}$ is the
+Cartesian product of $A_1$ and $A_2$.
+
+For example: Let ${A = \{ x, y \}}$, ${B = \{ 1, 2, 3 \}}$, and
+${C = \{ a, b \}.}$ ${A \times B}$ is:
+
+$$
+ A \times B = \{ (x, 1), (y, 1), (x, 2), (y, 2), (x, 3), (y, 3) \}
+$$
+
+And ${B \times A:}$
+
+$$
+ B \times A = \{ (1,x), (1,y), (2,x), (2,y), (3,x), (3,y) \}
+$$
+
+${A \times A}$ is a special case with its own notation. This is the
+Cartesian product of a set and the set itself, so we denote it with
+${A^2.}$
+
+$$
+ A^2 = \{ (x, x), (x, y), (y, x), (y, y) \}
+$$
+
+${(A \times B) \times C:}$
+
+$$
+ \begin{aligned} (A \times B) \times C = \{ \\ &((x,1), a), \\ &((x,1), b), \\ &((y, 1), a), \\ &((y, 1), b), \\ &((x, 2), a), \\ &((x, 2), b), \\ &((y, 2), a), \\ &((y, 2), b), \\ &((x, 3), a), \\ &((x, 3), b), \\ &((y, 3), a), \\ &((y, 3), b) \\ \} \end{aligned}
+$$
+
+Because Cartesian products are more generally sets, they have cardinality:
+
+$$
+ \begin{aligned}
+  n(A \times B) &= 6 \\
+  n(B \times A) &= 6 \\
+  n(A \times A) &= 4 \\
+  n((A \times B) \times C) &= 12
+ \end{aligned}
+$$
+
+The Cartesian products ${A \times B,}$ ${B \times A,}$ and
+${(A \times B) \times A}$ are more generally called **relations**. We will
+revisit relations in more detail later, but for now, know that the
+Cartesian product ${A \times B}$ is said to be a _relation_ from the set
+${A}$ to the set ${B.}$
+
+Cartesian products are a bridge between discrete mathematics and continuous
+mathematics. $\mathbb{R} \times \mathbb{R}$ is the Cartesian product—the
+set of all ordered pairs—$(x, y)$ where both $x$ and $y$ are real numbers.
+If we assign every $x$ to a point on a line and every $y$ to a point on
+another line perpendicular to $x$'s line, the lines form a plane. That
+plane is called the **Cartesian plane**, and every ordered pair $(x, y)$
+lies on it.
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653361923/math/cartesian_plane_nhyal8.svg"
+	}
+	caption={"The Cartesian Plane"}
+	width={"50"}
+	imwidth={"489"}
+	imheight={"456"}
+/>
+
+As we can likely gather, Cartesian products are useful for laying out the
+possible arrangments of the set of two elements.
+
+## Relations
+
+A **relation** is defined as follows:
+
+> _Definition: Relations_. A _relation_ is any set of ordered pairs.
+
+From the definition above, it follows that any subset of the Cartesian
+product ${A \times B}$ is a relation. We have several options for denoting
+relations. For example, suppose the order pair ${(x,y)}$ is a member of
+some relation. We can write:
+
+$$
+ (x,y) \in R \\ x R y
+$$
+
+where ${R}$ is some relation. If ${x,y \in \R,}$ it follows that:
+
+$$
+ R \subseteq \R \times \R
+$$
+
+which we read as "${R}$ is a relation in ${\R.}$" The following are all
+examples of relations:
+
+$$
+ \begin{aligned} R &= \{ (1,3), (2,4), (3,1), (3,4) \} \\[1em] R &= \{ (1,2.3), (2,3.1), (4,2), (3,7.9) \} \\[1em] R &= \{ (x,y) \mid x^2 + y^2 = 9 x,y \in \R \} \\[1em] R &= \{ (x,(y,z)) \mid y^2 + z^2 = x^2,~~~ x,y,z \in \R \} \end{aligned}
+$$
+
+### Reflexive Relations
+
+> _Definition: Reflexive Relation_. A relation ${R}$ in a set ${S}$ is
+> _reflexive_ iff for all ${a \in S,}$ it follows that ${a R a.}$
+
+### Symmetric Relations
+
+> _Definition: Symmetric Relation_. A relation ${R}$ in a set ${S}$ is
+> _symmetric_ iff for all ${a,b \in S:}$
+>
+> $$
+>  a R b \implies b R a
+> $$
+
+### Transitive Relations
+
+> _Definition: Transitive Relation_. A relation ${R}$ in a set ${S}$ is
+> _transitive_ iff for all ${a, b, c \in S:}$
+>
+> $$
+>  aRb \land bRc \implies aRc
+> $$
+
+### Equivalence Relations
+
+> _Definition: Equivalence Relation_. A relation ${R}$ in a set ${S}$ is an
+> _equivalence relation_ iff the ${R}$ is reflexive, symmetric, _and_
+> transitive.

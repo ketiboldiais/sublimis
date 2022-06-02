@@ -1,0 +1,62 @@
+# Basic Operators in C++
+
+C++ comes with several basic operators.[^operator] Below is a table briefly
+presenting them. The last few rows following an `#include` are operators
+(functions) that come from library. They only work if the library is
+included (e.g., `#include <cmath>`).
+
+[^operator]:
+    An operator is a symbol that takes one or more values as inputs, and
+    outputs another value after performing a particular operation. The
+    values we pass as inputs are called the operands.
+
+| operator    | description                      |
+| ----------- | -------------------------------- |
+| `a + b`     | addition                         |
+| `a - b`     | subtraction                      |
+| `a * b`     | multiplication                   |
+| `a / b`     | division                         |
+| `a mod b`   | modulus                          |
+| `a++`       | increment by 1                   |
+| `a--`       | decrement by 1                   |
+| `a & &b`    | logical AND                      |
+| `a \|\| b`  | logical OR                       |
+| `!a`        | logical not                      |
+| `a == b`    | `a` equal to `b`?                |
+| `a != b`    | `a` not equal to `b`?            |
+| `a < b`     | `a` less than `b`?               |
+| `a > b`     | `a` greater than `b`?            |
+| `a <= b`    | `a greater than or equal to `b`? |
+| `a >= b`    | `a greater than or equal to `b`? |
+| `a ? b : c` | If `a`, then `b`, otherwise `c`  |
+
+Operators fall into three categories: **Unary operators** are operators
+that take just one value as input. For example, the increment operator,
+`++`, increments by 1, and takes just one value as input. **Binary
+operators** are operators that take exactly two values as inputs. For
+example, the division operator `\` is a binary operator, since it takes two
+values. **Ternary operators** are operators that take exactly three values
+as inputs. In C++, the ternary operator `?:` is an operator takes three
+expressions as inputs and outputs one expression. For example:
+
+```cpp
+	#include <iostream>
+	using namespace std;
+
+	int main(int argc, char *argv[]) {
+		int x = 1;
+		int y = 2;
+		int z = 3;
+		int w;
+		x == 1 ? w = y : w = z;
+		cout << "w = " << w << endl;
+	}
+```
+
+```bash
+w = 2
+```
+
+The ternary operator `x == 1 ? w = y : w = z;` says, if `x` is equal to
+`1`, then `w = y`. Otherwise, `w = z`. Since `x == 1` is true, `w = y`.
+Thus, `w = 2`.

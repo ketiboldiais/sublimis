@@ -1,0 +1,310 @@
+# Logic Gates
+
+A **logic gate** is a device that implements some functionality that can be
+modeled with Boolean functions. There are two kinds of logic gates:
+**elementary gates** (gates that implement a strictly Boolean operation)
+and **composite gates** (gates that a functionality beyond a strictly
+Boolean operation, e.g., addition, multiplication, etc.). We begin by
+covering a few elementary gates.
+
+Below are the schematic represenations for the `AND`, `NOT`, and `OR`
+gates:
+
+![Elementary logic gates](https://res.cloudinary.com/sublimis/image/upload/v1653000544/cs/elementary_logic_gates.svg)
+
+The diagrams above are _schematic specifications_ of the gates. We can also
+provide **functional specifications** and **truth table specifications**.
+For the `AND` gate:
+
+<figure>
+	<img
+		src="https://res.cloudinary.com/sublimis/image/upload/v1653000916/cs/and_gate.svg"
+		alt="An AND gate"
+		width={150}
+		height={150}
+	/>
+</figure>
+
+```verilog
+if (a == 1 and b==1)
+then out=1 else out=0
+```
+
+$$
+	\begin{array}{c:c:c:c} & \texttt{a} & \texttt{b} &\texttt{out} \\ \hline & \texttt{0} & \texttt{0} & \texttt{0} \\ & \texttt{0} & \texttt{1} & \texttt{0} \\ & \texttt{1} & \texttt{0} & \texttt{0} \\ & \texttt{1} & \texttt{1} & \texttt{1} \end{array}
+$$
+
+For the `OR` gate:
+
+<figure>
+	<img
+		src="https://res.cloudinary.com/sublimis/image/upload/v1653001259/cs/or_gate.svg"
+		alt="An OR gate"
+		width={150}
+		height={150}
+	/>
+</figure>
+
+```verilog
+if (a==1 or b==1)
+then out=1 else out=0
+```
+
+$$
+	\begin{array}{c:c:c:c} & \texttt{a} & \texttt{b} &\texttt{out} \\ \hline & \texttt{0} & \texttt{0} & \texttt{0} \\ & \texttt{0} & \texttt{1} & \texttt{1} \\ & \texttt{1} & \texttt{0} & \texttt{1} \\ & \texttt{1} & \texttt{1} & \texttt{1} \end{array}
+$$
+
+For the `NOT` gate:
+
+<figure>
+	<img
+		src="https://res.cloudinary.com/sublimis/image/upload/v1653168534/cs/not_gate_dldwwj.svg"
+		alt="A NOT gate"
+		width={150}
+		height={150}
+	/>
+</figure>
+
+```verilog
+	if (in==0)
+	then out=1 else out=0
+```
+
+$$
+	\begin{array}{c:c} & \texttt{in} & \texttt{out} \\ \hline & \texttt{0} & \texttt{1} \\ & \texttt{1} & \texttt{0} \\ \end{array}
+$$
+
+### NAND Gate
+
+The `NAND` gate can be implemented as by wiring together and `AND` gate and
+a `NOT` gate:
+
+![The NAND gate's schematic](https://res.cloudinary.com/sublimis/image/upload/v1653168591/cs/nand_gate_schematic_axgn0w.svg)
+
+The `NAND` gate representation above is the **interface**. It's what the
+user actually interacts with. The gates inside the box—the `AND` and `NOT`
+gates comprising `NAND`—are the **implementation** of `NAND`.
+
+`NAND`'s specifications are as follows:
+
+<figure>
+	<img
+		src="https://res.cloudinary.com/sublimis/image/upload/v1653168641/cs/nand_gate_hmddvv.svg"
+		alt="A NAND gate"
+		width={150}
+		height={150}
+	/>
+</figure>
+
+```verilog
+	if (a==1 and b==1)
+	then out=0 else out=1
+```
+
+## Circuit Implementations
+
+We might be wondering, how exactly do these gates work physically? This is
+a fair question, because the gate schematics are really an abstraction for
+a **circuit**. Accordingly, the implementations for elementary gates are
+actually circuits. For example, the `AND` gate can be represented with a
+schematic specification of its **circuit implementation**:
+
+![The AND circuit](https://res.cloudinary.com/sublimis/image/upload/v1653168682/cs/and_circuit_szgr6v.svg)
+
+For the `OR` gate:
+
+<figure>
+	<img
+		src="https://res.cloudinary.com/sublimis/image/upload/v1653168714/cs/or_gate_cqxowj.svg"
+		alt="An OR gate"
+		width={150}
+		height={150}
+	/>
+</figure>
+
+In this volume, we don't deal with these circuit implementations. They are
+presented here purely to satisfy any curiosity we might have about how
+these gates actually work in reality. The design and implementation of
+these circuits falls within the realm of electrical engineering, not
+computer science.
+
+### Hardware Description Language
+
+When we're asked to design a logic gate, we want to always ask for as much
+information as we can. This means we always want to possibly construct a
+truth table. For example, suppose the client asks for a gate that:
+
+> Outputs `1` if and only if one of its two inputs is `1`.
+
+Specifying this as a truth table:
+
+<div id="xor_truth_table"></div>
+
+This particular gate is called a **XOR gate**.
+
+With this information, we can specify this design through **hardware
+description language (HDL)**—a computer language for describing the
+structure and behavior of digital logic circuits. For the `XOR` gate, we
+would write the following in an `.hdl` file:
+
+```verilog
+/** Xor gate: out = (a And Not(b)) Or (Not(a) And b)) */
+CHIP Xor {
+	IN a, b;
+	OUT out;
+
+	PARTS:
+	// Implementation goes here
+}
+```
+
+In the code above, the implementation (currently noted as "Implementation
+missing") is written in an HDL stub file. To write this implementation,
+we'll need to come up with a way to implement `XOR` using the gates we
+already have, `AND`, `OR`, `NOT`, and `NAND`.
+
+To do so, we take a closer look at the truth table. In this case, we see
+that there are only two cases where the output is `1`:
+
+1. `a` is `0` and `b` is `1.`
+2. `a` is `1` and `b` is `0`.
+
+Accordingly, we have the diagram:
+
+![The XOR gate's implementation](https://res.cloudinary.com/sublimis/image/upload/v1653168850/cs/XOR_implementation_vdyrne.svg)
+
+In our `hdl` file, we write:
+
+```verilog
+/** Xor gate: out = (a And Not(b)) Or (Not(a) And b)) */
+CHIP Xor {
+	IN a, b;
+	OUT out;
+
+	PARTS:
+	Not (in=a, out=nota);
+	Not (in=b, out=notb)
+	And (a=a, b=notb, out=aAndNotb);
+	And (a=nota, b=b, out=notaAndb);
+	Or  (a=aAndNotb, b=notaAndb, out=out);
+}
+```
+
+The `hdl` file is really nothing more than a textual description of the
+gate diagram.
+
+![The XOR gate's schematic](https://res.cloudinary.com/sublimis/image/upload/v1653168899/cs/hdl_xor_nbjc8n.svg)
+
+## Buses
+
+Computers often require manipulating groups of bits together. For example,
+sending some sequence ${00101011}$ from one area to another would be much
+more efficient if we could send it all together rather than sending it one
+by one.
+
+To help achieve this efficiency, we treat a group of bits as a single
+entity called a **bus**. For example, suppose we want to add two ${16}$ bit
+numbers. To do so, we build a gate called a **${16}$-bit adder**. Such a
+gate requires two inputs that feed ${16}$ bits each, and output ${16}$
+bits. Thus, the gate has ${32}$ wires feeding into it as input, and ${16}$
+wires leaving it as output:
+
+![A 16-bit adder](https://res.cloudinary.com/sublimis/image/upload/v1653168946/cs/real_16_bit_adder_ducr5w.svg)
+
+Instead of thinking about all of these wires individually, we abstract each
+group of ${16}$ wires as a _bus_, corresponding to groups of ${16}$ bits:
+
+![Abstracted 16-bit adder](https://res.cloudinary.com/sublimis/image/upload/v1653168980/cs/16_bit_adder_jggyvc.svg)
+
+## Gates from NAND
+
+This section presents an overview of some common gates, all formed from the
+NAND gate.
+
+### Multiplexor
+
+The `mux gate`, or **multiplexor**, is visualized as the following:
+
+![The MUX gate](https://res.cloudinary.com/sublimis/image/upload/v1653169040/cs/mux_gate_rfnjgs.svg)
+
+The multiplexor takes three inputs: The usual `a` and `b`, and a `sel`
+input. If `sel` is ${0,}$ the multiplexor outputs `a`. If `sel` is ${1,}$
+the multiplexor outputs `b`.
+
+The HDL description:
+
+```verilog
+if (sel==0)
+	out=a
+else
+	out=b
+```
+
+The truth table:
+
+The multiplexor also has an abbreviated truth table:
+
+The multiplexor's HDL appears as follows:
+
+```verilog
+CHIP AndMuxOr {
+	IN a, b, sel;
+	OUT out;
+
+	PARTS:
+	And (a=a, b=b, out=andOut);
+	Or (a=a, b=b, out=orOut);
+	Mux (a=andOut, b=orOut, sel=sel, out=out);
+}
+```
+
+### Demultiplexor
+
+The **DMux gate**, or **demultiplexor**, is schematically represented as
+follows:
+
+![The DMux gate](https://res.cloudinary.com/sublimis/image/upload/v1653169095/cs/dmux_gate_m0milb.svg)
+
+We can think of the demultiplexor as the inverse of a multiplexor. It
+receives a single input, and outputs either an `a` output or `b` output.
+The hardware description:
+
+```verilog
+if (sel==0)
+	{a,b}={in,0}
+else
+	{a,b}={0,in}
+```
+
+The truth table:
+
+<div id="demux_truth_table"></div>
+
+Using a demultiplexor and multiplexor together allows us to stream bits of
+information efficiently:
+
+![A MUX-DMux stream](https://res.cloudinary.com/sublimis/image/upload/v1653169148/cs/mux_demux_stream_psbbrj.svg)
+
+In the circuit above, the `sel` bits are connected to an _oscillator_
+returning `0`s and `1`s alternatively. The output of the `Mux` is a single
+stream of bits, which is then fed into the `DMux` where the original stream
+is outputted. This allows us to transmit large messages as a single stream
+of bits—far more cost-efficient than transmitting multiple streams.
+
+### AND16
+
+The **AND16 gate** is a ${16}$-bit `AND` gate. At its core, it really is
+just an `AND` gate, but instead of just two single-bit buses as input, it
+takes two ${16}$-bit bus inputs. This results in outputs like:
+
+$$
+	\begin{aligned} \texttt{a} &= 1 0 1 0 1 0 1 1 0 1 0 1 1 1 0 \\ \texttt{b} &= 0 0 1 0 1 1 0 1 0 0 0 1 0 1 0 \\ \hline \texttt{out} &= 0 0 1 0 1 0 0 1 0 0 0 1 0 1 0 \end{aligned}
+$$
+
+### Mux4Way16
+
+The **Mux4Way16 gate** is a 4-way 16-bit multiplexor. In other words, a
+multiplexor that takes four 16-bit buses as inputs, a 2-bit bus as a
+selection input, and a 16-bit bus as output. The truth table:
+
+<div id="mux4way16_truth_table"></div>

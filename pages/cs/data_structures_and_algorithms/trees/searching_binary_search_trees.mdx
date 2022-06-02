@@ -1,0 +1,170 @@
+# Searching a Binary Search Tree
+
+Searching through a binary search tree is very simple. Consider the
+following tree:
+
+<Tree
+	data={[
+		{ child: "30", parent: "" },
+		{ child: "15", parent: "30" },
+		{ child: "50", parent: "30" },
+		{ child: "10", parent: "15" },
+		{ child: "20", parent: "15" },
+		{ child: "40", parent: "50" },
+		{ child: "60", parent: "50" },
+	]}
+/>
+
+Suppose we wanted to find the element `40`. First, we take a pointer and
+start at the root:
+
+<Tree
+	data={[
+		{ child: "30", parent: "", ant: "p", focus: "red" },
+		{ child: "15", parent: "30" },
+		{ child: "50", parent: "30" },
+		{ child: "10", parent: "15" },
+		{ child: "20", parent: "15" },
+		{ child: "40", parent: "50" },
+		{ child: "60", parent: "50" },
+	]}
+/>
+
+With the pointer `p` set, we read `p`'s pointee's value, and compare it
+against the key. In this case, we see that `40 &nlt; 30`, so we move `p` to
+the current pointee's right-child:
+
+<Tree
+	data={[
+		{ child: "30", parent: "" },
+		{ child: "15", parent: "30" },
+		{ child: "50", parent: "30", ant: "p", focus: "red" },
+		{ child: "10", parent: "15" },
+		{ child: "20", parent: "15" },
+		{ child: "40", parent: "50" },
+		{ child: "60", parent: "50" },
+	]}
+/>
+
+Given `p`'s new pointee, we perform the procedure again. The comparison
+returns `40 < 50`, so we move `p` to the current pointee's left-child:
+
+<Tree
+	data={[
+		{ child: "30", parent: "" },
+		{ child: "15", parent: "30" },
+		{ child: "50", parent: "30" },
+		{ child: "10", parent: "15" },
+		{ child: "20", parent: "15" },
+		{ child: "40", parent: "50", ant: "p", focus: "red" },
+		{ child: "60", parent: "50" },
+	]}
+/>
+
+Comparing the pointee's value to our key, we see that `40 = 40`, and the
+search concludes &mdash; we've found our match. What if the key were
+instead `39`? In that case, we would get to the node labeled `40` above,
+then set `p` to node `40`'s left-child. But, because there is no such node,
+`p` is set to `NULL`. We use this fact to return an unsuccesful search
+&mdash; if `p` is `NULL` at any point before the key is found, there is no
+match.
+
+A recursive implementation might look like:
+
+```rust
+fn search(Node* root, int key) -> Node*:
+	if (root === NULL):
+		return NULL;
+	if (key === (*root).data):
+		return root;
+	else if (key < (*root).data):
+		search((*root).left_child, key);
+	else:
+		search((*root).right_child, key);
+```
+
+To illustrate the function above, we'll apply it to the previous tree.
+First, we pass the tree's `root` pointer, and a key. Suppose we're looking
+for the key `60`. We make the first call, `search(root, 60)`. First, we
+check if `root = NULL`. It is not, so we can proceed.
+
+We chck if `30 = 60`. No. `30 ≠ 60.` We go to the next prong, which asks if
+`30 < 60`. Again no. So, we jump to the default prong &mdash; make a
+recursive call, `((*root).right_child, 60)`. Since the right child of the
+root is `50`, for readability, we'll denote this as `search(root(50), 60)`:
+
+<HTree
+	data={[
+		{ child: "search(root, 60)", parent: "" },
+		{
+			child: "search(root(50), 60)",
+			parent: "search(root, 60)",
+		},
+	]}
+	margins={[20, 150, 20, 150]}
+	width={400}
+	height={100}
+	containerHeight={20}
+/>
+
+Making this call, we check if `root(50) = NULL`. No. So we go to the next
+prong, and check if `60 = root(50)`. It's not &mdash; `60 ≠ 50`. Check the
+next prong. Is `60 < 15`? No. We jump to the default prong, and wow we make
+the call `search(root(50).right_child, 60)`. This translates to
+`search(root(60), 60):`
+
+<HTree
+	data={[
+		{ child: "search(root, 60)", parent: "" },
+		{
+			child: "search(root(50)1, 60)",
+			parent: "search(root, 60)",
+			display: "none",
+		},
+		{
+			child: "search(root(50), 60)",
+			parent: "search(root, 60)",
+		},
+		{
+			child: "search(node(50).right_child1, 60)",
+			parent: "search(root(50), 60)",
+			display: "none",
+		},
+		{
+			child: "search(root(60), 60)",
+			parent: "search(root(50), 60)",
+		},
+	]}
+	margins={[20, 150, 20, 150]}
+	width={500}
+	height={300}
+	containerHeight={50}
+	containerWidth={80}
+/>
+
+Again we check if `root(60) = NULL`. It isn't, so we can proceed. Prong 2:
+Is `60 = root(60).data`? Yes. `60 = 60`. We've found our match.
+
+Alternatively, we can search with iteration:
+
+```rust
+fn search(Node* root, int key) -> Node* :
+	while (root != NULL):
+		if (key === (*root).data):
+			return root;
+		else if (key < (*root).data):
+			root = (*root).left_child;
+		else:
+			root = (*root).right_child;
+```
+
+## Time Complexity
+
+Examining the binary search tree's search algorithm, we see that the the
+algorithm's complexity depends on the tree's height. And as we know, a
+binary tree's height ${H}$ is bounded:
+
+<figure>$$ \log_{2} n \leq H \leq n $$</figure>
+
+Thus, in the best case scenario, searching a binary tree takes
+${O(\log_{2} n),}$ and in the worst case scenario, it takes ${O(n).}$

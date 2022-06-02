@@ -1,0 +1,171 @@
+# Postorder Traversal
+
+Postorder traversal is defined as follows:
+
+> _Procedure: Postorder Traversal_. Let ${B}$ be a binary tree. To traverse
+> ${B}$ in postorder:
+>
+> 1. Traverse the left subtree postorder.
+> 2. Traverse the right subtree postorder.
+> 3. Visit the node.
+
+In pseudocode:
+
+```rust
+fn postorder_traverse(tree):
+	postorder_traverse(left_subtree);
+	postorder_traverse(right_subtree);
+	visit(node);
+```
+
+We illustrate with a binary tree of order ${3:}$
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a" },
+		{ child: "c", parent: "a" },
+	]}
+/>
+
+We start by calling `postorder_traverse()` with `n(a)` the root, as an
+argument. I.e., we call `postorder_traverse(tree: n(a))`. Calling this
+function, results in the recursive call
+`postorder_traverse(left_subtree: n(a)).` Because the left subtree of
+`n(a)` has as its root `n(a)` the call
+`postorder_traverse(left_subtree: n(a))` is actually the call
+`postorder_traverse(tree: n(b))`. That call then results in calling
+`postorder_traverse(left_subtree: n(b)).` But because `n(b)` has no left
+subtree, we go to the next call, `postorder_traverse(right_subtree: n(b))`.
+But there is no right subtree of `n(b)` so we call `visit(node: n(b)).`
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a", focus: "red", ant: 1 },
+		{ child: "c", parent: "a" },
+	]}
+/>
+
+This finishes the call `postorder_traverse(left_subtree: n(a))`, so we call
+`postorder_traverse(right_subtree: n(a))`. Because the right subtree of
+`n(a)` has the root `n(c)` the call is actually
+`postorder_traverse(tree: n(c))`. Thus, we call
+`postorder_traverse(left_subtree: n(c))` and
+`postorder_traverse(right_subtree: n(c))`, but because `n(c)` has neither
+left nor right subtrees, we call `visit(n(c)).`
+
+<Tree
+	data={[
+		{ child: "a", parent: "" },
+		{ child: "b", parent: "a", ant: 1 },
+		{ child: "c", parent: "a", focus: "red", ant: 2 },
+	]}
+/>
+
+This finishes the call `postorder_traverse(right_subtree: n(a))`. All
+that's left to do is call `visit(node: n(a))`.
+
+<Tree
+	data={[
+		{ child: "a", parent: "", focus: "red", ant: 3 },
+		{ child: "b", parent: "a", ant: 1 },
+		{ child: "c", parent: "a", ant: 2 },
+	]}
+/>
+
+Summarizing, the traversal sequence for a binary tree of order ${3}$ is:
+
+<figure>$$ (n_b, n_a, n_c) $$</figure>
+
+If the binary tree was left-skewed, the traversal sequence would be
+${(n_b, n_a).}$
+
+<Tree
+	data={[
+		{ child: "a", parent: "", ant: 2 },
+		{ child: "b", parent: "a", ant: 1 },
+		{ child: "c", parent: "a", display: "none" },
+	]}
+/>
+
+If the binary tree was right-skewed, the traversal sequence would be
+${(n_c, n_a).}$
+
+<Tree
+	data={[
+		{ child: "a", parent: "", ant: 2 },
+		{ child: "b", parent: "a", display: "none" },
+		{ child: "c", parent: "a", ant: 1 },
+	]}
+/>
+
+## Implementation
+
+The postorder traversal algorithm is embodied in the following function:
+
+```rust
+fn postorder(Node* root) -> void:
+	postorder((*root).left_child)
+	postorder((*root).right_child)
+	print((*root).data)
+```
+
+Notice that the algorithm looks similar to the other traversal methods, the
+only difference being: The `print()` call occurs only after the left- and
+right-subtrees of a given node have been traversed. Suppose we called
+`postorder()` on a tree called `cedar`, represented as follows:
+
+<Tree
+	data={[
+		{ child: "4", parent: "", ant: "root" },
+		{ child: "9", parent: "4", edgeName: "F1" },
+		{ child: "7", parent: "4", edgeName: "F2" },
+		{ child: "6", parent: "9", edgeName: "F3" },
+		{ child: "2", parent: "9", edgeName: "F4" },
+		{ child: "0", parent: "7", edgeName: "F5" },
+		{ child: "1", parent: "7", edgeName: "F6" },
+	]}
+	isDirected={true}
+/>
+
+We won't go over the call execution for postorder traversal in detail, as
+it is similar to the other traversals we've seen. The call trace is as
+follows:
+
+<HTree
+	data={[
+		{ child: "postorder(F0)", parent: "" },
+		{ child: "postorder(F1)", parent: "postorder(F0)" },
+		{ child: "postorder(F3)", parent: "postorder(F1)" },
+		{ child: "postorder(0)", parent: "postorder(F3)", call: true },
+		{ child: "postorder(0)", parent: "postorder(F3)", call: true },
+		{ child: "6", parent: "postorder(F3)" },
+		{ child: "postorder(F4)", parent: "postorder(F1)" },
+		{ child: "postorder(0)", parent: "postorder(F4)", call: true },
+		{ child: "postorder(0)", parent: "postorder(F4)", call: true },
+		{ child: "2", parent: "postorder(F4)" },
+		{ child: "9", parent: "postorder(F1)" },
+		{ child: "postorder(F2)", parent: "postorder(F0)" },
+		{ child: "postorder(F5)", parent: "postorder(F2)" },
+		{ child: "postorder(0)", parent: "postorder(F5)", call: true },
+		{ child: "postorder(0)", parent: "postorder(F5)", call: true },
+		{ child: "0", parent: "postorder(F5)" },
+		{ child: "postorder(F6)", parent: "postorder(F2)" },
+		{ child: "postorder(0)", parent: "postorder(F6)", call: true },
+		{ child: "postorder(0)", parent: "postorder(F6)", call: true },
+		{ child: "1", parent: "postorder(F6)" },
+		{ child: "9", parent: "postorder(F2)" },
+		{ child: "4", parent: "postorder(F0)" },
+	]}
+	width={500}
+	height={600}
+	margins={[20, 100, 20, 110]}
+	containerHeight={85}
+/>
+
+As we saw with preorder and inorder traversal, postorder traversal results
+in ${2N + 1}$ function calls, where ${N}$ is the binary tree's order
+&mdash; i.e., the number of its nodes. Along the same lines, the resulting
+call stack size for a given invokation of `postorder()` is ${S_c = H + 2,}$
+where ${H}$ is the tree's height.

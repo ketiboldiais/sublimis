@@ -1,0 +1,185 @@
+.nav {
+	position: relative;
+}
+.headBar {
+	display: flex;
+	justify-content: space-between;
+	position: fixed;
+	background-color: var(--background-color);
+	color: var(--text-color);
+	font-size: 0.8rem;
+	padding: 5px 1px;
+	width: 100%;
+	left: 0;
+	top: 0;
+	z-index: 10;
+}
+.title {
+	margin: 0;
+	font-size: 2rem;
+}
+.headBar a {
+	display: block;
+	padding: 0;
+}
+.nav button {
+	border: none;
+	color: var(--text-color);
+	font-family: inherit;
+	background-color: inherit;
+	border-bottom: solid 2px grey;
+	padding: 3px;
+	margin: 0 1%;
+	cursor: pointer;
+	border: var(--box-shadow-border);
+	border-radius: 0.4em;
+	font-size: 0.8rem;
+	transition: all 1ms linear;
+	cursor: pointer;
+	box-shadow: var(--box-shadow);
+}
+.nav .button:hover {
+	border: 1px solid rgba(0, 0, 0, 0.05);
+	box-shadow: var(--box-shadow-hover);
+	text-decoration: none;
+	transition: all 1ms linear;
+}
+button.pressed {
+	box-shadow: var(--box-shadow-pressed);
+}
+.nav button:active {
+	box-shadow: var(--box-shadow-active);
+	transform: translateY(2px);
+}
+.navContent {
+	position: fixed;
+	overflow-y: scroll;
+	overscroll-behavior: contain;
+	z-index: 9;
+	background-color: var(--nav-background-color);
+	border: var(--box-shadow-border);
+	border-radius: 10px;
+	box-shadow: var(--box-shadow);
+	width: 90%;
+	height: 90%;
+	margin: 5%;
+	margin-top: 50px;
+	padding: 1em 0.6em 10vh 0;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	transition: 0.5s ease;
+	opacity: 0;
+	visibility: hidden;
+}
+
+.nav .showNav {
+	visibility: visible;
+	opacity: 1;
+}
+
+.nav ul {
+	list-style: none;
+	padding-left: 15px;
+	padding-top: 0.5em;
+	margin-top: 0.2em;
+	margin-left: 0;
+}
+
+.nav li ul {
+	padding: 0;
+}
+
+.nav li {
+	padding: 0;
+}
+
+.nav a {
+	border-bottom: none;
+}
+
+.nav ul li::before {
+	float: right;
+}
+
+.nav {
+	counter-reset: L1;
+}
+
+.nav ul li::before {
+	color: var(--text-color);
+	font-weight: normal;
+	counter-increment: L1;
+	content: counter(L1);
+}
+.navContent > ul ul {
+	padding-left: 10px;
+}
+.navContent > ul > li > ul {
+	padding-left: 0;
+}
+.navContent > ul > li {
+	font-weight: bold;
+}
+.navContent > ul > li > ul > ul > li {
+	font-variant: small-caps;
+}
+.navContent li {
+	color: var(--text-color);
+	font-weight: normal;
+	font-variant: normal;
+}
+
+.themeToggleDiv {
+	display: flex;
+	margin: 2px 5px;
+	align-items: center;
+	justify-content: center;
+}
+
+.themeToggleDiv label {
+	position: relative;
+	display: block;
+	width: 45px;
+	height: 25px;
+	border-radius: 100px;
+	background-color: var(--background-color);
+	border: var(--box-shadow-border);
+	box-shadow: var(--box-shadow-pressed);
+	overflow: hidden;
+	cursor: pointer;
+}
+.themeToggleDiv label:before,
+.themeToggleDiv label:after {
+	display: block;
+	position: absolute;
+	content: "";
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	top: 2px;
+	left: 3px;
+	transition: 0.5s ease;
+}
+.themeToggleDiv label:before {
+	background-color: #ffa41b;
+}
+.themeToggleDiv label:after {
+	background-color: var(--background-color);
+	/* background-color: #c80000; */
+	left: 11px;
+	transform: scale(0.00001);
+}
+
+.themeToggleDiv input[type="checkbox"] {
+	display: none;
+}
+
+.themeToggleDiv input[type="checkbox"]:checked + label:before {
+	background-color: rgb(212, 184, 226);
+	transform: translateX(18px);
+}
+
+.themeToggleDiv input[type="checkbox"]:checked + label:after {
+	transform: translateX(2px) scale(1);
+}

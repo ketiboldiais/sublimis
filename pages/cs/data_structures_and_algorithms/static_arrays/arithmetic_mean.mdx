@@ -1,0 +1,28 @@
+<Metadata
+	title={"Arithmetic Mean"}
+	description={
+		"How to calculate the mean or average of all the elements in an array."
+	}
+	keywords={
+		"Arithmetic mean, average, static arrays, sequences, data structures and algorithms."
+	}
+/>
+
+# Arithmetic Mean
+
+A useful operator to have when working with arrays is returning the
+_arithmetic mean_. This is done with the `ArithmeticMean()` operator. The
+implementation is straightforward. We simply compute the sum of all the
+elements, and divide it by the number of elements.
+
+```rust
+average():
+	total = 0;
+	for (i = 0; i < length; i++):
+		total += array[i]
+	return total / length
+```
+
+As we can see, the time complexity is no different, save for the extra
+operation in the last line of dividing by the length. Accordingly, this
+approach has a time complexity of ${O(n)}$—linear time.

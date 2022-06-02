@@ -1,0 +1,13 @@
+# Tree Summation
+
+To sum all of the elements in a tree, we use the following:
+
+```rust
+TreeSum(Node* root) -> int :
+	int x, y;
+	if (root != NULL):
+		x = TreeSum((*root).left_child);
+		y = TreeSum((*root).right_child);
+		return x + y (*root).data
+	return 0;
+```

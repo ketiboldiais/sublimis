@@ -1,0 +1,842 @@
+# Foundations I: Java
+
+This volume provides notes on the basic principles of modern computer
+science.
+
+Computer science. What is it? To answer this question, we ask another: What
+does a computer do? Well, we can imagine a computer as a _black box_. A
+very special box indeed. We feed inputs, and the box returns outputs:
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653521530/cs/blackbox_jy7ey2.svg"
+	}
+	caption={"A simple blackbox"}
+	width={"50"}
+	imwidth={"584"}
+	imheight={"159"}
+/>
+
+Inside the black box, we find code and hardware. Various instances of these
+two components work together to take our inputs, process them, and output
+results. But use this black box, we must start the process. We bear the
+burden of feeding the box inputs. But what inputs do we give? This is the
+underlying question of _representation_.
+
+## Representation
+
+Consider the concept of numbers. How are those represented? As children
+(and as adults), we use our fingers. Five on one hand for the first five
+positive integers, and five on the other for nine through ten. With two
+hands (assuming no missing fingers), we can represent 10 digits.[^rep_note]
+
+[^rep_note]:
+    Some societies, like the ancient Mayans, used their toes for counting
+    as well, positing a possible explanation for their vigesimal system—a
+    base-20 representation scheme. For now, we'll stick to base-10. As an
+    aside, note that numbers do not have bases. Representations do. We
+    count this as a single sentence, whether we represent it as one, 1, 一,
+    एक, واحد, ., or 𒐁. Humans all count the same way; we just represent the
+    count differently.
+
+For more formal settings, however, we use the decimal system. In this
+system, we represent numbers in _base-10_, using Hindu-Arabic numerals to
+represent the numbers 0 through 9: ${\{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9\}.}$
+The descriptor base-10 is derived from the fact that with the above digits,
+we can represent numbers with powers of 10. The number 256, for example, is
+really just:
+
+$$
+	\begin{align*} (2 \times 10^2) + (5 \times 10^1) + (6 \times 10^0) &= 200 + 50 + 6 \\ &= 256 \end{align*}
+$$
+
+Our black box (the computer), however, needs a much simpler system to
+represent numbers, as a matter of efficieny. That simpler system is
+_binary_.
+
+In _binary_, the numbers are represented entirely by two numerals:
+$\{ 0, 1 \}$. 0s and 1s are represented in by computers as
+**bits**.[^bits_note] 0s and 1s are preferable because computers, at the
+end of the day, work by turning millions of switches off and on:
+electricity flowing (switch on, i.e., `0`) and electricity not flowing
+(switch off, i.e., `1`). We can imagine how this works with lighbulbs. With
+1 light bulb, we can count from 0 to 1:
+
+[^bits_note]:
+    A contraction of "**b**inary digits", coined by the computer scientists
+    Claude Shannon. In his master's thesis, Shannon argued Boolean logic
+    could be used to switch circuits, which in turn could be used for
+    arithmetic calculations. Although his work led directly to the binary
+    arithmetic necessary for modern computation, Shannon received
+    considerable pushback from the scientific community.
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653524439/cs/lightbulbs_lmgrnz.svg"
+	}
+	caption={"Two possible states"}
+	width={"30"}
+	imwidth={"220"}
+	imheight={"105"}
+/>
+
+Can we count higher than 0 and 1? Sure. We just need more light bulbs:
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653524536/cs/threeOffLights_ak7xpx.svg"
+	}
+	caption={"Three off lights"}
+	width={"35"}
+	imwidth={"323"}
+	imheight={"119"}
+/>
+
+With 3 light bulbs, there are 8 different arrangements of the light bulbs
+being on or off:
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653524604/cs/lightbulbpossibilites_balxiq.svg"
+	}
+	caption={"Light bulb possibilities"}
+	width={"30"}
+	imwidth={"197"}
+	imheight={"563"}
+/>
+
+The above consists of 8 _unique_ arrangements. Because they are unique
+arrangements, we can assign them to numbers:
+
+| Arrangement | Number |
+| ----------- | ------ |
+| 0 0 0       | 0      |
+| 0 0 1       | 1      |
+| 0 1 0       | 2      |
+| 0 1 1       | 3      |
+| 1 0 0       | 4      |
+| 1 0 1       | 5      |
+| 1 1 0       | 6      |
+| 1 1 1       | 7      |
+
+By assigning arrangements of 1s and 0s to represent numbers, we have
+constructed the **binary system**. The system works exactly like the
+decimal system, with one crucial difference: rather than having 10 unique
+digits to work with, we only have 2; this means that our numbers are
+written with powers of 2. 12, for example, is:
+
+$$
+	\begin{aligned} (1 \times 2^3) + (1 \times 2^2) + (0 \times 2^1) + (0 \times 2^0) &= 8 + 4 + 0 + 0 \\ &= 12 \end{aligned}
+$$
+
+The binary equivalent of 12 then is ${1100_{[2]}}$. The subscripted
+${_{[2]}}$ indicates the number we're using is represented in base-2
+(binary). We could represent 12 as ${12_{[10]},}$ but since there is no
+${2}$ in binary, we can simply write 12.
+
+In the light bulbs above, we might have imagined a physical switch to turn
+the light bulbs on and off. In computers, the same concept applies, but the
+switches are tiny devices called **transistors**, and there are millions of
+them in a modern computer.
+
+Thinking carefully about these lights, each bulb has a **state**—a
+"snapshot" of the present conditions of a given system. In a system with
+just one light bulb, the system only has two states: on or off. With two
+lighbulbs, we have ${2 \times 2 = 2^2 = 4}$ possible states. This same
+analysis applies to bits. However, instead of a board of light bulbs, the
+bits are aggregated in **main memory** (or more specifically, _Random
+Access Memory (RAM)_). Main memory is effectively a representation of a
+computer's state. If the computer's RAM can only hold 3 bits, the computer
+has ${2 \times 2 \times 2 = 2^3}$ possible states. With 4 bits, the
+computer has ${2^4 = 16}$ possible states. Most modern computers have 8GB
+of RAM at a minimum. That's ${2^{68,719,476,736}}$ possible states. A more
+expensive computer can have 16GB (${2^{137,438,953,472}}$ possible states),
+and a high-end computer can have 64GB (${2^{549,755,813,888}}$). Custom
+built computers can ship with 128GB (${2^{1,099,511,627,776}}$). These are
+unfathomably large numbers, yet they're surprisingly not enough. Pandemic
+predictions, fluid simulations, climate modelling, encryption key
+generation, natural language processing, economic forecasts—all of these
+problems require meeting numerous conditions for successful solutions. And
+the more conditions we must meet, the more states we demand of our
+computers.[^consumer_note]
+
+[^consumer_note]:
+    The average consumer really only needs 8 or 16GB of RAM. These larger
+    RAM capacities are primarily aimed at professionals and power users
+    —data scientists, video editors, gamers, software developers working on
+    large applications, etc. Of course, not too long ago, we would've said
+    4GB, and before that, 500MB. Ideal or not, there's a steady trend of
+    producing software under the assumption that because memory has
+    increased, space considerations weigh less. This in turn has led to
+    more memory-intensive programs. Time will tell whether the numbers in
+    this margin note are edited.
+
+To be clear, binary representation isn't some recent idea. The German
+mathematician Gottfried Wilhelm von Leibniz (the same Leibniz who
+independently discovered calculus and the esoteric monad) described binary
+notation as early as 1703. And even then, Leibniz suggested that the
+Chinese were aware of binary representation some 2,000 years earlier,
+citing to the _I Ching_. What is relatively recent, however, is using
+binary to represent things other than numbers.
+
+For example, letters. Since we can represent many numbers in binary, we can
+represent letters in binary by assigning unique sequences of numbers to
+letters.[^victorian_note]
+
+[^victorian_note]:
+    Using numbers to represent letters is not all that different from Morse
+    code, the archetype of the telegraph. The telegraph itself has an
+    interesting relationship to modern day computers. As presented in Tom
+    Standage's book The Victorian Internet, many internet-related
+    phenomenon we're familiar with—hacking, chat rooms, scammers, heated
+    debates, and information leaking—have analogues in the age of
+    telegraphs. Indeed, there were "online romances" by the mid-1800s. The
+    letter A, for example, is represented by the sequence 65. Every letter
+    in the English alphabet (as well as all the punctuation symbols we're
+    familiar with) are assigned unique numbers. The system of these
+    assignments is called ASCII ("American Standard Code for Information
+    Interchange").
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653524805/cs/asciiexample_yzp1e4.svg"
+	}
+	caption={"ASCII"}
+	width={"50"}
+	imwidth={"150"}
+	imheight={"99"}
+/>
+
+As an aside, there really is no rhyme to these assignments—a group of
+computer scientists simply sat down and said, "Let's use this number for
+this." There is, however, a reason. Character codes only work if computer
+manufacturers implement them. Without **standardization**—setting minimum
+requirements to be met by all users—it is much harder to share data across
+machines. A recurring theme in the history of computer science is setting
+standards. The internet, language libraries, character encodings, data
+representations, these are all examples of standards. And as we'll see
+throughout these materials, violated standards can wreak havoc. Internet
+Explorer, for example, is the bane of web development. Put bluntly, web
+developers hoping to design sophisticated websites that look the same on
+all browsers must jump through hoops to work with Internet Explorer. This
+is largely because Microsoft obtained a near monopoly on the browser market
+and decided to forgo web standards. As browsers like Google Chrome and
+Firefox obtained increased market share, web development grew increasily
+complex, reaching the Wild West landscape it is today.
+
+This doesn't mean, however, that standards should never be rejected. In
+ASCII, for example, the encodings are typically represented by 8 bits.
+Thus, when we send a Snapchat message "HI!", we are—roughly
+speaking—sending 24 bits of data. With 8 bits, we can represent 256
+different characters, since each bit can either be a 0 or a 1
+($2^8 = 256$). Bits, however, are not a very useful unit of measurement,
+since they can very rapidly grow into large numbers (the characters H, i,
+and ! took up 24 bits alone—imagine how many bits a paragraph or a
+Wikipedia article takes). Because of this problem, we measure bits in
+**bytes**. A byte is simply 8 bits.[^nibble_note]
+
+[^nibble_note]: Half a byte—a sequence of 4 bits—is called a **nybble**.
+
+But a byte is extremely limiting—it only represents 256 characters, and
+human language consists of many, many more: accents over English
+characters, characters from different languages, mathematical and logical
+symbols, scientific symbols, emojis, etc. Because of ASCII's limitations,
+another standard, **Unicode** was created to assign numbers to characters,
+now used by most modern computers. This standard shift was only made
+possible because software and hardware producers decided to move on from
+ASCII.
+
+Having said all this, how does the computer know that we're referring to
+the letter A rather than the number 65? This is actually a remarkably
+complex question. For now, we will say that it simply remains "mindful" of
+what program we're executing (i.e., it has some notion of memory, and it
+can "remember" what it was doing before, and what it is doing currently).
+Using its capacity for memory, the computer will interpret 65 as a number
+only if certain conditions are true, and interpret 65 as a letter only if
+other conditions are true.
+
+## Representing Colors
+
+Not only are numbers assigned to characters, they can also be assigned to
+represent colors. There are a variety of different systems of assigning
+numbers to colors. In the **RGB color model**, colors are represented in
+the form `rgb(value, value, value)`, where each channel (indicated by
+"value") represents the color's red, green, and blue values respectively.
+This system works because every color can be made by mixing the colors red,
+green, and blue. The values in each of the channels essentially indicates
+the amount of each color to be "mixed." The values themselves are most
+commonly expressed as numbers. In an _8-bit per channel_ system, for
+example, each of the channels can take a value ranging from 0 (no value) to
+255 (highest value). For example, the color `rgb(0, 0, 0)` represents the
+color white (the absence of color), while `rgb(255, 255, 255)` represents
+black (all of the channels at maximum value).
+
+Once we tell the computer what color we want, the computer takes that
+value, and displays the color on a _pixel_ of the screen. Each pixel uses
+approximately 24 bits (8 bits per channel, since it takes 8 bits to
+represent numbers up to 255), or 3 bytes. This should give us a hunch for
+why high resolution images are generally large files on a computer.
+
+## Representing Images
+
+With the ability to represent colors, we can represent images. Images on a
+computer are simply an arrangement of pixels, where each pixel is assigned
+a color. In fact, we can confirm this is the case by zooming in very
+closely on an image. Find a complex image and try it. Notice that when we
+zoom in as much as we can, we notice small squares filled with colors.
+
+## Representing Motion
+
+On a computer, videos are really just images changing rapidly, which, by
+implication, are just colors changing rapidly. By changing a pixel's color
+once per unit of time, when all of the changes (to hundreds of thousands of
+pixels) are viewed all at once, we, as the viewer, see changes in shapes
+and swaths of colors, which in turn is perceived as motion. A good way to
+think about this is to recall the flipbook animations we played with as
+children. On each page, there are slight changes in the drawing. Because of
+these slight changes, flipping through the pages creates the illusion of
+motion.
+
+## Representing Sound
+
+In terms of physics, what we perceive as sound is actually an _acoustic
+wave_ propagating through space, reaching our eardrums and perceived by the
+brain. The greater a sound wave's _amplitude_ is, the louder the perceived
+sound is, and the larger its _frequency_, the higher its pitch. Moreover,
+the longer a sound wave's _duration_ is, the longer we perceive the sound.
+These scalars (amplitude, frequency, and duration), are present in all
+"notes," and are readily measurable. Unsurprisingly, sound can be
+represented by assigning numbers to these values.
+
+This discussion on representation reveals why there are so many different
+file extensions. Anyone who has worked with computers can easily note that
+there are hordes of different file extensions: .zip, .pdf, .jpeg, .mp4,
+.txt, .doc, .ppt, .html, .rtf, .py, .js, .java, ad nauseam. These file
+extensions indicate a _file format_—a set of rules humans have agreed on as
+to how information should be represented and organized.
+
+Now that we have a general idea of how to represent information (the inputs
+and outputs problem), we return our attention to the black box. What
+exactly happens inside this mysterious box? The black box processes all of
+the inputs we pass through to it with _algorithms_. An **algorithm** is a
+sequence of steps to solving a problem.
+
+Algorithms are not unique to computers. Assembling furniture from Ikea;
+calculating a tip; completing an assignment; composing an email; changing a
+flat tire—these are all problems and tasks that have an algorithm: steps to
+an outcome. The difference for algorithms in computers: There are no
+ambiguities. A recipe might say, "add a pinch of salt," but a computer has
+no way of understanding what a "pinch" is, unless we define it. This is
+because all of the information we provide a computer, and all of the
+information a computer gives back, is entirely 0s and 1s. That is all a
+computer knows—numbers.
+
+For example, consider the way we look up the word "rapscallion" in a
+dictionary. There are several ways to find the word:
+
+1. Examine each page, one at a time, until we reach "rapscallion." This
+   method would obviously work, but it would take us a great deal of time.
+
+2. Examine every other page, going back a page if we go too far, until we
+   reach "rapscallion." This would also work, but it would still take time,
+   albeit less than the first approach.
+
+3. Split the dictionary in half; look at the first page of the two halves;
+   toss the half further from the word; split the remaining half again;
+   look at the first page of the two halves; toss the half further from the
+   word; split; over and over until we reach "rapscallion." This is, in
+   fact, how most of us would search for the word.
+
+The three ways above are all _algorithms_. More importantly, we can write
+them in a language the computer can understand. Here, we use _pseudocode_,
+a language that is code-like, but not a programming language:
+
+```rust
+Pick up dictionary.
+Open to middle.
+Look at page.
+if (word is on page) {
+	STOP;
+}
+else if (word is earlier in dictionary) {
+	Open to middle of left half.
+	Go back to line 3.
+}
+else if (word is later in dictionary) {
+	Open to middle of right half.
+	Go back to line 3.
+}
+else {
+	STOP.
+}
+```
+
+Algorithms, however, are just one aspect of computer science. As a whole,
+computer science is an amalgamation of subjects related to computation.
+Programming—the study and practice of creating, implementing, and improving
+algorithms under software engineering principles—is just one such subject.
+
+Computer science is also focused on **theory**. Here, we ask questions
+about _computational complexity_, computability, and cryptography. How much
+time does it actually take for an algorithm to complete? Is a problem
+solvable via programming? How do we encrypt? These are all questions
+relating to _computer science theory_.
+
+Another field is _programming languages_. In this field, we ask questions
+about the semantics of a language; formal verification; compilation. And
+there are even more fields—graphics, data representation, artificial
+intelligence, systems.
+
+## From English to Bits
+
+Ok, so we know that computers only understand 0s and 1s. However, for us to
+get the computer to actually do what we want it to do, we need to feed it
+instructions that look like natural language, i.e., English. So now there's
+a piece missing in the puzzle: How do we go from the pseudocode
+instructions to the 0s and 1s? To answer this question, we briefly discuss
+the history of computers.
+
+In the beginning, the very first programs looked something like this:
+
+```rust
+0011001 00001101 00110001
+1100011 00010011 10101111
+0000110 00111001 00110010
+0001100 00101101 01101010
+```
+
+But instead of actually typing the 1s and 0s, as displayed above,
+programmers had to punch holes into cards and feed those cards to the
+computer. As we can imagine, this was a tedious process for various
+computations (but still faster than doing the computations by quill and
+ink). With complex enough computations, however, the discipline and
+attention to detail needed for punching these holes was untenable.
+
+Eventually, we got around to using keyboards, but even then, we weren't,
+and still aren't, very good at reading and writing large sequences of 1s
+and 0s. Because of this diffculty, some very smart folks at companies like
+Intel and AMD came up with ways to define unique sequences of 0s and 1s as
+words, letters, and characters. All of these words and letters, put
+together, form a **machine language**.
+
+Machine languages, however, are just as diffcult to write. They're filled
+with cryptic symbols and numbers like `JMP` and `LDY`. Programs in machine
+language look like a smorgasbord of acronyms, numbers, and special
+characters:
+
+```rust
+6      5     5     5     5      6 bits
+[  op  |  rs |  rt |  rd |shamt| funct]  R-type
+[  op  |  rs |  rt | address/immediate]  I-type
+[  op  |        target address        ]  J-type
+```
+
+Worse, machine languages vary by machine (or more precisely, by _machine
+architecture_). This made it enormously costly, in labor and time, to write
+**cross-platform programs**—programs that could run on different platforms
+like computers. Because of these difficulties, humans began making
+**high-level languages** such as Java—the language used in this volume.
+With high-level languages, programs are much more readable. For example, a
+computer program in some high-level language might look like:
+
+```rust
+if (todayIsMyBirthday == true) {
+	display("Happy birthday!")
+} else {
+	display("Sorry, not your birthday yet.")
+}
+```
+
+But how do these words and symbols in a high-level language—called **source
+code**—transform, or translate, into 1s and 0s? Through a process called
+**compilation**. Essentially, the instructions we wrote in the hypothetical
+high-level language above are sent to another program, called the
+**compiler**, and the compiler translates the instructions into something
+called **object code**. Roughly, object code consists of the low-level
+instructions the machine understands. This object code is contained in
+something called an **object file**.
+
+Now, our high-level language program might rely on source code from another
+file. That other file will also yield an object file. All these separate
+object files are then **linked** by a **linker**. The linker then returns a
+single file, called an **executable file**—containing all of the program's
+object code. This executable contains all the instructions the computer
+understands. When we double click a Word file on our computer, or open
+Safari, we are _running_ or _executing_ an executable file.
+
+## What is a computer program?
+
+A **program** is a set of instructions to be carried out by a computer.
+When the computer carries out the instructions, the program is said to have
+_executed_. Like humans, computers can only carry out those instructions if
+it actually understands the them. However, unlike humans, computers can
+only understand 0s and 1s. To ensure our instructions are translated to 0s
+and 1s, we write our instructions in a **programming language**—a
+systematic set of rules used to describe computations in a format that we,
+as humans, can edit.
+
+Java is just one example of a programming language. It's a general-purpose,
+object-oriented, platform-independent, and concurrent programming language.
+That's a lot to unpack, so let's go over each term slowly.
+
+A general-purpose language is a language that's not constrained to one
+particular problem domain. By problem domain, we mean "kinds of problems."
+
+There are many kinds of problems—finance problems, medical problems, legal
+problems, math problems, physics problems, language problems, etc. Now,
+some languages are better than others for certain problems. For legal
+problems, there is "legalese." For physics, there is mathematics and
+statistics. For mathematics, there is symbolic manipulation and rigorous
+proof. And for any given problem, we want to use the appropriate language.
+When the President of the United States hopes to defend his new economic
+reform plan, he doesn't go up to the podium and explain economic theory or
+cite mathematical lemmas. He references history, appeals to emotion and
+logic, and attacks the other side—in essence, rhetoric.
+
+The same goes for programming languages. Some languages were designed to
+tackle specific problems. Matlab is a powerful programming language for
+physics-related problems, but we wouldn't use it to build websites. C++ is
+a great programming language for making operating systems, but it would be
+overkill for small things like auto-responding to emails. Java is a
+general-purpose language. We can use it for virtually any problem (granted,
+there are problems where another language might be a better fit).
+
+Next, Java is object-oriented. This is a **computer paradigm.** A computer
+paradigm is an overloaded term (i.e., lots of people argue over what it
+means), but we can think of it as a philosophy of doing things, or a
+philosophy of solving problems. In object-oriented programming ("OOP"), the
+philosophy is roughly this: Real-world entities can be thought of as
+objects, and all objects have a type. We will elaborate further on this
+idea in later sections.
+
+Java is platform-independent. When the language was first released, its
+motto was "Write once, run anywhere." At the time Java was released, most
+programs were machine-dependent. I.e., if we wrote a program on a Dell,
+there was no guarantee it would run on a Mac. Java was designed to avoid
+this problem: We can write programs on Macs, Dells, Acers, or Toshibas, and
+the same program could be run on a different computer. We will see how Java
+gets around this problem shortly.
+
+Finally, Java is a concurrent language. Historically, programming languages
+were **single-threaded**: Programs written in the programming language
+could only do one thing at a time. With concurrency, we now have
+**multi-threaded** languages; languages that allow their programs to
+perform more than one thing at a time. One way to think about
+single-threaded and multi-threaded: John gets off of work, arrives home,
+and realizes he needs to do laundry and cook dinner. Under single-threaded
+languages, John would have to either do the laundry first or cook dinner;
+he can't do both. Under multi-threaded languages, John could do his laundry
+while he cooks dinner. This isn't the best analogy, but we will elaborate
+further on the idea of concurrency in later sections.
+
+The instructions we write in a program are broadly referred to as **source
+code**. When we're ready to execute, we _compile_ the program, whereupon
+the _Java compiler_ translates our source code into **byte code**—code that
+the computer understands.
+
+There are numerous programming languages, many of which are designed with a
+particular "philosophy" or "principle." _Procedural languages_ are those
+whose programs are a series of commands. These languages include Pascal and
+C. _Functional programming languages_ are premised on the idea that
+programs are composed of functions, mapping inputs to outputs. Examples of
+such languages include Lisp, ML, and Haskell. Then there are
+_object-oriented languages_—programs are composed of interacting "objects."
+This family includes Smalltalk, C++, and Java. Finally, there are _logic
+programming languages_, where programs consist of sentences in logical
+form, expressing facts and rules about problems. This group includes
+languages like Prolog and Datalog.
+
+Most languages result from programmers attempting to solve a problem where
+either (a) there was no language available, or (b) an existing language was
+insufficient. For example, C is used primarily for low-level operating
+systems and devices, and C++ was the result of C not providing a means for
+object-oriented design. JavaScript was borne out of frustrations with
+static web pages.
+
+Java, the language explored in these next sections, was originally intended
+for use by embedded systems—devices like digital timers, MP3 players,
+recording devices, etc. Over time, however, it began to be used for web
+applications. If we use a very old web browser and visit very old webpages,
+we might see this historical fact in the form of Java applets (if you don't
+know what those are, that's a good thing; Java applets have been outdated
+for many, many years). Today, JavaScript has taken that mantle, but Java is
+now the language of choice for the most popular mobile operating system,
+Android OS. Moreover, along with Python, Java is a common language for
+introductory computer scince courses.
+
+For next few sections, we will place all of our Java source code inside the
+space indicated:
+
+```java
+import java.lang.*
+
+class Intro {
+public static void main(String[] args) {
+
+/*
+* For now, assume all of the
+* example code
+* is placed here
+*/
+
+}
+}
+```
+
+The above is the skeleton of a Java program. In `class Intro`, the word
+`Intro` is the name of a _class_ (we will discuss this in more detail
+later), and it is also the name of the file containing our source
+code—`Intro.java`. A class name does not always have to be the same name as
+our file, but for now, pretend that such is the rule.
+
+Inside the class `Intro`, we have a _method_ called `main()`. We will
+revisit methods more rigorously in later sections, but for now, think of it
+as containing a sequence of instructions. We call these instructions
+**statements**. All of our source code for the next few sections is placed
+inside the curly braces following `main()`. We call this method the **main
+driver**—it's the method that directs the entirety of our program.
+
+For those who have never seen programming at all, explaining the rest of
+the symbols will likely not mean much. Nevertheless, we present some
+exposition now if only for a glimpse of what lies ahead.
+
+The keywords `String args[]` indicate that `main()` takes a list of
+_strings_ as input. Essentially, we can pass command-line arguments to the
+program as input. We will see an example of doing so shortly. The keyword
+`void` indicates that `main()` does not return anything.
+
+The keyword `public` is prepended to `main()` because `main()` must be seen
+by the _Java Virtual Machine_. More generally, the word `public` instructs
+Java that other programs or blocks of code can access the class. In Java,
+all programs are defined as public classes because some other application,
+such as the JVM, must be able to start the programs up.
+
+The line `import java.lang.*` is called an **import statement**. This
+instructs Java to look into the contents of `java.lang`, a **library
+package**, if we use words inside our program we haven't defined ourselves.
+What's a library package? It's a collection of tools written by other
+programmers that perform specific operations. For example, instead of
+writing a program that counts all the words in a file ourselves, we could
+instead import a program someone else has written to do just that. Import
+statements are what allow us to avoid reinventing the wheel.
+
+The word `static` is included because the general rule for methods is that
+we must create an instance of the class to call the method. However, we can
+get around this general rule by prepending the keyword `static`. This
+allows JVM to call `main()` without an instance of `Intro`.
+
+We will explore what the rest of the words mean as we continue. For now,
+let's run a simple program:
+
+```java
+import java.lang.*
+
+class Intro {
+public static void main(String[] args) {
+	System.out.println("Hello, world!");
+}
+}
+```
+
+```bash
+javac Intro.java
+java Intro
+
+Hello, world!
+```
+
+In the demo above, the source code is indicated by the first code example,
+color coded. The dark block below the code example is the _console_. The
+console can be viewed and used through various programs. For example, on a
+Mac, it's called the _Terminal_. Lines indicated with a `$` sign
+communicate a command. Thus, to run our simple `Intro.java` program, we
+must first type `javac Intro.java`, hit enter, then type `java Intro` and
+hit enter. The resulting line, with no `$`, is the program _output_.
+
+For those with some experience in programming, the line
+`System.out.println()` indicates that there is a class called `System`,
+with an object called `out`, that has a method called `println()`.
+
+Here is another example:
+
+```java
+class Demo {
+public static void main(String[] args) {
+	int x = 5;
+	int y = 6;
+	System.out.println(x + y);
+	int z = x + y + 1;
+	System.out.println(z);
+}
+}
+```
+
+```bash
+11
+12
+```
+
+This is a simple arithmetic computation in Java. As we've seen, computers
+can do simple math. Another example:
+
+```java
+class Demo {
+public static void main(String[] args) {
+	int temperature =
+	if (temperature < 0) {
+		System.out.println("Ok this is cold")
+	} else {
+		System.out.println("Meh, typical winter")
+	}
+}
+}
+```
+
+```bash
+Line 3: error: extraneous input 'if' expecting {'boolean', 'byte', 'char', 'double', 'float', 'int', 'long', 'new', 'record', 'short', 'super', 'switch', 'this', 'void', DECIMAL_LITERAL, HEX_LITERAL, OCT_LITERAL, BINARY_LITERAL, FLOAT_LITERAL, HEX_FLOAT_LITERAL, BOOL_LITERAL, CHAR_LITERAL, STRING_LITERAL, TEXT_BLOCK_LITERAL, 'null', '(', '{', '<', '!', '~', '++', '--', '+', '-', '@', IDENTIFIER}
+if (temperature < 0) {
+^
+Line 3: error: missing ';' at '{'
+if (temperature < 0) {
+					^
+Line 5: error: extraneous input 'else' expecting {'abstract', 'assert', 'boolean', 'break', 'byte', 'char', 'class', 'continue', 'do', 'double', 'final', 'float', 'for', 'if', 'import', 'int', 'interface', 'long', 'native', 'new', 'private', 'protected', 'public', 'record', 'return', 'short', 'static', 'strictfp', 'super', 'switch', 'synchronized', 'this', 'throw', 'transient', 'try', 'void', 'volatile', 'yield', 'while', DECIMAL_LITERAL, HEX_LITERAL, OCT_LITERAL, BINARY_LITERAL, FLOAT_LITERAL, HEX_FLOAT_LITERAL, BOOL_LITERAL, CHAR_LITERAL, STRING_LITERAL, TEXT_BLOCK_LITERAL, 'null', '(', '{', '}', ';', '<', '!', '~', '++', '--', '+', '-', '@', IDENTIFIER}
+} else {
+^
+3 errors
+```
+
+The code above was supposed to compute a simple conditional. But, the
+output is a large error message. This is a typical error message in Java.
+In this case, the error message is telling us we neglected to assign a
+value to the variable `temperature`. If we actually assign a value to
+`temperature`:
+
+```java
+int temperature = 10
+if (temperature < 0) {
+System.out.println("Ok this is cold")
+} else {
+System.out.println("Meh, typical winter")
+}
+```
+
+```bash
+Meh, typical winter
+```
+
+Now the code works. Computers are good at making simple decisions. Here is
+another example:
+
+```java
+long i = 0;
+while (i < 1000000L) {
+i++;
+}
+System.out.println("Finished");
+```
+
+```bash
+Finished
+```
+
+The code above incremented the value `0` by 1 a million times before it
+outputs the string `"Finished"`. Executing this code, it takes less than a
+second to output the string. Compare that to how long it would take a
+human. If you held then dropped a tennis ball, a typical modern computer
+could easily have executed over a billion instructions before the ball even
+hit the floor. Computers can perform repetitive tasks very very quickly.
+
+Computers can also communicate:
+
+```java
+System.out.println("Hello, world!");
+```
+
+```bash
+Hello, world!
+```
+
+Putting it all together, computers are good at four things:
+
+1. Basic arithmetic
+2. Simple decision making
+3. Repeating tasks over and over again, very fast
+4. Communicating
+
+These are all things we generally aren't very good at. We might be good at
+the fourth point, but really, when it comes to communicating _efficiently_
+and _clearly_, most of us fall short.
+
+These four points evidence an implicit value of studying computer
+science—it teaches us more about what separates humans from everything
+else. The conjecture: If a computer can do $x$, where $x$ is some activity,
+then $x$ is not a uniquely human activity.
+
+### Writing Programs Well
+
+Programming involves writing statements in a language. Because these
+statements are written, they inevitably are read, whether by others or our
+future selves. And where there are statements to be read, there are
+distinctions between _well-written programs_ and _poorly-written programs_.
+
+Generally, a program's writing quality depends on a few factors:
+
+1. **Correctness**. Does the program work as intended?
+
+2. **Clarity**. Is the program clearly written? I.e., can an unfamiliar
+   reader read and understand the program?
+
+3. **Conciseness**. Is the program concise? I.e., does it accomplish its
+   intent with the minimum amount of statements necessary, without
+   sacrificing clarity?
+
+4. **Style**. Does the program follow the prevailing conventions for
+   writing statements? I.e., capitalization, punctuation, proper use of
+   words, etc.
+
+Considering these factors, computer science is perhaps the ultimate
+embodiment of mathematics, science, engineering, linguistics, and
+philosophy. We approach problems like mathematicians, design our solutions
+like engineers, test hypotheses and evaluate results like scientists, all
+while bearing in mind that what we write is meant to be conveyed and
+understood by both humans and non-humans, a highly linguistic issue. Later
+in these materials, when we discuss how programming languages are made and
+how our programs affect others, we quickly discover that philosophy plays
+an enormous role as well.
+
+## Object-Orientation
+
+As its name suggests, object-oriented programming (OOP) is all about
+objects. We won't go into the details of what OOP is, but we'll provide a
+brief description.
+
+OOP was borne out of the need to implement large, complex solutions in a
+simple ways. The OOP approach is to model real-world entities and ideas in
+the most natural way possible. This is accomplished by adopting the
+following axiom: Everything in the world has (1) _properties_ and (2)
+_behavior_. For example, a person is a real-world entity. The person has
+properties like a name, an age, likes, dislikes, they might be single or
+with a partner, they might have a job, a political subscription, etc. These
+are all properties. But the person also has behavior: They can eat, drink,
+for some, talk, walk, run, and many more.
+
+Now, there are different _kinds_ of persons. We might think of them as
+_subsets_ of persons. A person might be a student, in which case they have
+additional properties: The school they attend, their student ID number, the
+courses they're registered for. They also have additional behavior:
+Studying, going to the gym, socializing, running to lecture, etc. Another
+person might be a voter: They have the property of where they are
+registered to vote and the act of voting.
+
+Where OOP shines is through the notion of _classes_. We can think of a
+class as a mathematical set, containing two things: properties and
+behavior. And as we know from mathematics, a set can contain subsets. If a
+set ${student}$ is a subset of ${person,}$ and we're told that someone
+named Jane is a ${student,}$ we can deduce that Jane is a ${person.}$ This
+idea of sets and subsets is a cornerstone of object-oriented programming.
+If Jane is a student, then she has all the properties and behaviors of a
+person, as well as all the properties and behaviors of a student. She eats,
+sleeps, goes to the gym, and runs to lecture. If this all seems a bit
+mysterious and blurry, don't worry. We'll get a clearer picture once we get
+to discussing classes and inheritance. For now, just know that OOP is just
+a style of programming, and Java follows it strictly.

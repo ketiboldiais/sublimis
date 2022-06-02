@@ -1,0 +1,243 @@
+# Machine Language
+
+With our work so far, we now have three key chips: Registers (which can be
+wired together to form RAM or ROM), an ALU (for performing hardware level
+arithmetic and logical operations), and a PC (to keep track of which
+instruction to perform). The next step is to find a way to pass data
+between all three of these chips. But before we begin thinking about
+implementing the connections and designing how the information should flow,
+we should set a goal. That is, answering the following question: How does
+the user control the machine?
+
+Answering this question requires us to forget about all of the low-level
+hardware details, focusing instead on what the end-product looks like. Why
+this sudden jump? Because we must organize our work. The fact is, a
+full-fledged computer is complex in its implementation details. Without a
+clear goal in mind, we risk producing poor designs or losing traction in
+certain areas. The remedy is a common software design technique called the
+**top-down approach** &mdash; we establish the final product's behavior and
+appearance to the user, then break it down into its component parts. In
+doing so, we gain an organized workflow defined by clear paths to
+particular endpoints.
+
+Fortunately, the renowned mathematician and computer scientist John von
+Neumann gives us the final product's high-level design:
+
+![von Neumann Architecture](https://res.cloudinary.com/sublimis/image/upload/v1653173125/cs/von_neumann_architecture_qvsajy.svg)
+
+Notice how the diagram above looks very much like the chips we've designed
+so far. This is no coincidence. Servers, laptops, desktops, tablets, mobile
+phones, smart watches &mdash; they're all chips called **computer
+systems**. There are various ways to design a computer system, just as
+there are various ways to design latches and flip-flops. The design above
+is called the **von Neumann architecture**. Other designs include the
+_Harvard architecture_, the _dataflow architecture_, the _transport
+triggered architecture_, and several others. Of these various
+architectures, the von Neumann architecture is undoubtedly the most common,
+so we will structure our final product accordingly. The computer system
+works as such:
+
+1. Input &mdash; data &mdash; is fed to the computer.
+
+2. The data is fed into memory. Inside the memory, there is some program
+   that instructs the CPU what to do with the data.
+
+3. The memory sends these instructions to the CPU.
+
+4. The CPU executes the instructions, and the resulting outputs are
+   returned as the computer system's output.
+
+Our first focus is on the second step &mdash; the program containing the
+CPU's instructions. All of these instructions, as a whole, comprise the
+computer system's **machine language**. Machine language instructions can
+be classified into three categories:
+
+1. **Data instructions.** These instructions tell the CPU to perform a
+   particular operation. We can also think of these instructions as
+   _operation instructions_. For example, an instruction to add, an
+   instruction to subtract, negate, and so on.
+
+2. **Control instructions.** These instructions tell the CPU which
+   instruction to perform next. For example, if the CPU is currently at the
+   fourth instruction in the program, the fifth instruction might say, Go
+   back to instruction three.
+
+3. **Address instructions.** These instructions can be thought of as
+   _operand instructions_ &mdash; they tell the CPU what to operate on. As
+   we know, data is stored in memory. Data instructions tell the CPU where
+   in memory it can find the necessary data it needs to perform its
+   operation instructions. For example, suppose the instruction sent to the
+   CPU is to execute `x = 9 + 8`. This instruction consists of two
+   operation instructions, `+` and `=`. However, it also consists of
+   addresses: The register storing `9`, the register storing `8`, and the
+   register referred to as `x`. To actually perform the operation, the CPU
+   must know where the `x`, `9`, and `8` are in memory.
+
+So what do these machine language instructions look like? They're just ones
+and zeroes. For example, a machine language might have the instruction
+`1000101` mean "perform addition." Or it might have the instruction
+`1010111` mean "go to step four." It's entirely up to the computer system's
+architect.
+
+Once we have machine language instructions implemented and a way to feed
+these instructions to memory, the computer system is essentially complete.
+For example, to compute `a = 1 + 9`, the user could just pass the following
+inputs in order:
+
+```rust
+0010 0110 0001
+0010 0111 1001
+1001 0110 0111
+0010 1111 1001
+```
+
+To say that this isn't user-friendly is an understatement. Think about all
+of the complicated we have computers do in the modern era. If the only way
+we could command a computer is to manually feed ones and zeros, daily
+computer tasks we take for granted like returning the current time would be
+difficult to write, let alone more complicated operations like simulating
+pressure systems.
+
+Because machine languages are unwieldy, computer scientists, specifically
+**programming language designers**, create programming languages that allow
+us to instead write something like:
+
+```rust
+let a = 1 + 9
+```
+
+This data input is an instruction in some **high-level language**. That
+language might be C, Java, Python, JavaScript, etc. How these instructions
+are understood by the computer is a complicated process that we'll explore
+in great detail later. The idea, however, is that the instructions are fed
+to a program called the **compiler**, which transforms these instructions
+into the computer's machine language. To transform the high-level language
+instruction into a machine language instruction, the compiler designer must
+define the high-level language instructions in terms of machine language
+instructions.
+
+All the possible instructions in a given computer system's machine language
+is called the computer system's **instruction set**. The computer system's
+instruction set is its most valuble interface. Without an instruction set,
+there's no way to connect hardware to software.
+
+How is this connection made? By and large, by tying the machine language
+instructions directly to hardware. For example, a machine language
+instruction for addition might translate to having the ALU output from its
+`x+y` pin. These instructions are called _simple instructions_ &mdash;
+instructions directly tied to hardware. However, the machine language can
+also have _compound instructions_ &mdash; an instruction to execute a
+sequence of simple or other compound instructions. In doing so, we can
+provide unique instructions for operations not directly implemented by the
+hardware. Because of the ability to write both simple and composite
+instructions, the computer architect must answer several questions when
+designing the computer system's machine language:
+
+1. What operations should be encapsulated into a single instruction? For
+   example, do we want a unique instruction for division? Computing
+   remainders? Squaring?
+
+2. What control mechanisms do we want encapsulated into a single
+   instruction? Maybe we want specific instructions for `if`, `else-if`,
+   and `else`. Or specific instructions for a while loop.
+
+3. What data types, if any, do we want the instruction set to support?
+
+At the machine language level, a _data type_ is an instruction that
+indicates how many bits comprise a single a unit of data. The machine
+language might have no data types, in which cases every piece of data is
+defined restricted to the computer's _word size_ &mdash; a register's
+width. If the word size is ${16}$ bits, the user can only work with ${16}$
+bits at any given moment. Alternatively, we might have many data types
+&mdash; ${8}$ bits, ${16}$ bits, ${32}$ bits, and so on. This allows us to
+directly support floating point arithmetic directly within hardware.
+
+Answering these questions requires analyzing tradeoffs. The more
+instructions we have, the bigger the instruction set. And the bigger the
+instruction set, the easier it is to create and support complex operations
+on the computer system. But that also means we get a more expensive bill,
+in terms of time and money. The larger an instruction set is over a smaller
+silicon area, the more time it takes to execute instructions. We can reduce
+that time by getting more silicon, but that requires more funding and
+resigning ourselves to a larger device.
+
+## Assembly Language
+
+To help the compiler designers (and later, as we'll see, operating system
+designers) construct these definitions, the computer architect provides
+_mnemonics_ for the machine language instructions. For example, suppose the
+computer system has a machine language instruction:
+
+```rust
+01000100110010
+```
+
+The make these machine language instructions easier to work with, the
+computer architect creates a system of mnemonics to organize and easily
+identify instructions in the machine language:
+
+| 0100001 | 0011 | 0010 |
+| ------- | ---- | ---- |
+| `ADD`   | `R2` | `R1` |
+
+In this case, the mnemonic `ADD` corresponds to the machine language
+instruction `010001`, and means the operation instruction "perform
+addition". The mnemonic `R2` corresponds to the instruction `0011`, which
+means "register 2". And the mnemonic `R1` corresponds to the instruction
+`0010`, which means "register 1." Putting it all together, when the
+compiler or operating system designer writes:
+
+```rust
+ADD R2 R1
+```
+
+They're writing the instruction, "Add the contents of registers 1 and 2,"
+which translates to `01000100110010`. These mnemonics &mdash; `ADD`, `R1`,
+`R2`, and many others &mdash; are called **assembly language
+instructions**, and they constitute the computer system's **assembly
+language**. Since assembly language instructions are just mnemonics for
+machine language instructions, the computer system's _instruction set_ can
+also be defined as the set of all possible assembly language instructions
+we can write in the computer system.
+
+But wait. How does the computer understand `ADD`, `R2`, and `R1`? Isn't
+this the same problem we saw with compilers? While it may seem like it's
+turtles all the way down, the last turtle is the **assembler** &mdash; a
+program that converts the assembly language instructions to machine
+language instructions. This program is written in machine language; at
+least at first. Later, when we examine an assembler's implementation, we'll
+see a technique called _bootstrapping_, which makes modern assembler design
+easier than it sounds.
+
+In designing an assembly language, we want to keep it extremely simple
+while also providing some form of readability (that is, after all, why
+assembly language is provided in the first place). Accordingly, some
+operations are so common that assembly language designers provide more
+concise syntax. For example, instead of having the user write `R2`, a
+better design would be to have the user write:
+
+```rust
+ADD Mem[249] Mem[250]
+```
+
+Recall that main memory is just a giant stack of registers, each with
+unique addresses. Thus, the symbol `Mem` indicates that we're writing a
+data instruction (i.e., access a particular register), and the numbers
+`249` and `250` refer to the index of that register in main memory. Thus,
+wherever we write `Mem[250]`, we're referring to the register with the
+index `250`.
+
+We can go a step further and provide an even better design: Instead of
+having the user write `Mem[250]`, we can design the assembly language to
+understand:
+
+```rust
+ADD x y
+```
+
+Here, `x` and `y` are called a **symbols** or **names** the user provides
+to refer to particular registers. When the user sends these instructions to
+the assembler, the assembler sees these symbols, and automatically
+translates the `x` and `y` into some unoccupied memory location. For
+example, if the registers `Mem[135]` and `Mem[136]` are free, `x` and `y`
+are translated into `Mem[135]` and `Mem[136]`.

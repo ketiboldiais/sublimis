@@ -1,0 +1,163 @@
+# Invariants
+
+Great proofs have several characteristics: (1) correct; (2) comlete; (3)
+clear; (4) brief—crisp and concise, not an overload of details; (5)
+well-organized—modular, in that its pieces or discretely separated, i.e.,
+using lemmas; (6) well-ordered—flowing from one premise to the next; (7)
+elegant—very clever. Great proofs are very much like well-written source
+code.
+
+Consider a puzzle. We want to move the tiles below such that they are in
+alphabetical order. We can only move up, down, left, or right, and we
+cannot take the tiles of the grid:
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653270674/math/alphabet_tile_dyz9um.svg"
+	}
+	caption={"A tile of alphabets"}
+	width={18}
+/>
+
+Here is the proposition:
+
+> There is no sequence of legal moves to invert ${g}$ and ${h}$ and return
+> all other letters to their original position.
+
+To prove this proposition, we must use an **invariant**. To show that a
+system can never reach a particular special state, we can do so by showing
+that there is some property called the invariant that holds at the initial
+state, is preserved at every legal move, and does not exist at the special
+state. In other words, if we have a property that exists at the initial
+state, and holds at every successive state, then the only state we can ever
+reach is a state that has that property, the invariant. Thus, if the
+special state has that property, we can never reach it.
+
+To figure out the invariant, we have to think about what happens at each
+move in the system. Let's first consider the row-move. We can move a tile
+to the left or right, and everything else stays the same. In other words,
+the relative order, or the **natural order** of the tiles, is left
+unchanged. For example, if we moved ${g}$ in the diagram above, the
+relative order remains the same: ${a-b-c,}$ ${d-e-f,}$ and ${h-g.}$ We
+should state this as a lemma:
+
+> A row move does not change the order of the letters.
+
+And we should prove this lemma:
+
+> **Proof**. In a row move, we move an item from some cell ${i}$ to an
+> adjacent cell ${i+1}$ or ${i-1.}$ Because nothing else moves, the order
+> of the items is preserved.
+
+Second, let's consider the column-move. We can move a tile up or down. This
+changes the natural order. For example, if we moved ${f}$ in the diagram
+above, the relative order has changed—${f}$ used to be after ${d}$ and
+${e,}$ but now it is after ${h}$ and ${g.}$
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653273019/math/colum_move_jsgjqh.svg"
+	}
+	width={45}
+	imwidth={301}
+	imheight={261}
+	caption={"Column move"}
+/>
+
+From these two possible column moves, we can determine that a column move
+changes either (a) the previous two tiles, or (b) the next two tiles. This
+means the relative orders of two pairs changes. Let's state this as a
+lemma:
+
+> A column move changes the relative order of precisely two pairs of items.
+
+We should prove this:
+
+> **Proof**. In a column move, we move an item in cell ${i}$ to a blank
+> spot in cell ${i - 3}$ or ${i + 3.}$ And when an item moves three
+> positions, it changes relative order with two other items, either cell
+> ${i - 1,}$ ${i - 2,}$ ${i + 1,}$ or ${i + 2.}$
+
+With these two lemmas, we've exhausted the moves. What can we infer from
+these lemmas? In a row move, nothing changes. In a column move, two pairs
+change. So what is the invariant? What is something that will not change?
+Suppose we have an even number of tiles out order to begin with. Now we
+know our only option is to use column moves, since row moves do not change
+any relative order. But with column moves, we can only change two tiles at
+most. And if we can only change two tiles at most, then we can we will
+always have an even number of tiles out of order. More formally:
+
+> _Definition_. A pair of letters, ${L_1}$ and ${L_2,}$ form an
+> _inversion_, or an _inverted pair_, if ${L_1}$ precedes ${L_2}$ in the
+> alphabet and ${L_1}$ appears after ${L_2}$ in the grid.
+
+The above definition defines an **inverted pair**. For example, consider
+the following configuration:
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1653273147/math/inverted_pair_qqu1x6.svg"
+	}
+	caption={"Inverted pair"}
+	width={25}
+/>
+
+Here, there are three inversions; ${(d, f), (e, f), (e, g).}$ Like the case
+where we have an even number of out-of-order tiles, if we have an odd
+number, no matter how many column moves we perform, there will always be an
+odd number of out-or-order tiles. Knowing this, if we start with one tile
+out-of-order, then we will always have an odd number of tiles out of order,
+because 1 is an odd number. We can state another lemma:
+
+> During a move, the number of inversions can only increase by 2, decrease
+> by 2 or stay the same.
+
+The proof for this lemma is a simple case-exhaustion.
+
+> **Proof (by exhaustion)**. In a row move, there are no changes in the
+> number of inversions, following the first lemma. In a column move, two
+> pairs change order, by the second lemma. There are three cases of how the
+> pairs were arranged before the column move: (a) Both pairs were in order.
+> (b) Both pairs were inverted. (c) One pair was inverted, the other was
+> not.
+
+In case (a), the number of inverted pairs goes up by 2. In case (b), the
+number of inverted pairs goes down by 2. In case (c), the number of
+inverted pairs stays the same.
+
+Following the second lemma, we have a corollary:
+
+> During a move, the parity of the number of inverted pairs stays the same.
+
+The proof for this corollary is founded from an axiom in number theory:
+Adding 2 or subtracting 2 from an even or odd number does not change its
+parity. The corollary we just drew is what cracks this problem. In the
+original problem, we start with 1 tile out-of-order. Thus, at the beginning
+of the problem, the parity of the number of inversions is 1. Following
+corollary 2, the parity of the number of inversions will always be odd:
+
+> In every state reachable from the start state, the parity of the number
+> inversions is odd.
+
+The proof of this lemma is by induction. In fact, invariant proofs are
+always by induction. The inductive hypothesis here is ${P(n):}$ "After any
+sequence of ${n}$ moves from the start state, the parity of the number of
+inversions is odd."
+
+> **Proof**. In the base case ${P(0),}$ there is exactly one inversion.
+> Thus, the base case is true. Now we consider the inductive case. Here, we
+> want to show that for any ${n \geq 0,}$ ${P(n) \implies P(n + 1).}$
+> Consider any sequence of ${n+1}$ moves: ${m_1, m_2, \ldots, m_{n+1}.}$
+>
+> Because of ${P(n),}$ we know that after ${n}$ moves, the parity is still
+> odd. By the first corollary, during any move, the parity of the number of
+> inversions does not change during ${m_{n+1}.}$ Therefore, the parity of
+> the number of inversions after all ${n+1}$ moves is odd. Hence,
+> ${P(n+1)}$ is true. Ergo, ${P(n) \implies P(n+1)}$ is true.
+
+Now we can prove the theorem:
+
+> **Proof**. The parity of the number inversions in the desired state is
+> ${0}$—even. By the fourth lemma, the desired state cannot be reached
+> using legal moves from the start state, because the start state's parity
+> is odd.
