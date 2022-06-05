@@ -1,5 +1,7 @@
+import { Sequence } from "@illus/Sequence";
+
 <Metadata
-	title={"Is It Sorted?"}
+	title={"Sort Check"}
 	description={"How to check if an array is sorted."}
 	keywords={
 		"sorted, static arrays, arrays, sequences, data structures and algorithms"
@@ -15,12 +17,7 @@ sorted. We will call this operator `isSorted()`.
 
 Suppose we had the following array:
 
-<Sequence
-	data={[4, 8, 13, 26, 20, 25, 28, 33, "", ""]}
-	width={380}
-	height={380}
-	containerWidth={65}
-/>
+<Sequence data={[4, 8, 13, 26, 20, 25, 28, 33, "", ""]} />
 
 We can check if the array is sorted by comparing the element at position
 ${i}$ to the element at position ${i + 1.}$ Given that array above is

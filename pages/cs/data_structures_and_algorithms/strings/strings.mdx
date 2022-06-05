@@ -1,20 +1,27 @@
+import { Sequence } from "@illus/Sequence";
+
+<Metadata
+	title={"String Algorithms"}
+	description={"Notes on various string-related algorithms"}
+	keywords={"strings, algorithms, static arrays, string manipulation"}
+/>
+
 # Algorithms on Strings
 
-+ [Algorithms on Strings](#algorithms-on-strings)
-	+ [Characters](#characters)
-	+ [Strings](#strings)
-	+ [Finding the Length of a String](#finding-the-length-of-a-string)
-	+ [Letter-casing Algorithms](#letter-casing-algorithms)
-	+ [Case Toggling](#case-toggling)
-	+ [Phone Counting](#phone-counting)
-	+ [Vowel Counter](#vowel-counter)
-	+ [Consonant Counter.](#consonant-counter)
-	+ [Word Counter](#word-counter)
-	+ [String Validations](#string-validations)
-	+ [String Reversal](#string-reversal)
-	+ [String Equality](#string-equality)
-	+ [Lexical Comparison](#lexical-comparison)
-	+ [Palindrome Verification](#palindrome-verification)
+1. [Characters](#characters)
+2. [Strings](#strings)
+3. [Finding the Length of a String](#finding-the-length-of-a-string)
+4. [Letter-casing Algorithms](#letter-casing-algorithms)
+5. [Case Toggling](#case-toggling)
+6. [Phone Counting](#phone-counting)
+7. [Vowel Counter](#vowel-counter)
+8. [Consonant Counter.](#consonant-counter)
+9. [Word Counter](#word-counter)
+10. [String Validations](#string-validations)
+11. [String Reversal](#string-reversal)
+12. [String Equality](#string-equality)
+13. [Lexical Comparison](#lexical-comparison)
+14. [Palindrome Verification](#palindrome-verification)
 
 In this section, we present several useful algorithms for strings. As we
 know, a **character set** is the set of character codes a language can
@@ -155,9 +162,9 @@ because there are multiple encoding systems:
    mapping concepts to code points; this process is distinct from
    converting the code points to bits. For example, the smiley face emoji
    (a concept) is mapped to a specific code point:
-	$$
-		😊 ~~~\to~~ \texttt{U+1F60A}
-	$$
+   $$
+   	😊 ~~~\to~~ \texttt{U+1F60A}
+   $$
 
 The number `U+1F60A` is a code point. The letter `U` stands for _Unicode_
 and the number `1F60A` is a hexadecimal number. To convert this code point

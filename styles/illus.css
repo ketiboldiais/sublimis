@@ -1,6 +1,7 @@
 /* Illus */
 	.illus {
-		margin: 0 auto;
+		display: flex;
+		justify-content: center;
 	}
 /* Binary Tree Styles */
 	.binaryTreeEdgeGroup line {
@@ -13,16 +14,171 @@
 	.binaryTreeTextGroup text {
 		fill: var(--binary-tree-text-color);
 	}
-
+/* Tree Styles */
+	.treeEdges line {
+		stroke: var(--tree-edge-color);
+	}
+	.treeNodes circle {
+		fill: var(--tree-node-fill-color);
+		stroke: var(--tree-edge-color);
+	}
+	.treeNodes text {
+		fill: var(--tree-text-color);
+	}
 /* Sequence Styles */
-.Sequence { width: 50%; }
-.sequenceElement rect {
-	fill: var(--sequenceElementFill);
-	stroke: var(--sequenceElementStroke);
-}
-.sequenceElementText text {
-	fill: var(--sequenceElementTextColor);
-}
-.sequenceIndexText text {
-	fill: var(--sequenceElementIndexColor);
-};
+	.sequenceElement rect {
+		fill: var(--sequenceElementFill);
+		stroke: var(--sequenceElementStroke);
+	}
+	.sequenceElementText text {
+		fill: var(--sequenceElementTextColor);
+	}
+	.sequenceAnnotationText text {
+		fill: var(--sequenceElementTextColor);
+	}
+	.sequenceIndexText text {
+		fill: var(--sequenceElementIndexColor);
+	};
+/* Matrix Styles */
+	.matrix { }
+	.matrixElement rect {
+		fill: var(--matrixElementFill);
+		stroke: var(--matrixElementStroke);
+	}
+	.matrixElement text {
+		fill: var(--matrixElementTextColor);
+	}
+	.matrixIndices text {
+		fill: var(--matrixIndexColor);
+	}
+	.matrix .mark rect { fill: var(--matrixFocusFillColor); }
+	.matrix .mark text { fill: var(--matrixFocusTextColor); }
+
+/* Linked List Styles */
+	.linkedListDataField rect {
+		fill: var(--linkedListDataFieldFill);
+		stroke: var(--text-color);
+	}
+	.linkedListDataField text { fill: var(--linkedListDataFieldTextColor); }
+	.linkedListNextField rect {
+		fill: var(--linkedListNextFieldFill);
+		stroke: var(--text-color);
+	}
+	.linkedListLink line {stroke: var(--linkedListLinkColor)}
+	#linkedListArrow {fill: var(--linkedListLinkColor)}
+	.linkedListLink circle {fill: var(--linkedListLinkColor)}
+	.linkedListIndex text {fill: var(--linkedListIndexColor);}
+	.linkedListAnnotation text {fill: var(--linkedListLinkColor);}
+
+/* Circular List Styles */
+	.circularListDataField rect {
+		fill: var(--circularListDataFieldFill);
+		stroke: var(--text-color);
+	}
+	.circularList text {
+		fill: var(--circularListDataFieldTextColor);
+	}
+	.circularListIndex text {
+		fill: var(--circularListIndexColor);
+	}
+	.circularListNextField rect {
+		fill: var(--circularListNextFieldFill);
+		stroke: var(--text-color);
+	}
+	.circularListLink line,
+	.circularListLink path {
+		stroke: var(--circularListLinkColor);
+	}
+	.circularListLink circle {
+		fill: var(--circularListLinkColor);
+	}
+	#circularListArrow {
+		fill: var(--circularListLinkColor);
+	}
+
+/* Doubly Linked List Styles */
+	.doublyLinkedListDataField rect {
+		fill: var(--doublyLinkedListDataFieldFill);
+		stroke: var(--text-color);
+	}
+	.doublyLinkedListPrevField rect {
+		fill: var(--doublyLinkedListPrevFieldFill);
+		stroke: var(--text-color);
+	}
+	.doublyLinkedListNextField rect {
+		fill: var(--doublyLinkedListNextFieldFill);
+		stroke: var(--text-color);
+	}
+	.doublyLinkedList text {
+		fill: var(--doublyLinkedListTextColor);
+	}
+	.doublyLinkedListLink line{
+		stroke: var(--doublyLinkedListLinkColor);
+	}
+	.doublyLinkedListLink circle {
+		fill: var(--doublyLinkedListLinkColor);
+	}
+	.doublyLinkedListLink path {
+		stroke: var(--doublyLinkedListLinkColor);
+	}
+	#doublyLinkedListNextArrow {
+		fill: var(--doublyLinkedListLinkColor);
+	}
+	#doublyLinkedListPrevArrow {
+		fill: var(--doublyLinkedListLinkColor);
+	}
+/* Stack Styles */
+	.stackFrame rect {
+		fill: var(--stackFrameFill);
+		stroke: var(--text-color);
+	}
+	.stackFrame text {
+		fill: var(--stackFrameText);
+	}
+/* Queuer Styles */
+	.queuer rect {
+		fill: var(--queuerFill);
+		stroke: var(--text-color);
+	}
+	.queuer text {
+		fill: var(--queuerTextColor);
+		font-size: 1.2rem;
+	}
+	.queuerIndex text,
+	.queuer.red .queuerIndex text {
+		fill: var(--queuerIndexTextColor);
+	}
+	.queuer.red text {
+		fill: var(--red);
+	}
+	.queueAnnotation text {
+		fill: var(--queuerTextColor);
+		font-size: 1.3rem;
+	}
+	.queuerIndex rect {
+		fill: var(--queuerIndexFill);
+	}
+	.queuer.red rect {
+		stroke: var(--queuerFocusRedStroke);
+	}
+	.queuer.red .queuerIndex rect {
+		fill: var(--queuerFocusRedFill);
+	}
+/* Circular Queues */
+	.circularQueuer path {
+		fill: var(--circularQueuerFill);
+		stroke: var(--circularQueuerStroke);
+	}
+	.circularQueuer text {
+		fill: var(--circularQueuerTextColor);
+	}
+	.circularQueuerIndex text {
+		fill: var(--circularQueuerIndexColor);
+	}
+/* ParseTree */
+	.parseTreeEdges path {
+		stroke: var(--parseTreeEdgeColor);
+	}
+	.parseTreeNodes text {
+		fill: var(--parseTreeTextColor);
+	}

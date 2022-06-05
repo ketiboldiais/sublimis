@@ -63,12 +63,9 @@ move. Thus, ${S(1) = 0.}$ Now we make the inductive step: Assume
 ${P(1) \land P(2) \land \ldots \land P(n)}$ is true to prove ${P(n+1).}$
 
 Now, given ${n+1}$ blocks, we can split the stack in a stack of ${k}$
-blocks or a stack of ${(n + 1)-k}$ blocks, where ${1 \leq k \leq n}$:
+blocks or a stack of ${(n + 1)-k}$ blocks, where ${1 \leq k \leq n.}$
 
-<FlowChart
-	data={` a[label="𝑛 + 𝟣"]; b[label="𝑘"]; c[label="(𝑛 - 𝟣)𝑘"]; a--b; a--c; `}
-	type="graph"
-/>
+
 
 The resulting score is ${k(n+1-k).}$ If we split the block of ${k}$ blocks,
 then we have ${P(k)}$ points.Thus, the resulting score from spliting ${k}$

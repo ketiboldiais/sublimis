@@ -1,4 +1,7 @@
-<metadata
+import { Sequence } from "@illus/Sequence";
+import { HTree } from "@illus/HTree";
+
+<Metadata
 	title={"Binary Search"}
 	description={"Notes on binary search."}
 	keywords={"Binary search, static arrays, logarithmic time."}
@@ -12,9 +15,6 @@ separate section. For now, suppose we have the following sorted array:
 
 <Sequence
 	data={[4, 8, 10, 15, 18, 21, 24, 27, 29, 33, 34, 37, 39, 41, 43]}
-	width={500}
-	height={500}
-	containerWidth={70}
 />
 
 Suppose our key is ${k = 18.}$ We see that 18 is at index ${i = 4.}$ With
@@ -198,8 +198,6 @@ can be found in 3 comparisons. Visualizing the tree:
 	]}
 	height={700}
 	width={650}
-	containerHeight={100}
-	containerWidth={100}
 />
 
 Splitting further, the key can be found in 4 comparisions, then 5, then 6,

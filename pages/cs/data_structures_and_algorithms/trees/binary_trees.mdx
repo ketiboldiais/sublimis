@@ -1,3 +1,9 @@
+import { BinaryTree } from "@illus/BinaryTree";
+import { Tree } from "@illus/Tree";
+import { CircularQueue } from "@illus/CircularQueue";
+import { Queue } from "@illus/Queue";
+import { Sequence } from "@illus/Sequence";
+
 # Binary Trees
 
 Binary trees are a core data structure behind much of the software products
@@ -60,7 +66,7 @@ following binary tree, with an accompanying empty array:
 	]}
 />
 
-<Sequence data={[" ", " ", " ", " ", " ", " ", " "]} />
+<Sequence data={[" ", " ", " ", " ", " ", " ", " "]} scale={50} />
 
 The challenge: How do we store each node in this binary tree in the array
 such that the relationships between the nodes are preserved? For example,
@@ -71,17 +77,17 @@ Here's an idea: Use the array's indices. Let's start by storing the
 elements from the top generation to the bottom generation, left to right.
 At ${L = 1,}$ we have a single node, `A`. So we store in the array:
 
-<Sequence data={["A", " ", " ", " ", " ", " ", " "]} />
+<Sequence data={["A", " ", " ", " ", " ", " ", " "]} scale={50} />
 
 At ${L = 2,}$ we have two nodes, `B` and `C`, so we store, from left to
 right, `B` then `C`:
 
-<Sequence data={["A", "B", "C", " ", " ", " ", " "]} />
+<Sequence data={["A", "B", "C", " ", " ", " ", " "]} scale={50} />
 
 Then, we go on to ${L = 3,}$ and see that there are ${4}$ nodes &mdash;
 `D`, `E`, `F`, and `G`. Again we store the nodes from left to right:
 
-<Sequence data={["A", "B", "C", "D", "E", "F", "G"]} />
+<Sequence data={["A", "B", "C", "D", "E", "F", "G"]} scale={50} />
 
 Let's construct a table to see if we can find a pattern. Suppose ${i}$ is
 an index in the array, ${i_L}$ is the index of the left child, and ${i_R}$
@@ -279,7 +285,7 @@ using a _queue_.
 Queue queue = newQueue();
 ```
 
-<Queue data={["", "", "", "", ""]} />
+<Queue data={["", "", "", "", ""]} scale={60} />
 
 With the queue, we use the following procedure:
 
@@ -334,10 +340,9 @@ With these steps performed, we now have the first node in our tree:
 		{ child: "4", parent: "9", display: "none" },
 		{ child: "2", parent: "9", display: "none" },
 	]}
-	containerHeight={10}
 />
 
-<Queue data={["F0", "", "", "", ""]} />
+<Queue data={["F0", "", "", "", ""]} scale={60} />
 
 We then dequeue the address `F0`, and have a pointer `p` point to the
 address `F0`.
@@ -361,7 +366,6 @@ address `F0`.
 		{ child: "4", parent: "9", display: "none" },
 		{ child: "2", parent: "9", display: "none" },
 	]}
-	containerHeight={10}
 />
 
 <Queue
@@ -373,6 +377,7 @@ address `F0`.
 		{ val: "" },
 		{ val: "" },
 	]}
+	scale={60}
 />
 
 With `p` pointed to `F0`, we ask: "Does the node `p` have a left-child?"
@@ -389,17 +394,6 @@ pointee's `left_child` pointer point to the new node:
 	(*p).left_child = t;
 ```
 
-<Queue
-	data={[
-		{ val: "F0", focus: "red" },
-		{ val: "F1", ant: "t" },
-		{ val: "" },
-		{ val: "" },
-		{ val: "" },
-		{ val: "" },
-	]}
-/>
-
 <Tree
 	data={[
 		{ child: "5", parent: "", ant: "F0 p" },
@@ -412,11 +406,7 @@ pointee's `left_child` pointer point to the new node:
 		{ child: "4", parent: "9", display: "none" },
 		{ child: "2", parent: "9", display: "none" },
 	]}
-	containerHeight={14}
 />
-
-Suppose the address of the new node is `F1`. We enqueue this address to our
-queue:
 
 <Queue
 	data={[
@@ -427,7 +417,11 @@ queue:
 		{ val: "" },
 		{ val: "" },
 	]}
+	scale={60}
 />
+
+Suppose the address of the new node is `F1`. We enqueue this address to our
+queue:
 
 <Tree
 	data={[
@@ -441,7 +435,18 @@ queue:
 		{ child: "4", parent: "9", display: "none" },
 		{ child: "2", parent: "9", display: "none" },
 	]}
-	containerHeight={14}
+/>
+
+<Queue
+	data={[
+		{ val: "F0", focus: "red" },
+		{ val: "F1", ant: "t" },
+		{ val: "" },
+		{ val: "" },
+		{ val: "" },
+		{ val: "" },
+	]}
+	scale={60}
 />
 
 With the left-child linked, we then ask the second question: "Does the node
@@ -463,17 +468,6 @@ pointer point to the new node:
 Let's say the address of the new node is `F2`. We enqueue this address to
 our queue:
 
-<Queue
-	data={[
-		{ val: "F0", focus: "red", ant: "p" },
-		{ val: "F1" },
-		{ val: "F2", ant: "t" },
-		{ val: "" },
-		{ val: "" },
-		{ val: "" },
-	]}
-/>
-
 <Tree
 	data={[
 		{ child: "5", parent: "", ant: "F0 p" },
@@ -486,7 +480,18 @@ our queue:
 		{ child: "4", parent: "9", display: "none" },
 		{ child: "2", parent: "9", display: "none" },
 	]}
-	containerHeight={14}
+/>
+
+<Queue
+	data={[
+		{ val: "F0", focus: "red", ant: "p" },
+		{ val: "F1" },
+		{ val: "F2", ant: "t" },
+		{ val: "" },
+		{ val: "" },
+		{ val: "" },
+	]}
+	scale={60}
 />
 
 We now have the first generation taken care of. So we go to the next
@@ -553,6 +558,7 @@ Now we have:
 		{ val: "" },
 		{ val: "" },
 	]}
+	scale={50}
 />
 
 <Tree
@@ -567,7 +573,6 @@ Now we have:
 		{ child: "4", parent: "9", display: "none" },
 		{ child: "2", parent: "9", display: "none" },
 	]}
-	containerHeight={24}
 />
 
 This takes care of the left node in the second generation, so now we
@@ -622,6 +627,7 @@ queue.enqueue(t);
 		{ val: "F4", ant: "t" },
 		{ val: "" },
 	]}
+	scale={50}
 />
 <Tree
 	data={[
@@ -635,7 +641,6 @@ queue.enqueue(t);
 		{ child: "4", parent: "9", display: "none" },
 		{ child: "2", parent: "9", display: "none" },
 	]}
-	containerHeight={24}
 />
 
 We then ask, does `p` have a right-child? No, it does not. So we go to the
@@ -686,6 +691,7 @@ We `dequeue` our `queue`, and assign the returned address to `p`.
 		{ val: "F4", ant: "t" },
 		{ val: "" },
 	]}
+	scale={50}
 />
 
 <Tree
@@ -738,6 +744,7 @@ node using `t`, queue `t`, and assign `t` to the `left_child` pointer of
 		{ val: "F4" },
 		{ val: "F5", ant: "t" },
 	]}
+	scale={50}
 />
 
 <Tree
@@ -793,6 +800,7 @@ of `p`:
 		{ val: "F5" },
 		{ val: "F6", ant: "t" },
 	]}
+	scale={50}
 />
 
 <Tree
@@ -1141,6 +1149,7 @@ This is a circular queue with a circumference of ${10:}$
 <CircularQueue
 	data={["", "", "", "", "", "", "", "", "", ""]}
 	name="address-circular-queue"
+	scale={50}
 />
 
 We use this queue to keep track of the values of `p` and `t`. The auxiliary
@@ -1202,6 +1211,7 @@ circular queue, `pointerQueue`:
 <CircularQueue
 	data={["0x1", "", "", "", "", "", "", "", "", ""]}
 	name="address-circular-queue"
+	scale={50}
 />
 
 All of this code establishes the tree's `root`. Once the root's
@@ -1313,6 +1323,7 @@ Then we enqueue this address to the `pointerQueue`:
 <CircularQueue
 	data={["0x1", "0x2", "", "", "", "", "", "", "", ""]}
 	name="address-circular-queue"
+	scale={50}
 />
 
 Next, we prompt the user to enter the right-child of `p` (still currently
@@ -1346,6 +1357,7 @@ We again enqueue the current address `t` points to into `pointerQueue`:
 <CircularQueue
 	data={["0x1", "0x2", "0x3", "", "", "", "", "", "", ""]}
 	name="address-circular-queue"
+	scale={50}
 />
 
 Once the left- and right-children of the current `p` are taken care of, we
@@ -1360,6 +1372,7 @@ Dequeuing `pointerQueue`, `p` now becomes the new front queuer:
 <CircularQueue
 	data={["", "0x2", "0x3", "", "", "", "", "", "", ""]}
 	name="address-circular-queue"
+	scale={50}
 />
 
 This process continues until the queue is completely empty.

@@ -1,3 +1,6 @@
+import { Tree } from "@illus/Tree";
+import { Sequence } from "@illus/Sequence";
+
 # Traversal Generation
 
 In this section, we examine different ways of generating trees. Since we've
@@ -12,7 +15,7 @@ sequence, we do not have enough data to generate a tree. For example,
 suppose we're told that the following is a preorder traversal sequence of
 the tree's node values:
 
-<Sequence data={["A", "B", "C"]} />
+<Sequence data={["A", "B", "C"]} scale={30}/>
 
 Without further information, we cannot construct a tree because the
 traversal sequence above could have come from five possible trees:
@@ -96,7 +99,7 @@ right-subtree. Thus, we have:
 		{ child: "7,6,9,3", parent: "4", noCircle: true },
 		{ child: "5,8,2,1", parent: "4", noCircle: true },
 	]}
-	containerHeight={23}
+	height={80}
 />
 
 The rest of the algorithm follows this basic step. We continue splitting
@@ -117,7 +120,7 @@ right-subtree. Thus, we have:
 		{ child: "6,9,3", parent: "7", noCircle: true, display: "none" },
 		{ child: "6,9,3", parent: "7", noCircle: true },
 	]}
-	containerHeight={23}
+	height={80}
 />
 
 The algorithm continues. We go to the next element, and see that it's `9`.
@@ -133,10 +136,7 @@ We go to the inorder sequence, look for `9`, and divide accordingly:
 		{ child: "6", parent: "9" },
 		{ child: "3", parent: "9" },
 	]}
-	containerHeight={27}
-	containerWidth={70}
 	edgeLength={100}
-	width={350}
 />
 
 We then move to the next element in the preorder sequence, `6`. Here, we
@@ -157,10 +157,7 @@ its left, and `1` to its right:
 		{ child: "5,8", parent: "2", noCircle: true },
 		{ child: "1", parent: "2", noCircle: true },
 	]}
-	containerHeight={27}
-	containerWidth={70}
 	edgeLength={100}
-	width={350}
 />
 
 At this point, the algorithm should be clear. Executing the rest of the
@@ -180,8 +177,5 @@ algorithm, we get:
 		{ child: "8", parent: "5" },
 		{ child: "1", parent: "2" },
 	]}
-	containerHeight={50}
-	containerWidth={70}
 	edgeLength={100}
-	width={250}
 />

@@ -1,3 +1,5 @@
+import {Sequence} from "@illus/Sequence";
+
 <Metadata
 	title={"Number Theory"}
 	description={"Notes on number theory"}
@@ -8,17 +10,16 @@
 
 # Basic Number Theory
 
-- [Number Theory](#number-theory)
-  - [The Integers](#the-integers)
-  - [Basic Axioms](#basic-axioms)
-  - [Divisibility](#divisibility)
-  - [Quotients & Remainders](#quotients--remainders)
-  - [Modular Arithmetic](#modular-arithmetic)
-  - [Proving Our Motivating Problem](#proving-our-motivating-problem)
-  - [Greatest Common Divisor](#greatest-common-divisor)
-  - [Euclid's Algorithm](#euclids-algorithm)
-  - [Application: Encryption](#application-encryption)
-  - [Encryption Scheme: Turing Code 1](#encryption-scheme-turing-code-1)
+1. [The Integers](#the-integers)
+2. [Basic Axioms](#basic-axioms)
+3. [Divisibility](#divisibility)
+4. [Quotients & Remainders](#quotients--remainders)
+5. [Modular Arithmetic](#modular-arithmetic)
+6. [Proving Our Motivating Problem](#proving-our-motivating-problem)
+7. [Greatest Common Divisor](#greatest-common-divisor)
+8. [Euclid's Algorithm](#euclids-algorithm)
+9. [Application: Encryption](#application-encryption)
+10. [Encryption Scheme: Turing Code 1](#encryption-scheme-turing-code-1)
 
 _Number theory_ is the study of the integers. Despite being one of the
 oldest fields in mathematics, there is still a great deal to explore. Many
@@ -650,46 +651,6 @@ result is generalized through **Euclid's algorithm.**
 Euclid's Algorithm is fairly quick way to find the greatest common
 denominator (GCD) of two integers. We can state the algorithm in pseudocode
 (assume $a$ and $b$ are positive integers).
-
-Here's an iterative version of the algorithm:
-
-<FlowChart data={`
-	a[label="a > b?",width=0.8];
-	a2[label="no"];
-	a1[label="yes"];
-	b[label="r := rem(a,b)",width=1.7];
-	c[label="a := b"];
-	d[label="b := r"];
-	e[label="return a",width=1];
-
-    a->a1;
-    a1->b;
-    b->c;
-    c->d;
-    d->a->a2->e;
-
-`} width={300} height={300} nodeShape="box"/>
-
-And here is a recursive approach:
-
-<FlowChart
-	data={`
-	x[label="call gcd(a,b)",width=1.6];
-	a[label="r := rem(a,b)",width=1.6];
-	b[label="r == 0?",width=1];
-	b1[label="yes"];
-	b2[label="no"];
-	c[label="return b",width=1];
-	d[label="return gcd(a=b,b=r)",width=2.4];
-
-    x->a->b;
-    b->b1;
-    b->b2;
-    	b2->d[label="  recurse"];
-    	d->x;
-    b1->c;
-
-`} width={260} height={260} nodeShape="box" />
 
 A good way to build some intuition for how this algorithm works is to do
 some tracing. Let's call it for $a = 255$ and $b = 483:$

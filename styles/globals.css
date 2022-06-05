@@ -1,8 +1,12 @@
+
 /* Dark mode theme */
 	@import url("./dark.css");
 
 /* Light mode theme */
 	@import url("./light.css");
+
+/* Illus styles */
+	@import url("./illus.css");
 
 /* Font Imports */
 	@font-face {
@@ -34,6 +38,7 @@
 	:root {
 		--serif: "Noto Serif", "serif_main", serif;
 		--sans_serif: "sans_serif_main";
+		--mono: "Fira Code";
 	}
 
 /* Global HTML */
@@ -63,3 +68,4 @@
 .theme-dark .figureImage {
   filter: invert(100%);
 }
+

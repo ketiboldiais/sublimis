@@ -1,3 +1,5 @@
+import { Sequence } from "@illus/Sequence";
+
 # The ALU
 
 The **Arithmetic Logic Unit (ALU)** can be thought of as the computer's
@@ -17,26 +19,26 @@ are unique depending on how the boxes are arranged. With just ${1}$ box,
 how many possible packages are there? From combinatorics, we have two
 possible packages:
 
-<Sequence data={[1, 0]} />
+<Sequence data={[1, 0]} scale={25}/>
 
 Now suppose we had two boxes. If we had two boxes, then we have four
 possible packages:
 
-<Sequence data={[0, 0]} />
-<Sequence data={[0, 1]} />
-<Sequence data={[1, 0]} />
-<Sequence data={[1, 1]} />
+<Sequence data={[0, 0]} scale={25}/>
+<Sequence data={[0, 1]} scale={25}/>
+<Sequence data={[1, 0]} scale={25}/>
+<Sequence data={[1, 1]} scale={25}/>
 
 And if we had three boxes, we would have eight possible packages:
 
-<Sequence data={[0, 0, 0]} />
-<Sequence data={[0, 0, 1]} />
-<Sequence data={[0, 1, 0]} />
-<Sequence data={[0, 1, 1]} />
-<Sequence data={[1, 0, 0]} />
-<Sequence data={[1, 0, 1]} />
-<Sequence data={[1, 1, 0]} />
-<Sequence data={[1, 1, 1]} />
+<Sequence data={[0, 0, 0]} scale={25}/>
+<Sequence data={[0, 0, 1]} scale={25}/>
+<Sequence data={[0, 1, 0]} scale={25}/>
+<Sequence data={[0, 1, 1]} scale={25}/>
+<Sequence data={[1, 0, 0]} scale={25}/>
+<Sequence data={[1, 0, 1]} scale={25}/>
+<Sequence data={[1, 1, 0]} scale={25}/>
+<Sequence data={[1, 1, 1]} scale={25}/>
 
 In general, if we have ${n}$ bits, where ${n}$ is a positive integer, we
 have ${2^n}$ possible packages. This analysis extends to computation. For
@@ -440,6 +442,7 @@ for that additional representation of ${0,}$ we'd at least have ${8.}$
 
 Another representation approach is **one's complement**. With one's
 complement, negative numbers are formed by <q>flipping</q> or
+
 <q>reflecting</q> all of the bits &mdash; turn all the ones into zeros, and
 all the zeros into ones. For example, the binary number
 ${1011_{\texttt{b}},}$ flipped, is ${0100_{\texttt{b}}.}$ This

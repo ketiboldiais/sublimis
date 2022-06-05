@@ -1,10 +1,13 @@
 import React, { useRef, useEffect } from "react";
-import { isObjectLiteral } from "../utils/isObjectLiteral/isObjectLiteral";
-import { svg } from "../utils/svg/svg";
 import { Base } from "../base/Base";
 import * as d3 from "d3";
-import { translate } from "../utils/translate/translate";
-import { insertArrowDefinitions } from "../utils/insertArrowDefinitions/insertArrowDefinitions";
+import {
+	svg,
+	className,
+	isObjectLiteral,
+	translate,
+	insertArrowDefinitions,
+} from "../utils";
 
 const formatData = (arr = []) => {
 	let data = [];
@@ -24,16 +27,13 @@ export const CircularList = ({
 	data = [],
 	width = 240,
 	height = 60,
-	textColor = "black",
-	linkColor,
+	linkColor = "black",
 	arrowFillColor,
-	fontSize = "0.7rem",
 	fontFamily = "system-ui",
 	fill = "white",
-	dataFieldFill = "#FAF0D7",
-	nextFieldFill = "#FDCEB9",
-	indexFieldTextColor = "black",
-	indexFieldFontSize = "0.5rem",
+	dataFieldFill = "white",
+	nextFieldFill = "white",
+	indexFieldFontSize = 0.5,
 	strokeColor = "black",
 	containerWidth,
 	containerHeight,
@@ -52,21 +52,24 @@ export const CircularList = ({
 	const nodeWidth = scale.bandwidth();
 	const nodeHeight = 10;
 
-	useEffect(() => {
+	const renderCicularList = () => {
 		const canvas = d3
 			.select(CircularListFigure.current)
 			.select("g.svgElement");
-		const nodeGroup = canvas
+		const circularListCanvas = canvas
+			.append("g")
+			.attr("class", className.circularList.canvas);
+		const nodeGroup = circularListCanvas
 			.selectAll("nodes")
 			.data(_data)
 			.enter()
 			.append("g")
-			.attr("class", "circular-list-node")
+			.attr("class", className.circularList.node)
 			.attr("transform", (d, i) => translate(scale(i), 0))
 			.attr("y", 0);
 		insertArrowDefinitions(
-			canvas,
-			"circular-list-arrow",
+			circularListCanvas,
+			className.circularList.arrow,
 			10,
 			0,
 			4,
@@ -76,17 +79,15 @@ export const CircularList = ({
 		);
 		const dataField = nodeGroup
 			.append("g")
-			.attr("class", "node-data-field");
+			.attr("class", className.circularList.dataField);
 		const dataFieldRectangle = dataField
 			.append("rect")
-			.attr("class", "node-data-field-rectangle")
 			.attr("width", nodeWidth)
 			.attr("height", nodeHeight)
 			.attr("stroke", strokeColor)
 			.attr("fill", dataFieldFill ? dataFieldFill : fill);
 		const dataFieldText = dataField
 			.append("text")
-			.attr("class", "node-data-field-text")
 			.attr("font-family", fontFamily)
 			.attr("text-anchor", "middle")
 			.attr("x", nodeWidth / 2)
@@ -96,18 +97,12 @@ export const CircularList = ({
 			.text((d) => d.val);
 		if (isIndexed) {
 			dataField
+				.append("g")
+				.attr("class", className.circularList.index)
 				.append("text")
-				.attr("class", "node-index-text")
 				.attr("font-family", fontFamily)
 				.attr("text-anchor", "middle")
-				.attr(
-					"fill",
-					indexFieldTextColor ? indexFieldTextColor : textColor,
-				)
-				.style(
-					"font-size",
-					indexFieldFontSize ? indexFieldFontSize : fontSize,
-				)
+				.attr("font-size", `${indexFieldFontSize}rem`)
 				.attr("x", nodeWidth / 1.5)
 				.attr("y", nodeHeight + 10)
 				.text((d, i) => i);
@@ -115,7 +110,7 @@ export const CircularList = ({
 
 		const nextField = nodeGroup
 			.append("g")
-			.attr("class", "node-next-field")
+			.attr("class", className.circularList.nextField)
 			.attr("transform", translate(scale.bandwidth(), 0));
 
 		const nextFieldRectangle = nextField
@@ -126,23 +121,33 @@ export const CircularList = ({
 			.attr("height", nodeHeight);
 
 		const nodeLinks = nodeGroup
+			.append("g")
+			.attr("class", className.circularList.link);
+		nodeLinks
 			.filter((d, i) => i !== _data.length - 1)
 			.append("line")
-			.attr("class", "circular-list-link")
 			.attr("stroke", linkColor)
 			.attr("x1", nodeWidth + nodeWidth / 4)
 			.attr("y1", nodeHeight / 2)
 			.attr("x2", nodeWidth + scale.bandwidth())
 			.attr("y2", nodeHeight / 2)
-			.attr("marker-end", "url(#circular-list-arrow)");
+			.attr("marker-end", `url(#${className.circularList.arrow})`);
 
-		const lastNodeLink = nodeGroup
+		// circle at end of links
+		nodeLinks
+			.append("circle")
+			.attr("fill", "black")
+			.attr("r", 1.5)
+			.attr("cx", nodeWidth + nodeWidth / 4)
+			.attr("cy", nodeHeight / 2);
+
+		// last node link
+		nodeLinks
 			.filter((d, i) => i === _data.length - 1)
 			.append("path")
-			.attr('class', 'circular-list-link')
 			.attr("fill", "none")
 			.attr("stroke", linkColor)
-			.attr("marker-end", "url(#circular-list-arrow)")
+			.attr("marker-end", `url(#${className.circularList.arrow})`)
 			.attr("d", () => {
 				const M1 = nodeWidth + nodeWidth / 4;
 				const M2 = nodeHeight / 2;
@@ -154,17 +159,19 @@ export const CircularList = ({
 				return `M ${M1} ${M2}, H ${H1}, V ${V1} H ${H2} V ${V3} H ${H3}`;
 			});
 
-		const rootPointer = canvas
+		const rootPointer = circularListCanvas
 			.append("g")
-			.attr("class", "root-pointer")
+			.attr(
+				"class",
+				`${className.circularList.root} ${className.circularList.link}`,
+			)
 			.attr(
 				"transform",
 				translate(-scale.bandwidth() / 2, scale.bandwidth() / 4),
 			);
-
-		const rootPointerText = rootPointer
+		// root pointer text
+		rootPointer
 			.append("text")
-			.attr("class", "root-pointer-text")
 			.attr("font-family", fontFamily)
 			.attr("text-anchor", "start")
 			.attr("x", -nodeWidth / 8)
@@ -172,9 +179,9 @@ export const CircularList = ({
 			.attr("dx", "-0.2em")
 			.attr("font-size", "7px")
 			.text(name);
-		const rootPointerLink = rootPointer
+		// root pointer link
+		rootPointer
 			.append("path")
-			.attr("class", "circular-list-link root-pointer-link")
 			.attr("fill", "none")
 			.attr("stroke", "black")
 			.attr("d", () => {
@@ -184,25 +191,23 @@ export const CircularList = ({
 				const V1 = nodeHeight / 3;
 				return `M ${m1},${m2} V ${V1} H ${H1}`;
 			})
-			.attr("marker-end", "url(#circular-list-arrow)");
+			.attr("marker-end", `url(#${className.circularList.arrow})`);
 
-		const nodeLinkCircle = nodeGroup
-			.append("circle")
-			.attr("fill", "black")
-			.attr("r", 1.5)
-			.attr("cx", nodeWidth + nodeWidth / 4)
-			.attr("cy", nodeHeight / 2);
-
-		const annotation = nextField
+		// annotations
+		nextField
 			.filter((d) => d.ant)
 			.append("g")
-			.attr("class", "linked-list-annotation")
+			.attr("class", className.circularList.annotation)
 			.append("text")
 			.attr("text-anchor", "middle")
 			.style("font-size", "8px")
 			.attr("x", -scale.bandwidth() / 4)
 			.attr("y", -margins[0] / 2)
 			.text((d) => d.ant);
+	};
+
+	useEffect(() => {
+		if (CircularListFigure.current) renderCicularList();
 	});
 	return (
 		<Base

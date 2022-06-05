@@ -1,3 +1,7 @@
+import { CircularList } from "@illus/CircularList";
+import { LinkedList } from "@illus/LinkedList";
+import { Sequence } from "@illus/Sequence";
+
 <Metadata
 	title={"Linked Lists"}
 	description={"Notes on the linked list data structure."}
@@ -5,49 +9,48 @@
 		"Linked lists, list data structures, pointers, data structures and algorithms"
 	}
 />
+
 # The Linked List Data Structure
 
-- [The Linked List Data Structure](#the-linked-list-data-structure)
-  - [Implementing the Node Data Structure](#implementing-the-node-data-structure)
-  - [Instantiating the Node](#instantiating-the-node)
-  - [Aside: Linked List & Pointers](#aside-linked-list--pointers)
-    - [Null & Nonnull Tests](#null--nonnull-tests)
-    - [Foot Test](#foot-test)
-  - [Iterative List Traversal](#iterative-list-traversal)
-  - [Printing a Linked List](#printing-a-linked-list)
-  - [Traversing a Linked List Recursively](#traversing-a-linked-list-recursively)
-  - [Printing in Reverse](#printing-in-reverse)
-  - [Node Constructor](#node-constructor)
-  - [Constructing a List from an Array](#constructing-a-list-from-an-array)
-  - [Length of a Linked List](#length-of-a-linked-list)
-    - [Recursive Implementation](#recursive-implementation)
-  - [Deletion](#deletion)
-    - [Left-shifting](#left-shifting)
-    - [Right-shift](#right-shift)
-    - [General Deletion](#general-deletion)
-  - [Insertion](#insertion)
-  - [Append](#append)
-  - [Prepend](#prepend)
-  - [Get](#get)
-  - [Set](#set)
-  - [Insert](#insert)
-    - [Sorted Insertions](#sorted-insertions)
-  - [List Reversal](#list-reversal)
-    - [Reverse-by-element](#reverse-by-element)
-    - [Reverse-by-link](#reverse-by-link)
-    - [Recursive List Reversal](#recursive-list-reversal)
-  - [Sum of All Elements](#sum-of-all-elements)
-    - [Recursive Approach.](#recursive-approach)
-  - [Peak Finder](#peak-finder)
-    - [Recursive Implementation](#recursive-implementation-1)
-- [Valley Finder](#valley-finder)
-  - [Searching a Linked List](#searching-a-linked-list)
-    - [Recursive Implementation](#recursive-implementation-2)
-  - [Sorted Test](#sorted-test)
-  - [Dedupe a Sorted List](#dedupe-a-sorted-list)
-  - [Concatenating Lists](#concatenating-lists)
-  - [Merging Lists](#merging-lists)
-  - [Loop Detection](#loop-detection)
+1. [Implementing the Node Data Structure](#implementing-the-node-data-structure)
+2. [Instantiating the Node](#instantiating-the-node)
+3. [Aside: Linked List & Pointers](#aside-linked-list--pointers)
+   1. [Null & Nonnull Tests](#null--nonnull-tests)
+   2. [Foot Test](#foot-test)
+4. [Iterative List Traversal](#iterative-list-traversal)
+5. [Printing a Linked List](#printing-a-linked-list)
+6. [Traversing a Linked List Recursively](#traversing-a-linked-list-recursively)
+7. [Printing in Reverse](#printing-in-reverse)
+8. [Node Constructor](#node-constructor)
+9. [Constructing a List from an Array](#constructing-a-list-from-an-array)
+10. [Length of a Linked List](#length-of-a-linked-list)
+    1. [Recursive Implementation](#recursive-implementation)
+11. [Deletion](#deletion)
+    1. [Left-shifting](#left-shifting)
+    2. [Right-shift](#right-shift)
+    3. [General Deletion](#general-deletion)
+12. [Insertion](#insertion)
+13. [Append](#append)
+14. [Prepend](#prepend)
+15. [Get](#get)
+16. [Set](#set)
+17. [Insert](#insert)
+    1. [Sorted Insertions](#sorted-insertions)
+18. [List Reversal](#list-reversal)
+    1. [Reverse-by-element](#reverse-by-element)
+    2. [Reverse-by-link](#reverse-by-link)
+    3. [Recursive List Reversal](#recursive-list-reversal)
+19. [Sum of All Elements](#sum-of-all-elements)
+    1. [Recursive Approach.](#recursive-approach)
+20. [Peak Finder](#peak-finder)
+    1. [Recursive Implementation](#recursive-implementation-1)
+21. [Searching a Linked List](#searching-a-linked-list)
+    1. [Recursive Implementation](#recursive-implementation-2)
+22. [Sorted Test](#sorted-test)
+23. [Dedupe a Sorted List](#dedupe-a-sorted-list)
+24. [Concatenating Lists](#concatenating-lists)
+25. [Merging Lists](#merging-lists)
+26. [Loop Detection](#loop-detection)
 
 Before we examine linked list algorithms, we must first understand the
 linked list data structure. We will do so by investigating the mechanics
@@ -1644,11 +1647,11 @@ Suppose we had the following linked list, called `list1`:
 
 If we write `append(list1, 8)`, we get:
 
-<LinkedList data={["list1", 3, 8]} width={200}/>
+<LinkedList data={["list1", 3, 8]} width={200} />
 
 And when we write `append(list1, 4)`, we get:
 
-<LinkedList data={["list1", 3, 8, 4]} width={215}/>
+<LinkedList data={["list1", 3, 8, 4]} width={215} />
 
 We can implement this procedure by using an additional pointer to the
 list's _foot_, or _tailend_—the last node in the list. We'll call the
@@ -3359,7 +3362,7 @@ int findMax(Node* p) {
 }
 ```
 
-# Valley Finder
+## Valley Finder
 
 In contrast to peak finding, the **valley finder** is an algorithm for
 finding the mimimum element. The implementation is similar to the peak

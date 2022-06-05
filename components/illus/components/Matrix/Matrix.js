@@ -1,22 +1,20 @@
 import React, { useRef, useEffect } from "react";
-import { svg } from "../utils/svg/svg";
+import {
+	svg,
+	translate,
+	className,
+	setClassName,
+	getPropertyValues,
+	isObjectLiteral,
+} from "../utils";
 import { Base } from "../base/Base";
 import * as d3 from "d3";
-import { translate } from "../utils/translate/translate";
-import { getPropertyValues } from "../utils/getPropertyValues/getPropertyValues";
 
-const formatData = (arr, focusData) => {
+const formatData = (arr) => {
 	let data = [];
 	for (let row = 0; row < arr.length; row++) {
 		for (let col = 0; col < arr[row].length; col++) {
 			let element = { val: arr[row][col], row: row, col: col };
-			if (focusData) {
-				for (let i = 0; i < focusData.length; i++) {
-					if (focusData[i][0] === row && focusData[i][1] === col) {
-						element.focus = true;
-					}
-				}
-			}
 			data.push(element);
 		}
 	}
@@ -25,87 +23,115 @@ const formatData = (arr, focusData) => {
 
 export const Matrix = ({
 	data = [[]],
-	focus,
-	width = 300,
-	height = 300,
-	containerWidth,
+	width = 500,
+	height = 500,
+	scale = 100,
+	containerWidth = scale,
+	fontSize = 2,
 	containerHeight,
-	margins = [60, 30, 60, 30],
-	isIndexed = true,
+	margins = [30, 30, 30, 30],
+	isRowIndexed = true,
+	isColumnIndexed = true,
+	isIndexed = isRowIndexed && isColumnIndexed,
 }) => {
-	const MatrixFigure = useRef();
+	const _matrixREF = useRef();
 	const _svg = svg(width, height, margins);
-	const _data = formatData(data, focus);
+	const _data = formatData(data);
+
 	const rows = getPropertyValues(_data, "row");
+	const numberOfRows = Math.max(...rows) + 1;
+
 	const columns = getPropertyValues(_data, "col");
-	const xScale = d3
-		.scaleBand()
-		.domain(columns)
-		.range([0, _svg.width])
-		.padding(0.08);
-	const yScale = d3
-		.scaleBand()
-		.domain(rows)
-		.range([0, _svg.height])
-		.padding(0.08);
+	const numberOfColumns = Math.max(...columns) + 1;
 
-	useEffect(() => {
-		const canvas = d3.select(MatrixFigure.current).select("g.svgElement");
-		const matrix = canvas.append("g").attr("class", "matrix");
-		const xAxisGroup = matrix
+	const x = d3.scaleBand().domain(columns).range([0, _svg.width]).padding(0.04);
+	const y = d3.scaleBand().domain(rows).range([0, _svg.height]).padding(0.04);
+
+	const renderColumnIndices = (selection) => {
+		const columnIndices = selection
+			.selectAll(".columnIndices")
+			.data(d3.range(numberOfColumns))
+			.enter()
 			.append("g")
-			.attr("class", "column-indices")
-			.attr("transform", translate(0, -xScale.bandwidth() / 4))
-			.call(d3.axisBottom(xScale).tickSize(0))
-			.selectAll(".domain")
-			.remove();
+			.attr('class', 'matrixIndices matrixColumnIndex')
+			.attr("transform", (d) => translate(x(d), 0));
 
-		const yAxisGroup = matrix
+		columnIndices
+			.append("text")
+			.attr("x", x.bandwidth() / 2)
+			.attr("font-size", `${fontSize - 0.5}rem`)
+			.attr("dy", "-0.5em")
+			.attr("text-anchor", "middle")
+			.text((d) => d);
+	};
+
+	const renderRowIndices = (selection) => {
+		const rowIndices = selection
+			.selectAll(".rowIndices")
+			.data(d3.range(numberOfRows))
+			.enter()
 			.append("g")
-			.attr("class", "row-indices")
-			.attr(
-				"transform",
-				translate(-xScale.bandwidth() / 4, yScale.bandwidth() / 2),
-			)
-			.call(d3.axisLeft(yScale).tickSize(0))
-			.selectAll(".domain")
-			.remove();
+			.attr('class', 'matrixIndices matrixRowIndex')
+			.attr("transform", (d) => translate(0, y(d)));
 
-		const matrixElement = matrix
-			.selectAll("squares")
+		rowIndices
+			.append("text")
+			.attr("font-size", `${fontSize - 0.5}rem`)
+			.attr("y", y.bandwidth() / 2)
+			.attr("dy", "0.32em")
+			.attr("dx", "-0.8em")
+			.attr("text-anchor", "middle")
+			.text((d) => d);
+	};
+
+	const renderMatrix = () => {
+		const canvas = d3.select(_matrixREF.current).select("g.svgElement");
+		const matrixCanvas = canvas
+			.append("g")
+			.attr("class", className.matrix.canvas);
+		const matrixElements = matrixCanvas
+			.selectAll(".elements")
 			.data(_data)
 			.enter()
 			.append("g")
-			.attr("class", "matrix-element")
-			.attr("transform", (d) => translate(xScale(d.col), yScale(d.row)));
-		const matrixSquare = matrixElement
+			.attr("class", (d) =>
+				setClassName(d.val.focus, className.matrix.element),
+			)
+			.attr("transform", (d) => translate(x(d.col), y(d.row)));
+		matrixElements
 			.append("rect")
-			.attr("class", (d) =>
-				d.focus
-					? "matrix-element-rectangle matrix-element-rectangle-focused"
-					: "matrix-element-rectangle",
-			)
-			.attr("x", 0)
-			.attr("y", xScale.bandwidth() / 2)
-			.attr("width", xScale.bandwidth())
-			.attr("height", yScale.bandwidth())
-			.attr("opacity", 0.8);
-		const matrixElementText = matrixElement
+			.attr("width", x.bandwidth())
+			.attr("height", y.bandwidth())
+			.attr("fill", "white")
+			.attr("stroke", "black");
+		// labels
+		matrixElements
 			.append("text")
-			.attr("class", (d) =>
-				d.focus
-					? "matrix-element-text matrix-element-text-focused"
-					: "matrix-element-text",
-			)
-			.attr("x", xScale.bandwidth() / 2)
-			.attr("y", yScale.bandwidth())
-			.attr("dy", "0.2em")
+			.attr("class", className.matrix.text)
+			.attr("font-size", `${fontSize}rem`)
+			.attr("dy", `0.32em`)
 			.attr("text-anchor", "middle")
-			.text((d) => d.val);
+			.attr("x", x.bandwidth() / 2)
+			.attr("y", y.bandwidth() / 2)
+			.text((d) => (isObjectLiteral(d.val) ? d.val.val : d.val));
+		// indices labeled
+		if (isIndexed) {
+			renderRowIndices(matrixCanvas);
+			renderColumnIndices(matrixCanvas);
+		} else if (isColumnIndexed) {
+			renderColumnIndices(matrixCanvas);
+		} else if (isRowIndexed) {
+			renderRowIndices(matrixCanvas);
+		}
+	};
+
+	useEffect(() => {
+		if (_matrixREF.current) renderMatrix();
 	});
 	return (
 		<Base
-			id={MatrixFigure}
+			id={_matrixREF}
+			type="Matrix"
 			width={width}
 			height={height}
 			containerWidth={containerWidth}

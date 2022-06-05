@@ -1,33 +1,33 @@
 import React, { useRef, useEffect } from "react";
-import { svg } from "../utils/svg/svg";
 import { Base } from "../base/Base";
 import * as d3 from "d3";
-import { setValue } from "../utils/setValue/setValue";
-import { attrs } from "../utils/attrs/attrs";
-import { insertArrowDefinitions } from "../utils/insertArrowDefinitions/insertArrowDefinitions";
-import { isNotUndefined } from "../utils/isNotUndefined/isNotUndefined";
 import { renderLevelMarks } from "./renderLevelMarks/renderLevelMarks";
 import { renderDepthMarks } from "./renderDepthMarks/renderDepthMarks";
 import { renderHeightMarks } from "./renderHeightMarks/renderHeightMarks";
 import { renderBalanceFactors } from "./renderBalanceFactors/renderBalanceFactors";
 import { generateTreeData } from "./generateTreeData/generateTreeData";
 import { calculateTreeSize } from "./calculateTreeSize/calculateTreeSize";
+import {
+	className,
+	svg,
+	setValue,
+	insertArrowDefinitions,
+	setClassName,
+} from "../utils";
 
 export const Tree = ({
 	data = [],
 	width = 250,
 	height = 140,
-	narrow = 10,
-	containerWidth = 100,
-	containerHeight = 60,
-	margins = [20, 20 + narrow, 20, 20 + narrow],
+	containerWidth,
+	containerHeight,
+	margins = [20, 20, 20, 20],
 	fontFamily = "system-ui",
 	edgeLength = null,
 	isDirected = false,
 	nodeRadius = 7,
 	nodeColor = "#ffffff",
 	edgeColor = "#000000",
-	nodeTextColor = edgeColor,
 	nodeStrokeColor = edgeColor,
 	markBalanceFactor = false,
 	markHeight = false,
@@ -36,7 +36,6 @@ export const Tree = ({
 	nodeTextFontSize = 8,
 	balancedTextColor = edgeColor,
 	imbalancedTextColor = edgeColor,
-	edgeThickness = 1,
 	heightFontSize = 7,
 	heightTextColor = edgeColor,
 	hideNodeCircles = false,
@@ -55,17 +54,19 @@ export const Tree = ({
 	const _edgeLength = setValue(edgeLength, calculateTreeSize(root));
 	const treeStructure = d3
 		.tree()
-		.size([_svg.width - narrow, _edgeLength])
+		.size([_svg.width, _edgeLength])
 		.separation((a, b) => (a.parent === b.parent ? 1 : 1.1));
 	treeStructure(root);
 
-	useEffect(() => {
+	const renderTree = () => {
 		const canvas = d3.select(TreeFigure.current).select("g.svgElement");
-		const tree = canvas.append("g").attr("class", "tree");
+		const tree = canvas.append("g").attr("class", className.tree.canvas);
+
+		// if tree is directed, define arrows
 		if (isDirected) {
 			insertArrowDefinitions(
 				canvas,
-				"tree-arrow",
+				className.tree.arrowURL,
 				25,
 				0,
 				5,
@@ -74,46 +75,64 @@ export const Tree = ({
 				edgeColor,
 			);
 		}
-		const links = tree.append("g").attr("class", "tree-links");
-		const linkLines = links
+
+		// links
+		const links = tree.append("g").attr("class", className.tree.edgeGroup);
+		links
 			.selectAll("line")
 			.data(root.links())
 			.enter()
-			.append("line");
-		attrs(linkLines, {
-			class: "tree-edge",
-			display: (d) =>
+			.append("line")
+			.attr("stroke", edgeColor)
+			.attr("foo", (d) => console.log(d))
+			.attr("x1", (d) => d.source.x)
+			.attr("y1", (d) => d.source.y)
+			.attr("x2", (d) => d.target.x)
+			.attr("y2", (d) => d.target.y)
+			.attr("display", (d) =>
 				d.source.data.display || d.target.data.display
 					? "none"
 					: "initial",
-			x1: (d) => d.source.x,
-			y1: (d) => d.source.y,
-			x2: (d) => d.target.x,
-			y2: (d) => d.target.y,
-			stroke: edgeColor,
-			"stroke-opacity": (d) => setValue(d.target.data.opacity, 1),
-			"marker-end": "url(#arrow_end)",
-			"stroke-width": edgeThickness,
-		});
+			)
+			.attr("marker-end", `url(#${className.tree.arrowURL})`);
 
-		const nodes = tree
+		const nodeGroup = tree
+			.append("g")
+			.attr("class", className.tree.nodeGroup);
+
+		const nodes = nodeGroup
 			.selectAll("circles")
 			.data(root.descendants())
 			.enter()
 			.append("g")
 			.attr("class", (d) => {
-				if (d.data.focus) {
-					return d.height === 0
-						? `tree-node tree-node-${d.data.focus} tree-node-leaf`
-						: `tree-node tree-node-${d.data.focus} tree-node-branch`;
+				if (d.height === 0) {
+					return setClassName(d.data.focus, className.tree.leaf);
 				} else {
-					return d.height === 0
-						? "node-circle tree-node-leaf"
-						: "node-circle tree-node-branch";
+					return setClassName(d.data.focus, className.tree.branch);
 				}
 			});
 
-		const nodeCircles = nodes
+		// annotations
+		const annotations = tree
+			.append("g")
+			.attr("class", className.tree.annotations);
+		annotations
+			.selectAll("text.annotate")
+			.data(root)
+			.enter()
+			.filter((d) => d.data.ant)
+			.append("text")
+			.text((d) => d.data.ant)
+			.attr("x", (d) => d.x)
+			.attr("y", (d) => d.y - nodeRadius * 1.5)
+			.attr("text-anchor", "middle")
+			.attr("fill", "black")
+			.style("font-size", "0.6rem");
+
+		// node circles
+		nodes
+			.filter((d) => d.data.display !== "none")
 			.filter((d) => !d.data.display)
 			.filter((d) => !d.data.noCircle)
 			.filter((d) => !d.data.type)
@@ -123,46 +142,26 @@ export const Tree = ({
 			.attr("cx", (d) => d.x)
 			.attr("cy", (d) => d.y)
 			.attr("stroke", hideNodeCircles ? "none" : nodeStrokeColor);
-		const nodeLabels = tree.append("g").attr("class", "node-text");
-		const dataField = nodeLabels
-			.selectAll("dataFieldLabels")
-			.data(root)
-			.enter()
+
+		// node labels
+		nodes
 			.filter((d) => !d.data.display)
 			.filter((d) => !d.data.label)
 			.append("text")
-			.text((d) => d.id)
 			.attr("font-family", fontFamily)
-			.attr("font-size", nodeTextFontSize);
-
-		attrs(dataField, {
-			class: (d) => {
-				if (d.data.focus) {
-					return d.height === 0
-						? "node-text node-focused-text node-leaf-text"
-						: "node-text node-focused-text node-branch-text";
-				} else {
-					return d.height === 0
-						? "node-text node-leaf-text"
-						: "node-text node-branch-text";
-				}
-			},
-			x: (d) => d.x,
-			y: (d) => {
+			.attr("font-size", nodeTextFontSize)
+			.attr("x", (d) => d.x)
+			.attr("y", (d) => {
 				if (d.data.noCircle) {
-					return d.y + 18;
-				} else if (d.data.type) {
-					return d.y + nodeRadius;
+					return d.y + 10;
 				} else {
 					return d.y;
 				}
-			},
-			dy: "0.3em",
-			opacity: (d) => setValue(d.data.opacity, 1),
-			"text-anchor": "middle",
-			fill: nodeTextColor,
-			"font-size": nodeTextFontSize,
-		});
+			})
+			.attr("text-anchor", "middle")
+			.attr("dy", "0.3em")
+			.text((d) => d.id);
+
 		if (markLevels)
 			renderLevelMarks(
 				tree,
@@ -190,6 +189,10 @@ export const Tree = ({
 				balancedTextColor,
 				imbalancedTextColor,
 			);
+	};
+
+	useEffect(() => {
+		if (TreeFigure.current) renderTree();
 	});
 	return (
 		<Base

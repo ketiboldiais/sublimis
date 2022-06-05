@@ -1,12 +1,13 @@
+import { DoublyLinkedList } from "@illus/DoublyLinkedList";
+
 # Doubly Linked Lists
 
-- [Doubly Linked Lists](#doubly-linked-lists)
-  - [Insertion: Doubly-linked Lists](#insertion-doubly-linked-lists)
-    - [Prepending](#prepending)
-  - [Appending to a Doubly Linked List](#appending-to-a-doubly-linked-list)
-  - [Deletion](#deletion)
-    - [Head Deletion](#head-deletion)
-    - [Tail Node Deletion](#tail-node-deletion)
+1. [Insertion: Doubly-linked Lists](#insertion-doubly-linked-lists)
+   1. [Prepending](#prepending)
+2. [Appending to a Doubly Linked List](#appending-to-a-doubly-linked-list)
+3. [Deletion](#deletion)
+   1. [Head Deletion](#head-deletion)
+   2. [Tail Node Deletion](#tail-node-deletion)
 
 In the previous section, we saw **singly-linked lists**—linked lists whose
 nodes are linked with just one link, implemented with a `next` pointer. We
@@ -509,8 +510,6 @@ Now that we've moved the head, we can simply delete `p`'s pointee:
 <DoublyLinkedList
 	data={[{ val: 8, ant: "h" }, 2, 7]}
 	width={180}
-	containerWidth={60}
-	containerHeight={15}
 />
 
 This leaves us with the list:
@@ -518,8 +517,6 @@ This leaves us with the list:
 <DoublyLinkedList
 	data={[8, 2, 7]}
 	width={180}
-	containerWidth={60}
-	containerHeight={15}
 />
 
 While we've successfully deleted the head, notice the new head's `prev`

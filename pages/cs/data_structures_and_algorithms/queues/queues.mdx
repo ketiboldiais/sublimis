@@ -1,3 +1,8 @@
+import { Queue } from "@illus/Queue";
+import { CircularQueue } from "@illus/CircularQueue";
+import { LinkedList } from "@illus/LinkedList";
+import { Sequence } from "@illus/Sequence";
+
 # The Queue
 
 In this section, we discuss the **queue** data structure. Like the stack,
@@ -5,7 +10,7 @@ the queue is a logical data structure premised on an foundational operating
 principle—**first-in-first-out (FIFO)**. For example, in the diagram below,
 suppose `A` enters first, then `B`, then `C`, then `D`:
 
-<Queue data={["A", "B", "C", "D"]} />
+<Queue data={["A", "B", "C", "D"]} scale={50} />
 
 The first to exit is `A`. The second is `B`. The third is `C`. And the
 fourth is `D`. We call the entities in a queue—e.g., `A`, `B`, `C`, and `D`
@@ -15,7 +20,10 @@ standing in a line at the bank, waiting for the next available teller.
 The queue has two special positions, the **front** (denoted below as `f`),
 and the **rear** (denoted below as `r`).
 
-<Queue data={[{ val: "A", ant: "f" }, "B", "C", { val: "D", ant: "r" }]} />
+<Queue
+	data={[{ val: "A", ant: "f" }, "B", "C", { val: "D", ant: "r" }]}
+	scale={50}
+/>
 
 Consistent with a queue in real life, to delete a queuer from the queue, we
 remove the element currently occupying the _front_:
@@ -27,6 +35,7 @@ remove the element currently occupying the _front_:
 		"C",
 		{ val: "D", ant: "r" },
 	]}
+	scale={50}
 />
 
 And to insert a queuer into the queue, we append an element to the _rear_:
@@ -38,6 +47,7 @@ And to insert a queuer into the queue, we append an element to the _rear_:
 		"C",
 		{ val: "D", ant: "r", focus: "red" },
 	]}
+	scale={50}
 />
 
 By convention, inserting a queuer is called **enqueue**, and removing a
@@ -69,9 +79,9 @@ properties and operations:
 Implementing the bounded queue with an array is simple. Below is a queue
 and its array implementation.
 
-<Queue data={[2, 3, 7, 5]} />
+<Queue data={[2, 3, 7, 5]} scale={50} />
 
-<Sequence data={[2, 3, 7, 5]} />
+<Sequence data={[2, 3, 7, 5]} scale={40} />
 
 With the static queue, we implement all of the properties mentioned in the
 preceding section, with two additional properties and operations:
@@ -229,21 +239,21 @@ increment `r`).
 
 For example, suppose we had a static queue of size 5:
 
-<Queue data={["", "", "", "", ""]} />
+<Queue data={["", "", "", "", ""]} scale={50} />
 
-<Sequence data={["", "", "", "", ""]} />
+<Sequence data={["", "", "", "", ""]} scale={40} />
 
 We begin by moving the pointer `r` to the first index in the array:
 
-<Queue data={["", "", "", "", ""]} />
+<Queue data={["", "", "", "", ""]} scale={50} />
 
-<Sequence data={[{ val: "", ant: "r" }, "", "", "", ""]} />
+<Sequence data={[{ val: "", ant: "r" }, "", "", "", ""]} scale={40} />
 
 Then, we insert the relevant data, say `2`:
 
-<Queue data={[2, "", "", "", ""]} />
+<Queue data={[2, "", "", "", ""]} scale={50} />
 
-<Sequence data={[{ val: 2, ant: "r" }, "", "", "", ""]} />
+<Sequence data={[{ val: 2, ant: "r" }, "", "", "", ""]} scale={40} />
 
 If we want to add another element, we just increment `r` and continue. In
 pseudocode:
@@ -533,17 +543,23 @@ struct Queue:
 To see why two pointers is useful, let's consider an example. Suppose we
 had the following queue, alongside its array implementation:
 
-<Queue data={[1, 8, 2, { val: 5, ant: "r" }]} />
+<Queue data={[1, 8, 2, { val: 5, ant: "r" }]} scale={50} />
 
-<Sequence data={[1, 8, 2, { val: 5, ant: "r" }]} />
+<Sequence data={[1, 8, 2, { val: 5, ant: "r" }]} scale={40} />
 
 There are two pointers, `r` (the `rear`) and `f` (the `front`). The pointer
 `f` is not displayed because initially, `f = -1`. Now let's say the first
 queuer is dequeued:
 
-<Queue data={[{ val: "", focus: "red" }, 8, 2, { val: 5, ant: "r" }]} />
+<Queue
+	data={[{ val: "", focus: "red" }, 8, 2, { val: 5, ant: "r" }]}
+	scale={50}
+/>
 
-<Sequence data={[{ val: "", focus: "red" }, 8, 2, { val: 5, ant: "r" }]} />
+<Sequence
+	data={[{ val: "", focus: "red" }, 8, 2, { val: 5, ant: "r" }]}
+	scale={40}
+/>
 
 As we saw with the RP queue, dequeuing results in an empty space at the
 front of the queue. And with the RP queue, the remedy for this is to shift
@@ -558,24 +574,26 @@ the teller, just have the teller shift towards the next customer:
 
 <Queue
 	data={[{ val: "", focus: "red", ant: "f" }, 8, 2, { val: 5, ant: "r" }]}
+	scale={50}
 />
 
 <Sequence
 	data={[{ val: "", focus: "red", ant: "f" }, 8, 2, { val: 5, ant: "r" }]}
+	scale={40}
 />
 
 Examining the diagram, we see that the `f` queuer will always be `Q[f+1]`.
 For example, say we start with an empty queue of capacity ${4:}$
 
-<Queue data={["", "", "", ""]} />
+<Queue data={["", "", "", ""]} scale={50} />
 
-<Sequence data={["", "", "", ""]} />
+<Sequence data={["", "", "", ""]} scale={40} />
 
 Now say we rush-in two queuers, ${5}$ and ${8:}$
 
-<Sequence data={[5, { val: 8, ant: "r" }, "", ""]} />
+<Sequence data={[5, { val: 8, ant: "r" }, "", ""]} scale={50} />
 
-<Queue data={[5, { val: 8, ant: "r" }, "", ""]} />
+<Queue data={[5, { val: 8, ant: "r" }, "", ""]} scale={40} />
 
 At no point in the rush-in do we increment `f`, which is initially
 `f = -1`. The pointer `f` is incremented only if we dequeue. As such, the
@@ -583,15 +601,27 @@ front element is still `Q[f+1]`, which in this case, is `Q[0]`.
 
 When we dequeue, `f` increments:
 
-<Sequence data={[{ val: 1, ant: "f" }, { val: "", ant: "r" }, ""]} />
+<Sequence
+	data={[{ val: 1, ant: "f" }, { val: "", ant: "r" }, ""]}
+	scale={30}
+/>
 
-<Queue data={[{ val: 1, ant: "f" }, { val: "", ant: "r" }, ""]} />
+<Queue
+	data={[{ val: 1, ant: "f" }, { val: "", ant: "r" }, ""]}
+	scale={50}
+/>
 
 When we enqueue say, the new queuers ${2}$ and ${9,}$ we get:
 
-<Sequence data={[{ val: 1, ant: "f" }, 8, 2, { val: 9, ant: "r" }]} />
+<Sequence
+	data={[{ val: 1, ant: "f" }, 8, 2, { val: 9, ant: "r" }]}
+	scale={40}
+/>
 
-<Queue data={[{ val: 1, ant: "f" }, 8, 2, { val: 9, ant: "r" }]} />
+<Queue
+	data={[{ val: 1, ant: "f" }, 8, 2, { val: 9, ant: "r" }]}
+	scale={50}
+/>
 
 Implementing the `dequeue()` procedure:
 
@@ -623,9 +653,9 @@ let's consider an example.
 
 Suppose we have the following queue and its array implementation:
 
-<Sequence data={[{ val: 1, ant: "f" }, 3, 2, { val: 7, ant: "r" }]} />
+<Sequence data={[{ val: 1, ant: "f" }, 3, 2, { val: 7, ant: "r" }]} scale={40}/>
 
-<Queue data={[{ val: 1, ant: "f" }, 3, 2, { val: 7, ant: "r" }]} />
+<Queue data={[{ val: 1, ant: "f" }, 3, 2, { val: 7, ant: "r" }]} scale={50}/>
 
 ```rust
 f = 0;
@@ -641,6 +671,7 @@ As we can see, we've already dequeued once. If we dequeue again:
 		2,
 		{ val: 7, ant: "r" },
 	]}
+	scale={40}
 />
 
 <Queue
@@ -650,6 +681,7 @@ As we can see, we've already dequeued once. If we dequeue again:
 		2,
 		{ val: 7, ant: "r" },
 	]}
+	scale={50}
 />
 
 ```rust
@@ -666,6 +698,7 @@ And again:
 		{ val: 2, focus: "red", ant: "f" },
 		{ val: 7, ant: "r" },
 	]}
+	scale={40}
 />
 
 <Queue
@@ -675,6 +708,7 @@ And again:
 		{ val: 2, focus: "red", ant: "f" },
 		{ val: 7, ant: "r" },
 	]}
+	scale={50}
 />
 
 ```rust
@@ -691,6 +725,7 @@ And dequeuing one more time:
 		{ val: 2, focus: "red" },
 		{ val: 7, focus: "red", ant: "f r" },
 	]}
+	scale={40}
 />
 
 <Queue
@@ -700,6 +735,7 @@ And dequeuing one more time:
 		{ val: 2, focus: "red" },
 		{ val: 7, focus: "red", ant: "f r" },
 	]}
+	scale={40}
 />
 
 ```rust
@@ -716,6 +752,7 @@ Then, dequeuing one last time:
 		{ val: 2, focus: "red" },
 		{ val: 7, focus: "red", ant: "r" },
 	]}
+	scale={40}
 />
 
 <Queue
@@ -725,6 +762,7 @@ Then, dequeuing one last time:
 		{ val: 2, focus: "red" },
 		{ val: 7, focus: "red", ant: "r" },
 	]}
+	scale={50}
 />
 
 ```rust
@@ -788,7 +826,7 @@ constant time—${O(1).}$
 If we thought about FRPs carefully, we might have noticed a few drawbacks.
 Suppose we had the following queue:
 
-<Queue data={[2, 4, 8, 1, { val: 3, ant: "r" }]} />
+<Queue data={[2, 4, 8, 1, { val: 3, ant: "r" }]} scale={60}/>
 
 If we dequeue twice, we get:
 
@@ -800,13 +838,14 @@ If we dequeue twice, we get:
 		1,
 		3,
 	]}
+	scale={60}
 />
 
 Because of the way we've implemented `isFull()` and `isEmpty()`, we cannot
 reuse the space previously occupied by the dequeued queuer. If dequeued all
 of the elements:
 
-<Queue data={["", "", "", "", { val: "", ant: "r" }]} cname={"all-red"} />
+<Queue data={["", "", "", "", { val: "", ant: "r" }]} scale={60}/>
 
 and executed `isEmpty()`, we would get back `true`, since `front > rear`.
 Given this restriction, we call such FRPs **single-use FRP-bounded
@@ -824,15 +863,15 @@ The solution is simple: The moment `isEmpty()` returns `true`,
 re-initialize `front` and `rear` to `-1`. For example, consider the
 following queue:
 
-<Queue data={[2, 4, 8, 1, { val: 3, ant: "r" }]} />
+<Queue data={[2, 4, 8, 1, { val: 3, ant: "r" }]} scale={60}/>
 
 If we dequeued all of the elements:
 
-<Queue data={["", "", "", "", { val: "", ant: "r" }]} cname={"all-red"} />
+<Queue data={["", "", "", "", { val: "", ant: "r" }]} scale={60}/>
 
 we immediately reset the pointers `front` and `rear` to `-1`:
 
-<Queue data={["", "", "", "", ""]} />
+<Queue data={["", "", "", "", ""]} scale={60}/>
 
 This allows us to reuse the dequeued element's spaces. Accordinly,
 implementing the resetting FRP is just a matter of writing a new function
@@ -859,6 +898,7 @@ situation:
 		1,
 		{ val: "r", ant: "r" },
 	]}
+	scale={60}
 />
 
 We cannot use the dequeued space, because the queue is not empty. Because
@@ -871,13 +911,14 @@ and resetting FRPs. First, instead of starting `front` and `rear` at `-1`,
 we start them at `0`. For example, suppose we had a queue with a capacity
 of ${6:}$
 
-<Queue data={[{ val: 0, ant: "f r" }, 1, 2, 3, 4, 5]} />
+<Queue data={[{ val: 0, ant: "f r" }, 1, 2, 3, 4, 5]} scale={50}/>
 
 Say we enqueue the value `1`. So the rear pointer `r` increments, and
 initializes the value `1` at index ${1:}$
 
 <Queue
 	data={[{ val: "", ant: "f" }, { val: 1, ant: "r" }, "", "", "", ""]}
+	scale={50}
 />
 
 The index that `f` points to, ${0}$ in this case, must be left empty.
@@ -886,6 +927,7 @@ filled the rest of queue spaces:
 
 <Queue
 	data={[{ val: "", ant: "f" }, 1, 5, 8, 9, 3, { val: 3, ant: "r" }]}
+	scale={50}
 />
 
 Now let's say we dequeue two queuers:
@@ -899,6 +941,7 @@ Now let's say we dequeue two queuers:
 		9,
 		{ val: 3, ant: "r" },
 	]}
+	scale={50}
 />
 
 and we want to enqueue the element `2`. For single-use FRPs and resetting
@@ -914,6 +957,7 @@ definitely can: Move `r` back to `0`, and enqueue:
 		9,
 		3,
 	]}
+	scale={50}
 />
 
 At this point, the queue is _full_. Remember, we cannot use the space `f`
@@ -931,6 +975,7 @@ To insert the element `7`, we simply increment `r` and enqueue:
 		9,
 		3,
 	]}
+	scale={50}
 />
 
 Let's consider another example, this time visualizing the circular queue.
@@ -945,12 +990,14 @@ We visualize the circular queue
 		9,
 		3,
 	]}
+	scale={50}
 />
 
 as:
 
 <CircularQueue
 	data={[2, { val: 7, ant: "r" }, { val: "", ant: "f" }, 8, 9, 3]}
+	scale={50}
 />
 
 Thinking of the circular queue in this way, it's more apparent what we have
@@ -1042,7 +1089,7 @@ account for this characteristic when implementing a linked queue.
 
 Consider the following queue:
 
-<Queue data={[{ val: 2, ant: "f" }, 8, 9, { val: 3, ant: "r" }]} />
+<Queue data={[{ val: 2, ant: "f" }, 8, 9, { val: 3, ant: "r" }]} scale={40}/>
 
 Implementing this as a linked list, we have:
 
@@ -1053,7 +1100,7 @@ Thus, when we create the first node for the queue above, we create the node
 with a pointer `t`, then have the pointers `f` and `r` point to this new
 node:
 
-<LinkedList data={[{ val: 2, ant: "t f r" }]} />
+<LinkedList data={[{ val: 2, ant: "t f r" }]} scale={50}/>
 
 Once we have the first node established, we can begin queuing and
 dequeuing.

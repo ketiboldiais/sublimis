@@ -1,3 +1,7 @@
+import { Stack } from "@illus/Stack";
+import { LinkedList } from "@illus/LinkedList";
+import { Sequence } from "@illus/Sequence";
+
 # The Stack
 
 The following materials pertain to the **stack data structure**. Unlike the
@@ -94,7 +98,7 @@ capacity 4. Such a stack can be interpreted as:
 
 But when implemented as an array:
 
-<Sequence data={[0, 0, 0, 0]} />
+<Sequence data={[0, 0, 0, 0]} scale={40} />
 
 Question: How do the array's indices relate to the stack? The indices
 provide a helpful way for keeping track of the topmost frame. In these
@@ -102,7 +106,7 @@ materials, we interpret the array qua stack as follows:
 
 <Stack data={[0, 0, 0, 0]} isIndexed={true} />
 
-<Sequence data={[0, 0, 0, 0]} />
+<Sequence data={[0, 0, 0, 0]} scale={40} />
 
 Here, we have a stack of _capacity_ 4 and a _height_ of 0. Given the empty
 array, when we insert a new element into the array by writing
@@ -110,28 +114,28 @@ array, when we insert a new element into the array by writing
 
 <Stack data={[2, 0, 0, 0]} isIndexed={true} />
 
-<Sequence data={[2, 0, 0, 0]} />
+<Sequence data={[2, 0, 0, 0]} scale={40} />
 
 The stack's capacity is still 4 but now its height is 1. Pushing another
 frame on the stack, say `F(9)` we write `array[1] = 9`:
 
 <Stack data={[2, 9, 0, 0]} isIndexed={true} />
 
-<Sequence data={[2, 9, 0, 0]} />
+<Sequence data={[2, 9, 0, 0]} scale={40} />
 
 Now the height is 2, but the capacity is still 4. Writing `array[2] = 1`,
 we push yet another frame:
 
 <Stack data={[2, 9, 1, 0]} isIndexed={true} />
 
-<Sequence data={[2, 9, 1, 0]} />
+<Sequence data={[2, 9, 1, 0]} scale={40} />
 
 The capacity is still 4, but the height is now 3. Once we push another
 frame on the stack, say `array[3] = 8`, we have:
 
 <Stack data={[2, 9, 1, 8]} isIndexed={true} />
 
-<Sequence data={[2, 9, 1, 8]} />
+<Sequence data={[2, 9, 1, 8]} scale={40} />
 
 At this point, we say that the stack is **full**—the stack's height equals
 its capacity, and we can push no further frames.
@@ -144,7 +148,7 @@ in the stack:
 
 <Stack data={[2, 9, 1, { val: 8, focus: true }]} isIndexed={true} />
 
-<Sequence data={[2, 9, 1, { val: 8, focus: true }]} />
+<Sequence data={[2, 9, 1, { val: 8, focus: true }]} scale={40} />
 
 Because of how important the topmost frame is, we want to always have a
 pointer `top` pointing at this frame:
@@ -154,7 +158,7 @@ pointer `top` pointing at this frame:
 	isIndexed={true}
 />
 
-<Sequence data={[2, 9, 1, { val: 8, focus: true }]} />
+<Sequence data={[2, 9, 1, { val: 8, focus: true }]} scale={40} />
 
 Putting all of this together, we want the following properties for the
 static stack, just to start:
@@ -1907,14 +1911,15 @@ To see that this works, let's consider our simple expression, `(a+b)`.
 First, string values are really just arrays of characters, with the last
 character being the string terminator.
 
-<Sequence data={["(", "a", "+", "b", ")", "\0"]} />
+<Sequence data={["(", "a", "+", "b", ")", "\\0"]} scale={50} />
 
 We can thus iterate over this array. Starting with the first character, we
 see that the character is a parenthesis, so we push it onto our dynamic
 stack:
 
 <Sequence
-	data={[{ val: "(", focus: "match" }, "a", "+", "b", ")", "\0"]}
+	data={[{ val: "(", focus: "match" }, "a", "+", "b", ")", "\\0"]}
+	scale={50}
 />
 
 <Stack data={["("]} />
@@ -1922,19 +1927,28 @@ stack:
 We go to the next character, and see that it isn't a parenthesis so we skip
 it:
 
-<Sequence data={["(", { val: "a", focus: "skip" }, "+", "b", ")", "\0"]} />
+<Sequence
+	data={["(", { val: "a", focus: "skip" }, "+", "b", ")", "\\0"]}
+	scale={50}
+/>
 
 <Stack data={["("]} />
 
 We skip the next character because it isn't a parenthesis either:
 
-<Sequence data={["(", "a", { val: "+", focus: "skip" }, "b", ")", "\0"]} />
+<Sequence
+	data={["(", "a", { val: "+", focus: "skip" }, "b", ")", "\\0"]}
+	scale={50}
+/>
 
 <Stack data={["("]} />
 
 And again we skip the next character because it isn't a parenthesis:
 
-<Sequence data={["(", "a", "+", { val: "b", focus: "skip" }, ")", "\0"]} />
+<Sequence
+	data={["(", "a", "+", { val: "b", focus: "skip" }, ")", "\\0"]}
+	scale={50}
+/>
 
 <Stack data={["("]} />
 
@@ -1942,7 +1956,8 @@ When we get to the next character, it is a parenthesis, so we pop off the
 stack:
 
 <Sequence
-	data={["(", "a", "+", "b", { val: ")", focus: "match" }, "\0"]}
+	data={["(", "a", "+", "b", { val: ")", focus: "match" }, "\\0"]}
+	scale={50}
 />
 
 <Stack data={[{ val: "(", pop: true }]} />
@@ -1952,7 +1967,8 @@ when parentheses don't match, let's consider the expression `((a + b)`. The
 first run:
 
 <Sequence
-	data={[{ val: "(", focus: "match" }, "(", "a", "+", "b", ")", "\0"]}
+	data={[{ val: "(", focus: "match" }, "(", "a", "+", "b", ")", "\\0"]}
+	scale={50}
 />
 
 <Stack data={["("]} />
@@ -1960,7 +1976,8 @@ first run:
 The second run:
 
 <Sequence
-	data={["(", { val: "(", focus: "match" }, "a", "+", "b", ")", "\0"]}
+	data={["(", { val: "(", focus: "match" }, "a", "+", "b", ")", "\\0"]}
+	scale={50}
 />
 
 <Stack data={["(", "("]} />
@@ -1969,7 +1986,8 @@ We skip the next three characters because they aren't parentheses. When we
 get to `)`, we pop off the stack:
 
 <Sequence
-	data={["(", "(", "a", "+", "b", { val: ")", focus: "match" }, "\0"]}
+	data={["(", "(", "a", "+", "b", { val: ")", focus: "match" }, "\\0"]}
+	scale={50}
 />
 
 <Stack data={["(", { val: "(", pop: "true" }]} />

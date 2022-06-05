@@ -1,18 +1,25 @@
 .theme-light {
 	--red: rgb(255, 112, 112);
+	--darkRed: rgb(229, 0, 0);
 	--lightGreen: rgb(148, 232, 148);
+	--paleGreen: rgb(197, 234, 197);
+	--darkGreen: rgb(0, 129, 0);
 	--lightBlue: rgb(112, 255, 234);
+	--paleBlue: rgb(149, 187, 205);
+	--darkBlue: rgb(0, 155, 207);
 	--black: rgb(41, 41, 41);
 	--white: white;
-	--lightgrey: rgb(255, 112, 112);
+	--lightGrey: rgb(147, 147, 147);
 	--darkBlue: rgb(38, 38, 117);
 	--lavender: rgb(229, 131, 229);
 	--gold: gold;
+	--paleGold: rgb(255, 247, 211);
+	--orange: rgb(255, 186, 68);
 
 	/* Core Colors */
 	--background-color: #fbfbfb;
 	--text-color: black;
-	--nav-content-background-color: #f7fafc;
+	--nav-content-background-color: #eaf4fb;
 
 	/* Heading color */
 	--heading-color: rgb(71, 102, 136);
@@ -47,15 +54,72 @@
 		inset -0.063rem -0.063rem 0.125rem white;
 	--box-shadow-active: 1px 1px 2px rgb(104, 104, 104);
 
-	/* illus palette */
-	--binary-tree-edge-color: firebrick;
-	--binary-tree-node-fill-color: tomato;
-	--binary-tree-text-color: white;
+/* illus palette */
+	/* Binary Trees */
+		--binary-tree-edge-color: firebrick;
+		--binary-tree-node-fill-color: tomato;
+		--binary-tree-text-color: white;
 
-	/* sequences */
-	--sequenceElementFill: rgb(79, 79, 79);
-	--sequenceElementStroke: rgb(24, 24, 24);
-	--sequenceElementTextColor: rgb(238, 238, 238);
-	--sequenceElementIndexColor: rgb(118, 118, 118);
-	--sequenceAnnotationColor: red;
+	/* Tree */
+		--tree-edge-color: var(--text-color);
+		--tree-node-fill-color: var(--paleGold);
+		--tree-text-color: var(--text-color);
+
+	/* Sequences */
+		--sequenceElementFill: var(--white);
+		--sequenceElementStroke: var(--black);
+		--sequenceElementTextColor: var(--black);
+		--sequenceElementIndexColor: var(--lightGrey);
+		--sequenceAnnotationColor: var(--red);
+
+	/* Matrices */
+		--matrixElementFill: var(--white);
+		--matrixElementStroke: var(--black);
+		--matrixElementTextColor: var(--black);
+		--matrixIndexColor: var(--lightGrey);
+		--matrixFocusFillColor: var(--black);
+		--matrixFocusTextColor: var(--orange);
+
+	/* Linked Lists */
+		--linkedListDataFieldFill: var(--white);
+		--linkedListDataFieldTextColor: var(--text-color);
+		--linkedListNextFieldFill: var(--paleBlue);
+		--linkedListLinkColor: var(--darkRed);
+		--linkedListIndexColor: var(--lightGrey);
+
+	/* Circular Linked Lists */
+		--circularListDataFieldFill: var(--white);
+		--circularListDataFieldTextColor: var(--text-color);
+		--circularListNextFieldFill: var(--paleBlue);
+		--circularListLinkColor: var(--darkRed);
+		--circularListIndexColor: var(--lightGrey);
+
+	/* Doubly Linked Lists */
+		--doublyLinkedListDataFieldFill: var(--white);
+		--doublyLinkedListTextColor: var(--text-color);
+		--doublyLinkedListNextFieldFill: var(--paleBlue);
+		--doublyLinkedListPrevFieldFill: var(--paleBlue);
+		--doublyLinkedListLinkColor: var(--darkRed);
+		--doublyLinkedListIndexColor: var(--red);
+
+	/* Stacks */
+		--stackFrameFill: var(--darkRed);
+		--stackFrameText: var(--white);
+
+	/* Queues */
+		--queuerFill: var(--white);
+		--queuerTextColor: var(--black);
+		--queuerIndexFill: var(--paleBlue);
+		--queuerIndexTextColor: var(--white);
+		--queuerAnnotationColor: var(--red);
+		--queuerFocusRedFill: var(--darkRed);
+		--queuerFocusRedStroke: var(--darkRed);
+	/* Circular Queues */
+		--circularQueuerFill: var(--paleGreen);
+		--circularQueuerStroke: var(--darkGreen);
+		--circularQueuerTextColor: var(--darkGreen);
+		--circularQueuerIndexColor: var(--lightGrey);
+	/* Parse Tree */
+		--parseTreeEdgeColor: var(--darkRed);
+		--parseTreeTextColor: var(--text-color);
 }

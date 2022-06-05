@@ -1,3 +1,7 @@
+import { HTree } from "@illus/HTree";
+import { Tree } from "@illus/Tree";
+import { Stack } from "@illus/Stack";
+
 # Preorder Traversal
 
 Preorder traveral is defined as follows:
@@ -26,7 +30,6 @@ Let's illustrate with a few examples. Consider the following tree:
 		{ child: "b", parent: "a" },
 		{ child: "c", parent: "a" },
 	]}
-	containerHeight={20}
 />
 
 We start by executing `visit(node)`. This means visiting the root, ${n_a:}$
@@ -37,7 +40,6 @@ We start by executing `visit(node)`. This means visiting the root, ${n_a:}$
 		{ child: "b", parent: "a" },
 		{ child: "c", parent: "a" },
 	]}
-	containerHeight={20}
 />
 
 Then we execute `preorder_traverse(left_subtree)`. This is simply a
@@ -52,7 +54,6 @@ ${n_b:}$
 		{ child: "b", parent: "a", focus: "red", ant: 2 },
 		{ child: "c", parent: "a" },
 	]}
-	containerHeight={20}
 />
 
 Because ${n_b}$ has no subrees, we finish the call
@@ -65,7 +66,6 @@ Because ${n_b}$ has no subrees, we finish the call
 		{ child: "b", parent: "a", ant: 2 },
 		{ child: "c", parent: "a", focus: "red", ant: 3 },
 	]}
-	containerHeight={20}
 />
 
 Putting these calls all together, for binary tree of order ${3,}$ the
@@ -83,7 +83,6 @@ If we had a left-skewed binary tree, the sequence would be ${(n_a, n_b).}$
 		{ child: "b", parent: "a", ant: 2 },
 		{ child: "c", parent: "a", display: "none" },
 	]}
-	containerHeight={20}
 />
 
 The same goes for a right-skewed binary tree. Since there is no
@@ -95,7 +94,6 @@ left-subtree, the next call is `preorder_traverse(right_subtree)`:
 		{ child: "b", parent: "a", display: "none" },
 		{ child: "c", parent: "a", ant: 2 },
 	]}
-	containerHeight={20}
 />
 
 ### Implementation
@@ -112,7 +110,6 @@ Suppose we're given the following tree:
 		{ child: "7", parent: "5", edgeName: "F5" },
 		{ child: "2", parent: "5", edgeName: "F6" },
 	]}
-	isDirected={true}
 />
 
 For preorder traversal, we have the following function:
@@ -146,7 +143,6 @@ line in this call prints the value `8`:
 	margins={[20, 90, 20, 100]}
 	width={300}
 	height={100}
-	containerHeight={20}
 />
 
 Inside `preorder(F0)`, we call `preorder((*root).left_child)`. Following
@@ -163,7 +159,6 @@ our diagram, this means making the call `preorder(F1)`:
 	width={300}
 	height={200}
 	margins={[20, 100, 20, 100]}
-	containerHeight={40}
 />
 
 Given `preorder(F1)`, we print the value `3`, then make the call
@@ -185,7 +180,6 @@ Given `preorder(F1)`, we print the value `3`, then make the call
 	width={400}
 	height={300}
 	margins={[20, 100, 20, 100]}
-	containerHeight={40}
 />
 
 The call `preorder(F3)` then prints the value `4`, and calls
@@ -209,7 +203,6 @@ The call `preorder(F3)` then prints the value `4`, and calls
 	width={500}
 	height={300}
 	margins={[20, 100, 20, 100]}
-	containerHeight={40}
 />
 
 Because `F3` has no left-child, the call is essentially `preorder(0)` (a
@@ -236,7 +229,6 @@ Because `F3` has no right-child, this call also results in `preorder(0)`:
 	width={500}
 	height={300}
 	margins={[20, 100, 20, 100]}
-	containerHeight={40}
 />
 
 Having executed all of the instructions for `preorder(F3)`, the most recent
@@ -267,7 +259,6 @@ call `preorder(F4.left_child)` is made.
 	width={500}
 	height={400}
 	margins={[20, 100, 20, 100]}
-	containerHeight={50}
 />
 
 This recursive call evaluates to `preorder(NULL)`, so we make the next
@@ -308,7 +299,6 @@ that looks like:
 	width={500}
 	height={500}
 	margins={[20, 100, 20, 100]}
-	containerHeight={65}
 />
 
 If we count the number `preorder()` calls, we'll find that there are ${15}$
@@ -363,7 +353,6 @@ while (root != NULL):
 		{ child: "7", parent: "5", edgeName: "F5" },
 		{ child: "2", parent: "5", edgeName: "F6" },
 	]}
-	isDirected={true}
 />
 
 Suppose `(*oak).root` has the address `F0`. First we make the call

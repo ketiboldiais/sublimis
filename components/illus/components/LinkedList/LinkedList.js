@@ -1,10 +1,14 @@
 import React, { useRef, useEffect } from "react";
-import { isObjectLiteral } from "../utils/isObjectLiteral/isObjectLiteral";
-import { svg } from "../utils/svg/svg";
 import { Base } from "../base/Base";
 import * as d3 from "d3";
-import { translate } from "../utils/translate/translate";
-import { insertArrowDefinitions } from "../utils/insertArrowDefinitions/insertArrowDefinitions";
+import {
+	svg,
+	isObjectLiteral,
+	className,
+	insertArrowDefinitions,
+	translate,
+	setClassName,
+} from "../utils";
 
 const formatData = (arr = []) => {
 	let data = [];
@@ -20,10 +24,11 @@ const formatData = (arr = []) => {
 };
 
 export const LinkedList = ({
-	data = [1,2,3,4,5],
+	data = [1, 2, 3, 4, 5],
 	width = 30.1049 * data.length + 70.1515,
 	height = 40,
-	containerWidth,
+	scale = 100,
+	containerWidth = scale,
 	containerHeight,
 	margins = [10, 40, 10, 20],
 	isIndexed = true,
@@ -32,31 +37,34 @@ export const LinkedList = ({
 	const _svg = svg(width, height, margins);
 	const _data = formatData(data);
 	const nodeCount = _data.length;
-	const scale = d3
+	const xScale = d3
 		.scaleBand()
 		.domain(d3.range(nodeCount))
 		.rangeRound([0, _svg.width])
 		.paddingInner(0.5);
-	const nodeWidth = scale.bandwidth();
+	const nodeWidth = xScale.bandwidth();
 	const nodeHeight = 10;
 
 	useEffect(() => {
 		const canvas = d3
 			.select(LinkedListFigure.current)
 			.select("g.svgElement");
-		const nodeGroup = canvas
+		const linkedList = canvas
 			.append("g")
-			.attr("class", "linked-list")
+			.attr("class", className.linkedList.canvas);
+		const nodeGroup = linkedList
 			.selectAll("nodes")
 			.data(_data)
 			.enter()
 			.append("g")
-			.attr("class", "linked-list-node")
-			.attr("transform", (d, i) => translate(scale(i), 0))
+			.attr("class", (d) =>
+				setClassName(d.focus, className.linkedList.node),
+			)
+			.attr("transform", (d, i) => translate(xScale(i), 0))
 			.attr("y", 0);
 		insertArrowDefinitions(
 			canvas,
-			"linked-list-arrow",
+			className.linkedList.arrowURL,
 			9,
 			0,
 			5,
@@ -66,17 +74,15 @@ export const LinkedList = ({
 		);
 		const dataField = nodeGroup
 			.append("g")
-			.attr("class", "node-data-field");
+			.attr("class", className.linkedList.dataField);
 		const dataFieldRectangle = dataField
 			.append("rect")
-			.attr("class", "node-data-field-rectangle")
 			.attr("width", nodeWidth)
 			.attr("height", nodeHeight)
 			.attr("stroke", "black")
 			.attr("fill", "white");
 		const dataFieldText = dataField
 			.append("text")
-			.attr("class", "node-data-field-text")
 			.attr("text-anchor", "middle")
 			.attr("x", nodeWidth / 2)
 			.attr("y", nodeHeight / 2)
@@ -86,9 +92,8 @@ export const LinkedList = ({
 		if (isIndexed) {
 			dataField
 				.append("g")
-				.attr("class", "enfig-index")
+				.attr("class", className.linkedList.index)
 				.append("text")
-				.attr("class", "node-index-text")
 				.attr("text-anchor", "middle")
 				.attr("fill", "black")
 				.style("font-size", "7px")
@@ -99,8 +104,8 @@ export const LinkedList = ({
 
 		const nextField = nodeGroup
 			.append("g")
-			.attr("class", "node-next-field")
-			.attr("transform", translate(scale.bandwidth(), 0));
+			.attr("class", className.linkedList.nextField)
+			.attr("transform", translate(xScale.bandwidth(), 0));
 
 		const nextFieldRectangle = nextField
 			.append("rect")
@@ -110,30 +115,35 @@ export const LinkedList = ({
 			.attr("height", nodeHeight);
 
 		const nodeLinks = nodeGroup
+			.append("g")
+			.attr("class", className.linkedList.link)
+
+		nodeLinks
 			.append("line")
-			.attr("class", "linked-list-link")
 			.attr("stroke", "black")
 			.attr("x1", nodeWidth + nodeWidth / 4)
 			.attr("y1", nodeHeight / 2)
-			.attr("x2", nodeWidth + scale.bandwidth())
+			.attr("x2", nodeWidth + xScale.bandwidth())
 			.attr("y2", nodeHeight / 2)
-			.attr("marker-end", "url(#linked-list-arrow)");
+			.attr("marker-end", `url(#${className.linkedList.arrowURL}`);
 
-		const nodeLinkCircle = nodeGroup
+		nodeLinks
 			.append("circle")
-			.attr("fill", "black")
+			.attr("fill", "red")
 			.attr("r", 1.5)
 			.attr("cx", nodeWidth + nodeWidth / 4)
-			.attr("cy", nodeHeight / 2);
+			.attr("cy", nodeHeight / 2)
+			// .attr("cx", nodeWidth + nodeWidth / 4)
+			// .attr("cy", nodeHeight / 2);
 
 		const annotation = nextField
 			.filter((d) => d.ant)
 			.append("g")
-			.attr("class", "linked-list-annotation")
+			.attr("class", className.linkedList.annotation)
 			.append("text")
 			.attr("text-anchor", "middle")
 			.style("font-size", "8px")
-			.attr("x", -scale.bandwidth() / 4)
+			.attr("x", -xScale.bandwidth() / 4)
 			.attr("y", -4)
 			.text((d) => d.ant);
 	});

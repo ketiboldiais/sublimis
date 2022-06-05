@@ -1,3 +1,6 @@
+import { Matrix } from "@illus/Matrix";
+import { Sequence } from "@illus/Sequence";
+
 <Metadata
 	title={"Matrices"}
 	description={"Matrices and grid data structures in C++."}
@@ -8,22 +11,21 @@
 
 # Matrices & Tensors
 
-- [Matrices & Tensors](#matrices--tensors)
-  - [Static Matrices](#static-matrices)
-  - [Dynamic Matrices](#dynamic-matrices)
-  - [Addressing Matrices](#addressing-matrices)
-    - [Row-major Ordering](#row-major-ordering)
-    - [Column-major Ordering](#column-major-ordering)
-  - [Tensors](#tensors)
-    - [Tensor Addressing](#tensor-addressing)
-    - [Tensors: Row-major Ordering](#tensors-row-major-ordering)
-    - [Tensors: Column-major Ordering](#tensors-column-major-ordering)
-    - [General Formula for Addressing](#general-formula-for-addressing)
-  - [Time Complexity for Translation](#time-complexity-for-translation)
-    - [Horner's Method](#horners-method)
-  - [Special Matrices](#special-matrices)
-    - [Diagonal Matrix](#diagonal-matrix)
-    - [Lower Triangular Matrix](#lower-triangular-matrix)
+1. [Static Matrices](#static-matrices)
+2. [Dynamic Matrices](#dynamic-matrices)
+3. [Addressing Matrices](#addressing-matrices)
+   1. [Row-major Ordering](#row-major-ordering)
+   2. [Column-major Ordering](#column-major-ordering)
+4. [Tensors](#tensors)
+   1. [Tensor Addressing](#tensor-addressing)
+   2. [Tensors: Row-major Ordering](#tensors-row-major-ordering)
+   3. [Tensors: Column-major Ordering](#tensors-column-major-ordering)
+   4. [General Formula for Addressing](#general-formula-for-addressing)
+5. [Time Complexity for Translation](#time-complexity-for-translation)
+   1. [Horner's Method](#horners-method)
+6. [Special Matrices](#special-matrices)
+   1. [Diagonal Matrix](#diagonal-matrix)
+   2. [Lower Triangular Matrix](#lower-triangular-matrix)
 
 Following lists, the next simplest data structure we explore is the
 **matrix** or **grid**. In the simplest case, the matrix is a data
@@ -54,8 +56,7 @@ other words, a ${3 \times 4}$ matrix. Visually:
 		[0, 0, 0, 0],
 		[0, 0, 0, 0],
 	]}
-	width={300}
-	height={270}
+	scale={60}
 />
 
 Note, however, that in memory, this is really an array where each element
@@ -83,6 +84,7 @@ the visual representation used in this section to the right):
 		[4, 5, 6],
 		[7, 8, 9],
 	]}
+	scale={50}
 />
 
 In mathematical notation:
@@ -682,13 +684,13 @@ The diagonal matrix looks like the following:
 
 <Matrix
 	data={[
-		[3, 0, 0, 0, 0],
-		[0, 7, 0, 0, 0],
-		[0, 0, 4, 0, 0],
-		[0, 0, 0, 9, 0],
-		[0, 0, 0, 0, 6],
+		[{ val: 3, focus: "mark" }, 0, 0, 0, 0],
+		[0, { val: 7, focus: "mark" }, 0, 0, 0],
+		[0, 0, { val: 4, focus: "mark" }, 0, 0],
+		[0, 0, 0, { val: 9, focus: "mark" }, 0],
+		[0, 0, 0, 0, { val: 6, focus: "mark" }],
 	]}
-	focus={([0, 0], [1, 1], [3, 3], [4, 4], [5, 5])}
+	scale={50}
 />
 
 Notice the numbers cutting diagonally: 3, 7, 4, 9, and 6. More generally,
@@ -698,13 +700,13 @@ top-left to the bottom-right, or from top-right to bottom-left:
 
 <Matrix
 	data={[
-		[0, 0, 0, 0, 3],
-		[0, 0, 0, 7, 0],
-		[0, 0, 4, 0, 0],
-		[0, 9, 0, 0, 0],
-		[6, 0, 0, 0, 0],
+		[0, 0, 0, 0, { val: 4, focus: "mark" }],
+		[0, 0, 0, { val: 7, focus: "mark" }, 0],
+		[0, 0, { val: 7, focus: "mark" }, 0, 0],
+		[0, { val: 7, focus: "mark" }, 0, 0, 0],
+		[{ val: 6, focus: "mark" }, 0, 0, 0, 0],
 	]}
-	focus={([0, 4], [1, 3], [2, 2], [3, 1], [4, 0])}
+	scale={50}
 />
 
 Let's focus on the former, where the diagonal runs from top-left to
@@ -766,11 +768,12 @@ ${M}$ into an array of size ${n.}$ In other words, the matrix:
 		[0, 0, 0, 9, 0],
 		[0, 0, 0, 0, 6],
 	]}
+	scale={60}
 />
 
 becomes the array:
 
-<Sequence data={[3, 7, 4, 9, 6]} />
+<Sequence data={[3, 7, 4, 9, 6]} scale={50}/>
 
 How do we store the non-zero elements of the matrix ${M}$ in the array
 ${A?}$ The first step, on our part, is to determine the mapping pattern.

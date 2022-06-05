@@ -1,38 +1,46 @@
+import { BinaryTree } from "@illus/BinaryTree";
+import { Tree } from "@illus/Tree";
+
+<Metadata
+	title={"Trees"}
+	description={"Notes on trees"}
+	keywords={"trees, binary trees, data structures and algorithms"}
+/>
+
 # Introduction to Trees
 
-- [Introduction to Trees](#introduction-to-trees)
-  - [Terminology](#terminology)
-  - [Tree Paths](#tree-paths)
-  - [Binary Trees](#binary-trees)
-    - [Tree Counting](#tree-counting)
-    - [Unordered Tree Permutations](#unordered-tree-permutations)
-  - [Tallest Unordered Binary Tree Permutation](#tallest-unordered-binary-tree-permutation)
-  - [Ordered Tree Permutations](#ordered-tree-permutations)
-  - [Height and Node Bounds](#height-and-node-bounds)
-    - [Binary Shrub Sizes](#binary-shrub-sizes)
-    - [Binary Lumber Size](#binary-lumber-size)
-  - [Lumber Heights](#lumber-heights)
-  - [Shrub Heights](#shrub-heights)
-    - [Binary Tree Bounds](#binary-tree-bounds)
-  - [Branch Nodes v. Leaf Nodes](#branch-nodes-v-leaf-nodes)
-  - [Types of Binary Trees](#types-of-binary-trees)
-    - [Rooted Binary Tree](#rooted-binary-tree)
-    - [Proper Binary Tree](#proper-binary-tree)
-    - [Relationship Between Height and Nodes](#relationship-between-height-and-nodes)
-    - [Shrubs](#shrubs)
-    - [Bounds of Proper Binary Trees](#bounds-of-proper-binary-trees)
-    - [Relation: Branch Nodes and Leaves](#relation-branch-nodes-and-leaves)
-    - [Complete Binary Trees](#complete-binary-trees)
-    - [Perfect Binary Tree](#perfect-binary-tree)
-    - [Balanced Binary Tree](#balanced-binary-tree)
-    - [Summary of Tree Types](#summary-of-tree-types)
-  - [${k\text{-ary}}$ Trees](#ktext-ary-trees)
-    - [Strict ${k\text{-ary}}$ Trees](#strict-ktext-ary-trees)
-    - [Strict ${k\text{-ary}}$ Shrub Sizes](#strict-ktext-ary-shrub-sizes)
-    - [Strict ${k\text{-ary}}$ Timber Sizes](#strict-ktext-ary-timber-sizes)
-    - [Strict ${k\text{-ary}}$ Shrub Heights](#strict-ktext-ary-shrub-heights)
-    - [Strict ${k\text{-ary}}$ Timber Heights](#strict-ktext-ary-timber-heights)
-    - [Relationship: Leaves & Branch Nodes](#relationship-leaves--branch-nodes)
+1. [Terminology](#terminology)
+2. [Tree Paths](#tree-paths)
+3. [Binary Trees](#binary-trees)
+   1. [Tree Counting](#tree-counting)
+   2. [Unordered Tree Permutations](#unordered-tree-permutations)
+4. [Tallest Unordered Binary Tree Permutation](#tallest-unordered-binary-tree-permutation)
+5. [Ordered Tree Permutations](#ordered-tree-permutations)
+6. [Height and Node Bounds](#height-and-node-bounds)
+   1. [Binary Shrub Sizes](#binary-shrub-sizes)
+   2. [Binary Lumber Size](#binary-lumber-size)
+7. [Lumber Heights](#lumber-heights)
+8. [Shrub Heights](#shrub-heights)
+   1. [Binary Tree Bounds](#binary-tree-bounds)
+9. [Branch Nodes v. Leaf Nodes](#branch-nodes-v-leaf-nodes)
+10. [Types of Binary Trees](#types-of-binary-trees)
+    1. [Rooted Binary Tree](#rooted-binary-tree)
+    2. [Proper Binary Tree](#proper-binary-tree)
+    3. [Relationship Between Height and Nodes](#relationship-between-height-and-nodes)
+    4. [Shrubs](#shrubs)
+    5. [Bounds of Proper Binary Trees](#bounds-of-proper-binary-trees)
+    6. [Relation: Branch Nodes and Leaves](#relation-branch-nodes-and-leaves)
+    7. [Complete Binary Trees](#complete-binary-trees)
+    8. [Perfect Binary Tree](#perfect-binary-tree)
+    9. [Balanced Binary Tree](#balanced-binary-tree)
+    10. [Summary of Tree Types](#summary-of-tree-types)
+11. [k-ary Trees](#ktext-ary-trees)
+    1. [Strict k-ary Trees](#strict-ktext-ary-trees)
+    2. [Strict k-ary Shrub Sizes](#strict-ktext-ary-shrub-sizes)
+    3. [Strict k-ary Timber Sizes](#strict-ktext-ary-timber-sizes)
+    4. [Strict k-ary Shrub Heights](#strict-ktext-ary-shrub-heights)
+    5. [Strict k-ary Timber Heights](#strict-ktext-ary-timber-heights)
+    6. [Relationship: Leaves & Branch Nodes](#relationship-leaves--branch-nodes)
 
 In this section, we examine the **tree** data structure. There are many
 kinds of trees—_general trees_, _binary trees_, special types of binary
@@ -56,7 +64,6 @@ trees, and so on. Below is a diagram of some tree.
 		[14, 12],
 		[15, 12],
 	]}
-	narrow={50}
 	edgeLength={100}
 />
 
@@ -116,8 +123,6 @@ For example, the tree below is a tree of order ${|N| = 3.}$
 		["b", "a"],
 		["c", "a"],
 	]}
-	narrow={70}
-	containerHeight={20}
 />
 
 This tree is of order ${|N| = 5.}$
@@ -130,9 +135,7 @@ This tree is of order ${|N| = 5.}$
 		["d", "b"],
 		["e", "b"],
 	]}
-	narrow={70}
 	edgeLength={60}
-	containerHeight={25}
 />
 
 And this tree is of order ${|N| = 15.}$
@@ -306,7 +309,6 @@ ${\text{deg}(n_g) = 0,}$ and so on.
 		["l", "j"],
 		["m", "k"],
 	]}
-	containerHeight={35}
 />
 
 The **degree of a tree**, or **tree degree**, has varying definitions. Some
@@ -752,9 +754,9 @@ are ${2^3}$ nodes. This yields:
 
 $$
 	\begin{aligned}
-		&n(\{ v \in V : v_L = 1 \}) + n(\{ v \in V : v_L = 2 \}) + n(\{ v \in V : v_L = 3 \}) \\ 
-		&= 1 + 2 + 2^2 + 2^3 \\ 
-		&= 
+		&n(\{ v \in V : v_L = 1 \}) + n(\{ v \in V : v_L = 2 \}) + n(\{ v \in V : v_L = 3 \}) \\
+		&= 1 + 2 + 2^2 + 2^3 \\
+		&=
 	15 \end{aligned}
 $$
 
@@ -1256,19 +1258,19 @@ Venn diagram:
 
 ![A Venn diagram of the various tree types.](https://res.cloudinary.com/sublimis/image/upload/v1652917198/cs/tree_types_venn_diagram.svg)
 
-## ${k\text{-ary}}$ Trees
+## k-ary Trees
 
-Binary trees are more generally called ${k\text{-ary}}$ trees.
-Specifically, they are a ${2\text{-ary}}$ tree.
+Binary trees are more generally called k-ary trees.
+Specifically, they are a 2-ary tree.
 
-> _Definition_: A ${k\text{-ary}}$ tree is a rooted tree where each node
+> _Definition_: A k-ary tree is a rooted tree where each node
 > has at most ${k}$ children.
 
 Thus, for the binary tree, we have ${k = 2.}$ This means that each node in
 the tree can only have ${0,}$ ${1,}$ or ${2}$ children. These are the only
 possiblities.
 
-A **ternary tree** is a ${3\text{-ary}}$ tree, so ${k=3.}$ Thus, in a
+A **ternary tree** is a 3-ary tree, so ${k=3.}$ Thus, in a
 ternary tree, each node can only have ${0,}$ ${1,}$ ${2,}$ or ${3}$
 children. For example, the green trees below are all ternary trees, but the
 red tree is not:
@@ -1279,57 +1281,57 @@ That blue tree looks like a binary tree. Indeed, it is. Remember, all
 that's required for a ternary tree is that each node must have _at most_
 ${3}$ nodes. That's a ceiling, not a floor.
 
-Similarly, a ${4\text{-ary}}$ tree is a tree where each node only has
+Similarly, a 4-ary tree is a tree where each node only has
 either ${0,}$ ${1,}$ ${2,}$ ${3,}$ or ${4}$ children.
 
-### Strict ${k\text{-ary}}$ Trees
+### Strict k-ary Trees
 
-A _strict ${k\text{-ary}}$ tree_ is a ${k\text{-ary}}$ tree where each node
+A _strict k-ary tree_ is a k-ary tree where each node
 has either (1) zero children or (2) exactly ${k}$ children.
 
-> _Definition_. Let ${T}$ be a ${k\text{-ary}}$ tree. ${T}$ is a _strict
-> ${k\text{-ary}}$ tree_ iff every node in ${T}$ has a ${0}$ or ${k}$
+> _Definition_. Let ${T}$ be a k-ary tree. ${T}$ is a _strict
+> k-ary tree_ iff every node in ${T}$ has a ${0}$ or ${k}$
 > children.
 
 Thus, a **strict binary tree** (what we referred to earlier as a _proper
 binary tree_) is a binary tree where every node has either ${0}$ or ${2}$
 children. A **strict ternary tree** is a ternary tree where every node has
-either ${0}$ or ${3}$ children. A **strict ${4\text{-ary}}$ tree** is a
-${4\text{-ary}}$ tree where every node has either ${0}$ or ${4}$ children.
+either ${0}$ or ${3}$ children. A **strict 4-ary tree** is a
+4-ary tree where every node has either ${0}$ or ${4}$ children.
 And so on.
 
-### Strict ${k\text{-ary}}$ Shrub Sizes
+### Strict k-ary Shrub Sizes
 
-The shrub size lemmas we saw earlier apply to strict ${k\text{-ary}}$
+The shrub size lemmas we saw earlier apply to strict k-ary
 trees.
 
 > _Lemma: Strict ${k}$-ary Shrub Sizes_. Let ${H \in \Z+}$ and
 > ${k \in \Z+.}$ The minimum number of nodes, i.e., the _minimum size_,
-> necessary to achieving a ${k\text{-ary}}$ tree of height ${H}$ is the
+> necessary to achieving a k-ary tree of height ${H}$ is the
 > _strict ${k}$-ary shrub size_, denoted ${S_{min}^k(H),}$ where:
 >
 > $$
 > 	  S_{min}^k(H) = kH + 1
 > $$
 
-### Strict ${k\text{-ary}}$ Timber Sizes
+### Strict k-ary Timber Sizes
 
 A similar lemma is found for timber sizes:
 
 > _Lemma: Strict ${k}$-ary Shrub Sizes_. Let ${H \in \Z+}$ and
 > ${k \in \Z+.}$ The maximum number of nodes, i.e., the _maximum size_,
-> necessary to achieving a ${k\text{-ary}}$ tree of height ${H}$ is the
+> necessary to achieving a k-ary tree of height ${H}$ is the
 > _strict ${k}$-ary timber size_, denoted ${S_{max}^k(H),}$ where:
 >
 > $$
 > 	  S_{max}^k(H) = \dfrac{k^{H + 1} - 1}{k - 1}
 > $$
 
-### Strict ${k\text{-ary}}$ Shrub Heights
+### Strict k-ary Shrub Heights
 
-The strict ${k\text{-ary}}$ lumber size lemma yields the strict
-${k\text{-ary}}$ shrub height lemma: The smallest possible height strict
-${k\text{-ary}}$ tree given ${N}$ nodes.
+The strict k-ary lumber size lemma yields the strict
+k-ary shrub height lemma: The smallest possible height strict
+k-ary tree given ${N}$ nodes.
 
 $$
 	\begin{aligned} \text{where } N &= S_{max}^k(H) \\[1em] N &= \dfrac{k^{H + 1} - 1}{k - 1} \\[1em] N(k-1) &= k^{H + 1} - 1 \\[1em] N(k-1) + 1 &= k^{H + 1} \\[1em] \log_{k}(N(k-1) + 1) &= H + 1 \\[1em] \log_{k}(N(k-1) + 1) + 1 &= H \\[1em] \log_{k}(Nk-k + 1) + 1 &= H \end{aligned}
@@ -1338,7 +1340,7 @@ $$
 Hence, we have the following lemma:
 
 > _Lemma: Strict ${k}$-ary Shrub Height_. Let ${N, k \in \Z^+.}$ Given
-> ${N}$ nodes, the shortest possible height strict ${k\text{-ary}}$ tree,
+> ${N}$ nodes, the shortest possible height strict k-ary tree,
 > called the _${k}$-ary shrub_, has the height ${H_{min}^k(N),}$ called the
 > _${k}$-ary shrub height_, where:
 >
@@ -1346,11 +1348,11 @@ Hence, we have the following lemma:
 > 	H_{min}^k(N) = [\log_{2}(Nk - k + 1)] + 1
 > $$
 
-### Strict ${k\text{-ary}}$ Timber Heights
+### Strict k-ary Timber Heights
 
-By a similar line of reasoning, we can derive the strict ${k\text{-ary}}$
-timber height lemma from the strict ${k\text{-ary}}$ shrub size lemma: The
-_tallest_ possible height strict ${k\text{-ary}}$ tree given ${N}$ nodes.
+By a similar line of reasoning, we can derive the strict k-ary
+timber height lemma from the strict k-ary shrub size lemma: The
+_tallest_ possible height strict k-ary tree given ${N}$ nodes.
 
 $$
 	\begin{aligned} \text{where } N &= S_{min}^k(H) \\[1em] N &= kH + 1 \\[1em] N - 1 &= kH \\[1em] \dfrac{N - 1}{k} &= H \end{aligned}
@@ -1359,7 +1361,7 @@ $$
 Thus, we have the lemma:
 
 > _Lemma: Strict ${k}$-ary Timber Height_. Let ${N, k \in \Z^+.}$ Given
-> ${N}$ nodes, the tallest possible height strict ${k\text{-ary}}$ tree,
+> ${N}$ nodes, the tallest possible height strict k-ary tree,
 > called the _${k}$-ary timber_, has the height ${H_{max}^k(N),}$ called
 > the _${k}$-ary timber height_, where:
 >
@@ -1370,11 +1372,11 @@ Thus, we have the lemma:
 ### Relationship: Leaves & Branch Nodes
 
 As we saw with binary trees, there's a relationship between the leaves of a
-${k\text{-ary}}$ tree and its branch nodes.
+k-ary tree and its branch nodes.
 
 > _Lemma_. Let ${k, \ell, b \in \Z^+,}$ where ${\ell}$ is the number of
 > leaves and ${b}$ is the number of branch nodes in a strict
-> ${k\text{-ary}}$ tree. Then:
+> k-ary tree. Then:
 >
 > $$
 > 	\ell = (k - 1)b + 1

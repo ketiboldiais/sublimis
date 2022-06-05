@@ -17,3 +17,4 @@ export * from "./svg/svg";
 export * from "./translate/translate";
 export * from "./wrap/wrap";
 export * from "./ClassNames";
+export * from "./setClassName/setClassName";

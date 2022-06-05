@@ -1,3 +1,6 @@
+import { ParseTree } from "@illus/ParseTree";
+import { Sequence } from "@illus/Sequence";
+
 # Introduction to Parsing
 
 Suppose we have the following expression:
@@ -9,24 +12,20 @@ Suppose we have the following expression:
 This expression is called a **binary expression** — it consists of two
 operands, `10` and `2`. Viewing it as a tree:
 
-<PTree
+<ParseTree
 	data={[[`+`], [`+`, `10`, `5`]]}
 	height={100}
 	width={120}
-	containerWidth={40}
-	containerHeight={35}
 	margins={[20, 20, 20, 20]}
 />
 
 More generally, binary expressions have the form:
 
-<PTree
+<ParseTree
 	data={[[`operator`], [`operator`, `operand`, `operand`]]}
 	height={100}
 	width={120}
 	fontSize={7}
-	containerWidth={40}
-	containerHeight={35}
 	margins={[20, 20, 20, 20]}
 />
 
@@ -49,12 +48,10 @@ Now suppose we have this expression:
 
 This, too, is just a binary expression:
 
-<PTree
+<ParseTree
 	data={[[`+`], [`+`, `10`, `⨉`], [`⨉`, `3`, `1`]]}
 	height={100}
 	width={120}
-	containerWidth={40}
-	containerHeight={35}
 	margins={[20, 20, 20, 20]}
 />
 
@@ -109,6 +106,3 @@ class Lexer:
 		stream = "";
 		cursor = 0;
 ```
-
-
-

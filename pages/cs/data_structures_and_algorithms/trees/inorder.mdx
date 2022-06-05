@@ -1,3 +1,6 @@
+import { HTree } from "@illus/HTree";
+import { Tree } from "@illus/Tree";
+
 # Inorder Traversal
 
 Inorder traveral is defined as follows:
@@ -43,8 +46,8 @@ ${n_b}$ has no left subtree, so we call `visit()`.
 After `visit()` finishes executing, we call
 `inorder_traverse(right_subtree)`. But, since ${n_b}$ has no right subtree,
 the call does not execute, and the function call
-`inorder_traverse(left_subtree: ${n_a}$)` finishes. This leads us to
-`visit(node: ${n_a}$)`.
+`inorder_traverse(left_subtree: a)` finishes. This leads us to
+`visit(node(a))`.
 
 <Tree
 	data={[
@@ -57,7 +60,7 @@ the call does not execute, and the function call
 Once we've visited ${n_a,}$ we then call
 `inorder_traverse(right_subtree: n_a)`. This subtree starts with the node
 ${n_c.}$ Because ${n_c}$ has no left subtree, we call
-`visit(node: ${n_c}$)`.
+`visit(node(c))`.
 
 <Tree
 	data={[
@@ -135,7 +138,6 @@ evaluates to `inorder(F0.left_child)`, which evaluates to `inorder(F1)`:
 	margins={[20, 90, 20, 100]}
 	width={300}
 	height={100}
-	containerHeight={20}
 />
 
 Calling `inorder(F1)`, we then call `inorder(F1.left_child)`, which
@@ -150,7 +152,6 @@ evaluates to `inorder(F3)`.
 	width={400}
 	height={100}
 	margins={[20, 100, 20, 100]}
-	containerHeight={20}
 />
 
 The call `inorder(F3)` results in the call `inorder(F3.left_child)`.
@@ -171,7 +172,6 @@ next call, `print "{F3.data}"`:
 	width={400}
 	height={300}
 	margins={[20, 100, 20, 100]}
-	containerHeight={40}
 />
 
 Once the `print` line finishes executing, we go to the next call,
@@ -192,7 +192,6 @@ evaluates to `inorder(0)`.
 	width={400}
 	height={300}
 	margins={[20, 100, 20, 100]}
-	containerHeight={40}
 />
 
 This completes the call to `inorder(F3)`, so we go back to the call
@@ -214,7 +213,6 @@ This completes the call to `inorder(F3)`, so we go back to the call
 	width={400}
 	height={300}
 	margins={[20, 100, 20, 100]}
-	containerHeight={45}
 />
 
 We then proceed to the next line, `inorder(F1.right_child)`. Because `F1`
@@ -239,7 +237,6 @@ left-child, so the call evaluates to `inorder(0)`.
 	width={400}
 	height={300}
 	margins={[20, 100, 20, 100]}
-	containerHeight={45}
 />
 
 We go to the next line, `print "{F4.data}"`, which prints the value `6`.
@@ -263,7 +260,6 @@ This line is followed by `inorder(F4.right_child)`. And once again, because
 	width={400}
 	height={300}
 	margins={[20, 100, 20, 100]}
-	containerHeight={45}
 />
 
 This completes the call to `inorder(F4)`, which in turn completes the call
@@ -300,7 +296,6 @@ call trace:
 	width={500}
 	height={500}
 	margins={[20, 100, 20, 100]}
-	containerHeight={65}
 />
 
 ## Iterative Approach

@@ -4,11 +4,15 @@ Of the core arithmetic operators, division is the most complex. In any
 discussion of division, we must first begin with two subsets of integers,
 the **even integers**:
 
-$$\{ 2, 4, 6, 8, \ldots \}$$
+$$
+    \{ 2, 4, 6, 8, \ldots \}
+$$
 
 and the odd integers:
 
-$$\{1, 3, 5, 7, \ldots\}$$
+$$
+    \{1, 3, 5, 7, \ldots\}
+$$
 
 Notice that both the even integers and the odd integers increment by 2. The
 difference, however, is that the even integers start at 2, and the odd
@@ -75,21 +79,30 @@ Let's prove the first property. First, the hypothesis to be proved:
 Because ${a}$ and ${b}$ are even integers, then by definition, ${a}$ and
 ${b}$ can be written in the forms:
 
-$$a = 2n}$ ${b = 2m}$ where ${n, m \in \Z^{+}.$$
+$$
+    a = 2n, ~ b = 2m
+$$
 
-Thus, by substitution, the expression ${a + b}$ can be written as:
+where ${n, m \in \Z^{+}}$. Thus, by substitution, the expression ${a + b}$
+can be written as:
 
-$$a + b = 2n + 2m.$$
+$$
+    a + b = 2n + 2m
+$$
 
 By distributivity:
 
-$$a + b = 2(n + m).$$
+$$
+    a + b = 2(n + m)
+$$
 
 The sum of two positive integers is a positive integer. Accordingly, the
 sum of ${n}$ and ${m}$ is some positive integer ${k.}$ As such, the
 expression ${2(n + m)}$ can be written as:
 
-$$a + b = 2k.$$
+$$
+    a + b = 2k
+$$
 
 Because ${a + b}$ is an expression of the form ${2k,}$ then by definition,
 ${a + b}$ is even.
@@ -97,31 +110,42 @@ ${a + b}$ is even.
 Now let's prove the second. Again, we'll use a direct proof. First, the
 hypothesis to proved:
 
-    Let ${a,b \in \Z^{+}.}$ If ${a}$ is even and ${b}$ is odd, then ${a + b}$ is odd.
+> Let ${a,b \in \Z^{+}.}$ If ${a}$ is even and ${b}$ is odd, then ${a + b}$
+> is odd.
 
 Suppose ${a}$ is even and ${b}$ is odd. Then by definition, ${a}$ and ${b}$
 are positive integers of the form:
 
-$$a = 2n, b = 2m + 1.$$
+$$
+    a = 2n, b = 2m + 1
+$$
 
 where ${n}$ is a positive integer, and ${m}$ is a natural number. It
 follows that:
 
-$$a + b = 2n + 2m + 1.$$
+$$
+    a + b = 2n + 2m + 1
+$$
 
 Then, by commutativity:
 
-$$a + b = (2n + 2m) + 1.$$
+$$
+    a + b = (2n + 2m) + 1
+$$
 
 And by associativity:
 
-$$a + b = 2(n + m) + 1.$$
+$$
+    a + b = 2(n + m) + 1
+$$
 
 Given that ${n}$ is a positive integer and ${m}$ is a non-negative integer
 (since ${m}$ is a natural number), ${n + m}$ is a natural number.
 Accordingly:
 
-$$a + b = 2k + 1,$$
+$$
+    a + b = 2k + 1
+$$
 
 where ${k = n + m,}$ which is some natural number. Hence, ${a + b}$ must be
 odd, by definition.
@@ -147,24 +171,34 @@ Suppose ${a \in \Z_{\text{even}}.}$ Since ${a}$ is an even integer, then by
 definition, ${a}$ is a positive integer of the form ${2n,}$ where ${n}$ is
 a positive integer. By substitution:
 
-$$a^2 = (2n)^2$$
+$$
+    a^2 = (2n)^2
+$$
 
 Applying the definition of an exponent:
 
-$$a^2 = (2n)(2n)$$
+$$
+    a^2 = (2n)(2n)
+$$
 
 By the associative property of multiplication, we get:
 
-$$a^2 = (2)(2 \cdot n \cdot n)$$
+$$
+    a^2 = (2)(2 \cdot n \cdot n)
+$$
 
 And by the definition of an exponent:
 
-$$a^2 = (2)(2n^2)$$
+$$
+    a^2 = (2)(2n^2)
+$$
 
 Because the product of positive integer is a positive integer, the intger
 ${2n^2}$ is a positive integer. Hence:
 
-$$a^2 = 2m$$
+$$
+    a^2 = 2m
+$$
 
 where ${m}$ is a positive integer. Because ${2m}$ is an even integer by
 definition, ${a^2}$ is even.
@@ -175,24 +209,34 @@ Given that ${a}$ is an odd integer, then by definition, ${a}$ is a positive
 integer of the form ${2n + 1,}$ where ${n}$ is a positive integer. By
 substitution:
 
-$$a^2 = (2n + 1)^2$$
+$$
+    a^2 = (2n + 1)^2
+$$
 
 By expansion:
 
-$$a^2 = 4n^2 + 4n + 1$$
+$$
+    a^2 = 4n^2 + 4n + 1
+$$
 
 By associativity:
 
-$$a^2 = (4n^2 + 4n) + 1$$
+$$
+    a^2 = (4n^2 + 4n) + 1
+$$
 
 By distributivity:
 
-$$a^2 = 2(2n^2 + 2n) + 1$$
+$$
+    a^2 = 2(2n^2 + 2n) + 1
+$$
 
 Because ${n}$ is a positive integer, $$2n^2 + 2n$$ is a positive integer.
 Hence:
 
-$$a^2 = 2k + 1$$
+$$
+    a^2 = 2k + 1
+$$
 
 where ${k}$ is a positive integer. Because ${2k + 1}$ is an odd integer by
 definition, ${a^2}$ is odd. The proposition we've just proven yields a

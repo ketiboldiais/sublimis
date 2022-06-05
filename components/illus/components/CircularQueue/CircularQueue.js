@@ -1,29 +1,30 @@
 import React, { useRef, useEffect } from "react";
-import { svg } from "../utils/svg/svg";
+import {
+	className,
+	svg,
+	translate,
+	setValue,
+	setClassName,
+} from "../utils";
 import { Base } from "../base/Base";
 import * as d3 from "d3";
-import { translate } from "../utils/translate/translate";
-import { setValue } from "../utils/setValue/setValue";
-import { attrs } from "../utils/attrs/attrs";
 import { formatQueueData } from "./formatQueueData/formatQueueData";
 
 export const CircularQueue = ({
 	data = [],
-	width = 160,
-	height = 160,
-	containerWidth,
+	width = 300,
+	height = 300,
+	scale = 100,
+	containerWidth = scale,
 	containerHeight,
-	margins = [80, 55, 80, 55],
+	margins = [150, 100, 150, 100],
 	isIndexed = true,
-	fontFamily="system-ui",
 	outerRadius = null,
 	innerRadius = null,
-	elementFillColor = "#f1ffd5",
-	elementStrokeColor = "#99A799",
-	elementTextColor = "#2b7857",
-	elementFontSize="1rem",
-	indexFontSize="0.75rem",
-	indexTextColor = "#9dc8af",
+	elementFillColor = "#ffffff",
+	elementStrokeColor = "#000000",
+	elementTextColor = "#000000",
+	indexTextColor = "#000000",
 	strokeWidth = 2,
 }) => {
 	const circularQueueFigure = useRef();
@@ -36,59 +37,59 @@ export const CircularQueue = ({
 	const indexArc = d3
 		.arc()
 		.innerRadius(_innerRadius)
-		.outerRadius(_outerRadius * 2.8);
+		.outerRadius(_outerRadius * 3);
 
-	useEffect(() => {
+	const renderCircularqueue = () => {
 		const canvas = d3
 			.select(circularQueueFigure.current)
 			.select("g.svgElement");
-		const pie = canvas.append("g");
-		attrs(pie, {
-			class: "circular-queue",
-			transform: translate(_svg.width / 2, 0),
-		});
+		const pie = canvas
+			.append("g")
+			.attr("class", className.circularQueue.canvas)
+			.attr("transform", translate(_svg.width / 2, 0));
 		const queuer = pie
 			.selectAll("piePaths")
 			.data(pieData)
 			.enter()
 			.append("g")
-			.attr("class", "queuer");
-		const queuerPaths = queuer.append("path");
-		attrs(queuerPaths, {
-			class: "queuer-path",
-			d: (d) => arc(d),
-			fill: elementFillColor,
-			stroke: elementStrokeColor,
-			"stroke-width": strokeWidth,
-		});
-		const queuerLabel = queuer.append("text").text((d) => d.data.val);
-		attrs(queuerLabel, {
-			"font-family": fontFamily,
-			class: "queuer-data-text",
-			dy: "0.3em",
-			"font-size": elementFontSize,
-			"text-anchor": "middle",
-			transform: (d) => `translate(${arc.centroid(d)})`,
-			fill: elementTextColor,
-		});
+			.attr("class", (d) =>
+				setClassName(d.focus, className.circularQueue.queuer),
+			);
+		// queuer paths
+		queuer
+			.append("path")
+			.attr("d", (d) => arc(d))
+			.attr("fill", elementFillColor)
+			.attr("stroke", elementStrokeColor)
+			.attr("stroke-width", strokeWidth);
+		// queuer labels
+		queuer
+			.append("text")
+			.text((d) => d.data.val)
+			.attr("dy", "0.3em")
+			.attr("text-anchor", "middle")
+			.attr("transform", (d) => `translate(${arc.centroid(d)})`)
+			.attr("fill", elementTextColor);
 
 		if (isIndexed) {
-			const queuerIndexText = pie
+			const indices = pie
+				.append("g")
+				.attr("class", className.circularQueue.index);
+			indices
 				.selectAll("indices")
 				.data(pieData)
 				.enter()
 				.append("text")
+				.attr("dy", "0.35em")
+				.attr("dx", "-0.3em")
+				.attr("fill", indexTextColor)
+				.attr("transform", (d) => `translate(${indexArc.centroid(d)})`)
 				.text((d, i) => i);
-			attrs(queuerIndexText, {
-				"font-family": fontFamily,
-				class: "queuer-index-text",
-				"font-size": indexFontSize,
-				"text-anchor": "middle",
-				dy: "0.35em",
-				fill: indexTextColor,
-				transform: (d) => `translate(${indexArc.centroid(d)})`,
-			});
 		}
+	};
+
+	useEffect(() => {
+		if (circularQueueFigure.current) renderCircularqueue();
 	});
 	return (
 		<Base

@@ -5,6 +5,7 @@ import { insertArrowDefinitions } from "../utils/insertArrowDefinitions/insertAr
 import { Base } from "../base/Base";
 import * as d3 from "d3";
 import { translate } from "../utils/translate/translate";
+import { getBackgroundColor } from "../utils";
 
 export const ParseTree = ({
 	data = [],
@@ -13,7 +14,7 @@ export const ParseTree = ({
 	containerWidth,
 	containerHeight,
 	margins = [70, 70, 70, 70],
-	fontSize = 14,
+	fontSize = 10,
 	isDirected = false,
 	sibSpace = 1,
 	nSibSpace = 2,
@@ -40,7 +41,7 @@ export const ParseTree = ({
 	const links = root.links();
 	const nodes = root.descendants();
 
-	useEffect(() => {
+	const renderParseTree = () => {
 		const canvas = d3.select(_ptreeREF.current).select("g.svgElement");
 		const htree = canvas.append("g").attr("class", "htree");
 		if (isDirected)
@@ -54,7 +55,7 @@ export const ParseTree = ({
 				"auto",
 				edgeColor,
 			);
-		const _links = htree.append("g").attr("class", "ptree-edge");
+		const _links = htree.append("g").attr("class", "parseTreeEdges");
 
 		// append paths
 		_links
@@ -67,7 +68,7 @@ export const ParseTree = ({
 			.attr("d", (d) => diagonal(d))
 			.attr("stroke", edgeColor)
 			.attr("marker-end", "url(#ptree-arrow)");
-		const _nodes = htree.append("g").attr("class", "htree-nodes");
+		const _nodes = htree.append("g").attr("class", "parseTreeNodes");
 		const _node = _nodes
 			.selectAll("htree-node")
 			.data(nodes)
@@ -87,7 +88,8 @@ export const ParseTree = ({
 		_node
 			.append("text")
 			.text((d) => d.id)
-			.attr("stroke", "white")
+			.attr("stroke", getBackgroundColor(_ptreeREF))
+			.attr("fill", getBackgroundColor(_ptreeREF))
 			.attr("font-size", fontSize)
 			.attr("stroke-width", fontSize / 2)
 			.attr("text-anchor", "middle")
@@ -101,6 +103,10 @@ export const ParseTree = ({
 			.attr("fill", nodeTextColor)
 			.attr("text-anchor", "middle")
 			.attr("dy", nodeRadius / 2);
+	};
+
+	useEffect(() => {
+		if (_ptreeREF.current) renderParseTree();
 	});
 
 	return (

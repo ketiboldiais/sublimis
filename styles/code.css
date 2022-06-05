@@ -47,3 +47,10 @@ code.language-cpp .token.function {color: var(--gold);}
 code.language-cpp .token.operator {color: var(--lightBlue);}
 code.language-cpp .token.string {color: var(--lightGreen);}
 
+pre.language-c {background-color: var(--black);}
+code.language-c .token.comment { color: var(--lightgrey); }
+code.language-c .token.keyword {color: var(--red);}
+code.language-c .token.function {color: var(--gold);}
+code.language-c .token.operator {color: var(--lightBlue);}
+code.language-c .token.string {color: var(--lightGreen);}
+

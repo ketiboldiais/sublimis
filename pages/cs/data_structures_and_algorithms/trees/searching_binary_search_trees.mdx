@@ -1,3 +1,6 @@
+import { Tree } from "@illus/Tree";
+import { HTree } from "@illus/HTree";
+
 # Searching a Binary Search Tree
 
 Searching through a binary search tree is very simple. Consider the
@@ -104,7 +107,6 @@ root is `50`, for readability, we'll denote this as `search(root(50), 60)`:
 	margins={[20, 150, 20, 150]}
 	width={400}
 	height={100}
-	containerHeight={20}
 />
 
 Making this call, we check if `root(50) = NULL`. No. So we go to the next
@@ -138,8 +140,6 @@ the call `search(root(50).right_child, 60)`. This translates to
 	margins={[20, 150, 20, 150]}
 	width={500}
 	height={300}
-	containerHeight={50}
-	containerWidth={80}
 />
 
 Again we check if `root(60) = NULL`. It isn't, so we can proceed. Prong 2:

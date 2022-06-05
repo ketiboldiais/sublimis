@@ -4,24 +4,6 @@ The **MVVM (Model-View-ViewModel) architecture** is a way of organizing —
 or more generally, a design paradigm — an application's code. MVVM starts
 with the premise that applications consist of two core parts:
 
-<FlowChart
-	data={`
-	model[label="Model",width=0.3];
-	view[label="View",width=0.3];
-	viewModel[label="ViewModel",width=0.3];
-	system[label="iOS",width=0.3];
-
-    view->system[dir=both];
-
-    subgraph cluster {
-    	viewModel->view[dir=both];
-    	viewModel->model[dir=both];
-    	label="Application";
-    		fontsize=8;
-    };
-
-`} width={350} height={250} />
-
 The **View** is where all of our user-interface (i.e., frontend) code
 lives. The **Model** is where all of our logic (i.e., backend) code lives.
 The **ViewModel** serves as a liason betwen the View and the model, binding
@@ -83,15 +65,6 @@ Because the View never holds data, it is always a current state reflection
 of the model. At no point does it show data other than what the model
 currently holds.
 
-<FlowChart
-	data={`
-	model[label="Model",width=0.3];
-	view[label="View",width=0.3];
-
-    model->view[label="data flow", fontsize=8];
-
-`} rankdir="LR" height={100} width={220} />
-
 In other words, the data the View receives is ~read-only~. This means that
 the View has no _state_. If there ever is a state (indicated by the use of
 `@State`) inside the View, it's purely for self-management.
@@ -151,20 +124,6 @@ ensure the following:
 This is done by the **ViewModel**.
 
 ## The ViewModel
-
-<FlowChart
-	data={`
-	graph[pad="0.3",nodesep="1",ranksep="1"];
-	model[label="Model",width=0.3];
-	view[label="View",width=0.3];
-	viewModel[label="ViewModel",width=0.3];
-
-    model->viewModel[label="data change",fontsize=8];
-    viewModel->model[label="modify Model",fontsize=8];
-    viewModel->view[label="announce change",fontsize=8];
-    view->viewModel[label="user intent",fontsize=8];
-
-`} rankdir="LR" width={580} height={160}/>
 
 The ViewModel has several duties job:
 

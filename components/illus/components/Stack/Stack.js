@@ -1,11 +1,15 @@
 import React, { useRef, useEffect } from "react";
-import { isObjectLiteral } from "../utils/isObjectLiteral/isObjectLiteral";
-import { setConditionalValue } from "../utils/setConditionalValue/setConditionalValue";
-import { setValue } from "../utils/setValue/setValue";
-import { svg } from "../utils/svg/svg";
 import { Base } from "../base/Base";
 import * as d3 from "d3";
-import { translate } from "../utils/translate/translate";
+import {
+	className,
+	translate,
+	svg,
+	setValue,
+	isObjectLiteral,
+	setConditionalValue,
+	setClassName,
+} from "../utils";
 
 const formatData = (arr = []) => {
 	let data = [];
@@ -23,8 +27,7 @@ const formatData = (arr = []) => {
 export const Stack = ({
 	data = [],
 	width = 350,
-	height = 170,
-	fontFamily="system-ui",
+	height = data.length * 10 + 70,
 	frameWidth = 70,
 	frameHeight = 20,
 	containerWidth,
@@ -48,11 +51,13 @@ export const Stack = ({
 			.data(_data)
 			.enter()
 			.append("g")
-			.attr("class", "stack-frame")
+			.attr("class", className.stack.canvas)
 			.attr("transform", (d) => translate(_svg.width / 2, scale(d)));
-		const frameRectangle = frameGroup
+		const frame = frameGroup
+			.append("g")
+			.attr("class", (d) => setClassName(d.focus, className.stack.frame));
+		frame
 			.append("rect")
-			.attr("class", "stack-frame-rectangle")
 			.attr("x", (d) =>
 				setConditionalValue(d.popped, frameWidth / 2, -frameWidth / 2),
 			)
@@ -62,10 +67,8 @@ export const Stack = ({
 			.attr("opacity", (d) => setValue(d.popped, 1))
 			.attr("height", frameHeight)
 			.attr("width", frameWidth);
-		const frameText = frameGroup
+		frame
 			.append("text")
-			.attr('font-family', fontFamily)
-			.attr("class", "stack-frame-text")
 			.attr("text-anchor", "middle")
 			.attr("x", (d) => setConditionalValue(d.popped, frameWidth, 0))
 			.attr("y", frameHeight / 2)

@@ -1,4 +1,4 @@
-## Radicals & Rational Expressions
+# Radicals & Rational Expressions
 
 By introducing the exponentiation notation, it would be very helpful to
 have notation that quickly reverses the results. This notation is provided
@@ -16,23 +16,7 @@ squaring two numbers, positive or negative, yields a positive number.
 > _Definition_. Given ${a \in \R^{+},}$ ${\sqrt{a}}$ is the number ${n,}$
 > where ${n \in \R}$ such that ${n^2 = a.}$
 
-From the square root definition, we can begin deriving rules:
-
-|---|---| |Let ${a, b \in \R_{\geq 0}}$| Assumption |
-|${(\sqrt{a})^2 (\sqrt{b})^2 = ab}$ | Definition of Square Root |
-|${(\sqrt{a})^2 (\sqrt{b})^2 = (\sqrt{a} \cdot \sqrt{b})^2}$ | The Power
-Product Rule of Exponents | | ${(\sqrt{a} \cdot \sqrt{b})^2 = ab}$ | The
-Transitive Property of Equality |
-|${\sqrt{a} \cdot \sqrt{b} \in \R_{\geq 0} }$ | The product of non-negative
-numbers is non-negative | | ${ab \in \R_{\geq 0}}$ | Id.; The Transitive
-Property of Equality | | There is exactly one ${n \in \R_{\geq 0}}$ such
-that ${n = (\sqrt{ab})^2 = ab}$ | Definition of Square Root; If
-${a \in \R_{\geq 0},}$ then there is a unique ${n}$ denoted by ${\sqrt{a}}$
-such that ${(\sqrt{a})^2.}$ | | ${n = \sqrt{ab} = \sqrt{a} \sqrt{b}}$ |
-${n}$ is the only number with the property that ${(\sqrt{ab})^2 = ab.}$ | |
-&#8756; ${\sqrt{ab} = \sqrt{a} \sqrt{b}}$ | ${\blacksquare}$ |
-
-Thus, we have the following rule:
+From the square root definition, we have the following rule:
 
 > _The Product Rule of Square Roots_. Given ${a \in \R_{\geq 0}}$ and
 > ${b \in \R_{\geq 0},}$ ${\sqrt{ab} = \sqrt{a} \cdot \sqrt{b}}$
@@ -52,35 +36,51 @@ $$
 
 Factoring the perfect square:
 
-$$\sqrt{100 \cdot 3}$$
+$$
+	\sqrt{100 \cdot 3}
+$$
 
 By the product rule:
 
-$$\sqrt{100} \cdot \sqrt{3}$$
+$$
+	\sqrt{100} \cdot \sqrt{3}
+$$
 
 Then, simplifying:
 
-$$10 \sqrt{3}$$
+$$
+	10 \sqrt{3}
+$$
 
 Here's another example. Consider this square root:
 
-$$\sqrt{162 a^2 b^4}$$
+$$
+	\sqrt{162 a^2 b^4}
+$$
 
 Factoring:
 
-$$\sqrt{81 \cdot 2 \cdot a^4 \cdot a \cdot b^4}$$
+$$
+	\sqrt{81 \cdot 2 \cdot a^4 \cdot a \cdot b^4}
+$$
 
 Then, by the product rule of square roots:
 
-$$(\sqrt{81}) (\sqrt{2}) (\sqrt{a}) (\sqrt{a^4}) (\sqrt{b^4})$$
+$$
+	(\sqrt{81}) (\sqrt{2}) (\sqrt{a}) (\sqrt{a^4}) (\sqrt{b^4})
+$$
 
 And simplifying:
 
-$$(9) (\sqrt{2}) (\sqrt{a}) (a^2) (b^2)$$
+$$
+	(9) (\sqrt{2}) (\sqrt{a}) (a^2) (b^2)
+$$
 
 By commutativity:
 
-$$9a^2 b^2 \sqrt{2a}$$
+$$
+	9a^2 b^2 \sqrt{2a}
+$$
 
 Another useful algorithm is combining multiple radical expressions into a
 single radical expression:
@@ -91,7 +91,9 @@ single radical expression:
 For example, consider the radical expression: ${(\sqrt{12})(\sqrt{3}).}$ We
 can multiply the this expression's terms into a single expression:
 
-$$ (\sqrt{12})(\sqrt{3}) = \sqrt{36}} $$
+$$
+	(\sqrt{12})(\sqrt{3}) = \sqrt{36}
+$$
 
 ## The Quotient Rule of Square Roots
 
@@ -127,7 +129,7 @@ Given a radical expression in the form of a quotient:
 1. Write the radical quotient has the quotient of two radical expressions.
 2. Simplify the numerator and denominator.
 
-# Adding and Subtracting Square Roots.
+## Adding and Subtracting Square Roots
 
 We can add or subtract radical expressions only if (1) they have the same
 radicand and (2) they have the same ${n^{\text{\scriptsize{th}}}}$ root.
@@ -140,9 +142,9 @@ expression as a sum, followed by reductions.
 
 $$
 \begin{aligned}
-\sqrt{2} + \sqrt{18} &= \sqrt{2} + \sqrt{2 \cdot 9}} \\
-	&= \sqrt{2} + (\sqrt{2} \cdot \sqrt{9})
-	&= \sqrt{2} + 3 \sqrt{2}
+	\sqrt{2} + \sqrt{18} &= \sqrt{2} + \sqrt{2 \cdot 9} \\
+	&= \sqrt{2} + (\sqrt{2} \cdot \sqrt{9}) \\
+	&= \sqrt{2} + 3 \sqrt{2} \\
 	&= 4 \sqrt{2}
 \end{aligned}
 $$
@@ -154,7 +156,7 @@ radical expressions,
    possible.
 2. Add or subtract expressions with equal radicands.
 
-## ${n^{\text{\scriptsize{th}}}}$ Root
+## nth Root
 
 The proposition ${a^3 = 8,}$ implies that ${\sqrt[3]{8} = a.}$ Thus, the
 phrase "the ${n^{\text{\scriptsize{th}}}}$ root of ${a}$" implies a number

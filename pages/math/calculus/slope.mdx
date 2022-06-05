@@ -1,3 +1,5 @@
+import { Plot } from "@illus/Plot";
+
 # Slope
 
 The graph of an equation is the set of all points with coordinates
@@ -23,11 +25,11 @@ Cartesian plane, these two points appear as:
 
 <Plot
 	geo={[
-		{type:'point', xy: [-2,1]},
-		{type:'label', xy: [-4,2], id: "(-2,1)"},
-		{type:'point', xy: [3,5]},
-		{type:'label', xy: [3,5], id: "(3,5)"},
-		{type:'line', start: [-2,1], end:[3,5]},
+		{ type: "point", xy: [-2, 1] },
+		{ type: "label", xy: [-4, 2], id: "(-2,1)" },
+		{ type: "point", xy: [3, 5] },
+		{ type: "label", xy: [3, 5], id: "(3,5)" },
+		{ type: "line", start: [-2, 1], end: [3, 5] },
 	]}
 	id="2pointPlot"
 />
@@ -149,9 +151,9 @@ direction (i.e., they have the same "steepness" to their slant):
 
 <Plot
 	functions={[
-		{f: (x) => 2 * x, color: "var(--red)"},
-		{f: (x) => 2 * x + 2, color: "var(--blue)"},
-		{f: (x) => 2 * x - 2, color: "var(--green)"},
+		{ f: (x) => 2 * x, color: "var(--red)" },
+		{ f: (x) => 2 * x + 2, color: "var(--blue)" },
+		{ f: (x) => 2 * x - 2, color: "var(--green)" },
 	]}
 	id="parallel_lines"
 />
@@ -170,8 +172,8 @@ forming 90 degree angles:
 
 <Plot
 	functions={[
-		{f: (x) => 2 * x + 3, color: "var(--red)"},
-		{f: (x) => -0.5 * x - 3, color: "var(--blue)"},
+		{ f: (x) => 2 * x + 3, color: "var(--red)" },
+		{ f: (x) => -0.5 * x - 3, color: "var(--blue)" },
 	]}
 	id="perpendicular_lines"
 />
@@ -194,13 +196,14 @@ a slope ${m_2}$. Finally, suppose that ${\ell_1}$ and ${\ell_2}$ intersect
 at the origin, ${(0,0)}$. The lines can be visually represented as:
 
 <Fig
-	link={"https://res.cloudinary.com/sublimis/image/upload/v1654218228/math/proof_perpendicular_lines_w4tk4l.svg"}
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1654218228/math/proof_perpendicular_lines_w4tk4l.svg"
+	}
 	caption={"Perpendicular lines"}
 	width={"50"}
 	imwidth={"441"}
 	imheight={"455"}
 />
-
 
 Since ${\ell_1 \perp \ell_2}$, we know that that the vertical line
 ${x = 1}$ intersects ${\ell_1}$ at ${(1, m_1)}$ and ${\ell_2}$ at

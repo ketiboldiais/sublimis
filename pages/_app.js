@@ -2,7 +2,6 @@ import Layout from "../components/Layout";
 import React, { useEffect } from "react";
 import { MDXProvider } from "@mdx-js/react";
 import "../styles/reset.css";
-import "../styles/illus.css";
 import "../styles/globals.css";
 import "../styles/code.css";
 import MDXComponents from "../components/MDXComponents";

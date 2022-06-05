@@ -167,25 +167,6 @@ export const BinaryTree = ({
 				cx: (d) => d.x,
 				cy: (d) => d.y,
 				r: nodeRadius,
-				stroke: (d) => {
-					if (hideNodeCircles) {
-						return "none";
-					} else if (d.data.focus) {
-						return nodeFocusStrokeColor;
-					} else {
-						return nodeStrokeColor;
-					}
-				},
-
-				fill: (d) => {
-					if (hideNodeCircles) {
-						return getBackgroundColor(TreeFigure);
-					} else if (d.data.focus) {
-						return nodeFocusFillColor;
-					} else {
-						return nodeFillColor;
-					}
-				},
 			});
 		}
 

@@ -19,19 +19,18 @@
 	padding: 3px 2px;
 	top: 0;
 }
-
 /* Paragraphs */
-.page p {
-	margin: 1rem 0;
-	line-height: 1.2;
-}
+	.page p {
+		margin: 1rem 0;
+		line-height: 1.2;
+	}
 
 /* Block Quotes */
-.page blockquote {
-	padding: 0;
-	padding-left: 0.5em;
-	background-color: var(--box-background-color);
-}
+	.page blockquote {
+		padding: 0;
+		padding-left: 1em;
+		border-left: 3px solid var(--lightGrey);
+	}
 
 /* Heading Sizes */
 	.page h1 {font-size: 2rem;}
@@ -53,6 +52,7 @@
 		color: var(--heading-color);
 		margin: 2.5rem 0 0 0;
 	}
+	.master h1 { margin-bottom: 5rem; }
 
 /* Tables */
 	.page table {
@@ -64,53 +64,70 @@
 
 
 /* List Styles */
-.page ul {list-style: disc;}
-.page ol {list-style: decimal;}
 
-/* List Indents */
-.page ol {margin: 1.2rem;}
-.page ul {margin: 1.2rem;}
+	.page ul {list-style: disc;}
 
+	.page ol {list-style: decimal;}
+
+	/* List style types */
+		.page ol ol {list-style: lower-alpha;}
+
+	/* List Indents */
+		.page ol {padding: 0.5rem 1.2rem;}
+		.page ul {margin: 0.5rem 1.2rem;}
+
+	/* List items */
+		.page li { padding: 0.5rem 0; }
+		/*
+		Remove margin from paragraphs in list tags. MDX inserts paragraph tags for some reason during compilation.
+		*/
+		.page li p {margin: 0.25rem 0;}
 /* Table of Contents from Markdown */
-.page h1 + ol {
-	list-style: upper-roman;
-	margin: 2rem 0.1rem 2rem 0.1rem;
-	padding: 1rem 2rem;
-}
-.page h1 + ol ol {
-	margin: 0rem 1.5rem;
-}
-.page h1 + ol ol {list-style: decimal;}
-.page h1 + ol ol ol {list-style: lower-alpha;}
-.page h1 + ol ol ol ol {list-style: lower-roman;}
 
-.page h1 + ol {
-	width: fit-content;
-	border-radius: 8px;
-}
-
-/* List items */
-	.page li { padding: 0.1rem 0; }
-
-	/* Remove margin from paragraphs in list tags. MDX inserts paragraph tags for some reason during compilation. */
-	.page li p {margin: 0.25rem 0;}
-
+	.page h1 + ol::before {
+		content: "Outline";
+		font-size: 1.5rem;
+		color: var(--heading-color);
+		display: block;
+		margin-left: -1.5rem;
+	}
+	.page h1 + ol {
+		list-style: decimal;
+		padding: 2% 2.2rem;
+		margin-top: 5%;
+		margin-bottom: 5%;
+		font-size: 0.85rem;
+		border-radius: 10px;
+		background-color: var(--box-background-color);
+	}
+	.page h1 + ol li {padding: 0; margin: 15px 0;}
+	.page h1 + ol li ol {
+		padding-bottom: 0;
+		padding-top: 0;
+	}
+	.page h1 + ol ol {list-style: lower-alpha}
+	.page h1 + ol ol ol {list-style: lower-roman;}
+	.page h1 + ol ol ol ol {list-style: decimal;}
 
 /* Superscripts (for footnotes) */
-.page sup {
-	font-size: 0.6rem;
-	border: var(--call-border);
-	color: var(--call-text-color);
-	padding: 1px 5px 1px 5px;
-	vertical-align:middle;
-	position: relative;
-	bottom:1px;
-	left:2px;
-	border-radius: 50%;
-}
+	.page sup {
+		font-size: 0.6rem;
+		border: var(--call-border);
+		color: var(--call-text-color);
+		padding: 1px 5px 1px 5px;
+		vertical-align:middle;
+		position: relative;
+		bottom:1px;
+		left:2px;
+		border-radius: 50%;
+	}
 
 /* Links */
-.page a {color: inherit}
+	.page a {color: inherit}
 
 /* Figure Caption */
-.page figcaption {font-size: 0.7rem;}
+
+	.page figcaption {font-size: 0.7rem;}
+
+/* Inline code */
+	.master code {font-family: var(--mono); font-size: 0.85rem}

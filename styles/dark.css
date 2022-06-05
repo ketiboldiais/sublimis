@@ -1,13 +1,15 @@
 .theme-dark {
 	--red: rgb(255, 112, 112);
+	--darkRed: rgb(255, 0, 0);
 	--lightGreen: rgb(138, 237, 138);
 	--lightBlue: rgb(112, 255, 234);
 	--black: rgb(26, 26, 26);
 	--white: white;
-	--lightgrey: rgb(165, 165, 165);
+	--lightGrey: rgb(165, 165, 165);
 	--darkBlue: rgb(25, 25, 81);
 	--lavender: rgb(229, 131, 229);
 	--gold: gold;
+	--orange: rgb(245, 168, 2);
 
 	/* Core Colors */
 	--background-color: rgb(49, 49, 49);
@@ -43,15 +45,71 @@
 		inset -0.063rem -0.063rem 0.125rem rgb(38, 38, 38);
 	--box-shadow-active: 1px 1px 2px rgb(56, 56, 56);
 
-	/* illus palette */
-	--binary-tree-edge-color: var(--red);
-	--binary-tree-node-fill-color: var(--background-color);
-	--binary-tree-text-color: var(--red);
+/* illus palette */
+	/* Binary Tree */
+		--binary-tree-edge-color: var(--red);
+		--binary-tree-node-fill-color: var(--background-color);
+		--binary-tree-text-color: var(--red);
+
+	/* Tree */
+		--tree-edge-color: var(--red);
+		--tree-node-fill-color: var(--background-color);
+		--tree-text-color: var(--red);
 
 	/* sequences */
-	--sequenceElementFill: rgb(24, 133, 152);
-	--sequenceElementStroke: rgb(0, 41, 107);
-	--sequenceElementTextColor: rgb(236, 236, 236);
-	--sequenceElementIndexColor: rgb(148, 148, 148);
-	--sequenceAnnotationColor: red;
+		--sequenceElementFill: var(--black);
+		--sequenceElementStroke: var(--white);
+		--sequenceElementTextColor: var(--white);
+		--sequenceElementIndexColor: var(--red);
+		--sequenceAnnotationColor: var(--lightBlue);
+
+	/* matrices */
+		--matrixElementFill: var(--black);
+		--matrixElementStroke: var(--white);
+		--matrixElementTextColor: var(--white);
+		--matrixIndexColor: var(--red);
+		--matrixFocusFillColor: var(--orange);
+		--matrixFocusTextColor: var(--white);
+
+	/* Linked Lists */
+		--linkedListDataFieldFill: var(--background-color);
+		--linkedListDataFieldTextColor: var(--text-color);
+		--linkedListNextFieldFill: var(--background-color);
+		--linkedListLinkColor: var(--red);
+		--linkedListIndexColor: var(--lightGrey);
+
+	/* Circular Linked Lists */
+		--circularListDataFieldFill: var(--background-color);
+		--circularListDataFieldTextColor: var(--white);
+		--circularListNextFieldFill: var(--background-color);
+		--circularListLinkColor: var(--red);
+		--circularListIndexColor: var(--red);
+	
+	/* Doubly Linked Lists */
+		--doublyLinkedListDataFieldFill: var(--background-color);
+		--doublyLinkedListTextColor: var(--red);
+		--doublyLinkedListNextFieldFill: var(--red);
+		--doublyLinkedListPrevFieldFill: var(--red);
+		--doublyLinkedListLinkColor: var(--red);
+		--doublyLinkedListIndexColor: var(--red);
+	/* Stacks */
+		--stackFrameFill: var(--background-color);
+		--stackFrameText: var(--text-color);
+	/* Queues */
+		--queuerFill: var(--background-color);
+		--queuerTextColor: var(--white);
+		--queuerIndexFill: var(--background-color);
+		--queuerIndexTextColor: var(--white);
+		--queuerAnnotationColor: var(--red);
+		--queuerFocusRedFill: var(--darkRed);
+		--queuerFocusRedStroke: var(--red);
+	/* Circular Queues */
+		--circularQueuerFill: var(--background-color);
+		--circularQueuerStroke: var(--lightBlue);
+		--circularQueuerTextColor: var(--lightBlue);
+		--circularQueuerIndexColor: var(--lightGrey);
+	/* Parse Tree */
+		--parseTreeEdgeColor: var(--red);
+		--parseTreeTextColor: var(--text-color);
+		
 }

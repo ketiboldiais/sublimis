@@ -1,24 +1,7 @@
 import Image from "next/image";
 import ImgStyles from "../styles/image.module.css";
 import Link from "next/link";
-// import { FlowChart } from "./FlowChart";
-// import { BinaryTree } from "./illus/components/BinaryTree/BinaryTree";
-// import { HTree } from "@enfig/HTree/HTree";
-// import { Matrix } from "@enfig/Matrix/Matrix";
-// import { PTree } from "@enfig/PTree/PTree";
-// import { LinkedList } from "./illus/components/LinkedList/LinkedList";
-// import { Plot3D } from "@enfig/Plot3D/Plot3D";
-// import { Sequence } from "./illus/components/Sequence/Sequence";
-// import { CircularList } from "./illus/components/CircularList/CircularList";
-// import { CircularQueue } from "@enfig/CircularQueue/CircularQueue";
-// import { Graph } from "./illus/components/Graph/Graph";
-// import { DoublyLinkedList } from "@enfig/DoublyLinkedList/DoublyLinkedList";
-// import { Stack } from "@enfig/Stack/Stack";
-// import { Queue } from "@enfig/Queue/Queue";
-// import { Tree } from "@enfig/Tree/Tree";
-// import { Plane } from "@enfig/Plane/Plane";
 import { Fig } from "./Fig";
-// import { Plot } from "./illus/components/Plot/Plot";
 
 import Header from "./Header";
 const MDXComponents = {

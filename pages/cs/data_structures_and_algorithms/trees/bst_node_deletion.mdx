@@ -1,3 +1,5 @@
+import { Tree } from "@illus/Tree";
+
 # Deleting BST Nodes
 
 We have the following tree:
@@ -168,19 +170,23 @@ flaws with this technique. First, suppose we had the following tree:
 		{ child: "e", parent: "30", display: "none" },
 		{ child: "70", parent: "30" },
 	]}
+	edgeLength={100}
 />
-
 
 The inorder traversal squence for this tree is:
 
-<figure>$$ \lang 10, 20, 30, 70, 80, 90 \rang $$</figure>
+$$
+	\lang 10, 20, 30, 70, 80, 90 \rang
+$$
 
 If we deleted `node(20)` using inorder-successor-succession, then we
 suddenly have to perform several successions:
 
 Before deletion. No changes.
 
-<figure>$$ \lang 10, 20, 30, 70, 80, 90 \rang $$</figure>
+$$
+	\lang 10, 20, 30, 70, 80, 90 \rang
+$$
 
 <Tree
 	data={[
@@ -196,13 +202,16 @@ Before deletion. No changes.
 		{ child: "e", parent: "30", display: "none" },
 		{ child: "70", parent: "30" },
 	]}
+	edgeLength={100}
 />
 
 Remove `node(20)`. There's a vacancy that must be filled, and because we're
 using inorder-successor-succession, `node(30)` must rise to fill the
 vacancy. In this case, it becomes the left-child of `node(90)`.
 
-<figure>$$ \lang 10, 30, \square, 70, 80, 90 \rang $$</figure>
+$$
+	\lang 10, 30, \square, 70, 80, 90 \rang
+$$
 
 <Tree
 	data={[
@@ -218,11 +227,14 @@ vacancy. In this case, it becomes the left-child of `node(90)`.
 		{ child: "e", parent: "30", display: "none" },
 		{ child: "70", parent: "30" },
 	]}
+	edgeLength={100}
 />
 
 The previous step results in a vacancy, and now `node(70)` must succeed.
 
-<figure>$$ \lang 10, 30, 70, \square, 80, 90 \rang $$</figure>
+$$
+	\lang 10, 30, 70, \square, 80, 90 \rang
+$$
 
 <Tree
 	data={[
@@ -238,11 +250,14 @@ The previous step results in a vacancy, and now `node(70)` must succeed.
 		{ child: "e", parent: "30", display: "none" },
 		{ child: "70", parent: "30" },
 	]}
+	edgeLength={100}
 />
 
 Now `node(80)` must succeed.
 
-<figure>$$ \lang 10, 30, 70, 80, \square, 90 \rang $$</figure>
+$$
+	\lang 10, 30, 70, 80, \square, 90 \rang
+$$
 
 <Tree
 	data={[
@@ -257,6 +272,7 @@ Now `node(80)` must succeed.
 		{ child: "e", parent: "30", display: "none" },
 		{ child: "70", parent: "30" },
 	]}
+	edgeLength={100}
 />
 
 And finally, `node(90)` must succeed, which means `node(30)` must succeed.
@@ -280,6 +296,7 @@ $$
 		{ child: "e", parent: "30", display: "none" },
 		{ child: "70", parent: "30" },
 	]}
+	edgeLength={100}
 />
 
 ## Time Complexity

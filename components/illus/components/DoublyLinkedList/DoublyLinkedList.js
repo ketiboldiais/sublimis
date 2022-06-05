@@ -1,10 +1,13 @@
 import React, { useRef, useEffect } from "react";
-import { isObjectLiteral } from "../utils/isObjectLiteral/isObjectLiteral";
-import { svg } from "../utils/svg/svg";
+import {
+	className,
+	isObjectLiteral,
+	svg,
+	translate,
+	insertArrowDefinitions,
+} from "../utils";
 import { Base } from "../base/Base";
 import * as d3 from "d3";
-import { translate } from "../utils/translate/translate";
-import { insertArrowDefinitions } from "../utils/insertArrowDefinitions/insertArrowDefinitions";
 
 const formatData = (arr = []) => {
 	let data = [];
@@ -21,45 +24,45 @@ const formatData = (arr = []) => {
 
 export const DoublyLinkedList = ({
 	data = [],
-	fontFamily="system-ui",
+	fontFamily = "system-ui",
 	listName = "root",
 	width = 240,
 	height = 40,
 	containerWidth,
 	containerHeight,
-	fontSize=8,
-	fontColor="#000000",
+	fontSize = 8,
+	fontColor = "#000000",
 
-	dataFieldFontSize=fontSize,
-	dataFieldColor="#ffffff",
-	dataFieldStrokeColor=fontColor,
-	dataFieldTextColor=fontColor,
+	dataFieldFontSize = fontSize,
+	dataFieldColor = "#ffffff",
+	dataFieldStrokeColor = fontColor,
+	dataFieldTextColor = fontColor,
 
-	nextFieldColor=dataFieldColor,
-	nextFieldStrokeColor=fontColor,
+	nextFieldColor = dataFieldColor,
+	nextFieldStrokeColor = fontColor,
 
-	prevFieldColor=dataFieldColor,
-	prevFieldStrokeColor=fontColor,
+	prevFieldColor = dataFieldColor,
+	prevFieldStrokeColor = fontColor,
 
-	rootFontSize=fontSize,
-	rootTextColor=fontColor,
+	rootFontSize = fontSize,
+	rootTextColor = fontColor,
 
-	antFontSize=10,
-	antFontColor=fontColor,
+	antFontSize = 10,
+	antFontColor = fontColor,
 
-	linkColor=fontColor,
+	linkColor = fontColor,
 
-	nextPointerColor=linkColor,
-	nextCircleColor=linkColor,
-	prevPointerColor=linkColor,
-	prevCircleColor=linkColor,
-	
-	indexFontSize=fontSize-2,
-	indexFontColor=fontColor,
+	nextPointerColor = linkColor,
+	nextCircleColor = linkColor,
+	prevPointerColor = linkColor,
+	prevCircleColor = linkColor,
+
+	indexFontSize = fontSize - 2,
+	indexFontColor = fontColor,
 	margins = [15, 30, 10, 30],
 	isIndexed = true,
 }) => {
-	const DoublyLinkedListFigure = useRef();
+	const _doublyLinkedListREF = useRef();
 	const _svg = svg(width, height, margins);
 	const _data = formatData(data);
 	const nodeCount = _data.length;
@@ -71,13 +74,16 @@ export const DoublyLinkedList = ({
 	const nodeWidth = scale.bandwidth();
 	const nodeHeight = scale.bandwidth() / 2;
 
-	useEffect(() => {
+	const renderDoublyLinkedList = () => {
 		const canvas = d3
-			.select(DoublyLinkedListFigure.current)
+			.select(_doublyLinkedListREF.current)
 			.select("g.svgElement");
+		const doublyLinkedListCanvas = canvas
+			.append("g")
+			.attr("class", className.doublyLinkedList.canvas);
 		insertArrowDefinitions(
-			canvas,
-			"doubly-linked-list-next-pointer",
+			doublyLinkedListCanvas,
+			className.doublyLinkedList.nextArrow,
 			8,
 			0,
 			4,
@@ -86,8 +92,8 @@ export const DoublyLinkedList = ({
 			nextPointerColor,
 		);
 		insertArrowDefinitions(
-			canvas,
-			"doubly-linked-list-prev-pointer",
+			doublyLinkedListCanvas,
+			className.doublyLinkedList.prevArrow,
 			8,
 			0,
 			4,
@@ -95,29 +101,29 @@ export const DoublyLinkedList = ({
 			"auto",
 			prevPointerColor,
 		);
-		const nodeGroup = canvas
+		const nodeGroup = doublyLinkedListCanvas
 			.selectAll("nodeGroups")
 			.data(_data)
 			.enter()
 			.append("g")
-			.attr("class", "doubly-linked-list-node")
+			.attr("class", className.doublyLinkedList.node)
 			.attr("transform", (d, i) => translate(scale(i), 0))
 			.attr("y", 0);
 		const dataField = nodeGroup
 			.append("g")
-			.attr("class", "node-data-field")
+			.attr("class", className.doublyLinkedList.dataField)
 			.attr("transform", translate(scale.bandwidth() / 3, 0));
-		const dataFieldRectangle = dataField
+		// Data Field Rectangle
+		dataField
 			.append("rect")
-			.attr("class", "node-data-field-rectangle")
 			.attr("width", nodeWidth)
 			.attr("height", nodeHeight)
 			.attr("stroke", dataFieldStrokeColor)
 			.attr("fill", dataFieldColor);
-		const dataFieldText = dataField
+		// Data field text
+		dataField
 			.append("text")
-			.attr("class", "node-data-field-text")
-			.attr('font-family', fontFamily)
+			.attr("font-family", fontFamily)
 			.attr("fill", dataFieldTextColor)
 			.attr("text-anchor", "middle")
 			.attr("font-size", dataFieldFontSize)
@@ -127,9 +133,10 @@ export const DoublyLinkedList = ({
 			.text((d) => d.val);
 		if (isIndexed) {
 			dataField
+				.append("g")
+				.attr("class", className.doublyLinkedList.index)
 				.append("text")
-				.attr("class", "node-index-text")
-				.attr('font-family', fontFamily)
+				.attr("font-family", fontFamily)
 				.attr("text-anchor", "middle")
 				.attr("fill", indexFontColor)
 				.attr("font-size", indexFontSize)
@@ -139,83 +146,86 @@ export const DoublyLinkedList = ({
 		}
 		const nextField = nodeGroup
 			.append("g")
-			.attr("class", "node-next-field")
+			.attr("class", className.doublyLinkedList.nextField)
 			.attr("transform", translate(scale.bandwidth(), 0));
-		const nextFieldRectangle = nextField
+		// next field rectangle
+		nextField
 			.append("rect")
-			.attr("class", "node-next-field-rectangle")
 			.attr("stroke", nextFieldStrokeColor)
 			.attr("fill", nextFieldColor)
 			.attr("width", nodeWidth / 3)
 			.attr("height", nodeHeight);
 		const prevField = nodeGroup
 			.append("g")
-			.attr("class", "node-prev-field");
-		const prevFieldRectangle = prevField
+			.attr("class", className.doublyLinkedList.prevField);
+		// prev field rectangle
+		prevField
 			.append("rect")
 			.attr("stroke", prevFieldStrokeColor)
 			.attr("fill", prevFieldColor)
 			.attr("width", nodeWidth / 3)
 			.attr("height", nodeHeight);
-		const nextPointerArrow = nodeGroup
+		const links = nodeGroup
+			.append("g")
+			.attr("class", className.doublyLinkedList.link);
+		// next link
+		links
 			.append("line")
-			.attr("class", "node-next-pointer")
+			.attr("class", className.doublyLinkedList.nextLink)
 			.attr("stroke", nextPointerColor)
 			.attr("x1", nodeWidth + nodeWidth / 8)
 			.attr("y1", nodeHeight / 4)
 			.attr("x2", nodeWidth + scale.bandwidth())
 			.attr("y2", nodeHeight / 4)
-			.attr("marker-end", "url(#doubly-linked-list-next-pointer)")
-		const nextPointerCircle = nodeGroup
+			.attr("marker-end", `url(#${className.doublyLinkedList.nextArrow})`);
+		// next link pointer circle
+		links
 			.append("circle")
-			.attr("class", "node-next-pointer-circle")
 			.attr("fill", nextCircleColor)
 			.attr("r", 1.5)
 			.attr("cx", nodeWidth + nodeWidth / 6)
 			.attr("cy", nodeHeight / 4);
-		const prevPointerArrow = nodeGroup
+		// prev link
+		links
 			.append("line")
-			.attr("class", "node-prev-pointer")
+			.attr("class", className.doublyLinkedList.prevLink)
 			.attr("stroke", prevPointerColor)
 			.attr("x1", -nodeWidth + (scale.bandwidth() + scale.bandwidth() / 5))
 			.attr("y1", nodeHeight / 1.5)
 			.attr("x2", -nodeWidth + nodeWidth / 3)
 			.attr("y2", nodeHeight / 1.5)
-			.attr("marker-end", "url(#doubly-linked-list-prev-pointer)");
-		const prevPointerCircle = nodeGroup
+			.attr("marker-end", `url(#${className.doublyLinkedList.prevArrow})`);
+		// prev link pointer circle
+		links
 			.append("circle")
-			.attr("class", "node-prev-pointer-circle")
 			.attr("fill", prevCircleColor)
 			.attr("r", 1.5)
 			.attr("cx", -nodeWidth + (scale.bandwidth() + scale.bandwidth() / 6))
 			.attr("cy", nodeHeight / 1.5);
+		// annotations
 		const annotations = dataField
-			.filter((d) => d.ant)
-			.append("text")
-			.attr("class", "node-annotation-text")
-			.attr("text-anchor", "middle")
-			.attr("x", -scale.bandwidth() / 8)
-			.attr("y", -4)
-			.text((d) => d.ant)
-			.attr("fill", "black");
-		const rootPointer = canvas
 			.append("g")
-			.attr("class", "root-pointer")
+			.attr("class", className.doublyLinkedList.annotation);
+		const rootPointer = doublyLinkedListCanvas
+			.append("g")
+			.attr("class", className.doublyLinkedList.node)
 			.attr(
 				"transform",
 				translate(-scale.bandwidth() / 2, -scale.bandwidth() / 4),
 			);
-		const rootPointerText = rootPointer
+		// root pointer text
+		rootPointer
 			.append("text")
-			.attr('font-family', fontFamily)
-			.attr("class", "root-pointer-text")
+			.attr("font-family", fontFamily)
 			.attr("text-anchor", "middle")
 			.attr("font-size", rootFontSize)
-			.attr('fill', rootTextColor)
+			.attr("fill", rootTextColor)
 			.text(listName);
-		const rootPointerLink = rootPointer
+		// root pointer link
+		rootPointer
+			.append("g")
+			.attr("class", className.doublyLinkedList.link)
 			.append("path")
-			.attr("class", "root-pointer-link")
 			.attr("fill", "none")
 			.attr("stroke", linkColor)
 			.attr("d", () => {
@@ -229,23 +239,28 @@ export const DoublyLinkedList = ({
 				const l2 = 0;
 				return `M ${m1},${m2} L ${L1},${L2} l ${l1},${l2}`;
 			})
-			.attr("marker-end", "url(#doubly-linked-list-next-pointer)");
+			.attr("marker-end", `url(#${className.doublyLinkedList.nextArrow})`);
 
-		const annotation = nextField
+		// annotations
+		nextField
 			.filter((d) => d.ant)
 			.append("g")
-			.attr("class", "linked-list-annotation")
+			.attr("class", className.doublyLinkedList.annotation)
 			.append("text")
 			.attr("text-anchor", "middle")
 			.attr("font-size", antFontSize)
-			.attr('fill', antFontColor)
+			.attr("fill", antFontColor)
 			.attr("x", -scale.bandwidth() / 4)
-			.attr("y", -margins[0]/2)
+			.attr("y", -margins[0] / 2)
 			.text((d) => d.ant);
+	};
+
+	useEffect(() => {
+		if (_doublyLinkedListREF.current) renderDoublyLinkedList(); 
 	});
 	return (
 		<Base
-			id={DoublyLinkedListFigure}
+			id={_doublyLinkedListREF}
 			width={width}
 			height={height}
 			containerWidth={containerWidth}

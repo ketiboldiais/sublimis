@@ -1,9 +1,13 @@
 import React, { useRef, useEffect } from "react";
-import { isObjectLiteral } from "../utils/isObjectLiteral/isObjectLiteral";
-import { svg } from "../utils/svg/svg";
 import { Base } from "../base/Base";
 import * as d3 from "d3";
-import { translate } from "../utils/translate/translate";
+import {
+	className,
+	isObjectLiteral,
+	setClassName,
+	svg,
+	translate,
+} from "../utils";
 
 const formatData = (arr = []) => {
 	let data = [];
@@ -22,7 +26,8 @@ export const Queue = ({
 	data = [],
 	width = 300,
 	height = 300,
-	containerWidth,
+	scale = 100,
+	containerWidth = scale,
 	containerHeight = 0.5,
 	margins = [20, 20, 20, 20],
 }) => {
@@ -40,14 +45,14 @@ export const Queue = ({
 		.domain(d3.range(frameCount))
 		.range([_svg.height, 0]);
 
-	useEffect(() => {
+	const renderQueue = () => {
 		const canvas = d3.select(queueFigure.current).select("g.svgElement");
 		const queueGroup = canvas
 			.selectAll("g.queuers")
 			.data(_data)
 			.enter()
 			.append("g")
-			.attr("class", "queuer")
+			.attr("class", (d) => setClassName(d.focus, className.queue.queuer))
 			.attr("transform", (d, i) => translate(xScale(i), 0));
 		const queuerRectangle = queueGroup
 			.append("rect")
@@ -63,20 +68,40 @@ export const Queue = ({
 			.attr("y", yScale.bandwidth() / 2)
 			.attr("dy", "0.4em")
 			.text((d) => d.val);
-		const indexRectangle = queueGroup
+		const queuerIndex = queueGroup
+			.append("g")
+			.attr("class", className.queue.index);
+		// index rectangles
+		queuerIndex
 			.append("rect")
 			.attr("width", xScale.bandwidth())
 			.attr("height", yScale.bandwidth() / 2)
 			.attr("y", yScale.bandwidth())
 			.attr("fill", "white")
 			.attr("stroke", "black");
-		const indexRectangleText = queueGroup
+		// index text
+		queuerIndex
 			.append("text")
 			.attr("text-anchor", "middle")
 			.attr("fill", "black")
 			.attr("x", xScale.bandwidth() / 2)
 			.attr("y", yScale.bandwidth() + yScale.bandwidth() / 3)
+			.attr('dy', '0.15em')
 			.text((d, i) => i);
+		// annotation
+		queueGroup
+			.filter((d) => d.ant)
+			.append("g")
+			.attr("class", className.queue.annotation)
+			.append("text")
+			.attr("text-anchor", "middle")
+			.attr("x", xScale.bandwidth() / 2)
+			.attr("y", -4)
+			.text((d) => d.ant);
+	};
+
+	useEffect(() => {
+		if (queueFigure.current) renderQueue();
 	});
 	return (
 		<Base

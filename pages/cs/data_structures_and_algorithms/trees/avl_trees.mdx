@@ -1,3 +1,5 @@
+import { Tree } from "@illus/Tree";
+
 # AVL Trees
 
 1. [Rotations](#rotations)
@@ -99,11 +101,15 @@ definition of an AVL tree:
 > _Definition: avl-tree_. Let ${A}$ be a binary tree. ${A}$ is an
 > _AVL-tree_ if, and only if, for every node ${n \in A,}$
 >
-> <figure>$$ \textit{\textsf{BF}}(n) \in \{ -1, 0, 1 \} $$</figure>
+> $$
+> 	  \textit{\textsf{BF}}(n) \in \{ -1, 0, 1 \}
+> $$
 >
 > Or, alternatively:
 >
-> <figure>$$\lvert \textit{\textsf{BF}}(n) \rvert \leq 1 $$</figure>
+> $$
+> 	  \lvert \textit{\textsf{BF}}(n) \rvert \leq 1
+> $$
 
 Following the definition above, if the absolute value of the balance factor
 of some node ${x}$ is greater than or equal to ${1,}$ we say that the node
@@ -151,6 +157,7 @@ with their heights indicated.
 		{ child: "i", parent: "d", display: "none" },
 	]}
 	markHeight={true}
+	edgeLength={100}
 />
 
 <Tree
@@ -166,6 +173,7 @@ with their heights indicated.
 		{ child: "k", parent: "i", display: "none" },
 	]}
 	markHeight={true}
+	edgeLength={100}
 />
 
 Examining each tree, we have the following tables of balance factors:
@@ -173,27 +181,27 @@ Examining each tree, we have the following tables of balance factors:
 <table>
 	<thead>
 		<tr>
-		<th>Tree</th>
-		<th>
-			<div>
-				<span>Node</span>
-			</div>
-		</th>
-		<th>
-			<div>
-				<span>Height of Left-subtree</span>
-			</div>
-		</th>
-		<th>
-			<div>
-				<span>Height of Right-subtree</span>
-			</div>
-		</th>
-		<th>
-			<div>
-				<span>Balance Factor</span>
-			</div>
-		</th>
+			<th>Tree</th>
+			<th>
+				<div>
+					<span>Node</span>
+				</div>
+			</th>
+			<th>
+				<div>
+					<span>Height of Left-subtree</span>
+				</div>
+			</th>
+			<th>
+				<div>
+					<span>Height of Right-subtree</span>
+				</div>
+			</th>
+			<th>
+				<div>
+					<span>Balance Factor</span>
+				</div>
+			</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -240,27 +248,27 @@ Examining each tree, we have the following tables of balance factors:
 <table>
 	<thead>
 		<tr>
-		<th>Tree</th>
-		<th>
-			<div>
-				<span>Node</span>
-			</div>
-		</th>
-		<th>
-			<div>
-				<span>Height of Left-subtree</span>
-			</div>
-		</th>
-		<th>
-			<div>
-				<span>Height of Right-subtree</span>
-			</div>
-		</th>
-		<th>
-			<div>
-				<span>Balance Factor</span>
-			</div>
-		</th>
+			<th>Tree</th>
+			<th>
+				<div>
+					<span>Node</span>
+				</div>
+			</th>
+			<th>
+				<div>
+					<span>Height of Left-subtree</span>
+				</div>
+			</th>
+			<th>
+				<div>
+					<span>Height of Right-subtree</span>
+				</div>
+			</th>
+			<th>
+				<div>
+					<span>Balance Factor</span>
+				</div>
+			</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -301,27 +309,27 @@ Examining each tree, we have the following tables of balance factors:
 <table>
 	<thead>
 		<tr>
-		<th>Tree</th>
-		<th>
-			<div>
-				<span>Node</span>
-			</div>
-		</th>
-		<th>
-			<div>
-				<span>Height of Left-subtree</span>
-			</div>
-		</th>
-		<th>
-			<div>
-				<span>Height of Right-subtree</span>
-			</div>
-		</th>
-		<th>
-			<div>
-				<span>Balance Factor</span>
-			</div>
-		</th>
+			<th>Tree</th>
+			<th>
+				<div>
+					<span>Node</span>
+				</div>
+			</th>
+			<th>
+				<div>
+					<span>Height of Left-subtree</span>
+				</div>
+			</th>
+			<th>
+				<div>
+					<span>Height of Right-subtree</span>
+				</div>
+			</th>
+			<th>
+				<div>
+					<span>Balance Factor</span>
+				</div>
+			</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -362,27 +370,27 @@ Examining each tree, we have the following tables of balance factors:
 <table>
 	<thead>
 		<tr>
-		<th>Tree</th>
-		<th>
-			<div>
-				<span>Node</span>
-			</div>
-		</th>
-		<th>
-			<div>
-				<span>Height of Left-subtree</span>
-			</div>
-		</th>
-		<th>
-			<div>
-				<span>Height of Right-subtree</span>
-			</div>
-		</th>
-		<th>
-			<div>
-				<span>Balance Factor</span>
-			</div>
-		</th>
+			<th>Tree</th>
+			<th>
+				<div>
+					<span>Node</span>
+				</div>
+			</th>
+			<th>
+				<div>
+					<span>Height of Left-subtree</span>
+				</div>
+			</th>
+			<th>
+				<div>
+					<span>Height of Right-subtree</span>
+				</div>
+			</th>
+			<th>
+				<div>
+					<span>Balance Factor</span>
+				</div>
+			</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -467,6 +475,7 @@ their balance factors indicated (red for imbalanced, green for balanced).
 		{ child: "i", parent: "d", display: "none" },
 	]}
 	markBalanceFactor={true}
+	edgeLength={100}
 />
 
 <Tree
@@ -482,6 +491,7 @@ their balance factors indicated (red for imbalanced, green for balanced).
 		{ child: "k", parent: "i", display: "none" },
 	]}
 	markBalanceFactor={true}
+	edgeLength={100}
 />
 
 Now that we know what it means for a tree to be imbalanced, let's examine
@@ -509,6 +519,7 @@ five possible binary trees:
 		{ child: "c", parent: "b", label: "none" },
 		{ child: "2", parent: "b", display: "none" },
 	]}
+	edgeLength={80}
 />
 
 <Tree
@@ -519,6 +530,7 @@ five possible binary trees:
 		{ child: "2", parent: "b", display: "none" },
 		{ child: "c", parent: "b", label: "none" },
 	]}
+	edgeLength={80}
 />
 
 <Tree
@@ -529,6 +541,7 @@ five possible binary trees:
 		{ child: "c", parent: "b", label: "none" },
 		{ child: "2", parent: "b", display: "none" },
 	]}
+	edgeLength={80}
 />
 
 <Tree
@@ -539,6 +552,7 @@ five possible binary trees:
 		{ child: "2", parent: "b", display: "none" },
 		{ child: "c", parent: "b", label: "none" },
 	]}
+	edgeLength={80}
 />
 
 <Tree
@@ -547,6 +561,7 @@ five possible binary trees:
 		{ child: "b", parent: "a", label: "none" },
 		{ child: "c", parent: "a", label: "none" },
 	]}
+	edgeLength={80}
 />
 
 Of the possibilities above, only ${\texttt{P5}}$ is balanced. Given that
@@ -561,6 +576,7 @@ only four possible cases for height-imbalanced trees:
 		{ child: "c", parent: "b" },
 		{ child: "2", parent: "b", display: "none" },
 	]}
+	edgeLength={80}
 />
 
 <Tree
@@ -571,6 +587,7 @@ only four possible cases for height-imbalanced trees:
 		{ child: "2", parent: "b", display: "none" },
 		{ child: "c", parent: "b" },
 	]}
+	edgeLength={80}
 />
 
 <Tree
@@ -581,6 +598,7 @@ only four possible cases for height-imbalanced trees:
 		{ child: "c", parent: "b" },
 		{ child: "2", parent: "b", display: "none" },
 	]}
+	edgeLength={80}
 />
 
 <Tree
@@ -591,6 +609,7 @@ only four possible cases for height-imbalanced trees:
 		{ child: "2", parent: "b", display: "none" },
 		{ child: "c", parent: "b" },
 	]}
+	edgeLength={80}
 />
 
 Because there are only four possible cases, there are only four methods for
@@ -643,7 +662,9 @@ Now, because we have ${T:LL_i,}$ we perform an **right-rotation**:
 	]}
 />
 
-<figure>$$ \Large \overset{\texttt{right-rotate}}{\curvearrowright} $$</figure>
+$$
+	\Large \overset{\texttt{right-rotate}}{\curvearrowright}
+$$
 
 <Tree
 	data={[
@@ -681,11 +702,11 @@ For example, suppose we have the following tree:
 	data={[
 		{ child: "a", parent: "" },
 		{ child: "b", parent: "a" },
-		{ child: "d", parent: "a", type: "subtree" },
+		{ child: "d", parent: "a", noCircle: true},
 		{ child: "c", parent: "b" },
-		{ child: "e", parent: "b", type: "subtree" },
-		{ child: "f", parent: "c", type: "subtree" },
-		{ child: "g", parent: "c", type: "subtree" },
+		{ child: "e", parent: "b", noCircle: true},
+		{ child: "f", parent: "c", noCircle: true},
+		{ child: "g", parent: "c", noCircle: true},
 	]}
 	edgeLength={100}
 />
@@ -700,10 +721,10 @@ tree is left-heavy. Accordingly, we have a right-rotation:
 		{ child: "b", parent: "" },
 		{ child: "c", parent: "b" },
 		{ child: "a", parent: "b" },
-		{ child: "e", parent: "a", type: "subtree" },
-		{ child: "d", parent: "a", type: "subtree" },
-		{ child: "f", parent: "c", type: "subtree" },
-		{ child: "g", parent: "c", type: "subtree" },
+		{ child: "e", parent: "a", noCircle: true},
+		{ child: "d", parent: "a", noCircle: true},
+		{ child: "f", parent: "c", noCircle: true},
+		{ child: "g", parent: "c", noCircle: true},
 	]}
 />
 
@@ -734,7 +755,9 @@ perform a **left-rotation**:
 	]}
 />
 
-<figure>$$ \Large \overset{\texttt{left-rotate}}{\curvearrowleft} $$</figure>
+$$
+	\Large \overset{\texttt{left-rotate}}{\curvearrowleft}
+$$
 
 <Tree
 	data={[
@@ -785,7 +808,9 @@ we perform a right-left rotation:
 	]}
 />
 
-<figure>$$ \Large \overset{\texttt{right-rotate}}{\curvearrowright} $$</figure>
+$$
+	\Large \overset{\texttt{right-rotate}}{\curvearrowright}
+$$
 
 <Tree
 	data={[
@@ -801,7 +826,9 @@ we perform a right-left rotation:
 	]}
 />
 
-<figure>$$ \Large \overset{\texttt{left-rotate}}{\curvearrowleft} $$</figure>
+$$
+	\Large \overset{\texttt{left-rotate}}{\curvearrowleft}
+$$
 
 ### Left-right Rotation
 
@@ -830,7 +857,9 @@ we perform a left-right rotation:
 	]}
 />
 
-<figure>$$ \Large \overset{\texttt{left-rotate}}{\curvearrowleft} $$</figure>
+$$
+	\Large \overset{\texttt{left-rotate}}{\curvearrowleft}
+$$
 
 <Tree
 	data={[
@@ -842,7 +871,9 @@ we perform a left-right rotation:
 	]}
 />
 
-<figure>$$ \Large \overset{\texttt{right-rotate}}{\curvearrowright} $$</figure>
+$$
+	\Large \overset{\texttt{right-rotate}}{\curvearrowright}
+$$
 
 <Tree
 	data={[
@@ -897,8 +928,6 @@ More generally:
 						{ child: 3, parent: 1, label: "none", ant: "0" },
 						{ child: 4, parent: 1, display: "none" },
 					]}
-					containerWidth={100}
-					containerHeight={40}
 				/>
 			</td>
 			<td>Left-left</td>
@@ -914,8 +943,6 @@ More generally:
 						{ child: 3, parent: 1, label: "none", ant: "0" },
 						{ child: 4, parent: 1, display: "none" },
 					]}
-					containerWidth={100}
-					containerHeight={40}
 				/>
 			</td>
 			<td>Left-right</td>
@@ -931,8 +958,6 @@ More generally:
 						{ child: 4, parent: 0, display: "none" },
 						{ child: 3, parent: 0, label: "none", ant: "0" },
 					]}
-					containerWidth={100}
-					containerHeight={40}
 				/>
 			</td>
 			<td>Right-right</td>
@@ -948,8 +973,6 @@ More generally:
 						{ child: 4, parent: 0, display: "none" },
 						{ child: 3, parent: 0, label: "none", ant: "0" },
 					]}
-					containerWidth={100}
-					containerHeight={40}
 				/>
 			</td>
 			<td>Right-left</td>
@@ -970,7 +993,6 @@ LL-rotation, we get:
 		{ child: "A", parent: "B" },
 	]}
 	markBalanceFactor={true}
-	containerHeight={20}
 />
 
 Now we see that it's balanced. The subtrees are now:
@@ -986,7 +1008,6 @@ Now we see that it's balanced. The subtrees are now:
 		{ child: "CR", parent: "C", noCircle: true },
 	]}
 	markBalanceFactor={true}
-	containerHeight={50}
 />
 
 Ok hang on. How did those subtrees move? A helpful way to think about how

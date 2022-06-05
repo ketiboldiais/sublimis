@@ -22,13 +22,14 @@ export const Sequence = ({
 	data = [1, 2, 3, 4, 5],
 	width = 0.574045 * data.length ** 2 + 22.878 * data.length + 45.8824,
 	height = 80,
-	containerWidth,
-	containerHeight,
+	scale = 100,
 	elementFillColor = "white",
 	elementStrokeColor = "black",
 	elementFontSize = "1rem",
 	indexFontSize = "0.8rem",
 	margins = [20, 20, 20, 20],
+	containerWidth = scale,
+	containerHeight,
 }) => {
 	const sequenceFigure = useRef();
 	const svgDimensions = svg(width, height, margins);
@@ -46,7 +47,7 @@ export const Sequence = ({
 		.range([0, svgDimensions.width], 0.05)
 		.paddingInner(0.1);
 
-	useEffect(() => {
+	const renderSequence = () => {
 		// set up group
 		const sequence = d3
 			.select(sequenceFigure.current)
@@ -71,8 +72,8 @@ export const Sequence = ({
 			.attr("height", xScale.bandwidth());
 
 		const dataLabels = sequence
-			.append('g')
-			.attr('class', className.sequence.elementText)
+			.append("g")
+			.attr("class", className.sequence.elementText)
 			.append("text")
 			.attr("font-size", elementFontSize)
 			.attr("text-anchor", "middle")
@@ -101,6 +102,10 @@ export const Sequence = ({
 			.attr("x", xScale.bandwidth() / 2)
 			.attr("y", -4)
 			.text((d) => d.ant);
+	};
+
+	useEffect(() => {
+		if (sequenceFigure.current) renderSequence();
 	});
 	return (
 		<Base

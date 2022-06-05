@@ -1,3 +1,6 @@
+import { HTree } from "@illus/HTree";
+import { Tree } from "@illus/Tree";
+
 # Postorder Traversal
 
 Postorder traversal is defined as follows:
@@ -126,7 +129,6 @@ right-subtrees of a given node have been traversed. Suppose we called
 		{ child: "0", parent: "7", edgeName: "F5" },
 		{ child: "1", parent: "7", edgeName: "F6" },
 	]}
-	isDirected={true}
 />
 
 We won't go over the call execution for postorder traversal in detail, as
@@ -161,7 +163,6 @@ follows:
 	width={500}
 	height={600}
 	margins={[20, 100, 20, 110]}
-	containerHeight={85}
 />
 
 As we saw with preorder and inorder traversal, postorder traversal results

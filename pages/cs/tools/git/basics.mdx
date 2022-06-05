@@ -547,13 +547,6 @@ familiar with it.
 
 We can envision the way commits are structured with the following diagram:
 
-<img
-	src="{% static 'images/git_commit_pointers.svg'%}"
-	alt="commit pointers"
-	loading="lazy"
-	class="sixty-p"
-/>
-
 This structure is linear &mdash; it only goes in one direction. The
 problem, however, is that projects seldom ever proceed in a linear fashion.
 For example, we might be implementing a new feature, where the user can use
@@ -570,13 +563,6 @@ point ${t_0}$, leading to the destruction of other parts of the program at
 some point ${t_1}$. If it turns out that the destruction was a bad idea, we
 can simply go back to ${t_0.}$ For this reason, we can think of branching
 as creating alternative timelines:
-
-<img
-	src="{% static 'images/git_branching.svg'%}"
-	alt="git branch"
-	loading="lazy"
-	class="sixty-p"
-/>
 
 The changes we make on one branch does not impact the changes we make on
 other branches, unless we _merge_ them (more on this later.) In git, we are
@@ -610,13 +596,6 @@ pointer referring to the current location in the repository. From HEAD,
 there is a pointer to a particular branch _reference_, in this case, a
 reference to main. More specifically, HEAD points to the last commit on
 branch main. This last reference is called the **tip**.
-
-<img
-	src="{% static 'images/git_head_pointer.svg'%}"
-	alt="head pointer"
-	loading="lazy"
-	class="seventy-p"
-/>
 
 If we switch to another branch, say a branch named x, then HEAD points to
 the tip of x &mdash; (HEAD->x). If we switch to a branch named y, HEAD then
@@ -922,21 +901,7 @@ kinds of merges later.
 
 In a _fast-forward merge_, we have the following timeline:
 
-<img
-	src="{% static 'images/git_fast_forward_merge.svg'%}"
-	alt="fast foward merge"
-	loading="lazy"
-	class="fifty-p"
-/>
-
 But, what if instead we had the following:
-
-<img
-	src="{% static 'images/git_non_forward.svg'%}"
-	alt="non fast foward"
-	loading="lazy"
-	class="sixty-p"
-/>
 
 Now the timeline has changed. We have changes in branch main that branchx
 does not have, and changes in branchx that main does not have. The problem
@@ -949,13 +914,6 @@ We will address conflicts in a later section, but for now, assume that
 there is no conflict. If there is no conflict, i.e., neither branchx nor
 main share changes, then we can merge the two branches with a **merge
 commit**:
-
-<img
-	src="{% static 'images/git_merge_commit.svg'%}"
-	alt="merge commit"
-	loading="lazy"
-	class="sixty-p"
-/>
 
 To perform a merge commit, we simply execute the same command we saw with
 the fast foward merge. The only difference is that we must include a commit
