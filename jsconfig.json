@@ -5,6 +5,7 @@
 			"contentlayer/generated": ["./.contentlayer/generated"],
 			"@components/*": ["components/*"],
 			"@enfig/*": ["components/enfig/components/*"],
+			"@illus/*": ["components/illus/"],
 		}
 	},
 	"include": [
