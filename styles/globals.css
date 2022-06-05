@@ -1,229 +1,65 @@
-@font-face {
-	font-family: "serif_main";
-	src: url("./fonts/serif_main_regular.woff");
-	font-style: normal;
-	font-weight: normal;
-}
-@font-face {
-	font-family: "serif_main";
-	src: url("./fonts/serif_main_italics.woff");
-	font-style: italic;
-	font-weight: normal;
-}
-@font-face {
-	font-family: "serif_main";
-	src: url("./fonts/serif_main_bold.woff");
-	font-style: normal;
-	font-weight: bold;
-}
-@font-face {
-	font-family: "sans_serif_main";
-	src: url("./fonts/sans_serif_main.woff");
-	font-weight: bold;
-	font-style: normal;
-}
+/* Dark mode theme */
+	@import url("./dark.css");
 
-.light {
-	transition: 1s ease;
+/* Light mode theme */
+	@import url("./light.css");
 
-	--background-color: #ffffff;
-	--page-color: #ffffff;
-	--text-color: rgb(41, 41, 41);
-	--box-shadow: 0px 1px 0 #bbbbbb, 1px 1px 2px #bdbdbd;
-	--box-shadow-hover: 1px 1px 2px rgb(228, 228, 228);
-	--box-shadow-border: 1px solid #ececec;
-	--box-shadow-pressed: inset 0.063rem 0.063rem 0.125rem #858585,
-		inset -0.063rem -0.063rem 0.125rem white;
-	--box-shadow-active: 1px 1px 2px rgb(104, 104, 104);
-	--nav-background-color: white;
-	--heading-color: rgb(185, 8, 8);
-
-	--blue: teal;
-	--red: firebrick;
-	--brightRed: tomato;
-	--green: rgb(0, 146, 0);
-
-	/* illus-axis */
-	--illus-axis-color: rgb(157, 178, 178);
-
-	/* illus-linked list */
-	--linked-list-data-color: none;
-	--linked-list-stroke-color: black;
-	--linked-list-next-color: rgb(188, 220, 230);
-	--linked-list-text-color: black;
-	--linked-list-link-color: black;
-
-	/* illus-graphs */
-	--graph-node-text-color: black;
-}
-.dark {
-	transition: 1s ease;
-
-	--background-color: rgb(56, 56, 56);
-	--page-color: rgb(43, 43, 43);
-	--text-color: rgb(220, 220, 220);
-	--box-shadow: 0px 1px 4px 1px #202020, 1px 2px 2px #232323;
-	--box-shadow-hover: 1px 1px 2px rgb(36, 36, 36);
-	--box-shadow-border: 1px solid #2e2e2e;
-	--box-shadow-pressed: inset 0.063rem 0.063rem 0.125rem #1e1e1e,
-		inset -0.063rem -0.063rem 0.125rem rgb(38, 38, 38);
-	--box-shadow-active: 1px 1px 2px rgb(56, 56, 56);
-	--nav-background-color: rgb(18, 39, 84);
-	--heading-color: rgb(255, 110, 110);
-
-	--blue: rgb(0, 145, 255);
-	--red: tomato;
-	--brightRed: firebrick;
-	--green: lime;
-
-	/* illus-axis */
-	--illus-axis-color: cyan;
-
-	/* illus-linked list */
-	--linked-list-data-color: none;
-	--linked-list-stroke-color: cyan;
-	--linked-list-next-color: none;
-	--linked-list-text-color: cyan;
-	--linked-list-link-color: cyan;
-
-	/* illus-graphs */
-	--graph-node-text-color: rgb(195, 195, 195);
-}
-
-html,
-body {
-	padding: 0;
-	overscroll-behavior: none;
-	background-color: var(--background-color);
-	margin: 0;
-	font-family: "Noto Serif", "serif_main", -apple-system,
-		BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell,
-		Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
-
-/* Headings */
-	h1, h2, h3,
-	h4, h5, h6 {
+/* Font Imports */
+	@font-face {
+		font-family: "serif_main";
+		src: url("./fonts/serif_main_regular.woff");
+		font-style: normal;
+		font-weight: normal;
+	}
+	@font-face {
+		font-family: "serif_main";
+		src: url("./fonts/serif_main_italics.woff");
+		font-style: italic;
+		font-weight: normal;
+	}
+	@font-face {
+		font-family: "serif_main";
+		src: url("./fonts/serif_main_bold.woff");
+		font-style: normal;
+		font-weight: bold;
+	}
+	@font-face {
 		font-family: "sans_serif_main";
+		src: url("./fonts/sans_serif_main.woff");
+		font-weight: bold;
+		font-style: normal;
 	}
 
-	h2, h3, h4,
-	h5, h6 {
-		color: var(--heading-color);
-		margin: 1.5em 0 -0.5em 0;
-		padding-bottom: 0;
+/* Root Variables */
+	:root {
+		--serif: "Noto Serif", "serif_main", serif;
+		--sans_serif: "sans_serif_main";
 	}
 
-	h1 {font-size: 2rem}
-	h2 {font-size: 1.8rem}
-	h3 {font-size: 1.6rem}
-	h4 {font-size: 1.4rem}
-	h5 {font-size: 1.2rem}
-	h6 {font-size: 1.1rem}
+/* Global HTML */
+	html { background-color: var(--background-color); }
 
+/* KaTeX */
+	span.katex {font-size: 1em;}
 
-html { font-size: clamp(10px, 15px, 18px); }
-
-.dark .figureImage {
-	filter: invert(100%);
+/* Scroll bars */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 7px;
 }
-
-small {
-	font-size: inherit;
-	font-variant: small-caps;
+::-webkit-scrollbar-track {
+  margin: 1em;
 }
-
-h1 {
-	text-align: center;
+::-webkit-scrollbar-thumb {
+  background-color: #d6dee1;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background-clip: content-box;
 }
-
-text,
-code {
-	font-family: "Fira Mono", monospace;
-}
-:not(pre) > code {
-	font-size: 0.85em;
-	white-space: pre;
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a8bbbf;
 }
 
-* {
-	box-sizing: border-box;
-}
-
-span.katex {
-	font-size: 1em;
-}
-
-blockquote {
-	margin: 0;
-	padding-left: 4%;
-	border-left: solid 2px rgb(188, 188, 188);
-}
-
-ol,
-ul {
-	margin: 0;
-	margin-left: 1.5em;
-	padding: 0;
-}
-
-ol {
-	list-style: decimal;
-}
-ol li ol {
-	list-style: lower-alpha;
-}
-ol li ol li ol {
-	list-style: upper-alpha;
-}
-ol li ol li ol li ol {
-	list-style: lower-roman;
-}
-ol li ol li ol li ol li ol {
-	list-style: lower-alpha;
-}
-
-figure {
-	margin: 0;
-	display: flex;
-	justify-content: center;
-	flex: 1;
-}
-
-.fig {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	padding-bottom: 30%;
-	margin: 0 auto;
-	position: relative;
-}
-
-.image {
-	width: 100%;
-	height: 100%;
-	padding: 0.2em;
-}
-.fig figcaption {
-	font-style: italic;
-	font-size: 0.85rem;
-	display: block;
-	width: fit-content;
-	margin: 2% auto;
-}
-
-table {
-	font-size: 0.9em;
-	width: 90%;
-	margin: 5px auto;
-	width: fit-content;
-	border: solid thin grey;
-	border-collapse: collapse;
-}
-
-table td,
-table th {
-	padding: 5px;
-	border: solid thin grey;
+.theme-dark .figureImage {
+  filter: invert(100%);
 }

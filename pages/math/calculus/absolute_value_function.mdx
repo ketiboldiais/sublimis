@@ -1,0 +1,192 @@
+import { Grid } from "@components/Grid/Grid";
+
+# The Absolute Value Function
+
+The absolute value function has the general form:
+
+$$
+	\Large f(x) = a \lvert x - h \rvert + k
+$$
+
+where ${a}$ provides how much the function vertically stretches, and
+whether the graph opens up or down. The variable ${h}$ provides how much
+the graph shifts horizontally, and ${k}$ provides how much the graph shifts
+vertically.
+
+The simplest form of the absolute function is ${f(x) = \lvert x  \rvert.}$
+It has the graph:
+
+<Plot
+	functions={[
+		{
+			f: (x) => Math.abs(x),
+			color: "var(--red)",
+		},
+	]}
+	geo={[
+		{ type: "point", xy: [-1, 1] },
+		{ type: "point", xy: [0, 0] },
+		{ type: "point", xy: [1, 1] },
+	]}
+	id={"abs1"}
+	domain={[-5, 5]}
+	range={[-5, 5]}
+/>
+
+The domain of the absolute value function is the set of all real numbers,
+${\R,}$ or, in interval notation, ${(-\infty, \infty)}$ Its range is the
+set of all nonnegative integers, ${\Z_{\geq 0}.}$ Or, in interval notation,
+${[0, \infty).}$ Notice that, in the base case ${f(x) = \lvert x \rvert,}$
+$f$ always returns ${f(x) \in \R^{+}}$ (i.e., ${f(x) \geq 0}$).
+
+The key points for the absolute value function are ${(-1,1),}$ ${(0,0)}$
+and ${(1,1),}$ as indicated in the graph above.
+
+> _Property_. Where ${f(x) = \lvert x \rvert,}$
+>
+> - ${\text{dom}(f) = \{ x \in \R \}}$
+> - ${\text{ran}(f) = \{ f(x) \in \Z_{\geq 0} \}}$
+
+Let's look at some variations of the absolute value function.
+
+## Vertical Shifts
+
+In general, vertical shifts of the absolute value function take the form:
+
+$$
+	f(x) =\lvert x \rvert + C
+$$
+
+where ${C}$ is some real number. If ${C \in \R^+,}$ the graph shifts up:
+
+<Plot
+	functions={[{ f: (x) => Math.abs(x) + 1, color: "var(--red)" }]}
+	geo={[
+		{
+			type: "label",
+			id: "f(x) =\\lvert x \\rvert + 1",
+			xy: [2, 2],
+			w: 60,
+		},
+	]}
+	id={"abs_up_shift"}
+	domain={[-5, 5]}
+	range={[-5, 5]}
+/>
+
+If ${C \in \R^-,}$ the graph shifts down:
+
+<Plot
+	functions={[{ f: (x) => Math.abs(x) - 1, color: "var(--red)" }]}
+	geo={[
+		{
+			type: "label",
+			id: "f(x) =\\lvert x \\rvert - 1",
+			xy: [2, -2],
+			w: 60,
+		},
+	]}
+	id={"abs_down_shift"}
+	domain={[-5, 5]}
+	range={[-5, 5]}
+/>
+
+## Horizontal Shifts
+
+Horizontal shifts of the absolute value function take the form:
+
+$$
+	f(x) = \lvert x + C \rvert
+$$
+
+where ${C}$ is some real number. If ${C \in \R^-,}$ the graph shifts to the
+right:
+
+<Plot
+	functions={[{ f: (x) => Math.abs(x - 1), color: "var(--red)" }]}
+	geo={[
+		{
+			type: "label",
+			id: "f(x) =\\lvert x - 1 \\rvert",
+			xy: [2, -2],
+			w: 60,
+		},
+	]}
+	id={"abs_right_shift"}
+	domain={[-5, 5]}
+	range={[-5, 5]}
+/>
+
+And if ${C \in \R^+,}$ the graph shifts to the left:
+
+<Plot
+	functions={[{ f: (x) => Math.abs(x + 1), color: "var(--red)" }]}
+	geo={[
+		{
+			type: "label",
+			id: "f(x) =\\lvert x + 1 \\rvert",
+			xy: [2, 2],
+			w: 60,
+		},
+	]}
+	id={"abs_left_shift"}
+	domain={[-5, 5]}
+	range={[-5, 5]}
+/>
+
+## Stretching
+
+
+## Reciprocal Absolute Value
+
+The reciprocal of the absolute value function,
+${f(x) = \dfrac{1}{\lvert x \rvert }}$ has the following graph:
+
+<Plot
+	functions={[{ f: (x) => 1 / Math.abs(x), color: "var(--red)" }]}
+	geo={[
+		{ type: "point", xy: [-1, 1] },
+		{ type: "point", xy: [0, 0] },
+		{ type: "point", xy: [1, 1] },
+	]}
+	id={"abs_reciprocal"}
+	domain={[-5, 5]}
+	range={[-5, 5]}
+/>
+
+Compare this graph to the graph of ${f(x) = x^2}$:
+
+<Grid cols={2}>
+
+<Plot
+	functions={[{ f: (x) => 1 / Math.abs(x), color: "var(--red)" }]}
+	geo={[
+		{ type: "label", id: "f(x) = \\dfrac{1}{|x|}", w: 60, xy: [2, 3] },
+	]}
+	id={"abs_reciprocal2"}
+	height={200}
+	width={200}
+	margins={[20, 20, 20, 20]}
+	domain={[-5, 5]}
+	noTicks={true}
+/>
+
+<Plot
+	functions={[{ f: (x) => 1 / x ** 2, color: "var(--red)" }]}
+	geo={[
+		{ type: "label", id: "f(x) = \\dfrac{1}{x^2}", w: 60, xy: [2, 3] },
+	]}
+	id={"one_over_x_squared"}
+	height={200}
+	width={200}
+	margins={[20, 20, 20, 20]}
+	domain={[-5, 5]}
+	noTicks={true}
+/>
+
+</Grid>
+
+While they look somewhat the same, the graph of
+${f(x) = \dfrac{1}{\lvert x \rvert }}$ tends towards 0 faster than the
+graph of ${f(x) = \dfrac{1}{x^2}}$ as ${x}$ approaches 0 from negative
+infinity and as ${x}$ approaches 0 from positive infinity.

@@ -1,0 +1,28 @@
+/* Illus */
+	.illus {
+		margin: 0 auto;
+	}
+/* Binary Tree Styles */
+	.binaryTreeEdgeGroup line {
+		stroke: var(--binary-tree-edge-color);
+	}
+	.binaryTreeNode circle {
+		fill: var(--binary-tree-node-fill-color);
+		stroke: var(--binary-tree-edge-color);
+	}
+	.binaryTreeTextGroup text {
+		fill: var(--binary-tree-text-color);
+	}
+
+/* Sequence Styles */
+.Sequence { width: 50%; }
+.sequenceElement rect {
+	fill: var(--sequenceElementFill);
+	stroke: var(--sequenceElementStroke);
+}
+.sequenceElementText text {
+	fill: var(--sequenceElementTextColor);
+}
+.sequenceIndexText text {
+	fill: var(--sequenceElementIndexColor);
+};

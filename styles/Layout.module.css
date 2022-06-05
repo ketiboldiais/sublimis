@@ -1,64 +1,116 @@
-.mainContent {
+.master {
 	background-color: var(--background-color);
 	color: var(--text-color);
-	display: flex;
-	justify-content: center;
+	font-family: var(--serif);
 }
-.container {
-	padding: 1em 1.5em;
-	margin-top: 50px;
-	margin-bottom: 32%;
-	width: clamp(450px, 95vw, 650px);
-	border-radius: 20px;
-	background-color: var(--page-color);
+.master h1 {
+	font-family: var(--sans_serif);
+}
+.page {
+	margin-top: 2rem;
+	padding: 0.8rem 0.8rem 20rem 0.8rem;
+	overflow-x: hidden;
+}
+.navbar {
+	position: -webkit-sticky;
+	position: sticky;
+	background-color: var(--background-color);
+	z-index: 10;
+	padding: 3px 2px;
+	top: 0;
 }
 
-.mainContent ::-webkit-scrollbar {
-	width: 10px;
-	height: 7px;
+/* Paragraphs */
+.page p {
+	margin: 1rem 0;
+	line-height: 1.2;
 }
-.mainContent ::-webkit-scrollbar-track {
-	margin: 1em;
-}
-.mainContent ::-webkit-scrollbar-thumb {
-	background-color: #d6dee1;
-	border-radius: 4px;
-	border: 1px solid transparent;
-	background-clip: content-box;
-}
-.mainContent ::-webkit-scrollbar-thumb:hover {
-	background-color: #a8bbbf;
-}
-.mainContent a {
-	position: relative;
+
+/* Block Quotes */
+.page blockquote {
 	padding: 0;
-	text-decoration: none;
-	border-bottom: 1px solid var(--text-color);
-	color: inherit;
-}
-.mainContent a {
-	border-bottom: thin dotted var(--text-color);
-}
-.mainContent a:visited {
-	color: none;
-	outline: 0;
-}
-.mainContent a:hover {
-	cursor: pointer;
-}
-.mainContent a::before {
-	content: "";
-	position: absolute;
-	display: block;
-	width: 100%;
-	height: 1px;
-	bottom: 0;
-	left: 0;
-	background-color: var(--text-color);
-	transform: scaleX(0);
-	transition: transform 0.3s ease;
-}
-.mainContent a:hover::before {
-	transform: scaleX(1);
+	padding-left: 0.5em;
+	background-color: var(--box-background-color);
 }
 
+/* Heading Sizes */
+	.page h1 {font-size: 2rem;}
+	.page h2 {font-size: 1.8rem;}
+	.page h3 {font-size: 1.6rem;}
+	.page h4 {font-size: 1.4rem;}
+	.page h5 {font-size: 1.2rem;}
+	.page h6 {font-size: 1.1rem;}
+
+/* Heading 1 */
+	.page h1 {text-align: center;}
+
+/* Heading font family */
+/* All headings are the same font family in the master container */
+	.master h1, .master h2,
+	.master h3, .master h4,
+	.master h5, .master h6 {
+		font-family: var(--sans_serif);
+		color: var(--heading-color);
+		margin: 2.5rem 0 0 0;
+	}
+
+/* Tables */
+	.page table {
+		width: 90%;
+		margin: 5% auto;
+	}
+	.page table, .page th, .page td { border: var(--border); }
+	.page th, .page td {padding: 0.2rem};
+
+
+/* List Styles */
+.page ul {list-style: disc;}
+.page ol {list-style: decimal;}
+
+/* List Indents */
+.page ol {margin: 1.2rem;}
+.page ul {margin: 1.2rem;}
+
+/* Table of Contents from Markdown */
+.page h1 + ol {
+	list-style: upper-roman;
+	margin: 2rem 0.1rem 2rem 0.1rem;
+	padding: 1rem 2rem;
+}
+.page h1 + ol ol {
+	margin: 0rem 1.5rem;
+}
+.page h1 + ol ol {list-style: decimal;}
+.page h1 + ol ol ol {list-style: lower-alpha;}
+.page h1 + ol ol ol ol {list-style: lower-roman;}
+
+.page h1 + ol {
+	width: fit-content;
+	border-radius: 8px;
+}
+
+/* List items */
+	.page li { padding: 0.1rem 0; }
+
+	/* Remove margin from paragraphs in list tags. MDX inserts paragraph tags for some reason during compilation. */
+	.page li p {margin: 0.25rem 0;}
+
+
+/* Superscripts (for footnotes) */
+.page sup {
+	font-size: 0.6rem;
+	border: var(--call-border);
+	color: var(--call-text-color);
+	padding: 1px 5px 1px 5px;
+	vertical-align:middle;
+	position: relative;
+	bottom:1px;
+	left:2px;
+	border-radius: 50%;
+}
+
+/* Links */
+.page a {color: inherit}
+
+/* Figure Caption */
+.page figcaption {font-size: 0.7rem;}

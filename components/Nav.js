@@ -2,31 +2,30 @@ import React, { useState, useRef } from "react";
 import navStyles from "../styles/Nav.module.css";
 import Routes from "./Routes";
 import Tree from "./TreeList";
+import { Toggle } from "./Toggle/Toggle";
 
-const Nav = ({ clickHandler, theme }) => {
+export const NavBody = ({ className }) => {
 	const ref = useRef();
 	const [navbarOpen, setNavbarOpen] = useState(false);
 	const handleToggle = () => {
 		setNavbarOpen((prev) => !prev);
 	};
 	return (
-		<nav className={navStyles.nav}>
-			<div className={navStyles.headBar}>
+		<>
+			<div className={navStyles.navControls}>
 				<button
-					className={navbarOpen ? navStyles.pressed : navStyles.button}
+					className={
+						navbarOpen
+							? `${navStyles.pressed} ${navStyles.button}`
+							: navStyles.button
+					}
 					onClick={handleToggle}
 					ref={ref}>
 					{navbarOpen
 						? "Close Table of Contents"
 						: "Open Table of Contents"}
 				</button>
-				<div className={navStyles.themeToggleDiv}>
-					<input type="checkbox" id="themeToggle" />
-					<label
-						htmlFor="themeToggle"
-						onClick={clickHandler}
-						theme={theme}></label>
-				</div>
+				<Toggle />
 			</div>
 			<div
 				className={`${navStyles.navContent} ${
@@ -34,7 +33,6 @@ const Nav = ({ clickHandler, theme }) => {
 				}`}>
 				<Tree data={Routes} allLinks={true} clickHandler={handleToggle} />
 			</div>
-		</nav>
+		</>
 	);
 };
-export default Nav;

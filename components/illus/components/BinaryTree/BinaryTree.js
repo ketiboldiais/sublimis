@@ -11,6 +11,7 @@ import { renderHeightMarks } from "../Tree/renderHeightMarks/renderHeightMarks";
 import { renderBalanceFactors } from "../Tree/renderBalanceFactors/renderBalanceFactors";
 import { calculateTreeSize } from "../Tree/calculateTreeSize/calculateTreeSize";
 import { generateBinaryTreeData } from "./GenerateBinaryTreeData/generateBinaryTreeData";
+import { className, getBackgroundColor } from "../utils";
 
 export const BinaryTree = ({
 	data = [[]],
@@ -69,11 +70,13 @@ export const BinaryTree = ({
 
 	useEffect(() => {
 		const canvas = d3.select(TreeFigure.current).select("g.svgElement");
-		const tree = canvas.append("g").attr("class", "binary-tree");
+		const tree = canvas
+			.append("g")
+			.attr("class", className.binaryTree.canvas);
 		if (isDirected) {
 			insertArrowDefinitions(
 				canvas,
-				"tree-arrow",
+				className.binaryTree.arrowURL,
 				25,
 				0,
 				5,
@@ -82,14 +85,16 @@ export const BinaryTree = ({
 				edgeColor,
 			);
 		}
-		const links = tree.append("g").attr("class", "binary-tree-links");
+		const links = tree
+			.append("g")
+			.attr("class", className.binaryTree.edgeGroup);
 		const linkLines = links
 			.selectAll("line")
 			.data(root.links())
 			.enter()
 			.append("line");
 		attrs(linkLines, {
-			class: "binary-tree-edge",
+			class: className.binaryTree.edge,
 			display: (d) =>
 				d.source.data.display || d.target.data.display
 					? "none"
@@ -139,11 +144,11 @@ export const BinaryTree = ({
 			.append("g")
 			.attr("class", (d) => {
 				if (d.data.child && d.data.child.focus) {
-					return `binary-tree-node binary-tree-node-focus-${d.data.child.focus}`;
+					return `${className.binaryTree.node} ${d.data.child.focus}`;
 				} else if (d.data.focus) {
-					return `binary-tree-node binary-tree-node-focus-${d.data.focus}`;
+					return `${className.binaryTree.node} ${d.data.focus}`;
 				} else {
-					return `binary-tree-node`;
+					return className.binaryTree.node;
 				}
 			});
 
@@ -152,19 +157,13 @@ export const BinaryTree = ({
 				.filter((d) => !d.data.display)
 				.filter((d) => !d.data.noCircle)
 				.filter((d) => !d.data.type)
-				.append("circle");
+				.append("circle")
+				.attr("class", (d) =>
+					d.height === 0
+						? className.binaryTree.leaf
+						: className.binaryTree.branch,
+				);
 			attrs(nodeCircles, {
-				class: (d) => {
-					if (d.data.focus) {
-						return d.height === 0
-							? "binary-tree-node-circle binary-tree-node-circle-focused binary-tree-node-circle-leaf"
-							: "binary-tree-node-circle binary-tree-node-circle-focused binary-tree-node-circle-branch";
-					} else {
-						return d.height === 0
-							? "binary-tree-node-circle binary-tree-node-circle-leaf"
-							: "binary-tree-node-circle binary-tree-node-circle-branch";
-					}
-				},
 				cx: (d) => d.x,
 				cy: (d) => d.y,
 				r: nodeRadius,
@@ -180,7 +179,7 @@ export const BinaryTree = ({
 
 				fill: (d) => {
 					if (hideNodeCircles) {
-						return "inherit";
+						return getBackgroundColor(TreeFigure);
 					} else if (d.data.focus) {
 						return nodeFocusFillColor;
 					} else {
@@ -190,27 +189,24 @@ export const BinaryTree = ({
 			});
 		}
 
-		const nodeLabels = tree.append("g").attr("class", "node-text");
+		const nodeLabels = tree
+			.append("g")
+			.attr("class", className.binaryTree.textGroup);
 		const dataField = nodeLabels
 			.selectAll("dataFieldLabels")
 			.data(root)
 			.enter()
 			.filter((d) => !d.data.display)
 			.filter((d) => !d.data.label)
+			.append("g")
+			.attr("class", (d) =>
+				d.height === 0
+					? className.binaryTree.leafText
+					: className.binaryTree.branchText,
+			)
 			.append("text")
 			.text((d) => d.data.child.val || d.data.child);
 		attrs(dataField, {
-			class: (d) => {
-				if (d.data.focus) {
-					return d.height === 0
-						? "binary-tree-node-text binary-tree-node-focused-text binary-tree-node-leaf-text"
-						: "binary-tree-node-text binary-tree-node-focused-text binary-tree-node-branch-text";
-				} else {
-					return d.height === 0
-						? "binary-tree-node-text binary-tree-node-leaf-text"
-						: "binary-tree-node-text binary-tree-node-branch-text";
-				}
-			},
 			"font-family": fontFamily,
 			x: (d) => d.x,
 			y: (d) => {

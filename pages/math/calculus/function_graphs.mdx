@@ -1,0 +1,176 @@
+# Function Graphs
+
+A function with a domain and range of real numbers can be graphed. When
+graphing functions, we use two axes—a horizontal axis for the function's
+domain (i.e., inputs) and vertical axis for function's range (i.e.,
+outputs). We call the input axis the ${\text{x-axis}}$ and the output axis
+the ${\text{y-axis.}}$
+
+> Definition. Given a function ${f,}$ the graph of ${f}$ on the ${x-y}$
+> plane consists of those points ${(x, y)}$ such that ${x}$ is the domain
+> of ${f}$ and ${y = f(x).}$
+
+## The Vertical Line Test
+
+The vertical line test allows us to determine if a particular graph
+represents a function. This is a particularly helpful result when we aren't
+provided any equation for a possible function, or if we are uncertain about
+what sets the function maps to and from.
+
+> A graph in the ${x-y}$ plane represents a function of $x$ iff any
+> vertical line intersects the graph in at most one point.
+
+For example, the graph below is not a function, since the blue vertical
+line passes through the plot at more than one point:
+
+<Plot
+	functions={[
+		{ f: (x) => Math.sqrt(x), color: "var(--red)" },
+		{ f: (x) => -Math.sqrt(x), color: "var(--red)" },
+		{ f: 5, color: "var(--red)", color: "var(--blue)", dash: 6 },
+	]}
+	id="nonfunction"
+/>
+
+## Graphing Transformations
+
+Graphs of functions serve as a bridge between geometry and algebra.
+Crossing from geometry to algebra are the definitions of _reflection_,
+_translation_, and _scaling_. All of these defines are broadly referred to
+as **transformations**—if we reflect, translate, or scale a function's
+graph, we are _transforming_ the function's graph.
+
+### Vertical Translation
+
+When we vertically translate a graph, we either shift the graph up or down
+the y-axis. For example, the following are vertical translations of the
+graph ${f(x) = x^2.}$
+
+<Plot
+	functions={[
+		{ f: (x) => x ** 2, color: "var(--red)" },
+		{ f: (x) => x ** 2 + 1, color: "var(--blue)" },
+		{ f: (x) => x ** 2 + 2, color: "var(--green)" },
+	]}
+	geo={[
+		{
+			type: "label",
+			id: "f(x) = x^2",
+			xy: [2, 0.8],
+			w: 60,
+			fill: "var(--red)",
+		},
+		{
+			type: "label",
+			id: "f(x) = x^2 + 1",
+			xy: [2, 1.8],
+			w: 60,
+			fill: "var(--blue)",
+		},
+		{
+			type: "label",
+			id: "f(x) = x^2 + 2",
+			xy: [2, 2.8],
+			w: 60,
+			fill: "var(--green)",
+		},
+	]}
+	domain={[-5, 5]}
+	range={[-5, 5]}
+	id="vertical_translation"
+/>
+
+Observe that when add a positive constant to the function's expression, we
+shift the graph up the $y$-axis. And when we add a negative constant (i.e.,
+subtraction) to the function's expression, we shift the grown down the
+$y$-axis. This logically follows from the fact that we are essentially
+adding a constant value to each element in the function's _range_. In other
+words, for every output, add or substract some constant—shift the graph up
+or down respectively.
+
+> _Definition_. Let ${f(x)}$ be a function and ${c}$ a constant, where
+> ${c \in \R.}$ Suppose ${y = f(x).}$ Substituting ${y}$ with ${y - c},$ we
+> obtain ${y - c = f(x),}$ which is equivalent to ${y = f(x) + c.}$ This is
+> a _vertical translation_ of ${f(x).}$
+>
+> If ${c \in \R^{+},}$ then ${f(x)}$ transforms to ${f(x) + c,}$ which
+> shifts ${G(f)}$ by ${c}$ units _up_ the $y$-axis.
+>
+> If ${c \in \R^{-},}$ then ${f(x)}$ transforms to ${f(x) + c = f(x) - c,}$
+> which shifts ${G(f)}$ by ${c}$ units _down_ the $y$-axis.
+>
+> If ${c = 0,}$ then there is no transformation, and _a fortiori_, no
+> vertical translation.
+
+### Horizontal Translation
+
+When we _horizontally translate_ a graph, we either shift the graph left or
+right along the $x$-axis. In essence, we are are adding or subtracting some
+constant from each element in the function's _domain_: For every input, add
+or substract some constant value. Horizontal translations, however, are a
+common source of error.
+
+Consider again the graph of ${y = x^2.}$ To shift the graph to the right,
+we add some negative constant ${c}$ to every input. Thus, ${y = (x - c)^2}$
+indicates a shift ${c}$ units to the right along the $x$-axis. Why is it a
+shift right? Because to get back to the original function ${y}$, we have to
+add ${c}$ units. It is the same logic behind why scrolling down with a
+mouse wheel moves this page up, or why a gear moving clockwise turns a
+second gear counter-clockwise. For example, given ${y = x^2,}$ the
+parabola's vertex is ${(0,0).}$ However, given ${y = (x-1)^2,}$ the
+parabola's vertex is now ${(1,0);}$ a shift to the right.
+
+In contrast, given ${y = (x + c)^2,}$ we have a horizontal shift to the
+_left_. Again, consider ${y = x^2.}$ The parabola is ${(0, 0).}$ When
+${y = (x + 1)^2,}$ the vertex is now ${(-1, 0);}$ a shift to the left.
+Below are horizontal translations:
+
+<Plot
+	functions={[
+		{ f: (x) => x ** 2, color: "var(--red)" },
+		{ f: (x) => (x - 1) ** 2, color: "var(--blue)" },
+		{ f: (x) => (x + 1) ** 2, color: "var(--green)" },
+	]}
+	geo={[
+		{
+			type: "label",
+			id: "f(x) = x^2",
+			xy: [3.5, 0.8],
+			w: 70,
+			fill: "var(--red)",
+		},
+		{
+			type: "label",
+			id: "f(x) = (x-1)^2",
+			xy: [3.5, 1.8],
+			w: 70,
+			fill: "var(--blue)",
+		},
+		{
+			type: "label",
+			id: "f(x) = (x+1)^2",
+			xy: [3.5, 2.8],
+			w: 70,
+			fill: "var(--green)",
+		},
+	]}
+	domain={[-5, 5]}
+	range={[-5, 5]}
+	id="horizontal_translation"
+/>
+
+In sum: If we subtract a constant, we shift right; add a constant, we shift
+left.
+
+> Definition. Let ${f(x)}$ be a function and ${c}$ a constant, where
+> ${c \in \R.}$ Suppose ${y = f(x).}$ Substituting ${x}$ with ${x - c},$ we
+> obtain ${y = f(x - c).}$ This is a _horizontal translation_ of ${f(x).}$
+>
+> If ${c \in \R^{+},}$ then ${f(x)}$ transforms to ${f(x - c),}$ which
+> shifts ${G(f)}$ by ${c}$ units to the _right_ along the $y$-axis.
+>
+> If ${c \in \R^{-},}$ then ${f(x)}$ transforms to ${f(x + c)}$ which
+> shifts ${G(f)}$ by ${c}$ units to the _left_ along the $y$-axis.
+>
+> If ${c = 0,}$ then there is no transformation, and _a fortiori_, no
+> horizontal translation.

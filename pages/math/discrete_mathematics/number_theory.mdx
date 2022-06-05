@@ -6,7 +6,7 @@
 	}
 />
 
-# Number Theory
+# Basic Number Theory
 
 - [Number Theory](#number-theory)
   - [The Integers](#the-integers)
@@ -668,7 +668,7 @@ Here's an iterative version of the algorithm:
     c->d;
     d->a->a2->e;
 
-`} width={260} height={260} nodeShape="box"/>
+`} width={300} height={300} nodeShape="box"/>
 
 And here is a recursive approach:
 
@@ -685,8 +685,8 @@ And here is a recursive approach:
     x->a->b;
     b->b1;
     b->b2;
-		b2->d[label="  recurse"];
-		d->x;
+    	b2->d[label="  recurse"];
+    	d->x;
     b1->c;
 
 `} width={260} height={260} nodeShape="box" />
@@ -848,12 +848,11 @@ the computer scientist Alan Turing. Turing was the first to propose using
 number theory for encryption, but his ideas were never published (hence the
 "might have been made" in the previous sentence).
 
-_Step 1: Turn the message into some prime number._ For example, consider
-the string `"victory"`. We can represent each letter in this string with an
-integer corresponding to its index in the Latin alphabet sequence. For
-example, the letter `v` is the twenty-second letter of the alphabet, `i` is
-the ninth, `c` is the third, and so on. Mapping all the letters to their
-indices:
+For example, consider the string `"victory"`. We can represent each letter
+in this string with an integer corresponding to its index in the Latin
+alphabet sequence. For example, the letter `v` is the twenty-second letter
+of the alphabet, `i` is the ninth, `c` is the third, and so on. Mapping all
+the letters to their indices:
 
 <Sequence data={["v", "i", "c", "t", "o", "r", "y"]} />
 
@@ -866,7 +865,8 @@ $$
 then just insert a ${13}$ at the end:
 
 $$
-	22090320151825\textcolor{red}{13}
+	22090320151825\textcolor{indianred}{13}
 $$
 
-we get a prime number.
+we get a prime number. Using this example, we can construct a simple
+encryption scheme. The procedure:

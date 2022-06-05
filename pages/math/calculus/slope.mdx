@@ -1,2 +1,252 @@
 # Slope
 
+The graph of an equation is the set of all points with coordinates
+satisfying the equation. For example, suppose we had the equation
+${y = x^2 + 1}$. Does the point ${(3,10)}$ lie on the equation's graph?
+Yes. Plugging ${(3,10)}$ into the equation ${y = x^2 + 1}$, we get
+${10 = (3)^2 + 1 = 9 + 10}$, which is true. Thus, the point ${3,10}$ does
+indeed lie on the graph.
+
+At very small intervals, graphs can be viewed as lines. Lines can either
+slant or remain straight, but in both cases, the line has a **slope**
+&mdash; a number that measures the line's direction.
+
+> Definition. Given two points, ${(x_1, y_1)}$ and ${(x_2, y_2)}$, the
+> slope of the line passing through the two points is the number $m$:
+
+$$
+	m = \dfrac{y_2 - y_1}{x_2 - x_1}
+$$
+
+For example, suppose we had two points, ${(-2,-1)}$ and ${(3,5)}$. On the
+Cartesian plane, these two points appear as:
+
+<Plot
+	geo={[
+		{type:'point', xy: [-2,1]},
+		{type:'label', xy: [-4,2], id: "(-2,1)"},
+		{type:'point', xy: [3,5]},
+		{type:'label', xy: [3,5], id: "(3,5)"},
+		{type:'line', start: [-2,1], end:[3,5]},
+	]}
+	id="2pointPlot"
+/>
+
+The line between these two points is:
+
+$$
+	m = \dfrac{5-1}{3-(-2)} = \dfrac{4}{5}
+$$
+
+Thus, the line between ${(-2,1)}$ and ${(3,5)}$ has a slope of
+${\frac{4}{5}}$. The slope equation can also be written as:
+
+$$
+	m = \dfrac{\Delta y}{\Delta x}
+$$
+
+The variable $\Delta y$ represents the change in $y$-coordinates
+(${y_2 - y_1}$), and the variable $\Delta x$ represents the change in
+$x$-coordinates (${x_2 - x_1}$).
+
+## Comparing Slope
+
+The slope $m$ of a line is a real number (${m \in \mathbb{R}}$). Thus, $m$
+can be a member of only one of three subsets:
+
+1. ${m \in \mathbb{R}^-}$
+2. ${m = 0}$
+3. ${m \in \mathbb{R}^+}$
+
+If $m$ is a negative real number &mdash; ${m \in \mathbb{R}^-}$ &mdash;
+then the line slants downwards to the right. If $m$ is a positive real
+number &mdash; ${m \in \mathbb{R}^+}$ &mdash; then the line slants upwards
+to the right. If ${m = 0}$, then the line is a perfectly straight
+_horizontal_ line.
+
+Given the Cartesian plane, one might wonder, aren't there two cases for
+straight lines: (a) a vertical straight line or (b) a horizontal straight
+line? Yes, there are indeed two cases, straight horizontal lines and
+straight vertical lines. But, the slope is not defined for a vertical line.
+If the two points share the same ordinate (the ${y \text{-coordinate}}$),
+then the line is a horizontal line (e.g., ${(a,b), (c,b)}$). If, however,
+the two points share the same abscissa (the ${x \text{-coordinate}}$), then
+the line is a vertical line (e.g., ${(a,b), (a,c)}$), but the slope is not
+defined. This is because calculating the slope for such a line would lead
+to an undefined result:
+
+$$
+	m = \dfrac{b - c}{a - a} = \dfrac{b - c}{0}
+$$
+
+Does the magnitude, or size, of $m$ yield any inferences? Yes.
+${\lvert m \rvert }$ represents the "steepness" of the line. The larger
+${\lvert m \rvert }$ is, the steeper the line slants (i.e., tending towards
+a straight vertical line), and the smaller ${\lvert m \rvert }$ is, the
+less the line's steepness (i.e., tending towards a straight horizontal
+line).
+
+## The Point-Slope Formula
+
+The slope formula can be rearranged in another form, yielding the
+**point-slope formula**.
+
+> _Formula_. Given a point $P_1{(x_1, y_1)}$, the equation of the line
+> passing through ${P_1}$ is given by the equation:
+>
+> $$
+> 	y - y_1 = m(x - x_1)
+> $$
+
+Because of the point-slope formula, it follows that the equation of a
+horizontal line is simply the ordinate of ${P_1}$. For example, suppose
+${P_1 = (4, -2)}$. A horizontal line is a line where ${m = 0}$, so it
+follows that the line's equation is:
+
+$$
+	\begin{aligned}
+		y - (-2) &= 0(x - 4)
+		y &= -2
+	\end{aligned}
+$$
+
+We know that a horizontal line will always have a slope of ${m = 0}$. For
+vertical lines, only the $y$-coordinate varies, and the $x$-coordinate
+remains the same. Thus, we can state more general rules for horizontal and
+vertical lines:
+
+> _Rule_. Given a point ${P_1(a,b)}$, the equation of a line passing
+> through ${P_1}$ is ${y = b}$.
+
+> _Rule_. Given a point ${P_2(a,b)}$, the equation of a line passing
+> through ${P_2}$ is ${x = a}$.
+
+## Slope-Intercept Formula
+
+If we know that a line passes through the point ${(0,b)}$, then we can
+derive yet another equation for a line: the **slope-intercept form**. Since
+the line passes through ${(0,b)}$ (i.e., the line crosses the $y$-axis),
+using the _point-slope formula_, we can conclude that ${y - b = m(x-0)}$.
+Simplifying and adding $b$ to both sides of the equation, we obtain the
+following rule.
+
+> _Formula_. Given a line with slope $m$ and a $y$-intercept $b$, the
+> equation of the line is given by the equation:
+>
+> $$
+> 	y = mx + b
+> $$
+
+If we know that a point satisfies this equation, then it must be the case
+that it lies on the line with the equation. Furthermore, whenever we see an
+equation of this form, we should be immediately aware that the equation
+graphically represents a line.
+
+## Parallel and Perpendicular Lines
+
+In geometry, we can easily notice that parallel lines slant in the same
+direction (i.e., they have the same "steepness" to their slant):
+
+<Plot
+	functions={[
+		{f: (x) => 2 * x, color: "var(--red)"},
+		{f: (x) => 2 * x + 2, color: "var(--blue)"},
+		{f: (x) => 2 * x - 2, color: "var(--green)"},
+	]}
+	id="parallel_lines"
+/>
+
+Because perpendicular lines have the same slant, in algebraic terms, the
+lines have the same slope. Thus, given line ${\overleftrightarrow{\rm AB}}$
+(where $A$ and $B$ are two arbitrary points on the line) with the slope
+$m_1$ and the line ${\overleftrightarrow{\rm CD}}$ (where $C$ and $D$ are
+two arbitary points on the line) with the slope $m_2$, the lines
+${\overleftrightarrow{\rm AB}}$ and ${\overleftrightarrow{\rm CD}}$ are
+parallel if, and only if, ${m_1 = m_2}$. In other words, two lines are
+parallel, if and only if, they have the same slope.
+
+In contrast, perpendicular lines slant in the exact opposite direction,
+forming 90 degree angles:
+
+<Plot
+	functions={[
+		{f: (x) => 2 * x + 3, color: "var(--red)"},
+		{f: (x) => -0.5 * x - 3, color: "var(--blue)"},
+	]}
+	id="perpendicular_lines"
+/>
+
+Given that two lines are perpendicular if and only if they form 90 degree
+angles, it follows that for a line to be parallel to another line, the
+line's slope must be the negative reciprocal of the other line. Thus, given
+a line ${\overleftrightarrow{\rm EF}}$ (where $E$ and $F$ are arbitrary
+points on the line) with the slope $m_1$ and a line
+${\overleftrightarrow{\rm GH}}$ (where $G$ and $H$ are arbirary points on
+the line) with the slope $m_2$, lines ${\overleftrightarrow{\rm EF}}$ and
+${\overleftrightarrow{\rm GH}}$ are perpendicular if, and only if,
+${m_1 = - \dfrac{1}{m_2}}$.
+
+To see why a perpendicular line's slope must be the negative reciprocal of
+the other line, consider the following: First, suppose we have three lines,
+$\ell_1$, $\ell_2$, and the vertical line ${x = 1}$. Now suppose that
+${\ell_1 \perp \ell_2}$, ${\ell_1}$ has a slope ${m_1}$, and ${\ell_2}$ has
+a slope ${m_2}$. Finally, suppose that ${\ell_1}$ and ${\ell_2}$ intersect
+at the origin, ${(0,0)}$. The lines can be visually represented as:
+
+<Fig
+	link={"https://res.cloudinary.com/sublimis/image/upload/v1654218228/math/proof_perpendicular_lines_w4tk4l.svg"}
+	caption={"Perpendicular lines"}
+	width={"50"}
+	imwidth={"441"}
+	imheight={"455"}
+/>
+
+
+Since ${\ell_1 \perp \ell_2}$, we know that that the vertical line
+${x = 1}$ intersects ${\ell_1}$ at ${(1, m_1)}$ and ${\ell_2}$ at
+${(1,m_2).}$ This is because both lines have a ${\Delta x = 1.}$
+
+Where ${\ell_1}$ and ${\ell_2}$ intersect, a right angle, ${\angle ABC}$,
+is formed, since perpendicular lines form right angles. Thus, it follows
+that there is a right triangle ${\triangle ABC,}$ since the resulting
+triangle from ${\angle ABC}$ forms a right triangle.
+
+Now, consider the distance between the origin, ${B(0,0)}$, and the point
+${A(1,m_1)}$. From the distance formula, the length of
+${\overline{\rm BA}}$ (the distance between $B$ and $A$) is
+${\overline{\rm BA} = \sqrt{1 + {m_1}^2}.}$ Similarly,
+${\overline{\rm BC} = \sqrt{1 + {m_2}^2}.}$ Thus,
+${\overline{\rm AC} = \sqrt{(1-1)^2 + (m_1-m_2)^2} = m_1 - m_2.}$
+
+From this analysis, we now know all of the lengths of the sides of
+${\triangle ABC}$:
+
+1. ${\overline{\rm BA} = \sqrt{1+{m_1}^2}}$
+2. ${\overline{\rm BC} = \sqrt{1+{m_2}^2}}$
+3. ${\overline{\rm AC} = m_1 - m_2}$
+
+Because we know the lengths for all of the sides of ${\triangle ABC,}$ we
+can express ${\triangle ABC}$ as an equation with the Pythagorean Theorem:
+
+$$
+	(\sqrt{1+{m_1}^2})^2 + (\sqrt{1+{m_2}^2})^2 = (m_1 - m_2)^2
+$$
+
+With this form, we can isolate ${m_1}$ and ${m_2}$ to separate sides of the
+equation:
+
+$$
+	\begin{aligned}
+		1 + {m_1}^2 + 1 + {m_2}^2 &= (m_1 - m_2)^2 \\
+		2 + {m_1}^2 + {m_2}^2 &= {m_1}^2 - 2{m_1}{m_2} + {m_2}^2 \\
+		2 &= -2{m_1}{m_2} \\
+		-1 &= {m_1}{m_2} \\
+		m_1 &= - \dfrac{1}{m_2} \\
+	\end{aligned}
+$$
+
+The analysis above applies regardless of where the point of intersection
+is, since perpendicular lines will always form right triangles.
+Accordingly, it follows that given a line ${\ell_1}$ with the slope ${m_1}$
+and a line ${\ell_2}$ with the slope ${m_2}$, for ${\ell_1 \perp \ell_2}$
+to be true, it must be the case that ${m_1 = - \dfrac{1}{m_2}}$.

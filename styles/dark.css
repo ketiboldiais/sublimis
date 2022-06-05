@@ -1,0 +1,57 @@
+.theme-dark {
+	--red: rgb(255, 112, 112);
+	--lightGreen: rgb(138, 237, 138);
+	--lightBlue: rgb(112, 255, 234);
+	--black: rgb(26, 26, 26);
+	--white: white;
+	--lightgrey: rgb(165, 165, 165);
+	--darkBlue: rgb(25, 25, 81);
+	--lavender: rgb(229, 131, 229);
+	--gold: gold;
+
+	/* Core Colors */
+	--background-color: rgb(49, 49, 49);
+	--text-color: rgb(220, 220, 220);
+	--nav-content-background-color: rgb(14, 31, 68);
+
+	/* Heading color */
+	--heading-color: rgb(255, 184, 69);
+
+	/* Border */
+	--border: solid thin grey;
+
+	/* Theme toggle box-shadow */
+	--container-box-shadow: -8px -4px 8px 0px #212121, 8px 4px 12px 0px #27292d, 4px 4px 4px 0px #313131 inset, -4px -4px 4px 0px #1a1a1a inset;
+
+	--indicator-box-shadow: rgba(255, 113, 113, 0.2) 0 -1px -15px 1px, inset rgb(102, 80, 0) 0 -1px 9px, #ca9625 0 2px 14px;
+
+	--indicator-background: radial-gradient(#e67e22 45%, #f39c12 75%);
+
+	/* Special Box Background */
+	--box-background-color: rgb(65, 65, 65);
+
+	/* Call number styles */
+	--call-border: solid thin rgb(132, 241, 255);
+	--call-text-color: rgb(132, 241, 255);
+
+	/* Box Shadows */
+	--box-shadow: 0px 1px 4px 1px #202020, 1px 2px 2px #232323;
+	--svg-shadow: drop-shadow(3px 3px 2px rgba(0, 0, 0, .7))
+	--box-shadow-hover: 1px 1px 2px rgb(36, 36, 36);
+	--box-shadow-border: 1px solid #2e2e2e;
+	--box-shadow-pressed: inset 0.063rem 0.063rem 0.125rem #1e1e1e,
+		inset -0.063rem -0.063rem 0.125rem rgb(38, 38, 38);
+	--box-shadow-active: 1px 1px 2px rgb(56, 56, 56);
+
+	/* illus palette */
+	--binary-tree-edge-color: var(--red);
+	--binary-tree-node-fill-color: var(--background-color);
+	--binary-tree-text-color: var(--red);
+
+	/* sequences */
+	--sequenceElementFill: rgb(24, 133, 152);
+	--sequenceElementStroke: rgb(0, 41, 107);
+	--sequenceElementTextColor: rgb(236, 236, 236);
+	--sequenceElementIndexColor: rgb(148, 148, 148);
+	--sequenceAnnotationColor: red;
+}

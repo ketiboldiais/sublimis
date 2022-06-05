@@ -86,7 +86,6 @@ const Routes = [
 					{ name: "Prelude: Data Structures & Algorithms", path: `${cs}${dsa}/dsa_overview`, },
 					{ name: "Complexity Analysis", path: `${cs}${dsa}/dsa_complexity_analysis`, },
 					{ name: "Numeric Algorithms", path: `${cs}${dsa}/dsa_numeric_algorithms`, },
-					{ name: "Sequences/Static Arrays", path: `${cs}${dsa}/dsa_sequence`, },
 					{ name: "Static Arrays", path: `${cs}${dsa}${sa}basic_operations`,
 						children: [
 							{ name: "Linear Search", path: `${cs}${dsa}${sa}linear_search`, },
@@ -223,6 +222,10 @@ const Routes = [
 				{ name: "Intervals", path: `${math}${calc}intervals` },
 				{ name: "The Cartesian Plane", path: `${math}${calc}cartesian_plane` },
 				{ name: "The Distance Formula", path: `${math}${calc}distance_formula` },
+				{ name: "Slope", path: `${math}${calc}slope` },
+				{ name: "Functions", path: `${math}${calc}functions` },
+				{ name: "Functions & Graphs", path: `${math}${calc}function_graphs` },
+				{ name: "The Absolute Value Function", path: `${math}${calc}absolute_value_function` },
 			]},
 		],
 	},

@@ -9,6 +9,7 @@ export const MathText = (
 	width = 1,
 	height = 1,
 	id = `rect`,
+	color,
 ) => {
 	const foreignObject = selection
 		.append("foreignObject")
@@ -22,6 +23,7 @@ export const MathText = (
 		.attr("id", id)
 		.style("font-size", `${fontSize}rem`)
 		.style("padding", "0")
+		.style("color", color)
 		.style("position", "fixed")
 		.attr("xmlns", "http://www.w3.org/1999/xhtml")
 		.html(function () {

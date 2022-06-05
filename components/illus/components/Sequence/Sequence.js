@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { isObjectLiteral } from "../utils/isObjectLiteral/isObjectLiteral";
+import { className } from "../utils/ClassNames";
 import { svg } from "../utils/svg/svg";
 import { Base } from "../base/Base";
 import * as d3 from "d3";
@@ -20,13 +21,13 @@ const generateDataFromArray = (arr = []) => {
 export const Sequence = ({
 	data = [1, 2, 3, 4, 5],
 	width = 0.574045 * data.length ** 2 + 22.878 * data.length + 45.8824,
-	height = 0.574045 * data.length ** 2 + 22.878 * data.length + 45.8824,
-	containerWidth = Math.min(5 * data.length + 10, 100),
-	containerHeight = 15,
-	elementFillColor="white",
-	elementStrokeColor="black",
-	elementFontSize="1rem",
-	indexFontSize="0.8rem",
+	height = 80,
+	containerWidth,
+	containerHeight,
+	elementFillColor = "white",
+	elementStrokeColor = "black",
+	elementFontSize = "1rem",
+	indexFontSize = "0.8rem",
 	margins = [20, 20, 20, 20],
 }) => {
 	const sequenceFigure = useRef();
@@ -51,50 +52,50 @@ export const Sequence = ({
 			.select(sequenceFigure.current)
 			.select("g.svgElement")
 			.append("g")
-			.attr("class", "sequence")
+			.attr("class", className.sequence.canvas)
 			.selectAll("g.Rects")
 			.data(sequenceData)
 			.enter()
 			.append("g")
-			.attr(
-				"class",
-				(d) => `sequence-element ${d.focus ? `focus-${d.focus}` : ""}`,
+			.attr("class", (d) =>
+				d.focus
+					? `${className.sequence.element} ${d.focus}`
+					: `${className.sequence.element}`,
 			)
 			.attr("transform", (d) => `translate(${xScale(d)})`);
 		const squares = sequence
 			.append("rect")
-			.attr("class", "sequence-element-rect")
-			.attr('fill', elementFillColor)
-			.attr('stroke', elementStrokeColor)
+			.attr("fill", elementFillColor)
+			.attr("stroke", elementStrokeColor)
 			.attr("width", xScale.bandwidth())
-			.attr("height", yScale.bandwidth());
+			.attr("height", xScale.bandwidth());
 
 		const dataLabels = sequence
+			.append('g')
+			.attr('class', className.sequence.elementText)
 			.append("text")
-			.attr("class", "sequence-element-text")
-			.attr('font-size', elementFontSize)
+			.attr("font-size", elementFontSize)
 			.attr("text-anchor", "middle")
 			.attr("x", xScale.bandwidth() / 2)
-			.attr("y", yScale.bandwidth() / 2)
+			.attr("y", xScale.bandwidth() / 2)
 			.attr("dy", "0.35em")
 			.text((d) => `${d.val}`);
 
 		const indices = sequence
 			.append("g")
-			.attr("class", "enfig-index")
+			.attr("class", className.sequence.indexText)
 			.append("text")
-			.attr("class", "sequence-index-text")
-			.attr('font-size', indexFontSize)
+			.attr("font-size", indexFontSize)
 			.attr("text-anchor", "middle")
 			.attr("x", xScale.bandwidth() / 2)
-			.attr("y", yScale.bandwidth() + yScale.bandwidth() / 2.5)
+			.attr("y", xScale.bandwidth() + xScale.bandwidth() / 2.5)
 			.attr("dy", "0.5em")
 			.text((d, i) => i);
 
 		const annotation = sequence
 			.filter((d) => d.ant)
 			.append("g")
-			.attr("class", "sequence-annotation")
+			.attr("class", className.sequence.annotationText)
 			.append("text")
 			.attr("text-anchor", "middle")
 			.attr("x", xScale.bandwidth() / 2)
@@ -104,6 +105,7 @@ export const Sequence = ({
 	return (
 		<Base
 			id={sequenceFigure}
+			type="Sequence"
 			width={width}
 			height={height}
 			containerWidth={containerWidth}

@@ -6,6 +6,25 @@
 
 # Computer Networks
 
+1. [A Brief History](#a-brief-history)
+2. [The Internet](#the-internet)
+   1. [Network Layers](#network-layers)
+   2. [Protocols](#protocols)
+3. [Terminology](#terminology)
+   1. [Network Edges](#network-edges)
+   2. [Network Edge Protocols](#network-edge-protocols)
+   3. [Access Networks & Physical Links](#access-networks--physical-links)
+   4. [Local Area Networks (LAN)](#local-area-networks-lan)
+4. [Signals & Bandwidths](#signals--bandwidths)
+5. [Network Core](#network-core)
+   1. [Circuit Switching](#circuit-switching)
+      1. [Bandwidth Division](#bandwidth-division)
+         1. [Frequency Division Multiplexing](#frequency-division-multiplexing)
+      2. [Time Division Multiplexing](#time-division-multiplexing)
+      3. [Hybrid Multiplexing](#hybrid-multiplexing)
+   2. [Throughput & Latency](#throughput--latency)
+   3. [Packet Switching](#packet-switching)
+
 What's the difference between a communication and a network?
 
 One answer: There's a distinction between _communications_ and _networks_.
@@ -519,7 +538,7 @@ can transfer bits, called the **bit rate**, measured in bits per second.
 This is given by _shannon's bit rate formula_:
 
 $$
-	\textsf{bit rate} = \textsf{bandwidth} \times \lg \left(1 + \dfrac{\textsf{P}_R}{\textsf{N}_R}\right)
+ \textsf{bit rate} = \textsf{bandwidth} \times \lg \left(1 + \dfrac{\textsf{P}_R}{\textsf{N}_R}\right)
 $$
 
 where ${\textsf{P}_R}$ is the power received by the receiver, and
@@ -1268,9 +1287,101 @@ seen, bandwidth is one such resource. The routers make the clients share
 bandwidth, but not deterministically or statically. Instead, the clients
 share the bandwidth in a probabilistic way.
 
-The downside to packet switching: The total amount of resources demanded by
-the packets can exceed the amount available. Because of this problem,
-packets must be enqueued into, and dequeued off of, a queue data structure.
+Packet switching is not without its downsides:
 
-Packets move one hop at a time. And before a node forwards a packet, it
-must receive the packet in its entirety.
+1. **Packet loss**. The total amount of resources demanded by the packets
+   can exceed the amount available. Once a router runs out of resources
+   (e.g., memory for its packet queue), it cannot accept any further
+   packets. If a packet arrives at just the wrong time, it's lost.
+
+2. **Packet delay**. Packets move one hop at a time. And before a node
+   forwards a packet, it must receive the packet in its entirety. This
+   means that there's no guarantee that a packet will reach its destination
+   by a certain time, particularly when there's a significant amount of
+   traffic.
+3. **More protocols.** From downsides (1) and (2), packet switching
+   requires more protocols to ensure reliability and congestion control.
+   Designing and implementing those protocols takes human time and monetary
+   resources.
+
+Despite these downsides, packet switching is for the most part
+advantageous. In effect, packet switching networks are analogous to the
+airline industry's ticketing practice.
+
+As any frequent flier knows, airlines sell more tickets than there are
+available seats. I.e., if there are 150 seats on the flight, the airline
+might sell a 165 tickets. The airlines essentially gamble on the fact that
+some customers won't show up or cancel.
+
+Of course, there are situations where all 165 customers show up. In those
+circumstances, the airlines are quick to offer vouchers and free
+rebookings. From an economic perspective, the amount of value lost from
+these vouchers and free rebookings is smaller compared to the amount lost
+from unsold seats. And in the long run, the airlines keep their costs low.
+
+The same idea applies in packet switching. There are situations where the
+downsides mentioned above occur, but in the long run, packet switching
+proves beneficial. To illustrate, suppose we had the following
+circuit-switched network:
+
+<Graph
+	data={[
+		{ link: [{ id: "router", r: 10, radial: 25, focus: "red" }, "a"] },
+		{ link: ["c", "router"] },
+		{ link: ["b", "router"] },
+		{ link: ["d", "router"] },
+		{ link: ["e", "router"] },
+		{ link: ["f", "router"] },
+		{ link: ["g", "router"] },
+		{ link: ["h", "router"] },
+		{ link: ["i", "router"] },
+		{ link: ["j", "router"] },
+		{
+			link: ["router", { id: "server", r: 15, radial: 30, focus: "blue" }],
+			focus: "hl",
+		},
+	]}
+	height={300}
+	width={400}
+	containerWidth={70}
+	collisionRadius={30}
+	edgeLength={70}
+/>
+
+The network above consists of ten users (marked `a` through `j`),
+connecting to a server that then connects to a router. Suppose the link
+from the server to the router has a bandwidth of 1Mbps.
+
+As we know, users aren't always active on a network. They might just be
+active for, say, 10% of the time. With circuit switching, we can support 10
+users. Each link has a 1Mbps (1000kbps) bandwidth, and if each user wants
+100kbps, we have:
+
+$$
+	\dfrac{1000~\text{kbps}}{100~\text{kbps}} = 10
+$$
+
+The problem is, if the users are only active 10% of the time, we're wasting
+bandwidth.
+
+Now suppose that, instead of 10 users, there are 35 users, and the network
+above is packet-switched. Given that each user is only active 10% of the
+time, the probability of the link being in use is 10%.
+
+What's the probability that more than 10 users are active? Well, we can
+calculate it with a bit discrete probability:
+
+$$
+	\binom{35}{10} \times P^{10} + 1 - P^{35 - 10} = 0.0004
+$$
+
+That's a tiny, tiny chance.[^probability_note]
+
+[^probability_note]:
+    This calculation assumes that the 10% active time is uniformly
+    distributed, and that the users are independent users.
+
+From this discussion, we can see that packet switching is ideal for
+"individual requests" — requests like quickly checking CNN or visiting some
+other website. It's not ideal for "unified requests" — millions of users
+suddenly requesting for some website illegally broadcasting the Superbowl.

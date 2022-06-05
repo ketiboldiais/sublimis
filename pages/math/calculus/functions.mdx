@@ -1,0 +1,167 @@
+# Functions
+
+Functions. What are they? At the most basic level, a function is a rule
+assigning a number to another number. At a more abstract level, a function
+is a _relation_ between mathematical objects. There are many relations in
+mathematics (equality, inequality, congruence, proximity, etc.). Functions
+are just one kind of relation. Most commonly, functions are relations
+between numbers, where one number shares a specific relationship, defined
+by a rule, to exactly one number. More explicitly: A function is a rule
+that assigns one number to another number. Do not confuse this idea of
+"one-to-one" with "one-to-unique." A relation can still be a function even
+if one or more numbers are related to the same number.
+
+Functions can be represented in a variety of ways. We can represent
+functions algebraically, using an equation or formula: ${f(x) = \ln x,}$
+${g = \sqrt{h}}$, or ${F = ma}$. We can represent functions verbally: "For
+every $x$, there is a $y$ such that $y$ is $x$ squared." We can represent
+functions with tables, where one column lists the values of $x$, and
+another lists their corresponding $y$ values. Finally, we can represent
+functions with graphs, using a coordinate system. Regardless of the way we
+represent them, functions all express the same idea: a relationship where
+one mathematical object maps to exactly one mathematical object, according
+to a rule.
+
+A more formal definition:
+
+> _Definition_. Let $A$ and $B$ be nonempty sets. A **function** from $A$
+> to $B$ is a _rule of correspondence_ that assigns, or maps, to each
+> element in $A$ _exactly one_ element in ${B.}$
+
+Consider the following relations:
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1654218453/math/functions_or_not_dc6jh8.svg"
+	}
+	caption={"Various relations"}
+	width={"30"}
+	imwidth={"252"}
+	imheight={"472"}
+/>
+
+The relation $u$ maps the elements of $A$ to the elements of ${B.}$ The
+relation $v$ maps the elements of $C$ to the elements of ${D.}$ And the
+relation $w$ maps the elements of $E$ to the elements of ${F.}$ The
+relation $u$ is a function, since it maps each element of $A$ to exactly
+one element of $B.$ The same goes for relation $v$ &mdash; each element of
+$C$ is mapped to exactly one element of ${D,}$ even if some elements of $C$
+map to the same element of ${D.}$ The relation ${w,}$ however, is _not_ a
+function, since at least one element of $E$ is mapped to more than one
+element of ${F.}$
+
+We often refer to the inputs of a function with the variable $x$, and the
+outputs of the function with the variable $y$, or $f(x)$. The input, $x$,
+is also called the _independent variable_, and the output, $f(x)$, is
+called the _dependent_ variable.
+
+A function will never give more than one output for one input. There are,
+of course, relationships where on number outputs more than one number.
+Those relationships, however, are not characterized by, or as, functions.
+We will explore those relationships later in due time.
+
+> _Definition_ Given two sets $A$ and $B$, the set Cartesian product
+> $A \times B$ the set of all ordered pairs $(a,b)$, where $a \in A$ and
+> $b \in B$. A subset of $A \times B$ is called a **relation**.
+
+A **function** is a special kind of relation. It is a pairing of elements
+in $A$ with elements in $B$, where each eleemnt in $A$ is paired with
+exactly one element in $B$. Thus, a function $f$ from $A$ to $B$ is a rule
+or relation between $A$ and $B$ that _assigns_, or _maps_, each element
+$a \in A$ to _one_ element in $b \in B$.
+
+If a function is a subset of $A \times B$, then $A$ is the **domain** of
+the function, and $B$ is the **range** of the function.
+
+Every function has a **natural domain** (also called the _implied domain_).
+The natural domain of a function is the set of all elements for which the
+function is defined. Whenever we analyze or discuss a function, we set a
+natural domain. That natural domain acts as the boundary of our analysis.
+For example, when we discuss the function $f(x) = \sqrt{x}$, we may specify
+that the natural domain of $f$ is $\mathbb{R}$. Because the natural domain
+of $f$ is $\mathbb{R}$, the domain of $f$ cannot include negative real
+numbers, since $\sqrt{x}$ is undefined for $\mathbb{R}^{-}$. Because of
+this fact, we specify the domain of $f$ as:
+
+$$
+	dom(f) = \{ x \in \mathbb{R} \mid x \geq 0 \}
+$$
+
+## Properties of Functions
+
+Functions can be identified by several properties:
+
+1. A set of inputs, called the function's **domain**, denoted ${dom(f),}$
+   e.g., the domain of the function ${f(x) = x^2}$ is
+   ${dom(f) = \mathbb{R}.}$
+
+2. A set of all _possible_ inputs, called the function's **natural
+   domain**, denoted ${D(f),}$ e.g., the natural domain of the function
+   ${c(d) = \sqrt{d}}$ is ${ D(c) = \mathbb{R}}$, but the domain of the
+   function is ${dom(d) = \{ d \in \mathbb{R} \mid d \geq 0 \}.}$ In set
+   notation, given a function ${f,}$ ${dom(f) \subseteq D(f).}$
+
+3. A set of outputs, called the function's **range**, or **image**, denoted
+   ${ran(f)}$ or ${Im(f),}$ e.g., the function ${y(w) = \dfrac{1}{w}}$ has
+   the range of ${Im(y) = \mathbb{R}.}$
+
+4. A set of all _possible_ outputs, called the function's **codomain**, or
+   **target**, denoted ${\text{target}(f),}$ e.g., the function
+   ${h(z) = z + 1}$ has a codomain of ${\text{target}(h) = \mathbb{R},}$
+   but if we restricted ${dom(h) = \{ 1,2 \},}$ then ${Im(h) = \{ 2,3 \},}$
+   but its codomain remains ${\text{target}(h) = \mathbb{R}.}$ In set
+   notation, given a function ${f,}$ ${Im(f) \subseteq \text{target}(f);}$
+
+5. A name for a typical input, called a **dummy variable**, e.g., the
+   function ${g(p) = \dfrac{1}{p} }$ has the dummy variable $p$.
+
+6. A name for the function, e.g., the function ${m(j) = \ln j}$ has the
+   name ${m(j).}$
+
+7. An assignment rule or formula assigning to every element of the domain
+   exactly one element of the **codomain**, e.g., the function
+   ${r(t) = t^2 + 4t + 1}$ has the assignment rule ${t^2 + 4t + 1.}$
+
+8. Some functions have graphs, denoted ${G(f).}$ (We say "some" because a
+   function need not concern numbers. A relation mapping common fruit names
+   to their respective scientific names is just as much a function as
+   ${s(t) = \sqrt{t - 1}.)}$
+
+## Arrow Notation
+
+All functions can be represented in arrow notation:
+
+<Fig
+	link={
+		"https://res.cloudinary.com/sublimis/image/upload/v1654218662/math/properties_functions_mapping_but937.svg"
+	}
+	caption={"Function mapping"}
+	width={"50"}
+	imwidth={"231"}
+	imheight={"93"}
+/>
+
+For example, the function ${f(x) = x^2}$, in arrow notation, is
+${f: x \mapsto x^2,}$ and its domain and codomain are represented as
+${\mathbb{R} \mapsto \mathbb{R}.}$ The benefit of arrow notation is that it
+allows us to easily restrict a function's inputs and outputs, which in turn
+allows us to differentiate functions explicitly. This is a particularly
+useful asset when the functions share the same assignment rule:
+
+Suppose the function ${f(x) = x^3 + 3x + 4.}$ The functions below all have
+the same assignment rule as ${f,}$ but they are all different functions:
+
+- ${f: x \mapsto x^3 + 3x + 4;}$ ${f: \mathbb{R} \mapsto \mathbb{R}.}$
+- ${g: x \mapsto x^3 + 3x + 4;}$ ${g: \mathbb{R} \mapsto [0, + \infty).}$
+- ${h: x \mapsto x^3 + 3x + 4;}$ ${h: [0, + \infty) \mapsto \mathbb{R}.}$
+- ${i: x \mapsto x^3 + 3x + 4;}$
+  ${i: [0, + \infty) \mapsto [0, + \infty).}$
+
+The function $f$ is neither injective nor surjective, the function $b$ is
+injective but not surjective, the function $c$ is surjective but not
+injective, and the function $d$ is a bijection.
+
+Note that in the last function, the function name $i$ was used. This is
+generally considered poor writing in mathematics, as the letter $i$ is
+almost always exclusively reserved for the imaginary number $i$ (setting
+aside the unorthodox practices of electrical engineers using $j$).

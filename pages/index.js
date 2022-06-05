@@ -2,7 +2,7 @@ import Head from "next/head";
 
 export default function Home() {
 	return (
-		<div>
+		<div style={{height: "100vh"}}>
 			<Head>
 				<title>Sublimis</title>
 				<meta name="keywords" content="math and cs notes" />

@@ -25,6 +25,8 @@ export const Graph = ({
 	nodeStrokeWidth = "",
 	nodeTextColor = "",
 	nodeTextFontSize = "0.8rem",
+	nodeTextOffsetY=-11,
+	nodeTextOffsetX=0,
 }) => {
 	const _graphREF = useRef();
 	const _svg = svg(width, height, margins);
@@ -94,19 +96,6 @@ export const Graph = ({
 			.attr("fill-opacity", 0.2)
 			.attr("stroke-width", 1)
 			.attr("stroke-opacity", 0.2);
-
-		const nodeTextOutline = nodeEnter.append("text").text((d) => d.id);
-
-		attrs(nodeTextOutline, {
-			class: "graph-node-text-outline",
-			"font-family": fontFamily,
-			"text-anchor": "middle",
-			dy: -11,
-			"stroke-width": "1px",
-			"stroke-opacity": "1px",
-			stroke: "white",
-			"font-size": "12px",
-		});
 
 		const nodeText = nodeEnter.append("text").text((d) => d.id);
 

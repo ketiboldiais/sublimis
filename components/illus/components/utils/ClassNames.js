@@ -1,0 +1,27 @@
+export const className = {
+	binaryTree: {
+		canvas: "binaryTree",
+		arrowURL: "binaryTreeArrow",
+		edgeGroup: "binaryTreeEdgeGroup",
+		edge: "binaryTreeEdge",
+		nodeGroup: "binaryTreeNodeGroup",
+		node: "binaryTreeNode",
+		leaf: "binaryTreeLeaf",
+		leafText: "binaryTreeLeafText",
+		branch: "binaryTreeBranchNode",
+		branchText: "binaryTreeBranchText",
+		textGroup: "binaryTreeTextGroup",
+		levelTextGroup: "binaryTreeLevels",
+		depthTextGroup: "binaryTreeDepths",
+		heightTextGroup: "binaryTreeHeights",
+		balanceFactorTextGroup: "binaryTreeBalanceFactors",
+	},
+	sequence: {
+		canvas: "sequence",
+		element: "sequenceElement",
+		text: "SequenceText",
+		elementText: "sequenceElementText",
+		indexText: "sequenceIndexText",
+		annotationText: "sequenceAnnotationText",
+	},
+};

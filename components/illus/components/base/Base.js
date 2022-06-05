@@ -22,7 +22,7 @@ export const Base = ({
 			? containerWidth
 			: `${containerWidth}%`;
 	const containerStyles = {
-		display: "inline-block",
+		display: "block",
 		position: "relative",
 		width: _cwidth,
 		paddingBottom: _cheight,
