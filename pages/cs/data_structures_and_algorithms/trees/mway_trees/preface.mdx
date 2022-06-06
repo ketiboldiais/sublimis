@@ -1,0 +1,93 @@
+import { MTree } from "@illus/MTree";
+import { BinaryTree } from "@illus/BinaryTree";
+
+# Multiway Search Trees
+
+1. [BTrees](#btrees)
+2. [Properties of 2-3 Trees](#properties-of-2-3-trees)
+
+In this chapter, we cover **multiway search trees**. Multiway search trees
+are what they sound like — they're search trees. We've seen search trees
+before, namely the binary search tree:
+
+<BinaryTree
+	data={[
+		[10, [8, 11]],
+		[8, [7, 9]],
+		[11, [null, 12]],
+	]}
+	scale={60}
+	tighten={20}
+/>
+
+With binary trees, we have the restriction that every node in the tree can
+have, at most, two children. If we increased the number of keys, however,
+then the number of children can also increase. This is precisely what
+multiway search trees (_MWay trees_ for short) are supposed to accomplish:
+
+<MTree
+	data={[
+		{ child: { id: "A", keys: [2, 9] }, parent: "" },
+		{ child: { id: "B", keys: [1, 4] }, parent: "A" },
+		{ child: { id: "C", keys: [3, 7] }, parent: "A" },
+		{ child: { id: "D", keys: [11, 13] }, parent: "A" },
+	]}
+	scale={60}
+	height={80}
+/>
+
+In the MWay tree above, the root has two keys, allowing us to construct a
+tree with three children. Because the tree now has three children, we say
+that the above tree is an MWay tree of degree-3. Alternatively, the tree
+above is also called a **2-3 tree** (2 keys, degree 3).
+
+## BTrees
+
+2-3 trees are _height-balanced search trees_. Below, is the same 2-3 tree
+with the height-balance factors indicated:
+
+<MTree
+	data={[
+		{ child: { id: "A", keys: [2, 9] }, parent: "" },
+		{ child: { id: "B", keys: [1, 4] }, parent: "A" },
+		{ child: { id: "C", keys: [3, 7] }, parent: "A" },
+		{ child: { id: "D", keys: [11, 13] }, parent: "A" },
+	]}
+	scale={60}
+	height={80}
+	markBalanceFactor={true}
+/>
+
+As such, they are members of the set of **B-trees**. B-trees are
+height-balanced trees of any degree. Because of this classification, 2-3
+trees can also be referred to as _B-trees of degree-3_. For readability,
+we'll use the term 2-𝑛 tree, where 𝑛 is the degree of the B-tree.
+
+## Properties of 2-n Trees
+
+Alongside their height-balanced nature, 2-𝑛 trees have several other
+properties that distinguish them from other trees. First, all the leaves of
+a 2-𝑛 tree are positioned at the same level:
+
+<MTree
+	data={[
+		{ child: { id: "A", keys: [2, 9] }, parent: "" },
+		{ child: { id: "B", keys: [1, 4] }, parent: "A" },
+		{ child: { id: "C", keys: [3, 7] }, parent: "A" },
+		{ child: { id: "D", keys: [11, 13] }, parent: "A" },
+	]}
+	scale={60}
+	height={80}
+	markLevels={true}
+/>
+
+Notice that all of the leaves in the tree above exist on the same level.
+The second property is that every node in the 2-𝑛 tree has at _at least
+half_ of 𝑛. In our example tree, we have ${n = 3.}$ Thus, each node must
+have, at a minimum,
+
+$$
+	\left\lceil \dfrac{n}{2} \right\rceil = \left\lceil \dfrac{3}{2} \right\rceil = \left\lceil 1.5 \right\rceil = 2
+$$
+
+children.
