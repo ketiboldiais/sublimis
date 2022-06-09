@@ -1,4 +1,5 @@
 import { Tree } from "@illus/Tree";
+import { Grid } from "@components/Grid/Grid";
 
 # AVL Trees
 
@@ -122,377 +123,398 @@ balance the tree by performing _rotations_, as we'll see later.
 That said, let's consider a few examples. Below are several binary trees,
 with their heights indicated.
 
-<Tree data={[
-		{ child: "a", parent: "" },
-		{ child: "b", parent: "a" },
-		{ child: "c", parent: "a" },
-		{ child: "d", parent: "b" },
-		{ child: "e", parent: "b" },
-		{ child: "f", parent: "c" },
-		{ child: "g", parent: "c", display: "none" },
+<Grid cols={2} rows={2}>
+	<Tree data={[
+			{ child: "a", parent: "" },
+			{ child: "b", parent: "a" },
+			{ child: "c", parent: "a" },
+			{ child: "d", parent: "b" },
+			{ child: "e", parent: "b" },
+			{ child: "f", parent: "c" },
+			{ child: "g", parent: "c", display: "none" },
 
-]} markHeight={true}/>
+    ]} markHeight={true} tighten={30} label="Tree A"/>
 
-<Tree
-	data={[
-		{ child: "a", parent: "" },
-		{ child: "b", parent: "a" },
-		{ child: "c", parent: "a" },
-		{ child: "d", parent: "b" },
-		{ child: "e", parent: "b", display: "none" },
-		{ child: "f", parent: "c", display: "none" },
-		{ child: "g", parent: "c" },
-	]}
-	markHeight={true}
-/>
+    <Tree
+    	data={[
+    		{ child: "a", parent: "" },
+    		{ child: "b", parent: "a" },
+    		{ child: "c", parent: "a" },
+    		{ child: "d", parent: "b" },
+    		{ child: "e", parent: "b", display: "none" },
+    		{ child: "f", parent: "c", display: "none" },
+    		{ child: "g", parent: "c" },
+    	]}
+    	markHeight={true}
+    	tighten={30}
+    	label={"Tree B"}
+    />
 
-<Tree
-	data={[
-		{ child: "a", parent: "" },
-		{ child: "b", parent: "a" },
-		{ child: "c", parent: "a" },
-		{ child: "d", parent: "b" },
-		{ child: "e", parent: "b", display: "none" },
-		{ child: "h", parent: "d" },
-		{ child: "i", parent: "d", display: "none" },
-	]}
-	markHeight={true}
-	edgeLength={100}
-/>
+    <Tree
+    	data={[
+    		{ child: "a", parent: "" },
+    		{ child: "b", parent: "a" },
+    		{ child: "c", parent: "a" },
+    		{ child: "d", parent: "b" },
+    		{ child: "e", parent: "b", display: "none" },
+    		{ child: "h", parent: "d" },
+    		{ child: "i", parent: "d", display: "none" },
+    	]}
+    	markHeight={true}
+    	edgeLength={100}
+    	tighten={30}
+    	label={"Tree C"}
+    />
 
-<Tree
-	data={[
-		{ child: "a", parent: "" },
-		{ child: "b", parent: "a" },
-		{ child: "c", parent: "a" },
-		{ child: "d", parent: "b" },
-		{ child: "e", parent: "b", display: "none" },
-		{ child: "h", parent: "d", display: "none" },
-		{ child: "i", parent: "d" },
-		{ child: "j", parent: "i" },
-		{ child: "k", parent: "i", display: "none" },
-	]}
-	markHeight={true}
-	edgeLength={100}
-/>
+    <Tree
+    	data={[
+    		{ child: "a", parent: "" },
+    		{ child: "b", parent: "a" },
+    		{ child: "c", parent: "a" },
+    		{ child: "d", parent: "b" },
+    		{ child: "e", parent: "b", display: "none" },
+    		{ child: "h", parent: "d", display: "none" },
+    		{ child: "i", parent: "d" },
+    		{ child: "j", parent: "i" },
+    		{ child: "k", parent: "i", display: "none" },
+    	]}
+    	markHeight={true}
+    	edgeLength={100}
+    	tighten={30}
+    	label={"Tree D"}
+    	labelOffsetX={15}
+    />
+
+</Grid>
 
 Examining each tree, we have the following tables of balance factors:
 
-<table>
-	<thead>
-		<tr>
-			<th>Tree</th>
-			<th>
-				<div>
-					<span>Node</span>
-				</div>
-			</th>
-			<th>
-				<div>
-					<span>Height of Left-subtree</span>
-				</div>
-			</th>
-			<th>
-				<div>
-					<span>Height of Right-subtree</span>
-				</div>
-			</th>
-			<th>
-				<div>
-					<span>Balance Factor</span>
-				</div>
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td rowSpan="6">A</td>
-			<td>a</td>
-			<td>2</td>
-			<td>2</td>
-			<td>0</td>
-		</tr>
-		<tr>
-			<td>b</td>
-			<td>1</td>
-			<td>1</td>
-			<td>0</td>
-		</tr>
-		<tr>
-			<td>c</td>
-			<td>1</td>
-			<td>0</td>
-			<td>1</td>
-		</tr>
-		<tr>
-			<td>d</td>
-			<td>0</td>
-			<td>0</td>
-			<td>0</td>
-		</tr>
-		<tr>
-			<td>e</td>
-			<td>0</td>
-			<td>0</td>
-			<td>0</td>
-		</tr>
-		<tr>
-			<td>f</td>
-			<td>0</td>
-			<td>0</td>
-			<td>0</td>
-		</tr>
-	</tbody>
-</table>
+<Grid cols={2} rows={2}>
+	<table>
+		<thead>
+			<tr>
+				<th>Tree</th>
+				<th>
+					<div>
+						<span>Node</span>
+					</div>
+				</th>
+				<th>
+					<div>
+						<span>Height of Left-subtree</span>
+					</div>
+				</th>
+				<th>
+					<div>
+						<span>Height of Right-subtree</span>
+					</div>
+				</th>
+				<th>
+					<div>
+						<span>Balance Factor</span>
+					</div>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td rowSpan="6">A</td>
+				<td>a</td>
+				<td>2</td>
+				<td>2</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>b</td>
+				<td>1</td>
+				<td>1</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>c</td>
+				<td>1</td>
+				<td>0</td>
+				<td>1</td>
+			</tr>
+			<tr>
+				<td>d</td>
+				<td>0</td>
+				<td>0</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>e</td>
+				<td>0</td>
+				<td>0</td>
+				<td>0</td>
+			</tr>
+			<tr>
+				<td>f</td>
+				<td>0</td>
+				<td>0</td>
+				<td>0</td>
+			</tr>
+		</tbody>
+	</table>
 
-<table>
-	<thead>
-		<tr>
-			<th>Tree</th>
-			<th>
-				<div>
-					<span>Node</span>
-				</div>
-			</th>
-			<th>
-				<div>
-					<span>Height of Left-subtree</span>
-				</div>
-			</th>
-			<th>
-				<div>
-					<span>Height of Right-subtree</span>
-				</div>
-			</th>
-			<th>
-				<div>
-					<span>Balance Factor</span>
-				</div>
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td rowSpan="5">B</td>
-			<td>a</td>
-			<td>2</td>
-			<td>2</td>
-			<td>0</td>
-		</tr>
-		<tr>
-			<td>b</td>
-			<td>1</td>
-			<td>0</td>
-			<td>1</td>
-		</tr>
-		<tr>
-			<td>c</td>
-			<td>0</td>
-			<td>1</td>
-			<td>-1</td>
-		</tr>
-		<tr>
-			<td>d</td>
-			<td>0</td>
-			<td>0</td>
-			<td>0</td>
-		</tr>
-		<tr>
-			<td>g</td>
-			<td>0</td>
-			<td>0</td>
-			<td>0</td>
-		</tr>
-	</tbody>
-</table>
+    <table>
+    	<thead>
+    		<tr>
+    			<th>Tree</th>
+    			<th>
+    				<div>
+    					<span>Node</span>
+    				</div>
+    			</th>
+    			<th>
+    				<div>
+    					<span>Height of Left-subtree</span>
+    				</div>
+    			</th>
+    			<th>
+    				<div>
+    					<span>Height of Right-subtree</span>
+    				</div>
+    			</th>
+    			<th>
+    				<div>
+    					<span>Balance Factor</span>
+    				</div>
+    			</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		<tr>
+    			<td rowSpan="5">B</td>
+    			<td>a</td>
+    			<td>2</td>
+    			<td>2</td>
+    			<td>0</td>
+    		</tr>
+    		<tr>
+    			<td>b</td>
+    			<td>1</td>
+    			<td>0</td>
+    			<td>1</td>
+    		</tr>
+    		<tr>
+    			<td>c</td>
+    			<td>0</td>
+    			<td>1</td>
+    			<td>-1</td>
+    		</tr>
+    		<tr>
+    			<td>d</td>
+    			<td>0</td>
+    			<td>0</td>
+    			<td>0</td>
+    		</tr>
+    		<tr>
+    			<td>g</td>
+    			<td>0</td>
+    			<td>0</td>
+    			<td>0</td>
+    		</tr>
+    	</tbody>
+    </table>
 
-<table>
-	<thead>
-		<tr>
-			<th>Tree</th>
-			<th>
-				<div>
-					<span>Node</span>
-				</div>
-			</th>
-			<th>
-				<div>
-					<span>Height of Left-subtree</span>
-				</div>
-			</th>
-			<th>
-				<div>
-					<span>Height of Right-subtree</span>
-				</div>
-			</th>
-			<th>
-				<div>
-					<span>Balance Factor</span>
-				</div>
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td rowSpan="5">C</td>
-			<td>a</td>
-			<td>3</td>
-			<td>1</td>
-			<td>2</td>
-		</tr>
-		<tr>
-			<td>b</td>
-			<td>2</td>
-			<td>0</td>
-			<td>2</td>
-		</tr>
-		<tr>
-			<td>c</td>
-			<td>0</td>
-			<td>0</td>
-			<td>0</td>
-		</tr>
-		<tr>
-			<td>d</td>
-			<td>1</td>
-			<td>0</td>
-			<td>1</td>
-		</tr>
-		<tr>
-			<td>h</td>
-			<td>0</td>
-			<td>0</td>
-			<td>0</td>
-		</tr>
-	</tbody>
-</table>
+    <table>
+    	<thead>
+    		<tr>
+    			<th>Tree</th>
+    			<th>
+    				<div>
+    					<span>Node</span>
+    				</div>
+    			</th>
+    			<th>
+    				<div>
+    					<span>Height of Left-subtree</span>
+    				</div>
+    			</th>
+    			<th>
+    				<div>
+    					<span>Height of Right-subtree</span>
+    				</div>
+    			</th>
+    			<th>
+    				<div>
+    					<span>Balance Factor</span>
+    				</div>
+    			</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		<tr>
+    			<td rowSpan="5">C</td>
+    			<td>a</td>
+    			<td>3</td>
+    			<td>1</td>
+    			<td>2</td>
+    		</tr>
+    		<tr>
+    			<td>b</td>
+    			<td>2</td>
+    			<td>0</td>
+    			<td>2</td>
+    		</tr>
+    		<tr>
+    			<td>c</td>
+    			<td>0</td>
+    			<td>0</td>
+    			<td>0</td>
+    		</tr>
+    		<tr>
+    			<td>d</td>
+    			<td>1</td>
+    			<td>0</td>
+    			<td>1</td>
+    		</tr>
+    		<tr>
+    			<td>h</td>
+    			<td>0</td>
+    			<td>0</td>
+    			<td>0</td>
+    		</tr>
+    	</tbody>
+    </table>
 
-<table>
-	<thead>
-		<tr>
-			<th>Tree</th>
-			<th>
-				<div>
-					<span>Node</span>
-				</div>
-			</th>
-			<th>
-				<div>
-					<span>Height of Left-subtree</span>
-				</div>
-			</th>
-			<th>
-				<div>
-					<span>Height of Right-subtree</span>
-				</div>
-			</th>
-			<th>
-				<div>
-					<span>Balance Factor</span>
-				</div>
-			</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td rowSpan="6">D</td>
-			<td>a</td>
-			<td>4</td>
-			<td>1</td>
-			<td>3</td>
-		</tr>
-		<tr>
-			<td>b</td>
-			<td>3</td>
-			<td>0</td>
-			<td>3</td>
-		</tr>
-		<tr>
-			<td>c</td>
-			<td>0</td>
-			<td>0</td>
-			<td>0</td>
-		</tr>
-		<tr>
-			<td>d</td>
-			<td>0</td>
-			<td>2</td>
-			<td>-2</td>
-		</tr>
-		<tr>
-			<td>i</td>
-			<td>1</td>
-			<td>0</td>
-			<td>1</td>
-		</tr>
-		<tr>
-			<td>j</td>
-			<td>0</td>
-			<td>0</td>
-			<td>0</td>
-		</tr>
-	</tbody>
-</table>
+    <table>
+    	<thead>
+    		<tr>
+    			<th>Tree</th>
+    			<th>
+    				<div>
+    					<span>Node</span>
+    				</div>
+    			</th>
+    			<th>
+    				<div>
+    					<span>Height of Left-subtree</span>
+    				</div>
+    			</th>
+    			<th>
+    				<div>
+    					<span>Height of Right-subtree</span>
+    				</div>
+    			</th>
+    			<th>
+    				<div>
+    					<span>Balance Factor</span>
+    				</div>
+    			</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		<tr>
+    			<td rowSpan="6">D</td>
+    			<td>a</td>
+    			<td>4</td>
+    			<td>1</td>
+    			<td>3</td>
+    		</tr>
+    		<tr>
+    			<td>b</td>
+    			<td>3</td>
+    			<td>0</td>
+    			<td>3</td>
+    		</tr>
+    		<tr>
+    			<td>c</td>
+    			<td>0</td>
+    			<td>0</td>
+    			<td>0</td>
+    		</tr>
+    		<tr>
+    			<td>d</td>
+    			<td>0</td>
+    			<td>2</td>
+    			<td>-2</td>
+    		</tr>
+    		<tr>
+    			<td>i</td>
+    			<td>1</td>
+    			<td>0</td>
+    			<td>1</td>
+    		</tr>
+    		<tr>
+    			<td>j</td>
+    			<td>0</td>
+    			<td>0</td>
+    			<td>0</td>
+    		</tr>
+    	</tbody>
+    </table>
+
+</Grid>
 
 From the tables above, we can see that trees ${\texttt{C}}$ and
 ${\texttt{D}}$ are imbalanced. The same trees are presented below with
 their balance factors indicated (red for imbalanced, green for balanced).
 
-<Tree
-	data={[
-		{ child: "a", parent: "" },
-		{ child: "b", parent: "a" },
-		{ child: "c", parent: "a" },
-		{ child: "d", parent: "b" },
-		{ child: "e", parent: "b" },
-		{ child: "f", parent: "c" },
-		{ child: "g", parent: "c", display: "none" },
-	]}
-	markBalanceFactor={true}
-/>
+<Grid cols={2} rows={2}>
+	<Tree data={[
+			{ child: "a", parent: "" },
+			{ child: "b", parent: "a" },
+			{ child: "c", parent: "a" },
+			{ child: "d", parent: "b" },
+			{ child: "e", parent: "b" },
+			{ child: "f", parent: "c" },
+			{ child: "g", parent: "c", display: "none" },
 
-<Tree
-	data={[
-		{ child: "a", parent: "" },
-		{ child: "b", parent: "a" },
-		{ child: "c", parent: "a" },
-		{ child: "d", parent: "b" },
-		{ child: "e", parent: "b", display: "none" },
-		{ child: "f", parent: "c", display: "none" },
-		{ child: "g", parent: "c" },
-	]}
-	markBalanceFactor={true}
-/>
+    ]} markBalanceFactor={true} tighten={30} label="Tree A"/>
 
-<Tree
-	data={[
-		{ child: "a", parent: "" },
-		{ child: "b", parent: "a" },
-		{ child: "c", parent: "a" },
-		{ child: "d", parent: "b" },
-		{ child: "e", parent: "b", display: "none" },
-		{ child: "h", parent: "d" },
-		{ child: "i", parent: "d", display: "none" },
-	]}
-	markBalanceFactor={true}
-	edgeLength={100}
-/>
+    <Tree
+    	data={[
+    		{ child: "a", parent: "" },
+    		{ child: "b", parent: "a" },
+    		{ child: "c", parent: "a" },
+    		{ child: "d", parent: "b" },
+    		{ child: "e", parent: "b", display: "none" },
+    		{ child: "f", parent: "c", display: "none" },
+    		{ child: "g", parent: "c" },
+    	]}
+    	markBalanceFactor={true}
+    	tighten={30}
+    	label={"Tree B"}
+    />
 
-<Tree
-	data={[
-		{ child: "a", parent: "" },
-		{ child: "b", parent: "a" },
-		{ child: "c", parent: "a" },
-		{ child: "d", parent: "b" },
-		{ child: "e", parent: "b", display: "none" },
-		{ child: "h", parent: "d", display: "none" },
-		{ child: "i", parent: "d" },
-		{ child: "j", parent: "i" },
-		{ child: "k", parent: "i", display: "none" },
-	]}
-	markBalanceFactor={true}
-	edgeLength={100}
-/>
+    <Tree
+    	data={[
+    		{ child: "a", parent: "" },
+    		{ child: "b", parent: "a" },
+    		{ child: "c", parent: "a" },
+    		{ child: "d", parent: "b" },
+    		{ child: "e", parent: "b", display: "none" },
+    		{ child: "h", parent: "d" },
+    		{ child: "i", parent: "d", display: "none" },
+    	]}
+    	markBalanceFactor={true}
+    	edgeLength={100}
+    	tighten={30}
+    	label={"Tree C"}
+    />
+
+    <Tree
+    	data={[
+    		{ child: "a", parent: "" },
+    		{ child: "b", parent: "a" },
+    		{ child: "c", parent: "a" },
+    		{ child: "d", parent: "b" },
+    		{ child: "e", parent: "b", display: "none" },
+    		{ child: "h", parent: "d", display: "none" },
+    		{ child: "i", parent: "d" },
+    		{ child: "j", parent: "i" },
+    		{ child: "k", parent: "i", display: "none" },
+    	]}
+    	markBalanceFactor={true}
+    	edgeLength={100}
+    	tighten={30}
+    	label={"Tree D"}
+    	labelOffsetX={15}
+    />
+
+</Grid>
 
 Now that we know what it means for a tree to be imbalanced, let's examine
 _rotating_—the act of correct height imbalances.
@@ -511,106 +533,131 @@ left-child to begin with; three nodes total.
 As we know from the _Catalan number formula_, given three nodes, there are
 five possible binary trees:
 
-<Tree
-	data={[
-		{ child: "a", parent: "", label: "none" },
-		{ child: "b", parent: "a", label: "none" },
-		{ child: "1", parent: "a", display: "none" },
-		{ child: "c", parent: "b", label: "none" },
-		{ child: "2", parent: "b", display: "none" },
-	]}
-	edgeLength={80}
-/>
+<Grid cols={2} rows={3}>
+	<Tree
+		data={[
+			{ child: "a", parent: "", label: "none" },
+			{ child: "b", parent: "a", label: "none" },
+			{ child: "1", parent: "a", display: "none" },
+			{ child: "c", parent: "b", label: "none" },
+			{ child: "2", parent: "b", display: "none" },
+		]}
+		edgeLength={80}
+		markBalanceFactor={true}
+		tighten={30}
+		label="Tree 1"
+	/>
 
-<Tree
-	data={[
-		{ child: "a", parent: "", label: "none" },
-		{ child: "1", parent: "a", display: "none" },
-		{ child: "b", parent: "a", label: "none" },
-		{ child: "2", parent: "b", display: "none" },
-		{ child: "c", parent: "b", label: "none" },
-	]}
-	edgeLength={80}
-/>
+    <Tree
+    	data={[
+    		{ child: "a", parent: "", label: "none" },
+    		{ child: "1", parent: "a", display: "none" },
+    		{ child: "b", parent: "a", label: "none" },
+    		{ child: "2", parent: "b", display: "none" },
+    		{ child: "c", parent: "b", label: "none" },
+    	]}
+    	edgeLength={80}
+    	markBalanceFactor={true}
+    	tighten={30}
+    	label="Tree 2"
+    />
 
-<Tree
-	data={[
-		{ child: "a", parent: "", label: "none" },
-		{ child: "1", parent: "a", display: "none" },
-		{ child: "b", parent: "a", label: "none" },
-		{ child: "c", parent: "b", label: "none" },
-		{ child: "2", parent: "b", display: "none" },
-	]}
-	edgeLength={80}
-/>
+    <Tree
+    	data={[
+    		{ child: "a", parent: "", label: "none" },
+    		{ child: "1", parent: "a", display: "none" },
+    		{ child: "b", parent: "a", label: "none" },
+    		{ child: "c", parent: "b", label: "none" },
+    		{ child: "2", parent: "b", display: "none" },
+    	]}
+    	edgeLength={80}
+    	markBalanceFactor={true}
+    	tighten={30}
+    	label="Tree 3"
+    />
 
-<Tree
-	data={[
-		{ child: "a", parent: "", label: "none" },
-		{ child: "b", parent: "a", label: "none" },
-		{ child: "1", parent: "a", display: "none" },
-		{ child: "2", parent: "b", display: "none" },
-		{ child: "c", parent: "b", label: "none" },
-	]}
-	edgeLength={80}
-/>
+    <Tree
+    	data={[
+    		{ child: "a", parent: "", label: "none" },
+    		{ child: "b", parent: "a", label: "none" },
+    		{ child: "1", parent: "a", display: "none" },
+    		{ child: "2", parent: "b", display: "none" },
+    		{ child: "c", parent: "b", label: "none" },
+    	]}
+    	edgeLength={80}
+    	markBalanceFactor={true}
+    	tighten={30}
+    	label="Tree 4"
+    />
 
-<Tree
-	data={[
-		{ child: "a", parent: "", label: "none" },
-		{ child: "b", parent: "a", label: "none" },
-		{ child: "c", parent: "a", label: "none" },
-	]}
-	edgeLength={80}
-/>
+    <Tree
+    	data={[
+    		{ child: "a", parent: "", label: "none" },
+    		{ child: "b", parent: "a", label: "none" },
+    		{ child: "c", parent: "a", label: "none" },
+    	]}
+    	edgeLength={50}
+    	markBalanceFactor={true}
+    	tighten={30}
+    	label="Tree 5"
+    />
+
+</Grid>
 
 Of the possibilities above, only ${\texttt{P5}}$ is balanced. Given that
 all subtrees of a binary tree are binary trees, it follows that there are
 only four possible cases for height-imbalanced trees:
 
-<Tree
-	data={[
-		{ child: "a", parent: "" },
-		{ child: "b", parent: "a" },
-		{ child: "1", parent: "a", display: "none" },
-		{ child: "c", parent: "b" },
-		{ child: "2", parent: "b", display: "none" },
-	]}
-	edgeLength={80}
-/>
+<Grid cols={2} rows={2}>
+	<Tree
+		data={[
+			{ child: "a", parent: "" },
+			{ child: "b", parent: "a" },
+			{ child: "1", parent: "a", display: "none" },
+			{ child: "c", parent: "b" },
+			{ child: "2", parent: "b", display: "none" },
+		]}
+		edgeLength={80}
+		label={"Tree 1"}
+	/>
 
-<Tree
-	data={[
-		{ child: "a", parent: "" },
-		{ child: "1", parent: "a", display: "none" },
-		{ child: "b", parent: "a" },
-		{ child: "2", parent: "b", display: "none" },
-		{ child: "c", parent: "b" },
-	]}
-	edgeLength={80}
-/>
+    <Tree
+    	data={[
+    		{ child: "a", parent: "" },
+    		{ child: "1", parent: "a", display: "none" },
+    		{ child: "b", parent: "a" },
+    		{ child: "2", parent: "b", display: "none" },
+    		{ child: "c", parent: "b" },
+    	]}
+    	edgeLength={80}
+    	label={"Tree 2"}
+    />
 
-<Tree
-	data={[
-		{ child: "a", parent: "" },
-		{ child: "1", parent: "a", display: "none" },
-		{ child: "b", parent: "a" },
-		{ child: "c", parent: "b" },
-		{ child: "2", parent: "b", display: "none" },
-	]}
-	edgeLength={80}
-/>
+    <Tree
+    	data={[
+    		{ child: "a", parent: "" },
+    		{ child: "1", parent: "a", display: "none" },
+    		{ child: "b", parent: "a" },
+    		{ child: "c", parent: "b" },
+    		{ child: "2", parent: "b", display: "none" },
+    	]}
+    	edgeLength={80}
+    	label={"Tree 3"}
+    />
 
-<Tree
-	data={[
-		{ child: "a", parent: "" },
-		{ child: "b", parent: "a" },
-		{ child: "1", parent: "a", display: "none" },
-		{ child: "2", parent: "b", display: "none" },
-		{ child: "c", parent: "b" },
-	]}
-	edgeLength={80}
-/>
+    <Tree
+    	data={[
+    		{ child: "a", parent: "" },
+    		{ child: "b", parent: "a" },
+    		{ child: "1", parent: "a", display: "none" },
+    		{ child: "2", parent: "b", display: "none" },
+    		{ child: "c", parent: "b" },
+    	]}
+    	edgeLength={80}
+    	label={"Tree 4"}
+    />
+
+</Grid>
 
 Because there are only four possible cases, there are only four methods for
 height-balancing some binary tree. These methods are called **rotations**:
@@ -628,6 +675,8 @@ a tree ${T.}$ After the first two entries, the binary tree appears as:
 		{ child: "b", parent: "a" },
 		{ child: "c", parent: "a", display: "none" },
 	]}
+	edgeLength={80}
+	scale={50}
 />
 
 The user then enters another element:
@@ -640,6 +689,8 @@ The user then enters another element:
 		{ child: "c", parent: "b" },
 		{ child: "e", parent: "b", display: "none" },
 	]}
+	edgeLength={80}
+	scale={50}
 />
 
 At this point, the tree is imbalanced. Why? Because ${\texttt{node(a)}}$
@@ -652,6 +703,8 @@ left-subtree of the left-subtree of ${T.}$
 
 Now, because we have ${T:LL_i,}$ we perform an **right-rotation**:
 
+<Grid cols={3}>
+
 <Tree
 	data={[
 		{ child: "a", parent: "" },
@@ -660,6 +713,7 @@ Now, because we have ${T:LL_i,}$ we perform an **right-rotation**:
 		{ child: "c", parent: "b" },
 		{ child: "e", parent: "b", display: "none" },
 	]}
+	edgeLength={80}
 />
 
 $$
@@ -672,9 +726,10 @@ $$
 		{ child: "c", parent: "b" },
 		{ child: "a", parent: "b" },
 	]}
+	edgeLength={80}
 />
 
-<div id="rotate4"></div>
+</Grid>
 
 The RR-rotation consists of the following steps:
 
@@ -702,13 +757,14 @@ For example, suppose we have the following tree:
 	data={[
 		{ child: "a", parent: "" },
 		{ child: "b", parent: "a" },
-		{ child: "d", parent: "a", noCircle: true},
+		{ child: "d", parent: "a", noCircle: true },
 		{ child: "c", parent: "b" },
-		{ child: "e", parent: "b", noCircle: true},
-		{ child: "f", parent: "c", noCircle: true},
-		{ child: "g", parent: "c", noCircle: true},
+		{ child: "e", parent: "b", noCircle: true },
+		{ child: "f", parent: "c", noCircle: true },
+		{ child: "g", parent: "c", noCircle: true },
 	]}
 	edgeLength={100}
+	scale={50}
 />
 
 In the diagram above, the nodes without circles indicate that there are
@@ -721,11 +777,12 @@ tree is left-heavy. Accordingly, we have a right-rotation:
 		{ child: "b", parent: "" },
 		{ child: "c", parent: "b" },
 		{ child: "a", parent: "b" },
-		{ child: "e", parent: "a", noCircle: true},
-		{ child: "d", parent: "a", noCircle: true},
-		{ child: "f", parent: "c", noCircle: true},
-		{ child: "g", parent: "c", noCircle: true},
+		{ child: "e", parent: "a", noCircle: true },
+		{ child: "d", parent: "a", noCircle: true },
+		{ child: "f", parent: "c", noCircle: true },
+		{ child: "g", parent: "c", noCircle: true },
 	]}
+	scale={50}
 />
 
 ### Left rotation
@@ -740,11 +797,14 @@ Now suppose the user enters the tree:
 		{ child: "2", parent: "b", display: "none" },
 		{ child: "c", parent: "b" },
 	]}
+	edgeLength={80}
+	scale={50}
 />
 
 Here, we have an **RR-imbalanced tree**. To balance this tree, we must
 perform a **left-rotation**:
 
+<Grid cols={3}>
 <Tree
 	data={[
 		{ child: "a", parent: "" },
@@ -753,6 +813,7 @@ perform a **left-rotation**:
 		{ child: "e", parent: "b", display: "none" },
 		{ child: "c", parent: "b" },
 	]}
+	edgeLength={80}
 />
 
 $$
@@ -765,7 +826,9 @@ $$
 		{ child: "a", parent: "b" },
 		{ child: "c", parent: "b" },
 	]}
+	edgeLength={80}
 />
+</Grid>
 
 The procedure:
 
@@ -789,10 +852,14 @@ Now we examine the third case. Suppose the user enters:
 		{ child: "c", parent: "b" },
 		{ child: "2", parent: "b", display: "none" },
 	]}
+	edgeLength={80}
+	scale={50}
 />
 
 We say that this tree is **right-left imbalanced**. To balance this tree,
 we perform a right-left rotation:
+
+<Grid cols={5}>
 
 <Tree
 	data={[
@@ -806,6 +873,7 @@ we perform a right-left rotation:
 		},
 		{ child: "2", parent: "b", display: "none" },
 	]}
+	edgeLength={80}
 />
 
 $$
@@ -824,11 +892,23 @@ $$
 		{ child: "2", parent: "c", display: "none" },
 		{ child: "b", parent: "c" },
 	]}
+	edgeLength={80}
 />
 
 $$
 	\Large \overset{\texttt{left-rotate}}{\curvearrowleft}
 $$
+
+<Tree
+	data={[
+		{ child: "c", parent: "", focus: "red" },
+		{ child: "b", parent: "c" },
+		{ child: "a", parent: "c" },
+	]}
+	edgeLength={80}
+/>
+
+</Grid>
 
 ### Left-right Rotation
 
@@ -842,10 +922,14 @@ Now we examine the final case. Suppose the user enters:
 		{ child: "2", parent: "b", display: "none" },
 		{ child: "c", parent: "b" },
 	]}
+	edgeLength={80}
+	scale={50}
 />
 
 We say that this tree is **left-right imbalanced**. To balance this tree,
 we perform a left-right rotation:
+
+<Grid cols={5}>
 
 <Tree
 	data={[
@@ -855,6 +939,7 @@ we perform a left-right rotation:
 		{ child: "2", parent: "b", display: "none" },
 		{ child: "c", parent: "b", focus: "red" },
 	]}
+	edgeLength={80}
 />
 
 $$
@@ -869,6 +954,7 @@ $$
 		{ child: "b", parent: "c" },
 		{ child: "2", parent: "c", display: "none" },
 	]}
+	edgeLength={80}
 />
 
 $$
@@ -881,7 +967,10 @@ $$
 		{ child: "b", parent: "c" },
 		{ child: "a", parent: "c" },
 	]}
+	edgeLength={80}
 />
+
+</Grid>
 
 ## General Form of AVL Rotations
 
@@ -899,6 +988,7 @@ AVL tree rotations have a general form. Consider the following tree:
 	]}
 	markBalanceFactor={true}
 	edgeLength={100}
+	scale={50}
 />
 
 The nodes without circles indicate that the child node is the root to some
@@ -928,6 +1018,8 @@ More generally:
 						{ child: 3, parent: 1, label: "none", ant: "0" },
 						{ child: 4, parent: 1, display: "none" },
 					]}
+					height={70}
+					tighten={30}
 				/>
 			</td>
 			<td>Left-left</td>
@@ -943,6 +1035,8 @@ More generally:
 						{ child: 3, parent: 1, label: "none", ant: "0" },
 						{ child: 4, parent: 1, display: "none" },
 					]}
+					height={70}
+					tighten={30}
 				/>
 			</td>
 			<td>Left-right</td>
@@ -958,6 +1052,8 @@ More generally:
 						{ child: 4, parent: 0, display: "none" },
 						{ child: 3, parent: 0, label: "none", ant: "0" },
 					]}
+					height={70}
+					tighten={30}
 				/>
 			</td>
 			<td>Right-right</td>
@@ -973,6 +1069,8 @@ More generally:
 						{ child: 4, parent: 0, display: "none" },
 						{ child: 3, parent: 0, label: "none", ant: "0" },
 					]}
+					height={70}
+					tighten={30}
 				/>
 			</td>
 			<td>Right-left</td>
@@ -993,6 +1091,9 @@ LL-rotation, we get:
 		{ child: "A", parent: "B" },
 	]}
 	markBalanceFactor={true}
+	tighten={40}
+	height={80}
+	scale={50}
 />
 
 Now we see that it's balanced. The subtrees are now:
@@ -1008,6 +1109,9 @@ Now we see that it's balanced. The subtrees are now:
 		{ child: "CR", parent: "C", noCircle: true },
 	]}
 	markBalanceFactor={true}
+	scale={50}
+	tighten={40}
+	height={100}
 />
 
 Ok hang on. How did those subtrees move? A helpful way to think about how
@@ -1025,4 +1129,81 @@ node as a thread:
 />
 
 Notice that by pulling the thread, the subtree slowly goes up, until it
-arrives at its final location.
+arrives at its final location. Knowing this general form, consider a more
+complicated tree:
+
+<Tree
+	data={[
+		{ child: 30, parent: "" },
+		{ child: 20, parent: 30 },
+		{ child: 40, parent: 30 },
+		{ child: 10, parent: 20 },
+		{ child: 25, parent: 20 },
+		{ child: -1, parent: 40, display: "none" },
+		{ child: 50, parent: 40 },
+		{ child: 5, parent: 10 },
+		{ child: 15, parent: 10 },
+		{ child: -2, parent: 25, display: "none" },
+		{ child: 28, parent: 25 },
+	]}
+	tighten={20}
+	edgeLength={100}
+	scale={60}
+	markBalanceFactor={true}
+/>
+
+This tree is balanced. Suppose we insert a new node with the value 4.
+Because 4 is smaller than 30, it goes towards the left, landing at the node
+containg 20. Then, because it's smaller than 20, it goes to the left again,
+landing on the node containing 10. And because it's smaller than 10, it
+lands at node 5. And because it's smaller than 5, it's inserted as the left
+child of 5:
+
+<Tree
+	data={[
+		{ child: 30, parent: "" },
+		{ child: 20, parent: 30 },
+		{ child: 40, parent: 30 },
+		{ child: 10, parent: 20 },
+		{ child: 25, parent: 20 },
+		{ child: -1, parent: 40, display: "none" },
+		{ child: 50, parent: 40 },
+		{ child: 5, parent: 10 },
+		{ child: 15, parent: 10 },
+		{ child: -2, parent: 25, display: "none" },
+		{ child: 28, parent: 25 },
+		{ child: 4, parent: 5 },
+		{ child: -3, parent: 5, display: "none" },
+	]}
+	tighten={20}
+	edgeLength={100}
+	scale={60}
+	markBalanceFactor={true}
+/>
+
+Now that we've inserted node(4), the tree is imbalanced. To balance this
+tree, we focus on just three nodes:
+
+<Tree
+	data={[
+		{ child: 30, parent: "", focus: "mark" },
+		{ child: 20, parent: 30, focus: "mark" },
+		{ child: 40, parent: 30 },
+		{ child: 10, parent: 20, focus: "mark" },
+		{ child: 25, parent: 20 },
+		{ child: -1, parent: 40, display: "none" },
+		{ child: 50, parent: 40 },
+		{ child: 5, parent: 10 },
+		{ child: 15, parent: 10 },
+		{ child: -2, parent: 25, display: "none" },
+		{ child: 28, parent: 25 },
+		{ child: 4, parent: 5 },
+		{ child: -3, parent: 5, display: "none" },
+	]}
+	tighten={20}
+	edgeLength={100}
+	scale={60}
+	markBalanceFactor={true}
+/>
+
+After node(10), wherever node(4) is inserted, it's left-left imbalanced.

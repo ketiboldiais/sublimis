@@ -1,0 +1,30 @@
+# Software Architecture
+
+In designing software systems, there are six core considerations:
+
+1. **Performance.** A large software system like might serve millions of
+   users at any given moment. For the entire system to work, the system's
+   architects must answer questions like: How much time should it take for
+   this request to process? How much time do we have for this response to
+   return? Ideally, the system has a small amount of _latency_ and amount
+   of _throughput_.
+2. **Scalability.** Without more, a software system that works for ten
+   users isn't guaranteed to work for a hundred, let alone a million. The
+   scalability consideration answers questions like: Can this system
+   millions of users? Millions of _simultaneous_ requests?
+3. **Reliability.** Software systems will fail. The reliability
+   consideration addresses ways to prevent or lessen the likelihood of
+   common failures, how to respond to failures, and how to mitigate damages
+   from failures. Questions include: How do we make the system more
+   resilient to failures? What should the system do if a particular failure
+   occurs?
+4. **Security.** Modern software systems are almost always manipulating
+   user-input data somehow. That manipulation may involve transferring such
+   data from one point to another. And where there's data movement, there's
+   a security risk. As such, software architects must consider questions
+   like: How should the system transfer this data? What should the system
+   do with accumulated garbage? How should the system dispose of data? The
+   security consideration has grown particularly significant in recent
+   years, given the current trend of increasingly stricter privacy laws.
+5. **Deployment.**
+6. technology stacks

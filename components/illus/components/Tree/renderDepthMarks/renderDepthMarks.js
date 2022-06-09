@@ -1,5 +1,5 @@
 export const renderDepthMarks = (selection, root, radius) => {
-	const DepthNums = selection.append("g");
+	const DepthNums = selection.append("g").attr('class', "treeDepthMark");
 	DepthNums.selectAll("text")
 		.data(root.descendants())
 		.enter()

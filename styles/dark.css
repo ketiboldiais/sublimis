@@ -2,7 +2,9 @@
 	--red: rgb(255, 112, 112);
 	--darkRed: rgb(255, 0, 0);
 	--lightGreen: rgb(138, 237, 138);
+	--green: lime;
 	--lightBlue: rgb(112, 255, 234);
+	--blue: rgb(0, 255, 255);
 	--black: rgb(26, 26, 26);
 	--white: white;
 	--lightGrey: rgb(165, 165, 165);
@@ -12,7 +14,7 @@
 	--orange: rgb(245, 168, 2);
 
 	/* Core Colors */
-	--background-color: rgb(49, 49, 49);
+	--background-color: rgb(42, 42, 42);
 	--text-color: rgb(220, 220, 220);
 	--nav-content-background-color: rgb(14, 31, 68);
 
@@ -55,6 +57,21 @@
 		--tree-edge-color: var(--red);
 		--tree-node-fill-color: var(--background-color);
 		--tree-text-color: var(--red);
+		--tree-annotation-color: var(--text-color);
+		--tree-height-color: var(--text-color);
+		--tree-depth-color: var(--text-color);
+		--tree-level-color: var(--text-color);
+		--tree-balance-factor-color: var(--text-color);
+		--tree-imbalance-factor-color: var(--red);
+		--tree-balance-factor-color: var(--green);
+		--tree-node-mark-fill: var(--background-color);
+		--tree-node-mark-stroke: var(--blue);
+		--tree-node-mark-text: var(--blue);
+	
+	/* MTrees */
+		--mtree-edge-color: cyan;
+		--mtree-node-fill-color: var(--background-color);
+		--mtree-text-color: cyan;
 
 	/* sequences */
 		--sequenceElementFill: var(--black);
@@ -111,5 +128,15 @@
 	/* Parse Tree */
 		--parseTreeEdgeColor: var(--red);
 		--parseTreeTextColor: var(--text-color);
-		
+	/* Dot Plot */
+		--dotPlotCircleFill: var(--background-color);
+		--dotPlotCircleStroke: var(--red);
+		--dotPlotAxisColor: var(--red);
+
+	/* Plot  */
+		--point-fill-color: var(--blue);
+		--point-stroke-color: var(--blue);
+	/* Flow */
+		--flow-stroke-color: var(--lightBlue);
+		--flow-fill-color: var(--background-color);		
 }

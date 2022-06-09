@@ -1,0 +1,182 @@
+import { DotPlot } from "@illus/DotPlot";
+
+# Foundational Definitions & Concepts
+
+1. [Population](#population)
+   1. [Samples](#samples)
+   2. [Statistics](#statistics)
+   3. [Parameters](#parameters)
+   4. [Representative Samples](#representative-samples)
+   5. [Variables & Data](#variables--data)
+2. [Categories of Data](#categories-of-data)
+   1. [Discrete & Continuous Data](#discrete--continuous-data)
+   2. [Random Sampling](#random-sampling)
+      1. [Simple Random Sampling](#simple-random-sampling)
+      2. [Stratified Sampling](#stratified-sampling)
+
+Statistics is the study, collection, analysis, interpretation, and
+presentation of data. For example, consider the following _dot plot_:
+
+<DotPlot
+	data={[5, 5.5, 6, 6, 6, 6.5, 6.5, 6.5, 6.5, 7, 7, 8, 8, 9, 12]}
+	xMin={3}
+	xMax={13}
+	xLabel={"\\text{hours of sleep}"}
+	labelOffsetY={5}
+	labelOffsetX={10}
+	labelFontSize={0.6}
+	marginLeft={10}
+	id={"dotPlot1"}
+/>
+
+This plot visualizes the results of some survey on the hours of sleep the
+respondents are getting. Does this tell us that most people are getting
+about 6.5 hours of sleep? Does it tell us that 8 hours, as commonly
+recommended, isn't all that common? That anything beyond 12 or less than 6
+is "rare?" These are the kinds of questions that statistics answers.
+
+There are two tasks usually done in statistics:
+
+1. Organizing and summarizing data. The methods for accomplishing this task
+   are collectively called **descriptive statistics**.
+2. Drawing conclusions from data. The methods for accomplishing this task
+   are collectively called **inferential statistics**.
+
+With this introduction, let's define some basic terms in statistics.
+
+## Population
+
+In statistics, data is generally collected from some **population**. A
+population is a set — a collection of entities or objects. The members of
+this set might be people, companies, animals, dollars, and so on.
+
+### Samples
+
+Some populations are so large that we can't possibly collect data from
+every single member of the population. For example, it's infeasible to
+collect data from every single voter in the United States. Because of these
+limitations, we instead select a **sample** of the population. A sample is
+a subset of the larger population.
+
+### Statistics
+
+From the sample data, we can calculate one or more **statistics** — some
+number representing a property of the sample. For example, from a survey of
+a sample of college students, we might calculate the average grade point
+average. Say that average is 3.5. The number 3.5 is a statistic — it's a
+number that represents a property of the sample; namely, the average GPA.
+
+### Parameters
+
+All statistics are estimates of a **parameter** of the population. A
+parameter is a property of the entire population. For example, the average
+GPA calculated from the preceding example is an estimate of the average GPA
+for _all_ college students.
+
+### Representative Samples
+
+Because all statistics are estimates of some parameter, a principal task in
+statistics is answering the question: How accurate is this statistic in
+estimating the parameter? Simply put, a statistic's accuracy depends on
+whether the sample is a **representative sample**. A sample is considered
+representative only if it contains the population's characteristics. For
+example, if we wanted to know the average GPA for all biology majors, then
+we should be surveying biology majors rather than just any major.
+
+### Variables & Data
+
+As mentioned earlier, populations have characteristics. Some of those
+characteristics can be determined — e.g., how tall the population member
+is, where the population member lives, yes or no to a particular question,
+and so on. Each of these determinable characteristics is called a
+**variable**.
+
+In statistics, there are two kinds of variables:
+
+1. A **numerical variable** is a variable that can be defined as a value of
+   some unit. For example, weight in kilograms, height in meters, or time
+   in seconds.
+2. A **categorial variable** is a variable that places a person or object
+   into a category. For example, the categories of all 50 U.S. states, the
+   parties Democrat, Republican, or Independent, or the federal income tax
+   brackets.
+
+The values of these variables — numerical or categorical — are call
+**data**.
+
+## Categories of Data
+
+Generally, data falls into two categories:
+
+1. **Qualitative data** is data resulting from categorizing or describing
+   population characteristics. For example, from a survey of the
+   population, we might gather qualitiative data on the members' ethnic
+   groups or the car they drive. Qualitative data is also called
+   **categorical data**.
+2. **Quantitive data** is data resulting from counting or measuring
+   population characteristics. For example, from a survey of the
+   population, we might gather quantitative data like the members' weights,
+   yearly income, or the number of their dependents.
+
+### Discrete & Continuous Data
+
+Quantitative data consists of two further categories:
+
+1. **Quantitative discrete data (QDD)** is quantiative data that results
+   from counting. Because QDD results from counting, QDD ultimately
+   consists of integers. For example, the number of junk mail an individual
+   receives per day might be 0, 5, or 100, but not 4.8.
+2. **Quantiative continuous data (QCD)** is quantitative data that results
+   from measurement. As such, this data might take on _real number values_.
+   For example, the lengths of phone calls might be 2.4, 1.8, or 6.7
+   minutes.
+
+### Random Sampling
+
+Earlier, we mentioned how sampling is a principle concern of statistics. To
+obtain a representative sample, we follow a key definition:
+
+> _Definition_. Let ${x}$ be some sample of population ${P.}$ ${x}$ is a
+> representative sample of ${P}$ if, and only if, ${x}$ has the same
+> characteristics as ${P.}$
+
+To satisfy this definition, statisticians employ **random sampling**. In
+random sampling, a sample is chosen by ensuring that each member of the
+population has an equal chance of being selected. There are many ways to
+ensure this condition.
+
+#### Simple Random Sampling
+
+The easiest method is **simple random sampling**. With this approach, we
+select a **sample size** ${n,}$ and from the population ${P,}$ we select
+${n}$ members at random. How do we select at random? Well, if the members
+consisted of people, we could write their names on slips of paper, put the
+slips in a hat, and randomly pull from the hat.
+
+A more sophisticated approach:
+
+1. Select a sample ${S}$ comprising ${n}$ members from population ${P.}$
+2. For each member member of ${S,}$ assign a two digit number.
+3. Generate random numbers.
+4. For each of the random numbers, the matching two digit numbers is a
+   selection.
+
+For example, suppose there are 20 voters in some district, and we want a
+sample size of 10. For each of the voters, we assign the numbers 01, 02,
+03, ..., 20. We then generate random numbers with either a calculator or
+some other piece of software. The random number generator might yield
+0.9829, 0.325, 0.1582, 0.0683, and so on. For each of these randomly
+generated numbers, we read the first matching two digit number as a
+selection. For example, from the preceding list, we see 0.1582, so the
+voter assigned 15 is selected. We then see 0.06, so the voter assigned 06
+is selected.
+
+#### Stratified Sampling
+
+Another random sampling method is **stratified sampling**. The procedure is
+as follows:
+
+1. Divide the population into ${n}$ groups.[^strata]
+2. From each group, take a _proportionate_ number of members.
+
+[^strata]: These groups are called **strata** (singular **stratum**).

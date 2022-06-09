@@ -7,7 +7,7 @@
 	font-family: var(--sans_serif);
 }
 .page {
-	margin-top: 2rem;
+	margin: 6rem auto 5rem auto;
 	padding: 0.8rem 0.8rem 20rem 0.8rem;
 	overflow-x: hidden;
 }
@@ -24,36 +24,50 @@
 		margin: 1rem 0;
 		line-height: 1.2;
 	}
-
 /* Block Quotes */
 	.page blockquote {
 		padding: 0;
 		padding-left: 1em;
-		border-left: 3px solid var(--lightGrey);
+		border-left: 3px solid var(--heading-color);
+		color: var(--text-color);
 	}
 
-/* Heading Sizes */
+/* Heading Sizes and margins */
 	.page h1 {font-size: 2rem;}
-	.page h2 {font-size: 1.8rem;}
-	.page h3 {font-size: 1.6rem;}
-	.page h4 {font-size: 1.4rem;}
-	.page h5 {font-size: 1.2rem;}
-	.page h6 {font-size: 1.1rem;}
+	.page h2 {
+		font-size: 1.8rem;
+		margin: 2rem 0 -0.5rem 0;
+	}
+	.page h3 {
+		font-size: 1.6rem;
+		margin: 2rem 0 -0.5rem 0;
+	}
+	.page h4 {
+		font-size: 1.4rem;
+		margin: 2rem 0 -0.5rem 0;
+	}
+	.page h5 {
+		font-size: 1.2rem;
+		margin: 2rem 0 -0.5rem 0;
+	}
+	.page h6 {
+		font-size: 1.1rem;
+		margin: 2rem 0 -0.5rem 0;
+	}
 
 /* Heading 1 */
 	.page h1 {text-align: center;}
-
 /* Heading font family */
 /* All headings are the same font family in the master container */
 	.master h1, .master h2,
 	.master h3, .master h4,
 	.master h5, .master h6 {
-		font-family: var(--sans_serif);
+		font-weight: bold;
+		font-family: inherit;
+		/* font-family: var(--sans_serif); */
 		color: var(--heading-color);
-		margin: 2.5rem 0 0 0;
 	}
-	.master h1 { margin-bottom: 5rem; }
-
+	.master h1 { margin-bottom: 8rem; }
 /* Tables */
 	.page table {
 		width: 90%;
@@ -73,11 +87,14 @@
 		.page ol ol {list-style: lower-alpha;}
 
 	/* List Indents */
-		.page ol {padding: 0.5rem 1.2rem;}
+		.page ol {padding: 0 2rem;}
 		.page ul {margin: 0.5rem 1.2rem;}
 
 	/* List items */
-		.page li { padding: 0.5rem 0; }
+		.page li {
+			padding: 0.5rem 0;
+			line-height: 1.2;
+		}
 		/*
 		Remove margin from paragraphs in list tags. MDX inserts paragraph tags for some reason during compilation.
 		*/
@@ -89,18 +106,17 @@
 		font-size: 1.5rem;
 		color: var(--heading-color);
 		display: block;
-		margin-left: -1.5rem;
+		margin-left: -1rem;
 	}
 	.page h1 + ol {
 		list-style: decimal;
-		padding: 2% 2.2rem;
+		padding: 10px 2rem;
 		margin-top: 5%;
 		margin-bottom: 5%;
 		font-size: 0.85rem;
 		border-radius: 10px;
-		background-color: var(--box-background-color);
 	}
-	.page h1 + ol li {padding: 0; margin: 15px 0;}
+	.page h1 + ol li {padding: 0; margin: 10px 0;}
 	.page h1 + ol li ol {
 		padding-bottom: 0;
 		padding-top: 0;
@@ -111,23 +127,112 @@
 
 /* Superscripts (for footnotes) */
 	.page sup {
-		font-size: 0.6rem;
-		border: var(--call-border);
-		color: var(--call-text-color);
-		padding: 1px 5px 1px 5px;
-		vertical-align:middle;
-		position: relative;
-		bottom:1px;
-		left:2px;
-		border-radius: 50%;
+		font-size: 0.7rem;
+		vertical-align:top;
 	}
-
 /* Links */
+	.master a {
+		position: relative;
+		padding: 0;
+		text-decoration: none;
+		border-bottom: 1px solid var(--text-color);
+		color: inherit;
+	}
+	.master a { border-bottom: thin dotted var(--text-color); }
+	.master a:visited {
+		color: none;
+		outline: 0;
+	}
+	.master a:hover { cursor: pointer; }
+	.master a::before {
+		content: "";
+		position: absolute;
+		display: block;
+		width: 100%;
+		height: 1px;
+		bottom: 0;
+		left: 0;
+		background-color: var(--text-color);
+		transform: scaleX(0);
+		transition: transform 0.3s ease;
+	}
+	.master a:hover::before {
+		transform: scaleX(1);
+	}
 	.page a {color: inherit}
-
 /* Figure Caption */
 
 	.page figcaption {font-size: 0.7rem;}
 
 /* Inline code */
 	.master code {font-family: var(--mono); font-size: 0.85rem}
+/* Bold and Italics Tags */
+
+	.master strong {font-weight: bold;}
+	.master em {font-style: italic;}
+
+/* Demo Box */
+	.demo {
+		display: flex;
+		flex-direction: column;
+		border: solid thin lightgrey;
+		box-shadow: var(--box-shadow);
+		margin: 1% auto;
+	}
+	.buffer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-between;
+		margin: auto;
+	}
+	.buffer * {margin: 5px;}
+	/* Window buttons */
+	div.win {
+		display: block;
+		background-color: rgb(232, 232, 232);
+		width: 100%;
+	}
+	div.closeBtn,
+	div.minBtn,
+	div.maxBtn {
+		display: inline-block;
+		margin: 2px;
+		border-radius: 50%;
+	}
+	div.closeBtn {
+		background: #FF5D5B;
+		border: 5px solid #ff342a;
+	}
+
+	div.minBtn {
+		background: #FFBB39;
+		border: 5px solid #ffbb29;
+	}
+
+	div.maxBtn {
+		background: #00CD4E;
+		border: 5px solid #00ba41;
+	}
+
+	.demo button {
+		color: var(--text-color);
+		background-color: var(--background-color);
+		border: var(--box-shadow-border);
+		box-shadow: var(--box-shadow);
+	}
+	.demo button:active {
+		box-shadow: var(--box-shadow-pressed);
+	}
+	
+
+/* Media Queries */
+@media (min-width: 700px) {
+	.page {width:95%}
+	.page h1 + ol {
+		float: right;
+		width: 40%;
+		margin: 0 1%;
+		background-color: var(--box-background-color);
+	}
+}

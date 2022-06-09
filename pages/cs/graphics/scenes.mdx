@@ -1,0 +1,394 @@
+import { Cube } from "@illus/Cube";
+import { Canvas } from "@illus/Canvas";
+import { Fork } from "@components/Fork";
+
+export const Install = () => {
+	return (
+		<Fork
+			text="ThreeJS installation page"
+			url="https://threejs.org/docs/#manual/en/introduction/Installation"
+		/>
+	);
+};
+
+export const Geometries = () => {
+	return (
+		<Fork
+			text="geometries"
+			url="https://threejs.org/docs/#api/en/geometries/BoxGeometry"
+		/>
+	);
+};
+
+export const Materials = () => {
+	return (
+		<Fork
+			text="materials"
+			url="https://threejs.org/docs/#api/en/materials/LineBasicMaterial"
+		/>
+	);
+};
+
+export const Cameras = () => {
+	return (
+		<Fork
+			text="cameras"
+			url="https://threejs.org/docs/#api/en/cameras/ArrayCamera"
+		/>
+	);
+};
+
+# Scenes
+
+<Cube/>
+
+To install ThreeJS, see the <Install/>. It's recommended to use ThreeJS via
+Webpack. With the ThreeJS library available, we have access to a variable
+called `THREE`. ThreeJS is structured with classes, and most of these
+classes are accessible by importing the three module as named import (in
+these materials we'll use the name`THREE`).
+
+To actually display ThreeJS renderings, we must have some container that
+houses all of the renderings. This is called a **scene**. More generally,
+to display renderings, we need, at a minimum, the following:
+
+- A scene
+- An object
+- A camera
+- A renderer
+
+The scene is akin to a movie set. It's where all of the objects, models,
+cameras, lights, and more are placed. After we place everything we need in
+that scene, we ask ThreeJS to render the scene. To create a scene, we write
+the following:
+
+```javascript
+const scene = new THREE.Scene();
+```
+
+Writing the above, we've instantiated a scene. We can then place an
+_object_ in that scene. An object is any geometric object, or more
+generally, whatever it is what we want to render. It might be a cube, a
+sphere, a model for a building, person, video game character, etc. For now,
+we'll start with a basic cube.
+
+An object is really an abstract term for a **mesh**. A mesh is a
+combination of two things: (1) a **geometry**, and (2) a **material**. We
+can think of a geometry as defining the object's boundaries in space (i.e.,
+it's shape), and the material as defining how the object looks (i.e., it's
+colors). More accurately, the geometry is an abstraction for writing the
+instruction establishing the vertices discussed earlier. ThreeJS provides
+numerous <Geometries/> and <Materials/> and . For our humble cube, we will
+use the ThreeJS properties `BoxGeometry` and `MeshBasicMaterial`:
+
+```javascript
+const scene = new THREE.Scene();
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: "red" });
+```
+
+The values (1, 1, 1) can be interpreted as any unit &mdash; pixels,
+kilometers, meters, etc. It's entirely up to us how we interpret those
+units. However, once we establish an interpretation, it's imperative that
+we use that interpretation consistently. This is because
+&#8220;units&#8221; in ThreeJS come down to proportions. If we interpret
+the cube as having a length, width, and height of 1 meter, respectively,
+then we must use that interpretation when we place other objects in
+relation to the cube.
+
+For the material, notice that we passed an object. In later sections, we'll
+see that materials can easily increase in complexity. And as we know, we
+want to manage increased complexity with various data structures. In this
+case, we use an object. For `color` property, we used a named color. We can
+also use hexadecimal, RGB, and HSL values. Hexadecimal is the more common
+color format, and we can write hexadecimal values directly:
+
+```javascript
+const scene = new THREE.Scene();
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+```
+
+With the geometry and material initialized, we can now initialize the mesh:
+
+```javascript
+const scene = new THREE.Scene();
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const mesh = new THREE.Mesh(geometry, material);
+```
+
+We now have a mesh. To see this mesh, however, we must add it to the scene:
+
+```javascript
+const scene = new THREE.Scene();
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
+```
+
+We now need a camera. Without a camera, we have no way of seeing what's in
+the scene. ThreeJS provides many kinds of <Cameras />. For now, we will use
+a camera called `PerspectiveCamera`:
+
+```javascript
+const scene = new THREE.Scene();
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
+const camera = new THREE.PerspectiveCamera();
+```
+
+Above, we initialized a new perspective camera called `camera`. The
+perspective camera is designed to mimic the way the human eye sees. To get
+the camera to work, we must provide the constructor a few parameters:
+
+```rust
+new THREE.PerspectiveCamera(fov, aspect, near, far)
+```
+
+Let's cover these parameters. First, the ${fov}$ parameter
+(&#8220;Field-of-view&#8221;) sets the vertical vision angle &mdash; how
+much we can see up and down. This might seem odd, as the intuitive response
+is that our field of view is often measured in terms of the horizontal
+visual angle (i.e., our peripheral vision). The game development community
+(often at the forefront of computer graphics), however, has found that both
+development and user experience is much more intuitive when working with
+vertical visual angles.
+
+With a larger field of view, we see everything everywhere, but the things
+we see appear distorted. With a smaller field of view, we see things as if
+we're peering through a scope. There are less things visible, but the
+things that are visible are proportionate and close.
+
+Using the above information, we now write:
+
+```javascript
+const scene = new THREE.Scene();
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
+const camera = new THREE.PerspectiveCamera(75);
+```
+
+The second parameter, ${asp}$, establishes the aspect ratio. This is simply
+the width of the renderer divided by its height. We will see the renderer
+shortly, but for now, we can think of the width and height as the
+dimensions of the renderer. It's considered best practice to initialize the
+dimension values in an object, then refer to the values via object
+notation:
+
+```javascript
+const scene = new THREE.Scene();
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
+const sizes = {
+	width: 800;
+	height: 800;
+}
+const camera = new THREE.PerspectiveCamera(
+	75,
+	sizes.width / sizes.height
+)
+```
+
+We will examine the other parameters in later sections. But with just the
+two parameters above, we now add the camera to the scene:
+
+```javascript
+const scene = new THREE.Scene();
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
+const sizes = {
+	width: 800;
+	height: 800;
+}
+const camera = new THREE.PerspectiveCamera(
+	75,
+	sizes.width / sizes.height
+)
+scene.add(camera);
+```
+
+The final step is to _render_ the scene. This is what sets off the process
+for drawing everything we've written. The function that performs the render
+is called a **renderer**. When the renderer is called, the scene is
+rendered from the camera's point of view, and the result is returned. That
+result is then drawn into the HTML element selected to display the result.
+In our case, we will use a `canvas` element. We can either write the
+`canvas` element directly in our HTML document, or have ThreeJS do it for
+us. To simplify things, we'll write the `canvas` element directly:
+
+```html
+<canvas></canvas>
+```
+
+Ignore the class attribute `"webgl"` for now. We will use it in a later
+section. The main point is that there's a `canvas` element inside the HTML
+document we're working with. The HTML `canvas` element itself is just an
+element that allows us to draw objects in via JavaScript. By calling the
+renderer, ThreeJS will use WebGL to draw the render inside the `canvas`.
+
+That said, before we add the renderer, we must first create it. Like
+`material` a renderer can easily grow complex. Accordingly, we use an
+object containing several properties. One of those properties is the
+`canvas` element. Thus, we must target the `canvas` element and store it as
+a property:
+
+```javascript
+const scene = new THREE.Scene();
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
+const sizes = {
+	width: 800;
+	height: 800;
+}
+const camera = new THREE.PerspectiveCamera(
+	75,
+	sizes.width / sizes.height
+)
+scene.add(camera);
+const canvas = document.querySelector('.webgl');
+const renderer = new THREE.WebGLRenderer({
+	canvas: canvas;
+});
+```
+
+If we refresh the HTML page, we'd see a black rectangle, with no cube in
+sight:
+
+
+
+To see our cube, we must first give the renderer a size:
+
+```javascript
+const scene = new THREE.Scene();
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
+const sizes = {
+	width: 800;
+	height: 800;
+}
+const camera = new THREE.PerspectiveCamera(
+	75,
+	sizes.width / sizes.height
+)
+scene.add(camera);
+const canvas = document.querySelector('.webgl');
+const renderer = new THREE.WebGLRenderer({
+	canvas: canvas;
+});
+renderer.setSize(sizes.width, sizes.height);
+```
+
+When we resize the renderer, we resize the canvas. This is why we see the
+size of the black rectangle increase. Next, we must call the `render()`
+function:
+
+```javascript
+const scene = new THREE.Scene();
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
+const sizes = {
+	width: 800;
+	height: 800;
+}
+const camera = new THREE.PerspectiveCamera(
+	75,
+	sizes.width / sizes.height
+)
+scene.add(camera);
+const canvas = document.querySelector('.webgl');
+const renderer = new THREE.WebGLRenderer({
+	canvas: canvas;
+});
+renderer.setSize(sizes.width, sizes.height);
+renderer.render(scene, camera);
+```
+
+Even with the code above, we still don't see a cube. Why? Because the
+camera is actually _inside_ the cube. We have to move the camera away from
+the cube. To move the camera &mdash; and really, to move any object &mdash;
+we use the following properties (where ${obj}$ is an object):
+
+1. `obj.position`
+   - The `position` property is an object literal with three properties:
+     `x`, `y`, and `z.` Each of these properties represents the ${x}$-,
+     ${y}$-, and ${z}$-axis values respectively.
+   - Note that axis interpretation varies widely across libraries. In
+     ThreeJS, the ${x}$-axis is interpreted as left-right movement, the
+     ${y}$-axis as up-down movement, and the ${z}$-axis is forward-backward
+     movement.
+2. `obj.rotation`
+   - The `rotation` property represents an object's local rotation, in
+     radians.
+3. `obj.scale`
+   - The `scale` property represents an object's local scale.
+
+Knowing these properties, we want to move the camera backwards (i.e.,
+towards us):
+
+```javascript
+const scene = new THREE.Scene();
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
+const sizes = {
+	width: 800;
+	height: 800;
+}
+const camera = new THREE.PerspectiveCamera(
+	75,
+	sizes.width / sizes.height
+)
+camera.position.z = 3; // move the camera
+scene.add(camera);
+const canvas = document.querySelector('.webgl');
+const renderer = new THREE.WebGLRenderer({
+	canvas: canvas;
+});
+renderer.setSize(sizes.width, sizes.height);
+renderer.render(scene, camera);
+```
+
+We should now see a red square. It is actually a cube, we just need to move
+the camera to the right:
+
+```javascript
+const scene = new THREE.Scene();
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
+const sizes = {
+	width: 800;
+	height: 800;
+}
+const camera = new THREE.PerspectiveCamera(
+	75,
+	sizes.width / sizes.height
+)
+camera.position.z = 3; // move the camera back
+camera.position.x = 2; // move the camera right
+scene.add(camera);
+const canvas = document.querySelector('.webgl');
+const renderer = new THREE.WebGLRenderer({
+	canvas: canvas;
+});
+renderer.setSize(sizes.width, sizes.height);
+renderer.render(scene, camera);
+```

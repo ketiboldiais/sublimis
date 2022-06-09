@@ -137,6 +137,23 @@ And if ${C \in \R^+,}$ the graph shifts to the left:
 
 ## Stretching
 
+Multiplying the absolute value term, ${\lvert x \rvert,}$ stretches the
+graph:
+
+<Plot
+	functions={[
+		{ f: (x) => Math.abs(x), color: "var(--red)" },
+		{ f: (x) => 2 * Math.abs(x), color: "var(--blue)" },
+		{ f: (x) => 0.5 * Math.abs(x), color: "var(--green)" },
+	]}
+	geo={[
+		{type:"label", id: "f(x) =\\lvert x \\rvert", fill: "var(--red)", xy:[3,-1],  w:60},
+		{type:"label", id: "f(x) =2\\lvert x \\rvert", fill: "var(--blue)", xy:[3,-3], w:60},
+		{type:"label", id: "f(x) =\\dfrac{1}{2}\\lvert x \\rvert", fill: "var(--green)", xy:[3,-5], w:60},
+	]}
+	id={"abs_stretching"}
+/>
+
 ## Reciprocal Absolute Value
 
 The reciprocal of the absolute value function,

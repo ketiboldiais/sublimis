@@ -30,9 +30,14 @@ export const Stack = ({
 	height = data.length * 10 + 70,
 	frameWidth = 70,
 	frameHeight = 20,
-	containerWidth,
+	scale=100,
+	containerWidth=scale,
 	containerHeight,
-	margins = [10, 10, 10, 10],
+	marginTop=10,
+	marginRight=10,
+	marginBottom=10,
+	marginLeft=10,
+	margins = [marginTop, marginRight, marginBottom, marginLeft],
 }) => {
 	const stackFigure = useRef();
 	const _svg = svg(width, height, margins);

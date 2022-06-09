@@ -1,11 +1,13 @@
 import React, { useRef, useEffect } from "react";
-import { isObjectLiteral } from "../utils/isObjectLiteral/isObjectLiteral";
-import { translate } from "../utils/translate/translate";
-import { svg } from "../utils/svg/svg";
-import { setValue } from "../utils/setValue/setValue";
-import { getArrayMax } from "../utils/getArrayMax/getArrayMax";
-import { getArrayMin } from "../utils/getArrayMin/getArrayMin";
-import { getPropertyValues } from "../utils/getPropertyValues/getPropertyValues";
+import {
+	isObjectLiteral,
+	translate,
+	svg,
+	setValue,
+	getArrayMax,
+	getArrayMin,
+	getPropertyValues,
+} from "../utils";
 import { Base } from "../base/Base";
 import * as d3 from "d3";
 
@@ -48,12 +50,10 @@ export const BarPlot = ({
 	containerHeight,
 	margins = [70, 70, 70, 70],
 }) => {
-	const BarPlotFigure = useRef();
+	const ref = useRef();
 	const _data = formatData(data);
 	const _svg = svg(width, height, margins);
 
-	const _xMin = setValue(xMin, getArrayMin(getPropertyValues(_data, "x")));
-	const _xMax = setValue(xMax, getArrayMax(getPropertyValues(_data, "x")));
 	const _yMin = setValue(getArrayMin(getPropertyValues(_data, "y")));
 	const _yMax = setValue(getArrayMax(getPropertyValues(_data, "y")));
 
@@ -73,16 +73,15 @@ export const BarPlot = ({
 	const yAxis = d3.axisLeft().scale(yScale);
 
 	useEffect(() => {
-		const BarPlot = d3
-			.select(BarPlotFigure.current)
-			.select("g.svgElement");
+		const BarPlot = d3.select(ref.current).select("g.svgElement");
 
 		const bars = BarPlot.selectAll("rectangles")
 			.data(_data)
 			.enter()
 			.append("g")
 			.attr("class", "bar-plot-bar");
-		const rectangles = bars
+		// bar rectangles
+		bars
 			.append("rect")
 			.attr("fill", (d) => color(d.y))
 			.attr("x", (d) => xScale(d.x))
@@ -95,7 +94,8 @@ export const BarPlot = ({
 			.attr("transform", translate(0, _svg.height));
 		const yAxisGroup = BarPlot.append("g").attr("class", "y-axis");
 
-		const xAxisRendered = xAxisGroup.call(xAxis);
+		// render x-axis
+		xAxisGroup.call(xAxis);
 		if (xTickRotate) {
 			xAxisGroup
 				.selectAll(".tick")
@@ -104,7 +104,8 @@ export const BarPlot = ({
 				.attr("transform", `rotate(${xTickRotate})`)
 				.attr("dx", "0.6em");
 		}
-		const yAxisRendered = yAxisGroup.call(yAxis);
+		// render y-axis
+		yAxisGroup.call(yAxis);
 		// add x-label if provided by user
 		if (xAxisLabel) {
 			const labelXPosition = _svg.width + margins[1] / 4;
@@ -134,7 +135,7 @@ export const BarPlot = ({
 	});
 	return (
 		<Base
-			id={BarPlotFigure}
+			id={ref}
 			width={width}
 			height={height}
 			containerWidth={containerWidth}

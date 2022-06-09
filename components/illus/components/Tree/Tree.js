@@ -11,20 +11,23 @@ import {
 	className,
 	svg,
 	setValue,
-	insertArrowDefinitions,
 	setClassName,
+	translate,
 } from "../utils";
 
 export const Tree = ({
 	data = [],
+	label = "",
 	width = 250,
+	scale = 100,
 	height = 140,
-	containerWidth,
+	tighten = 0,
+	containerWidth = scale,
 	containerHeight,
-	margins = [20, 20, 20, 20],
-	fontFamily = "system-ui",
+	margins = [20, 20 + tighten, 20, 20 + tighten],
 	edgeLength = null,
-	isDirected = false,
+	labelOffsetX = 0,
+	labelOffsetY = 0,
 	nodeRadius = 7,
 	nodeColor = "#ffffff",
 	edgeColor = "#000000",
@@ -62,20 +65,6 @@ export const Tree = ({
 		const canvas = d3.select(TreeFigure.current).select("g.svgElement");
 		const tree = canvas.append("g").attr("class", className.tree.canvas);
 
-		// if tree is directed, define arrows
-		if (isDirected) {
-			insertArrowDefinitions(
-				canvas,
-				className.tree.arrowURL,
-				25,
-				0,
-				5,
-				5,
-				"auto",
-				edgeColor,
-			);
-		}
-
 		// links
 		const links = tree.append("g").attr("class", className.tree.edgeGroup);
 		links
@@ -84,7 +73,6 @@ export const Tree = ({
 			.enter()
 			.append("line")
 			.attr("stroke", edgeColor)
-			.attr("foo", (d) => console.log(d))
 			.attr("x1", (d) => d.source.x)
 			.attr("y1", (d) => d.source.y)
 			.attr("x2", (d) => d.target.x)
@@ -93,8 +81,7 @@ export const Tree = ({
 				d.source.data.display || d.target.data.display
 					? "none"
 					: "initial",
-			)
-			.attr("marker-end", `url(#${className.tree.arrowURL})`);
+			);
 
 		const nodeGroup = tree
 			.append("g")
@@ -148,7 +135,6 @@ export const Tree = ({
 			.filter((d) => !d.data.display)
 			.filter((d) => !d.data.label)
 			.append("text")
-			.attr("font-family", fontFamily)
 			.attr("font-size", nodeTextFontSize)
 			.attr("x", (d) => d.x)
 			.attr("y", (d) => {
@@ -189,6 +175,22 @@ export const Tree = ({
 				balancedTextColor,
 				imbalancedTextColor,
 			);
+		if (label) {
+			tree
+				.append("g")
+				.attr("class", "treeLabel")
+				.attr(
+					"transform",
+					translate(
+						_svg.width / 2 + labelOffsetX,
+						_svg.height + labelOffsetY,
+					),
+				)
+				.attr("font-size", levelFontSize + 2)
+				.attr("text-anchor", "middle")
+				.append("text")
+				.text(label);
+		}
 	};
 
 	useEffect(() => {

@@ -1,0 +1,49 @@
+# Computer Graphics
+
+This volume provides notes on computer graphics. To illustrate key
+concepts, we use ThreeJS—a JavaScript library that enables developers to
+create 3D visualizations and experiences for the web. We can think of it as
+an abstraction of **WebGL** ("Web Graphics Library").[^lib1]
+
+WebGL itself is a JavaScript API that renders triangles. Yes—impressive 3D
+graphics in websites are done via triangles. These triangle renderings are
+displayed in some HTML element (most commonly, a `canvas`). 3D effects
+result from the fact that these triangles are rendered at breathtaking
+speeds. These speeds are possible because WebGL uses the host machine's GPU
+(Graphic Processing Unit). The advantage to using the GPU is because of
+parallel computation. As we know, JavaScript is a single-threaded language.
+And as a single-threaded language, the vast majority of computations—done
+by the CPU—can only be done one a time. Those computations are fast, but
+with graphics, visualizations are better rendered with parallel
+computations—we want to render a gargantuan amount of triangles all at
+once. For JavaScript, this is only feasible through the GPU.
+
+[^lib1]:
+    ThreeJS can also work with SVG and CSS, but because it's geared
+    primarily at abstracting WebGL, SVG and CSS functionalities remain
+    limited.
+
+The idea behind rendering triangles is that we position three vertices, and
+state that there are edges connecting them. These instructions are written
+in **shaders**, a topic we will discuss in later sections, and are
+forwarded to the GPU. The GPU then processes these instructions and
+displays particular colors to the individual pixels bounded by the vertices
+and edges.
+
+This is a remarkably fast process. By manipulating the positions of various
+vertices all at once—which in turn changes the colors of the individual
+pixels all at once—we can create the effect of a 3D dimensional object. The
+entities that perform these manipulations are specified functions.
+
+A _camera_, for example, is one such function. By manipulating the vertices
+in a particular way, we create the effect of seeing the 3D object from
+different angles, when in reality, we're just changing the position values
+for many vertices all at once.
+
+A fair question we might have is why not just use WebGL directly then?
+Indeed, we can. Many projects in _haute graphique_—very high-end graphics
+work—are written directly in WebGL for better control. And with better
+control, the programmer can optimize for performance as needed. The
+tradeoff, however, is that WebGL is painfully difficult to write. Drawing a
+single triangle on an HTML `canvas` element would take, at a minimum, a
+hundred lines of code.

@@ -7,10 +7,12 @@ export const renderBalanceFactors = (
 	balanceFactorFontSize,
 	balancedTextColor,
 	imbalancedTextColor,
+	offsetX=0,
+	offsetY=0,
 ) => {
 	const bfNums = selection
 		.append("g")
-		.attr("class", "tree-balance-factor-text");
+		.attr("class", "treeBalanceFactorMark");
 	const bfNumText = bfNums
 		.selectAll("text")
 		.data(data)
@@ -22,13 +24,13 @@ export const renderBalanceFactors = (
 	attrs(bfNumText, {
 		class: (d) => {
 			if (Math.abs(calculateBalanceFactor(d)) > 1) {
-				return `balance-factor-text imbalanced`;
+				return `balanceFactorImbalanced`;
 			} else {
-				return `balance-factor-text balanced`;
+				return `balanceFactorBalanced`;
 			}
 		},
-		x: (d) => d.x,
-		y: (d) => d.y,
+		x: (d) => d.x - offsetX,
+		y: (d) => d.y - offsetY,
 		dy: -radius - radius / 2,
 		"text-anchor": "middle",
 		fill: (d) => {

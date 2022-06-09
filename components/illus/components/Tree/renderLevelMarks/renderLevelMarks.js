@@ -9,6 +9,7 @@ export const renderLevelMarks = (
 ) => {
 	const levelNums = selection
 		.append("g")
+		.attr('class', "treeLevelMarks")
 		.selectAll("text")
 		.data(nodesByLevel(root.descendants()))
 		.enter();
@@ -22,7 +23,6 @@ export const renderLevelMarks = (
 		.text((d) => d.depth + 1);
 	levelNums
 		.append("line")
-		.attr("class", "level-line")
 		.attr("x1", (d) => -svg.width + svg.width + 10)
 		.attr("y1", (d) => d.y)
 		.attr("x2", (d) => svg.width)

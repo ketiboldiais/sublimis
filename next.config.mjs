@@ -8,7 +8,7 @@ import rehypeSlug from "rehype-slug";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	reactStrictMode: true,
+	reactStrictMode: false,
 	pageExtensions: ["js", "jsx", "ts", "tsx", "md", "mdx"],
 	images: {
 		domains: ["res.cloudinary.com"],

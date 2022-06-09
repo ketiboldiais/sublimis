@@ -5,7 +5,7 @@
 @import url("./light.css");
 
 pre {
-  width: auto;
+  width: 100%;
   height: auto;
 	font-family: "Fira Code";
   text-align: left;
@@ -39,6 +39,20 @@ pre.language-java {background-color: var(--darkBlue);}
 code.language-java .token.keyword { color: var(--red); }
 code.language-java .token.comment { color: var(--lightgrey); }
 code.language-java .token.class-name { color: var(--lavender); }
+
+pre.language-javascript {background-color: var(--darkBlue);}
+code.language-javascript .token.keyword { color: var(--red); }
+code.language-javascript .token.comment { color: var(--lightgrey); }
+code.language-javascript .token.class-name { color: var(--lavender); }
+
+pre.language-jsx {background-color: rgb(1, 47, 75);}
+code.language-jsx .token.keyword { color: var(--red); }
+code.language-jsx .token.operator { color: lime; }
+code.language-jsx .token.comment { color: var(--lightgrey); }
+code.language-jsx .token.class-name { color: var(--lavender); }
+code.language-jsx .token.function {color: var(--gold);}
+code.language-jsx .token.tag {color: var(--lavender);}
+code.language-jsx .token.plain-text {color: cyan;}
 
 pre.language-cpp {background-color: var(--black);}
 code.language-cpp .token.comment { color: var(--lightgrey); }

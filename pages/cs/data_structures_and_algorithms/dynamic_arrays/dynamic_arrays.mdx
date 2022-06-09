@@ -1,0 +1,193 @@
+import { Sequence } from "@illus/Sequence";
+import { Grid } from "@components/Grid/Grid";
+
+# Dynamic Arrays
+
+1. [Length Fields](#length-fields)
+2. [Indirection](#indirection)
+
+In languages like Java, static arrays are objects consisting of a numbered
+list of variables. Each of the variables inside the object can be one of
+two things:
+
+1. a primitive type, or
+2. a reference to an object
+
+As objects, to create an array, we must first create a reference to that
+array. For example, suppose we wanted to create an array consisting of the
+characters `b`, `l`, `u`, and `e`.
+
+To obtain such an array, we first create a reference:
+
+```java
+char[] C;
+```
+
+Writing the code above, we've now created a reference `C`, which will refer
+to an array of characters. Now, all the code above does is create a
+reference. Java knows it will refer to some array object of characters, but
+no such object exists yet. As such, we must create the array object we
+want, and bind it to the reference above:
+
+```java
+char[] C;
+C = new char[4];
+```
+
+Above, we've bound the reference to a new array object with a length of 4.
+This results in the following:
+
+<Sequence
+	data={["", "", "", ""]}
+	scale={20}
+	arrayPointers={[{ target: 0, text: "C" }]}
+/>
+
+We now have four _variables_ we can assign values to. For example, writing
+
+```java
+char[] C;
+C = new char[4];
+C[0] = 'b';
+```
+
+results in:
+
+<Sequence
+	data={["b", "", "", ""]}
+	scale={20}
+	arrayPointers={[{ target: 0, text: "C" }]}
+/>
+
+writing:
+
+```java
+char[] C;
+C = new char[4];
+C[0] = 'b';
+C[1] = 'l';
+C[2] = 'u';
+C[3] = 'e';
+```
+
+we get:
+
+<Sequence
+	data={["b", "l", "u", "e"]}
+	scale={20}
+	arrayPointers={[{ target: 0, text: "C" }]}
+/>
+
+However, the moment we write:
+
+```java
+char[] C;
+C = new char[4];
+C[0] = 'b';
+C[1] = 'l';
+C[2] = 'u';
+C[3] = 'e';
+C[4] = 's';
+```
+
+we get a runtime error. More specifically, we'll get an out-of-bounds
+exception. Why is it a runtime error? Because Java doesn't know how long
+the array is until runtime.
+
+## Length Fields
+
+In Java, every array object has a field called `length`. That field is
+immutable — we, as Java's users, cannot assign it a value. Thus, writing
+something like:
+
+```java
+C.length = 10;
+```
+
+will return a compile time error. This is because static arrays have a
+fixed length — that length cannot be changed. This is the tradeoff we have
+to take for constant time access.
+
+## Indirection
+
+One way to get around the fixed-size limitation of static arrays is to use
+a **dynamically-allocated array**, or **dynamic arrays** for short.
+Languages like C and C++ handle this well. Below is a comparison of
+declaring the two different arrays in C++ (the right a static array, the
+left dynamic):
+
+<Grid cols={2} colgap={"5px"}>
+
+```c
+int arr[100];
+```
+
+```c
+int* arr = new int[size];
+```
+
+</Grid>
+
+The idea behind the dynamic array: Rather than directly storing a reference
+to the array (as is the case with static arrays), we instead store a
+_pointer_ to the array. This technique is a form of **indirection**. For
+example, say we started with the following dynamic array:
+
+<Sequence
+	data={["", "", "", ""]}
+	scale={30}
+	arrayPointers={[{ target: 0, text: "ptr" }]}
+/>
+
+Above, we have a pointer `ptr` pointing to this array. Now suppose filled
+up the array:
+
+<Sequence
+	data={["a", "b", "c", "d"]}
+	scale={30}
+	arrayPointers={[{ target: 0, text: "ptr" }]}
+/>
+
+If we want to add a fifth element, `e`, we'd be out of luck with a static
+array. But, because we're using a dynamic array, we just have to allocate
+more space elsewhere in memory:
+
+<Grid cols={2}>
+
+<Sequence
+	data={["a", "b", "c", "d"]}
+	arrayPointers={[{ target: 0, text: "ptr" }]}
+	scale={50}
+/>
+
+<Sequence data={["", "", "", "", ""]} scale={60} />
+
+</Grid>
+
+copy over the contents of our original array:
+
+<Grid cols={2}>
+
+<Sequence
+	data={["a", "b", "c", "d"]}
+	arrayPointers={[{ target: 0, text: "ptr" }]}
+	scale={50}
+/>
+
+<Sequence data={["a", "b", "c", "d", ""]} scale={60} />
+
+</Grid>
+
+and change our pointer's pointee:
+
+<Grid cols={2}>
+
+<Sequence data={["a", "b", "c", "d"]} scale={50} />
+
+<Sequence
+	data={["a", "b", "c", "d", ""]}
+	arrayPointers={[{ target: 0, text: "ptr" }]}
+	scale={60}
+/>
+
+</Grid>

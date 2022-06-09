@@ -4,6 +4,7 @@ import { className } from "../utils/ClassNames";
 import { svg } from "../utils/svg/svg";
 import { Base } from "../base/Base";
 import * as d3 from "d3";
+import { insertArrowDefinitions, translate } from "../utils";
 
 const generateDataFromArray = (arr = []) => {
 	let data = [];
@@ -20,6 +21,7 @@ const generateDataFromArray = (arr = []) => {
 
 export const Sequence = ({
 	data = [1, 2, 3, 4, 5],
+	arrayPointers = [],
 	width = 0.574045 * data.length ** 2 + 22.878 * data.length + 45.8824,
 	height = 80,
 	scale = 100,
@@ -27,19 +29,21 @@ export const Sequence = ({
 	elementStrokeColor = "black",
 	elementFontSize = "1rem",
 	indexFontSize = "0.8rem",
-	margins = [20, 20, 20, 20],
+	marginTop = 20,
+	marginRight = 20,
+	marginBottom = 20,
+	marginLeft = 20,
+	margins = [marginTop, marginRight, marginBottom, marginLeft],
 	containerWidth = scale,
 	containerHeight,
 }) => {
+	if (arrayPointers) {
+		height = 100;
+		margins = [marginTop, marginRight, marginBottom * 2.5, marginLeft];
+	}
 	const sequenceFigure = useRef();
 	const svgDimensions = svg(width, height, margins);
 	const sequenceData = generateDataFromArray(data);
-
-	const yScale = d3
-		.scaleBand()
-		.domain(sequenceData)
-		.range([0, svgDimensions.height])
-		.paddingInner(0.1);
 
 	const xScale = d3
 		.scaleBand()
@@ -49,9 +53,20 @@ export const Sequence = ({
 
 	const renderSequence = () => {
 		// set up group
-		const sequence = d3
+		const canvas = d3
 			.select(sequenceFigure.current)
-			.select("g.svgElement")
+			.select("g.svgElement");
+		insertArrowDefinitions(
+			canvas,
+			"sequencePointerArrow",
+			5,
+			0,
+			5,
+			5,
+			"auto",
+			elementStrokeColor,
+		);
+		const sequence = canvas
 			.append("g")
 			.attr("class", className.sequence.canvas)
 			.selectAll("g.Rects")
@@ -70,6 +85,39 @@ export const Sequence = ({
 			.attr("stroke", elementStrokeColor)
 			.attr("width", xScale.bandwidth())
 			.attr("height", xScale.bandwidth());
+
+		if (arrayPointers) {
+			const pointers = canvas
+				.selectAll(".arrayPointers")
+				.data(arrayPointers)
+				.enter()
+				.append("g")
+				.attr("class", "sequencePointers")
+				.attr("transform", translate(0, svgDimensions.height * 2.6));
+			pointers
+				.append("text")
+				.attr(
+					"x",
+					(d) => d.target * xScale.bandwidth() + xScale.bandwidth() / 2,
+				)
+				.attr("text-anchor", "middle")
+				.attr("font-size", indexFontSize)
+				.text((d) => d.text);
+			pointers
+				.append("line")
+				.attr(
+					"x1",
+					(d) => d.target * xScale.bandwidth() + xScale.bandwidth() / 2,
+				)
+				.attr("y1", -margins[2] / 4)
+				.attr(
+					"x2",
+					(d) => d.target * xScale.bandwidth() + xScale.bandwidth() / 2,
+				)
+				.attr("y2", -margins[2] / 1.5)
+				.attr("stroke", elementStrokeColor)
+				.attr("marker-end", "url(#sequencePointerArrow)");
+		}
 
 		const dataLabels = sequence
 			.append("g")

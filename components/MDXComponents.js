@@ -5,11 +5,11 @@ import { Fig } from "./Fig";
 
 import Header from "./Header";
 const MDXComponents = {
-	a: (props) => (
-		<a href={props.href} target="_blank">
-			{props.children}
-		</a>
-	),
+	// a: (props) => (
+	// 	<a href={props.href} target="_blank">
+	// 		{props.children}
+	// 	</a>
+	// ),
 	img: (props) => (
 		<div>
 			<figure className={ImgStyles.fig}>

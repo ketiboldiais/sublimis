@@ -1,184 +1,334 @@
 /* Illus */
-	.illus {
-		display: flex;
-		justify-content: center;
-	}
+.illus {
+	display: flex;
+	justify-content: center;
+	overflow: visible;
+}
+/* .illus line { stroke: var(--text-color); } */
+.illus text {font-family: "Fira Mono";}
 /* Binary Tree Styles */
-	.binaryTreeEdgeGroup line {
-		stroke: var(--binary-tree-edge-color);
-	}
-	.binaryTreeNode circle {
-		fill: var(--binary-tree-node-fill-color);
-		stroke: var(--binary-tree-edge-color);
-	}
-	.binaryTreeTextGroup text {
-		fill: var(--binary-tree-text-color);
-	}
+.binaryTreeEdgeGroup line {
+	stroke: var(--binary-tree-edge-color);
+}
+.binaryTreeNode circle {
+	fill: var(--binary-tree-node-fill-color);
+	stroke: var(--binary-tree-edge-color);
+}
+.binaryTreeTextGroup text {
+	fill: var(--binary-tree-text-color);
+}
 /* Tree Styles */
-	.treeEdges line {
-		stroke: var(--tree-edge-color);
-	}
-	.treeNodes circle {
-		fill: var(--tree-node-fill-color);
-		stroke: var(--tree-edge-color);
-	}
-	.treeNodes text {
-		fill: var(--tree-text-color);
-	}
+.treeEdges line {
+	stroke: var(--tree-edge-color);
+}
+.treeNodes circle {
+	fill: var(--tree-node-fill-color);
+	stroke: var(--tree-edge-color);
+}
+.treeNodes text {
+	fill: var(--tree-text-color);
+}
+.treeAnnotations text {
+	fill: var(--tree-annotation-color);
+}
+.treeHeightMark text {fill: var(--tree-height-color);}
+.treeDepthMark text {fill: var(--tree-depth-color);}
+.balanceFactorImbalanced {fill: var(--tree-imbalance-factor-color)}
+.balanceFactorBalanced {fill: var(--tree-balance-factor-color)}
+.treeLabel text {fill: var(--text-color);}
+.treeNodes .mark circle {
+	fill: var(--tree-node-mark-fill);
+	stroke: var(--tree-node-mark-stroke);
+}
+.treeNodes .mark text { fill: var(--tree-node-mark-text); }
+/* MWayTree */
+.MTreeEdges line {
+	stroke: var(--mtree-edge-color);
+}
+.MTreeNode rect {
+	fill: var(--mtree-node-fill-color);
+	stroke: var(--mtree-edge-color);
+}
+.MTreeNode text {
+	fill: var(--mtree-text-color);
+}
+#MTreeArrow {fill: var(--mtree-edge-color)}
 /* Sequence Styles */
-	.sequenceElement rect {
-		fill: var(--sequenceElementFill);
-		stroke: var(--sequenceElementStroke);
-	}
-	.sequenceElementText text {
-		fill: var(--sequenceElementTextColor);
-	}
-	.sequenceAnnotationText text {
-		fill: var(--sequenceElementTextColor);
-	}
-	.sequenceIndexText text {
-		fill: var(--sequenceElementIndexColor);
-	};
+
+.sequenceElement rect {
+	fill: var(--sequenceElementFill);
+	stroke: var(--sequenceElementStroke);
+}
+.sequenceElementText text {
+	fill: var(--sequenceElementTextColor);
+}
+.sequenceAnnotationText text {
+	fill: var(--sequenceElementTextColor);
+}
+.sequenceIndexText text {
+	fill: var(--sequenceElementIndexColor);
+	font-family: "Noto Serif";
+}
+.sequencePointers line {
+	stroke: var(--sequenceElementStroke);
+}
+.Sequence marker {
+	fill: var(--sequenceElementStroke);
+}
+.sequencePointers text {
+	fill: var(--sequenceElementStroke);
+}
+
 /* Matrix Styles */
-	.matrix { }
-	.matrixElement rect {
-		fill: var(--matrixElementFill);
-		stroke: var(--matrixElementStroke);
-	}
-	.matrixElement text {
-		fill: var(--matrixElementTextColor);
-	}
-	.matrixIndices text {
-		fill: var(--matrixIndexColor);
-	}
-	.matrix .mark rect { fill: var(--matrixFocusFillColor); }
-	.matrix .mark text { fill: var(--matrixFocusTextColor); }
+.matrix { }
+.matrixElement rect {
+	fill: var(--matrixElementFill);
+	stroke: var(--matrixElementStroke);
+}
+.matrixElement text {
+	fill: var(--matrixElementTextColor);
+}
+.matrixIndices text {
+	fill: var(--matrixIndexColor);
+	font-family: "Noto Serif";
+}
+.matrix .mark rect { fill: var(--matrixFocusFillColor); }
+.matrix .mark text { fill: var(--matrixFocusTextColor); }
 
 /* Linked List Styles */
-	.linkedListDataField rect {
-		fill: var(--linkedListDataFieldFill);
-		stroke: var(--text-color);
-	}
-	.linkedListDataField text { fill: var(--linkedListDataFieldTextColor); }
-	.linkedListNextField rect {
-		fill: var(--linkedListNextFieldFill);
-		stroke: var(--text-color);
-	}
-	.linkedListLink line {stroke: var(--linkedListLinkColor)}
-	#linkedListArrow {fill: var(--linkedListLinkColor)}
-	.linkedListLink circle {fill: var(--linkedListLinkColor)}
-	.linkedListIndex text {fill: var(--linkedListIndexColor);}
-	.linkedListAnnotation text {fill: var(--linkedListLinkColor);}
+.linkedListDataField rect {
+	fill: var(--linkedListDataFieldFill);
+	stroke: var(--text-color);
+}
+.linkedListDataField text { fill: var(--linkedListDataFieldTextColor); }
+.linkedListNextField rect {
+	fill: var(--linkedListNextFieldFill);
+	stroke: var(--text-color);
+}
+.linkedListLink line {stroke: var(--linkedListLinkColor)}
+#linkedListArrow {fill: var(--linkedListLinkColor)}
+.linkedListLink circle {fill: var(--linkedListLinkColor)}
+.linkedListIndex text {
+	fill: var(--linkedListIndexColor);
+	font-family: "Noto Serif";
+}
+.linkedListAnnotation text {fill: var(--linkedListLinkColor);}
 
 /* Circular List Styles */
-	.circularListDataField rect {
-		fill: var(--circularListDataFieldFill);
-		stroke: var(--text-color);
-	}
-	.circularList text {
-		fill: var(--circularListDataFieldTextColor);
-	}
-	.circularListIndex text {
-		fill: var(--circularListIndexColor);
-	}
-	.circularListNextField rect {
-		fill: var(--circularListNextFieldFill);
-		stroke: var(--text-color);
-	}
-	.circularListLink line,
-	.circularListLink path {
-		stroke: var(--circularListLinkColor);
-	}
-	.circularListLink circle {
-		fill: var(--circularListLinkColor);
-	}
-	#circularListArrow {
-		fill: var(--circularListLinkColor);
-	}
+.circularListDataField rect {
+	fill: var(--circularListDataFieldFill);
+	stroke: var(--text-color);
+}
+.circularList text {
+	fill: var(--circularListDataFieldTextColor);
+}
+.circularListIndex text {
+	fill: var(--circularListIndexColor);
+	font-family: "Noto Serif";
+}
+.circularListNextField rect {
+	fill: var(--circularListNextFieldFill);
+	stroke: var(--text-color);
+}
+.circularListLink line,
+.circularListLink path {
+	stroke: var(--circularListLinkColor);
+}
+.circularListLink circle {
+	fill: var(--circularListLinkColor);
+}
+#circularListArrow {
+	fill: var(--circularListLinkColor);
+}
 
 /* Doubly Linked List Styles */
-	.doublyLinkedListDataField rect {
-		fill: var(--doublyLinkedListDataFieldFill);
-		stroke: var(--text-color);
-	}
-	.doublyLinkedListPrevField rect {
-		fill: var(--doublyLinkedListPrevFieldFill);
-		stroke: var(--text-color);
-	}
-	.doublyLinkedListNextField rect {
-		fill: var(--doublyLinkedListNextFieldFill);
-		stroke: var(--text-color);
-	}
-	.doublyLinkedList text {
-		fill: var(--doublyLinkedListTextColor);
-	}
-	.doublyLinkedListLink line{
-		stroke: var(--doublyLinkedListLinkColor);
-	}
-	.doublyLinkedListLink circle {
-		fill: var(--doublyLinkedListLinkColor);
-	}
-	.doublyLinkedListLink path {
-		stroke: var(--doublyLinkedListLinkColor);
-	}
-	#doublyLinkedListNextArrow {
-		fill: var(--doublyLinkedListLinkColor);
-	}
-	#doublyLinkedListPrevArrow {
-		fill: var(--doublyLinkedListLinkColor);
-	}
+.doublyLinkedListDataField rect {
+	fill: var(--doublyLinkedListDataFieldFill);
+	stroke: var(--text-color);
+}
+.doublyLinkedListPrevField rect {
+	fill: var(--doublyLinkedListPrevFieldFill);
+	stroke: var(--text-color);
+}
+.doublyLinkedListNextField rect {
+	fill: var(--doublyLinkedListNextFieldFill);
+	stroke: var(--text-color);
+}
+.doublyLinkedList text {
+	fill: var(--doublyLinkedListTextColor);
+}
+.doublyLinkedListLink line{
+	stroke: var(--doublyLinkedListLinkColor);
+}
+.doublyLinkedListLink circle {
+	fill: var(--doublyLinkedListLinkColor);
+}
+.doublyLinkedListLink path {
+	stroke: var(--doublyLinkedListLinkColor);
+}
+#doublyLinkedListNextArrow {
+	fill: var(--doublyLinkedListLinkColor);
+}
+#doublyLinkedListPrevArrow {
+	fill: var(--doublyLinkedListLinkColor);
+}
 /* Stack Styles */
-	.stackFrame rect {
-		fill: var(--stackFrameFill);
-		stroke: var(--text-color);
-	}
-	.stackFrame text {
-		fill: var(--stackFrameText);
-	}
+.stackFrame rect {
+	fill: var(--stackFrameFill);
+	stroke: var(--text-color);
+}
+.stackFrame text {
+	fill: var(--stackFrameText);
+}
 /* Queuer Styles */
-	.queuer rect {
-		fill: var(--queuerFill);
-		stroke: var(--text-color);
-	}
-	.queuer text {
-		fill: var(--queuerTextColor);
-		font-size: 1.2rem;
-	}
-	.queuerIndex text,
-	.queuer.red .queuerIndex text {
-		fill: var(--queuerIndexTextColor);
-	}
-	.queuer.red text {
-		fill: var(--red);
-	}
-	.queueAnnotation text {
-		fill: var(--queuerTextColor);
-		font-size: 1.3rem;
-	}
-	.queuerIndex rect {
-		fill: var(--queuerIndexFill);
-	}
-	.queuer.red rect {
-		stroke: var(--queuerFocusRedStroke);
-	}
-	.queuer.red .queuerIndex rect {
-		fill: var(--queuerFocusRedFill);
-	}
+.queuer rect {
+	fill: var(--queuerFill);
+	stroke: var(--text-color);
+}
+.queuer text {
+	fill: var(--queuerTextColor);
+	font-size: 1.2rem;
+}
+.queuerIndex text,
+.queuer.red .queuerIndex text {
+	fill: var(--queuerIndexTextColor);
+}
+.queuerIndex text {
+	font-family: "Noto Serif";
+}
+.queuer.red text {
+	fill: var(--red);
+}
+.queueAnnotation text {
+	fill: var(--queuerTextColor);
+	font-size: 1.3rem;
+}
+.queuerIndex rect {
+	fill: var(--queuerIndexFill);
+}
+.queuer.red rect {
+	stroke: var(--queuerFocusRedStroke);
+}
+.queuer.red .queuerIndex rect {
+	fill: var(--queuerFocusRedFill);
+}
 /* Circular Queues */
-	.circularQueuer path {
-		fill: var(--circularQueuerFill);
-		stroke: var(--circularQueuerStroke);
-	}
-	.circularQueuer text {
-		fill: var(--circularQueuerTextColor);
-	}
-	.circularQueuerIndex text {
-		fill: var(--circularQueuerIndexColor);
-	}
+.circularQueuer path {
+	fill: var(--circularQueuerFill);
+	stroke: var(--circularQueuerStroke);
+}
+.circularQueuer text {
+	fill: var(--circularQueuerTextColor);
+}
+.circularQueuerIndex text {
+	fill: var(--circularQueuerIndexColor);
+	font-family: "Noto Serif";
+}
 /* ParseTree */
-	.parseTreeEdges path {
-		stroke: var(--parseTreeEdgeColor);
-	}
-	.parseTreeNodes text {
-		fill: var(--parseTreeTextColor);
-	}
+.parseTreeEdges path {
+	stroke: var(--parseTreeEdgeColor);
+}
+.parseTreeNodes text {
+	fill: var(--parseTreeTextColor);
+}
+
+/* DotPlot */
+.dotPlotBin circle {
+	fill: var(--dotPlotCircleFill);
+	stroke: var(--dotPlotCircleStroke);
+}
+.dotPlotXAxis line,
+.dotPlotXAxis path {
+	stroke: var(--dotPlotAxisColor);
+}
+.dotPlotXAxis text {
+	fill: var(--dotPlotAxisColor);
+	font-family: "Noto Serif";
+}
+
+/* Plot Styles */
+.plot text { font-family: "Noto Serif"; }
+.plot .plot_point circle {
+fill: var(--point-fill-color);
+stroke: var(--point-stroke-color);
+}
+.plot .ex circle {
+fill: var(--background-color);
+}
+
+/* Flowchart styles */
+.flowchart {
+display: flex;
+/* width:100vw;
+height:100vw; */
+justify-content: center;
+}
+.flowchart polygon {
+fill: var(--background-color);
+stroke: none;
+}
+.flowchart .edge polygon {
+stroke: var(--text-color);
+}
+.flowchart .node polygon {
+stroke: var(--text-color);
+}
+.flowchart text {
+fill: var(--text-color);
+font-family: inherit;
+}
+.flowchart path {
+stroke: var(--text-color);
+}
+.TableMatrix {
+width: fit-content !important;
+border: none !important;
+}
+.TableMatrix thead tr {
+border-bottom: solid thin grey !important;
+}
+.TableMatrix th, .TableMatrix td {
+border: none !important;
+padding: 0.2em 0.8em !important;
+}
+.TableMatrix tr td:first-child,
+.TableMatrix tr th:first-child {
+border-right: solid thin grey !important;
+}
+
+/* Graphs */
+.Graph text {fill: var(--text-color)}
+.Graph .green circle {
+fill: var(--lightGreen);
+stroke: var(--green);
+}
+.Graph .blue circle {
+fill: var(--lightBlue);
+stroke: var(--blue);
+}
+.Graph .graphEdge line {
+stroke: var(--blue);
+}
+
+/* Flow */
+.Flow .edgePaths path { stroke: var(--flow-stroke-color); }
+.Flow marker { fill: var(--flow-stroke-color); }
+.Flow text { fill: var(--flow-stroke-color); }
+.Flow .nodes rect {
+fill: var(--flow-fill-color);
+stroke: var(--flow-stroke-color);
+}
+
+/* Digraph */
+.Digraph text {fill: var(--text-color)}
+.digraphEdges path {stroke: var(--tree-edge-color)}
+.Digraph marker {fill: var(--tree-edge-color)}
+.digraphNodes circle {stroke: var(--tree-edge-color)}
+
+
+@media (max-width: 500px) {
+.flowchart svg {
+	width: 100vw;
+	height: 100vw;
+}
+}

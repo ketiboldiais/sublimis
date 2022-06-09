@@ -1,0 +1,356 @@
+import { Demo } from "@components/Demo";
+import { Plot } from "@illus/Plot";
+import { useState, useReducer } from "react";
+
+# Functional Programming Techniques
+
+As a language, JavaScript is conducive to functional programming. The notes
+below cover some of the more common functional programming techniques in
+JavaScript.
+
+## Hooking
+
+⚠️ _This section assumes familiary with the React library._
+
+Hooking is a functional programming pattern for handling side-effects. In a
+broad sense, hooks are simply wrappers for generic callback functions. To
+understand why hooks exist, consider the following React component:
+
+```jsx
+export const Greet = ({ greeting }) => {
+	return <div>{greeting}</div>;
+};
+```
+
+to use this component, we simply write:
+
+```jsx
+<Greet greeting="Hello" />
+```
+
+This is React's approach to creating web applications. The entire
+application is some _state_, and to change how the application looks or
+behaves, we modify its state. Hooks are patterns for performing these
+modifications.
+
+### UseState
+
+Suppose we had the following component:
+
+```jsx
+export const Counter = () => {
+	let counter = 0;
+	return <div>{counter}</div>;
+};
+```
+
+adding the counter to the application, we get:
+
+export const Counter = () => {
+	let counter = 0;
+	return <div>{counter}</div>;
+};
+
+<Demo>
+	<Counter />
+</Demo>
+
+Now we want a button with the following action: If we click the button, the
+value increments. So, we modify our component by including a button. We
+then assign an incrementing function to the button's `onClick` attribute:
+
+```jsx
+export const Counter = () => {
+	let counter = 0;
+	const increment = () => {
+		counter = counter + 1;
+	};
+	return (
+		<div>
+			{counter}
+			<button onClick={increment}>++</button>
+		</div>
+	);
+};
+```
+
+The code now results in:
+
+export const Counter2 = () => {
+	let counter = 0;
+	const increment = () => {
+		counter = counter + 1;
+	};
+	return (
+		<div>
+			{counter}
+			<button onClick={increment}>++</button>
+		</div>
+	);
+};
+
+<Demo>
+	<Counter2 />
+</Demo>
+
+If we click on the button above, nothing happens. The `counter` variable,
+however, is in fact changing. So why aren't we seeing the value change?
+Because React doesn't know that the application's state has changed. The
+`counter` variable changed, but that variable is not actually _hooked_ onto
+the application's state. And because it isn't hooked on to the
+application's state, React isn't prompted to re-render the component.
+
+To hook the `counter` variable on to the state, we can use the `useState()`
+hook.
+
+```jsx
+import { useState } from "react";
+
+export const Counter = () => {
+	const [counter, setCounter] = useState(0); // the initial value
+
+	const increment = () => {
+		setCounter(counter + 1);
+	};
+
+	return (
+		<div>
+			{counter}
+			<button onClick={increment}>++</button>
+		</div>
+	);
+};
+```
+
+now we have a working button:
+
+export const Counter3 = () => {
+	const [counter, setCounter] = useState(0);
+	const increment = () => {
+		setCounter(counter + 1);
+	};
+	return (
+		<div>
+			{counter}
+			<button onClick={increment}>++</button>
+		</div>
+	);
+};
+
+<Demo>
+	<Counter3 />
+</Demo>
+
+The `useState()` hook consists of a few parts to get all of this working.
+Let's take a closer look at the syntax:
+
+<Plot
+	geo={[
+		{
+			type: "label",
+			id: "\\texttt{const [v,f] = useState(i)}",
+			xy: [-4, 6],
+		},
+		{ type: "label", id: "\\text{variable to mutate}", xy: [-4, -0.3] },
+		{ type: "label", id: "\\text{function to mutate v}", xy: [-4, 8.8] },
+		{ type: "label", id: "\\text{initial value of v}", xy: [1, 1.8] },
+		{ type: "line", start: [-1.9, 0], end: [-1.9, 5.3] },
+		{ type: "line", start: [-1.3, 6], end: [-1.3, 8] },
+		{ type: "line", start: [2.6, 2], end: [2.6, 5.4] },
+	]}
+	containerHeight={"55%"}
+	marginTop={0}
+	noAxes={true}
+	id={"useStateSyntax"}
+/>
+
+The `useState()` hook can be thought of as encapsulating the following
+declaration:
+
+> Where `v` is some value with the initial value `i`, `f` is a function
+> that updates the value of `v` at the time `f` is called.
+
+### UseReducer
+
+Suppose we had the following component:
+
+```jsx
+import { useState } from "react";
+
+export const Parity = () => {
+	const [counter, setCounter] = useState(0);
+	const [parity, changeParity] = useState(true);
+	const clickHandler = () => {
+		setCounter(counter + 1);
+		changeParity(!parity);
+	};
+	return (
+		<>
+			<div>{counter}</div>
+			<button onClick={clickHandler}>++</button>
+			<div>{parity ? "even" : "odd"}</div>
+		</>
+	);
+};
+```
+
+The component above results in:
+
+export const Parity = () => {
+	const [counter, setCounter] = useState(0);
+	const [parity, changeParity] = useState(true);
+	const clickHandler = () => {
+		setCounter(counter + 1);
+		changeParity(!parity);
+	};
+	return (
+		<>
+			<div>{counter}</div>
+			<button onClick={clickHandler}>++</button>
+			<div>{parity ? "even" : "odd"}</div>
+		</>
+	);
+};
+
+<Demo>
+	<Parity />
+</Demo>
+
+In the component above, we have a click-handler that modifies two states —
+one that increments the value, and the other that changes the text from
+even to odd. For this sample component, the code above is fine. However, we
+can imagine a component with numerous states. And the more states we have,
+the more unwieldy our click-handler can get.
+
+This is where the `useReduce()` hook comes in handy:
+
+```jsx
+import { useReducer } from "react";
+
+export const Parity = () => {
+	const reducer = (state, action) => {
+		switch (action.type) {
+			case "increment":
+				return { counter: state.counter + 1, parity: state.parity };
+			case "changeParity":
+				return { counter: state.counter, parity: !state.parity };
+			default:
+				return state;
+		}
+	};
+	const [state, dispatch] = useReducer(reducer, {
+		counter: 0,
+		parity: true,
+	});
+	const clickHandler = () => {
+		dispatch({ type: "increment" });
+		dispatch({ type: "changeParity" });
+	};
+	return (
+		<>
+			<div>{state.counter}</div>
+			<button onClick={clickHandler}>++</button>
+			<div>{state.parity ? "even" : "odd"}</div>
+		</>
+	);
+};
+```
+
+The code abve renders the same component:
+
+export const Parity2 = () => {
+	const reducer = (state, action) => {
+		switch (action.type) {
+			case "increment":
+				return { counter: state.counter + 1, parity: state.parity };
+			case "changeParity":
+				return { counter: state.counter, parity: !state.parity };
+			default:
+				return state;
+		}
+	};
+	const [state, dispatch] = useReducer(reducer, {
+		counter: 0,
+		parity: true,
+	});
+	const clickHandler = () => {
+		dispatch({ type: "increment" });
+		dispatch({ type: "changeParity" });
+	};
+	return (
+		<>
+			<div>{state.counter}</div>
+			<button onClick={clickHandler}>++</button>
+			<div>{state.parity ? "even" : "odd"}</div>
+		</>
+	);
+};
+
+<Demo>
+	<Parity2 />
+</Demo>
+
+The `useReducer()` hook has similar syntax to `useState()`. The difference,
+however, is that it gives us a better handle on state changes. The syntax:
+
+<Plot
+	geo={[
+		{
+			type: "label",
+			id: "\\texttt{const [$s$,$d$] = useReducer($r$, $obj$)}",
+			xy: [-4, 6],
+			fill: "var(--blue)",
+		},
+		{ type: "label", id: "\\text{state identifier}", xy: [-4, -0.3] },
+		{ type: "line", start: [-1.85, 0], end: [-1.85, 5.3] },
+		{ type: "label", id: "\\text{dispatch function}", xy: [-4, 8.8] },
+		{ type: "line", start: [-1.3, 6], end: [-1.3, 8] },
+		{ type: "label", id: "\\text{reducer function}", xy: [1, 1.8] },
+		{ type: "line", start: [3.2, 2], end: [3.2, 5.4] },
+		{ type: "label", id: "\\text{state object}", xy: [3, 8.7] },
+		{ type: "line", start: [4.4, 8], end: [4.4, 6] },
+	]}
+	containerHeight={"55%"}
+	marginTop={0}
+	noAxes={true}
+	id={"useReducerSyntax"}
+/>
+
+In the syntax above, ${obj}$ (the state object) is an object containing the
+states we want to mutate in our component. This object is bound to the
+identifier ${s}$ (the state identifier). To modify the state object, we use
+the reducer function ${r.}$ This is a function with the following syntax:
+
+<Plot
+	geo={[
+		{
+			type: "label",
+			id: "\\texttt{r($s$, $a$)}",
+			xy: [-1.2, 6],
+			fill: "var(--blue)",
+		},
+		{ type: "label", id: "\\text{action object}", xy: [-1.2, 3] },
+		{ type: "line", start: [0.36, 3.1], end: [0.36, 5.4] },
+		{ type: "label", id: "\\text{state object}", xy: [-2, 8.8] },
+		{ type: "line", start: [-0.5, 5.9], end: [-0.5, 8] },
+	]}
+	containerHeight={"38%"}
+	noAxes={true}
+	marginTop={0}
+	id={"reducerFunctionSyntax"}
+/>
+
+Above, ${s}$ is the state identifier we used earlier. This is what gives
+the reducer function access to the previous state. The second parameter is
+an action object. This object essentially allows the reducer function to
+run through the list of states, comparing this object against each list
+entry (in our example, this is done with a switch statement). If it
+encounters a matching entry, it performs that entry's associated procedure.
+
+To actually execute the reducer function, we call the dispatch function
+${d.}$ The dispatch function has the syntax ${d(a),}$ where ${a}$ is the
+action object earlier-mentioned.
+
+### UseEffect
+
+Arguably, the most powerful and oft-used hook is `UseEffect()`.

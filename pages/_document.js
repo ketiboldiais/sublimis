@@ -11,6 +11,9 @@ class MyDocument extends Document {
 						href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500&display=swap"
 						rel="stylesheet"></link>
 					<link
+						href="https://fonts.googleapis.com/css2?family=Noto+Emoji&display=swap"
+						rel="stylesheet"></link>
+					<link
 						href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap&text=0123456789()"
 						rel="stylesheet"></link>
 					<link

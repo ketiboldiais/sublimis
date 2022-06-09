@@ -103,4 +103,10 @@ export const className = {
 		index: "circularQueuerIndex",
 		annotation: "circularQueuerAnnotation",
 	},
+	dotPlot: {
+		canvas: 'dotPlot',
+		bin: 'dotPlotBin',
+		xAxis: 'dotPlotXAxis',
+		xAxisLabel: 'dotPlotXAxisLabel',
+	}
 };

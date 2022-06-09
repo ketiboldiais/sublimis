@@ -1,0 +1,715 @@
+import { Plot } from "@illus/Plot";
+import { Flow } from "@illus/Flow";
+import { Graph } from "@illus/Graph";
+
+<Metadata
+	title={"Network Core"}
+	description={"Notes on circuit and packet switching."}
+	keywords={
+		"computer networks, packet switching, circuit switching, bandwidth division, frequency division multiplexing, time division multiplexing, hybrid multiplexing, throughput, latency"
+	}
+/>
+
+# Network Core
+
+1. [Circuit Switching](#circuit-switching)
+2. [Bandwidth Division](#bandwidth-division)
+   1. [Frequency Division Multiplexing](#frequency-division-multiplexing)
+   2. [Time Division Multiplexing](#time-division-multiplexing)
+   3. [Hybrid Multiplexing](#hybrid-multiplexing)
+3. [Throughput & Latency](#throughput--latency)
+4. [Packet Switching](#packet-switching)
+
+The **network core** is a network of routers and networks of networks. How
+is data transferred through the network? There are two approaches:
+
+1. **circuit switching**, and
+2. **packet switching**
+
+## Circuit Switching
+
+Under the circuit switching approach, there's a physical connection — a
+metal wire — connecting the source to the target. Memory is not required
+under the circuit switching approach. The data flows like a constant stream
+from one body to another, uninterrupted.
+
+For example, in the network diagram below, there's a path (colored red)
+from `device8` to `server1`.
+
+<Graph
+	data={[
+		{
+			link: [
+				{ id: "server1", r: 10, radial: 25, focus: "blue" },
+				{ id: "router1", radial: 15, focus: "green" },
+			],
+			focus: "hl",
+		},
+		{
+			link: ["router1", { id: "router2", radial: 15, focus: "green" }],
+			focus: "hl",
+		},
+		{ link: [{ id: "router3", radial: 15, focus: "green" }, "router1"] },
+		{ link: ["device1", "router2"] },
+		{ link: ["device2", "router3"] },
+		{ link: ["device5", "router3"] },
+		{ link: ["device6", "router3"] },
+		{ link: ["device3", "router2"] },
+		{ link: ["device4", "router2"] },
+		{ link: ["device8", { id: "router4", radial: 15, focus: "green" }] },
+		{ link: ["router4", "server1"] },
+		{ link: ["device10", "router4"] },
+		{ link: ["device11", "router4"] },
+		{ link: ["device12", "router4"] },
+		{ link: ["device8", "router2"], focus: "hl" },
+	]}
+	collisionRadius={40}
+	edgeLength={60}
+	scale={70}
+/>
+
+Because of this uninterrupted flow, data is sent as is. No modification, no
+chopping; it's sent as a whole. For circuit switching to work, the source
+and the target must coordinate with one another in setting aside resources
+for their **end-to-end call**.
+
+Notice that in the diagram above, the path from `device8` to `server1` is
+not the shortest path. The shortest path would be
+`(device8, router4, server1)`. Why was the longer path taken? Likely
+because `router4` cannot handle `device8` connecting to it. Perhaps its
+reached its threshhold for the maximum number of connections, or perhaps
+`device8` is not authorized to connect to it.
+
+For all circuit switching technologies, endpoints on the network must
+peform a call setup. Contacting the various nodes along the network for
+permission to pass through them to the final source is part of this set up.
+The clearest example of a technology employing the circuit switching
+approach is the telephone network.
+
+There are several benefits to circuit switches. First, performance is
+guaranteed because of the physical connections. Having this kind of
+guarantee leads to much more efficient resource allocation. Nodes along the
+network can communicate with one another about their current statuses,
+which in turn allows requesting sources to promptly request another node.
+
+It also allows clients to use time more carefully. If a client knows that
+it must send the data within ${x}$ seconds, it rely on its logic's timing
+assumptions, because of the guarantee provided circuit switching.
+
+These benefits, of course, come with a tradeoff. Circuit switches must take
+the time to set up the call. That set up time can be significant. Think of
+California's highway system. Millions of dollars are poured by the
+Califonia state government to help manage the state's rat nest of traffic.
+Circuit switching suffers a similiar fate — because users have exclusive
+access to their allocated resources, circuit switching technologies must
+come up with various schemes (often complicated and elaborate) for managing
+network traffic. These schemes are often called **call admissions
+control**.
+
+Finally, because users have exclusive use of their allocated resources, no
+other network participants can use that path, even if the path is _idle_.
+This can be inefficient. In sum: Circuit switching provides _reliability_,
+but at the cost of _scalability_.
+
+#### Bandwidth Division
+
+As mentioned earlier, technologies that use bandwidth division must
+allocate network resources among its callers. Because circuit switches use
+a physical connection, the most important resource is bandwidth. For most
+circuit switches, bandwidth is allocated by dividing the bandwidth into
+equal portions.
+
+There are two ways to perform this division: (1) **frequency division
+multiplexing**, (2) **time division multiplexing**, and (3) **hybrid
+multiplexing**.
+
+##### Frequency Division Multiplexing
+
+With frequency division, bandwidth is divided horizontally (i.e., in terms
+of frequency):
+
+<Plot
+	geo={[
+		{
+			type: "rectangle",
+			xy: [20, 2],
+			w: 40,
+			h: 4,
+			stroke: "firebrick",
+			fill: "red",
+		},
+		{
+			type: "rectangle",
+			xy: [20, 6],
+			w: 40,
+			h: 4,
+			stroke: "goldenrod",
+		},
+		{
+			type: "rectangle",
+			xy: [20, 10],
+			w: 40,
+			h: 4,
+			stroke: "green",
+		},
+		{
+			type: "rectangle",
+			xy: [20, 14],
+			w: 40,
+			h: 4,
+			stroke: "teal",
+		},
+		{ type: "label", xy: [42, 4], id: "\\text{John}" },
+		{ type: "label", xy: [42, 8], id: "\\text{Louis}" },
+		{ type: "label", xy: [42, 12], id: "\\text{Kyle}" },
+		{ type: "label", xy: [42, 16], id: "\\text{Hikari}" },
+	]}
+	xLabel={{ text: "time", w: 20 }}
+	yLabel={{ text: "frequency", w: 40 }}
+	domain={[-50, 50]}
+	range={[-50, 50]}
+	tickCount={10}
+	id={"fdm"}
+	margins={[50, 50, 50, 50]}
+	scale={70}
+/>
+
+Each of the rectangles is a chunk of bandwidth allocated to the network's
+users. For example, in the diagram above, John gets a certain amount of
+bandwidth, Louis gets a certain amount of bandwidth, Kyle, Hikari, and so
+on.
+
+The advantage to frequency division multiplexing: Users have constant
+access to the network. They can use the network whenever they'd like. This
+is ideal for applications that require constant data transfer. For example,
+simple online games and internet telephony (e.g., WhatsApp voice calls).
+Internet telephony in particular is well-suited for frequency division
+multiplexing. Voice signals operate at the KHz range — not even MHz. This
+is a tiny amount of bandwidth.
+
+The tradeoff: Users aren't getting the fastest possible network speeds.
+Worse, the more users there are on the network, the more divisions must be
+made. With more divisions, each user has a narrower band — slower network
+speeds.
+
+#### Time Division Multiplexing
+
+With time division multiplexing, bandwidth is divided vertically (i.e., in
+terms of time):
+
+<Plot
+	geo={[
+		{
+			type: "rectangle",
+			xy: [2, 15],
+			w: 4,
+			h: 30,
+			stroke: "firebrick",
+		},
+		{
+			type: "rectangle",
+			xy: [6, 15],
+			w: 4,
+			h: 30,
+			stroke: "goldenrod",
+		},
+		{
+			type: "rectangle",
+			xy: [10, 15],
+			w: 4,
+			h: 30,
+			stroke: "green",
+		},
+		{
+			type: "rectangle",
+			xy: [14, 15],
+			w: 4,
+			h: 30,
+			stroke: "teal",
+		},
+	]}
+	xLabel={{ text: "time", w: 20 }}
+	yLabel={{ text: "frequency", w: 40 }}
+	domain={[-50, 50]}
+	range={[-50, 50]}
+	tickCount={10}
+	id={"tdm"}
+	margins={[50, 50, 50, 50]}
+	scale={70}
+/>
+
+With time division multiplexing, the network's users have specified time
+slots for when they may use the network. For example, Bill might have the
+network from 9:00AM to 10:00AM, and Nikki might have the network from
+2:00PM to 3:00PM, alongside other users before and after them.
+
+The advantage to time division multiplexing: During the user's allocated
+time band, they have the entire bandwidth to themselves. And if they have
+the entire bandwidth to themselves, they have much faster upload and
+download speeds.
+
+The first tradeoff: Users do not have constant access to the network. They
+can only use the network at specified times. This is a significant cost to
+users that need data on demand.
+
+The second tradeoff: The more users there are, the narrower the bands will
+be — users have smaller time slots. This can be a problem for users that
+must download large files. For example, an operating system. If the user
+cannot fit the download in their time slot, they'll have to wait until
+their next available slot. The operating system might have downloaded
+completely under frequency division multiplexing in that time spent
+waiting.
+
+#### Hybrid Multiplexing
+
+The third approach is a mixture of frequency division multiplexing and time
+division multiplexing. In other words, we divide bandwidth in terms of both
+time _and_ frequency:
+
+<Plot
+	geo={[
+		{
+			type: "rectangle",
+			xy: [5, 5],
+			w: 10,
+			h: 10,
+			stroke: "firebrick",
+		},
+		{
+			type: "rectangle",
+			xy: [5, 15],
+			w: 10,
+			h: 10,
+			stroke: "goldenrod",
+		},
+		{
+			type: "rectangle",
+			xy: [15, 5],
+			w: 10,
+			h: 10,
+			stroke: "green",
+		},
+		{
+			type: "rectangle",
+			xy: [15, 15],
+			w: 10,
+			h: 10,
+			stroke: "teal",
+		},
+	]}
+	xLabel={{ text: "time", w: 20 }}
+	yLabel={{ text: "frequency", w: 40 }}
+	domain={[-50, 50]}
+	range={[-50, 50]}
+	tickCount={10}
+	id={"hdm"}
+	margins={[50, 50, 50, 50]}
+	scale={70}
+/>
+
+This hybrid approach is what 4G uses.
+
+### Throughput & Latency
+
+The measure of **throughput** is packets (or bits) per unit of time.
+**Latency** is the amount of time it takes to deliver a packet of bits.
+Let's talk about throughput first.
+
+Suppose we have some time frame ${x}$ (e.g., from 2:00PM to 2:01PM).
+Throughput answers the question: How many packets are delivered in the time
+frame ${x}$? The idea behind throughput is best explained by considering
+the following:
+
+<Plot
+	geo={[
+		{
+			type: "point",
+			xy: [0, 0],
+			fill: "red",
+		},
+		{
+			type: "point",
+			xy: [5, 0],
+			fill: "red",
+		},
+		{
+			type: "point",
+			xy: [10, 0],
+			fill: "red",
+		},
+		{
+			type: "point",
+			xy: [15, 0],
+			fill: "red",
+		},
+		{
+			type: "point",
+			xy: [20, 0],
+			fill: "red",
+		},
+		{
+			type: "point",
+			xy: [25, 0],
+			fill: "red",
+		},
+		{
+			type: "point",
+			xy: [9, 5],
+			fill: "red",
+		},
+		{
+			type: "point",
+			xy: [10, 5],
+			fill: "red",
+		},
+		{
+			type: "point",
+			xy: [11, 5],
+			fill: "red",
+		},
+		{
+			type: "point",
+			xy: [24, 5],
+			fill: "red",
+		},
+		{
+			type: "point",
+			xy: [25, 5],
+			fill: "red",
+		},
+		{
+			type: "point",
+			xy: [26, 5],
+			fill: "red",
+		},
+	]}
+	xLabel={{ text: "time", w: 20 }}
+	yLabel={{ text: "device", w: 20 }}
+	xLabelWidth={80}
+	yLabelWidth={40}
+	domain={[-30, 30]}
+	range={[-30, 30]}
+	tickCount={10}
+	id={"throughput"}
+	margins={[50, 50, 50, 50]}
+	scale={70}
+/>
+
+In the graph above, device 0 delivers one packet every 5 units of time.
+Device 5, however, delivers three packets every 10 units of time. Which of
+these devices has better throughput? They have the same throughput. There
+are six packets total, over 30 units of time. Thus, for both device 0 and
+device 5, we have:
+
+$$
+  \dfrac{6}{30} = \dfrac{1}{5}
+$$
+
+Throughput and latency are distinct. To illustrate, consider a device that
+sends some packet ${P_i.}$ Packet ${P_i}$ is placed in a queue and starts a
+timer, and is then sent off once its dequeued. When ${p_i}$ enters the
+receiver's queue, it stops its timer. The receiver then looks at all the
+timer values from all the packets and averages them. This computed average
+is the latency.
+
+The graph below visualizes packets traveling from a source (the red line)
+to a destination (the blue line). The green lines indicate the packets'
+paths.
+
+<Plot
+	geo={[
+		{ type: "line", start: [1, 10], end: [1, -10], class: "red" },
+		{ type: "line", start: [6, 10], end: [6, -10], class: "blue" },
+		{ type: "segment", start: [1, 10], end: [6, 8], class: "green" },
+		{ type: "segment", start: [1, 8], end: [6, 6], class: "green" },
+		{ type: "segment", start: [1, 6], end: [6, 4], class: "green" },
+		{ type: "line", start: [-6, 10], end: [-6, -10], class: "red" },
+		{ type: "line", start: [-1, 10], end: [-1, -10], class: "blue" },
+		{ type: "segment", start: [-6, 8], end: [-1, 6], class: "green" },
+		{ type: "segment", start: [-6, 7.8], end: [-1, 5.8], class: "green" },
+		{ type: "segment", start: [-6, 8.2], end: [-1, 6.2], class: "green" },
+	]}
+	id="throughput_compare"
+	yLabel={{ text: "time", w: 20 }}
+	renderXAxis={false}
+	yLabelWidth={30}
+	noTicks={true}
+	margins={[50, 50, 50, 50]}
+	scale={70}
+/>
+
+Comparing these two visualizations, the scenario to the left (device 5 in
+the previous example), has a much higher average than the scenario to the
+right (device 0 in the previous example). This demonstrates the distinction
+between latency and throughput — devices can have the same throughput but
+different latencies, and vice versa.
+
+### Packet Switching
+
+Under the packet switching approach, for data to travel from ${A}$ to
+${B,}$ it must first be chopped up into discrete chunks of data. These
+chunks are then sent towards point ${B,}$ stopping at various intermediary
+points. At each of those points, the chunk is stored in memory, and must
+wait for further instructions on where to go next.
+
+In circuit switching, we saw that resources are divided at the router
+level. Each user has exclusive access to the resource they're allocated; no
+other user can use the resources they're allocated and using. Packet
+switching eschews this approach. Instead of dividing the resources, a queue
+is created at the router.
+
+Suppose there are two devices ${A}$ and ${B}$ attempting to send packets to
+some router ${R.}$ For these packets to arrive at their destination ${A}$
+and ${B}$ must deliver their packets to the packet queue contained in
+${R.}$ Once inside the queue, the router dequeues the queue, and sends the
+dequeued packet on its way to the next node.
+
+The advantage to this approach: If ${A}$ doesn't have very many packets to
+send, ${B}$ can continue sending packets to ${R}$'s queue, without having
+to wait for ${A.}$ Because packets are sent with a queue (a
+first-in-first-out data structure), ${B}$'s packets are sent without issue.
+
+This approach is called **statistical multiplexing**. Thus, unlike circuit
+switching, network resources are _shared_ between the sources. As we've
+seen, bandwidth is one such resource. The routers make the clients share
+bandwidth, but not deterministically or statically. Instead, the clients
+share the bandwidth in a probabilistic way.
+
+Packet switching is not without its downsides:
+
+1. **Packet loss**. The total amount of resources demanded by the packets
+   can exceed the amount available. Once a router runs out of resources
+   (e.g., memory for its packet queue), it cannot accept any further
+   packets. If a packet arrives at just the wrong time, it's lost.
+
+2. **Packet delay**. Packets move one hop at a time. And before a node
+   forwards a packet, it must receive the packet in its entirety. This
+   means that there's no guarantee that a packet will reach its destination
+   by a certain time, particularly when there's a significant amount of
+   traffic.
+3. **More protocols.** From downsides (1) and (2), packet switching
+   requires more protocols to ensure reliability and congestion control.
+   Designing and implementing those protocols takes human time and monetary
+   resources.
+
+Despite these downsides, packet switching is for the most part
+advantageous. In effect, packet switching networks are analogous to the
+airline industry's ticketing practice.
+
+As any frequent flier knows, airlines sell more tickets than there are
+available seats. I.e., if there are 150 seats on the flight, the airline
+might sell a 165 tickets. The airlines essentially gamble on the fact that
+some customers won't show up or cancel.
+
+Of course, there are situations where all 165 customers show up. In those
+circumstances, the airlines are quick to offer vouchers and free
+rebookings. From an economic perspective, the amount of value lost from
+these vouchers and free rebookings is smaller compared to the amount lost
+from unsold seats. And in the long run, the airlines keep their costs low.
+
+The same idea applies in packet switching. There are situations where the
+downsides mentioned above occur, but in the long run, packet switching
+proves beneficial. To illustrate, suppose we had the following
+circuit-switched network:
+
+<Graph
+	data={[
+		{ link: [{ id: "router", r: 10, radial: 25, focus: "red" }, "a"] },
+		{ link: ["c", "router"] },
+		{ link: ["b", "router"] },
+		{ link: ["d", "router"] },
+		{ link: ["e", "router"] },
+		{ link: ["f", "router"] },
+		{ link: ["g", "router"] },
+		{ link: ["h", "router"] },
+		{ link: ["i", "router"] },
+		{ link: ["j", "router"] },
+		{
+			link: ["router", { id: "server", r: 15, radial: 30, focus: "blue" }],
+			focus: "hl",
+		},
+	]}
+	height={300}
+	width={400}
+	collisionRadius={30}
+	edgeLength={70}
+	scale={50}
+/>
+
+The network above consists of ten users (marked `a` through `j`),
+connecting to a server that then connects to a router. Suppose the link
+from the server to the router has a bandwidth of 1Mbps.
+
+As we know, users aren't always active on a network. They might just be
+active for, say, 10% of the time. With circuit switching, we can support 10
+users. Each link has a 1Mbps (1000kbps) bandwidth, and if each user wants
+100kbps, we have:
+
+$$
+	\dfrac{1000~\text{kbps}}{100~\text{kbps}} = 10
+$$
+
+The problem is, if the users are only active 10% of the time, we're wasting
+bandwidth.
+
+Now suppose that, instead of 10 users, there are 35 users, and the network
+above is packet-switched. Given that each user is only active 10% of the
+time, the probability of the link being in use is 10%.
+
+What's the probability that more than 10 users are active? Well, we can
+calculate it with a bit discrete probability:
+
+$$
+	\binom{35}{10} \times P^{10} + 1 - P^{35 - 10} = 0.0004
+$$
+
+That's a tiny, tiny chance.[^probability_note] This tiny probability is
+what incentivizes packet switching's gamble: Because of how small this
+chance is, we'll let users take up the queue however much they want.
+
+[^probability_note]:
+    This calculation assumes that the 10% active time is uniformly
+    distributed, and that the users are independent users.
+
+From this discussion, we can see that packet switching is ideal for
+"individual requests" — requests like quickly checking CNN or visiting some
+other website. It's not ideal for "unified requests" — millions of users
+suddenly requesting for some website illegally broadcasting the Superbowl.
+In short: Packet switching provides scalability at the cost of reliability.
+
+### Buffering
+
+Because of the reliability issue, packet switch networks have come up with
+a variety of ways to mitigate costs. One that we're likely all familiar
+with is the buffering online video.
+
+The idea behind buffering: Instead of showing the video immediately, we'll
+make the user wait for some time ${x}$ until some amount of packets ${n}$
+have arrived. Once ${n}$ packets have arrived, the video can begin playing.
+And while the video plays, more packets can be retrieved in the background.
+
+The term "buffer" is fitting: There's a buffer of time allowing the system
+to request and receive packets, leaving the user with an uninterruped
+viewing experience. And if we really think about, this is the better
+approach. Most users would rather wait a 5 minutes before the video starts
+rather than random, five 1 minute pauses throughout the video. We'll see in
+later sections many other approaches to addressing packet switching's
+reliability issue.
+
+### Forwarding
+
+As we know, packet switching operates by cutting up data into chunks called
+packets. Those packets then travel along the network's edges. Packets,
+however, don't move on their own. They have to be sent by each node along
+the path from source to destination. For example, if some user requests for
+the Washington Post's website, the packet's router must determine that the
+packet should be sent to Virginia. If another user requests CNN's website,
+the packet's router must determine that the packet should be sent to
+Atlanta.
+
+As such, each node along the path must determine which node the packet
+should be sent to next. The process of determining the packet's next
+destination is called **forwarding**, and the technology for implementing
+this process is called a **forwarding scheme**. Today, there are two
+predominant forwarding schemes:
+
+1. **datagram networks** and
+2. **virtual circuit networks**
+
+#### Datagram Networks
+
+With the datagram network approach, each packet must have a **destination
+address field**. Once the packet arrives at a router's queue, the router
+looks at the destination address field and sends it towards that address.
+
+For example, if the packet is for CNN.com, the destination address might be
+some IP address 157.166.226.25. The packet arrives at router ${R_0.}$
+${R_0}$ looks up this address in its address table, and sees that it should
+forward the packet to the address ${A_1.}$ The packet is then sent to some
+router ${R_1.}$ After it arrives inside ${R_1}$'s queue, ${R_1}$ performs
+the same process: It looks up the destination address in its table, and
+sees that it should be sent to some address ${A_2.}$ The packet then goes
+to ${R_2,}$ ${R_3,}$ ${R_4,}$ and so on, until it arrives at CNN.com's
+server.
+
+We can think of this approach as akin to a driver asking for directions
+along the way. The driver gets to point ${P,}$ and asks, "Hey, how do I get
+to ${S?}$" ${P}$ says, "Oh, just go to ${Q}$ just down the way, they'll
+know." So the driver goes to ${Q}$ and asks the same question: "Hey, how do
+I get to ${S?}$" ${S}$ replies similary: "Oh, just go to ${R.}$ They'll
+know." When the driver finally gets to ${R,}$ they get the reply: "Oh, it's
+just down the way. Right there."
+
+Putting ourselves in the driver's shoes: This is an awfully long and
+convoluted way to get to the final destination. Why couldn't ${P,}$ the
+first stop, just tell the driver to give driving? This problem is analogous
+to the datagram network. At each stop, the packet must wait for the router
+to perform its computations — dequeue the packet, look at the packet's
+destination address, look up the destination address in its table, and so
+on. That's time wasted.
+
+Because of this wait time problem, engineers came up with another scheme,
+the _virtual circuit network_.
+
+#### Virtual Circuit Networks
+
+Under the virtual circuit network approach, each packet carries a tag
+called its **virtual circuit ID**. This tag determines the packet's next
+stop. For example, let's say we have some packet ${p,}$ a request for some
+cat video on YouTube. ${p}$ arrives at its first router, ${R_0.}$ ${R_0}$
+dequeues its queue, and sees that the packet is requesting a YouTube video.
+This is where things get a bit different.
+
+Instead of determining which address the packet should go to next, ${R_0}$
+sends a packet of its own to the YouTube server. That packet is a request
+for the following:
+
+1. Hey YouTube, I want a network path with your server.
+2. Also, I'm going to mark all of the packets I send along this path with
+   this special number ${n.}$
+
+If YouTube approves the request, the path is established, and ${R_0}$
+begins forwarding the packets to YouTube. ${p}$ begins travelling along the
+path. The packet will still stop at various nodes along the path — again,
+packets don't move by themselves — but now the nodes don't have to look up
+addresses. Instead, they see the special number ${n}$ and know immediately
+which node the packet should go to next.
+
+Going back to our driver analogy from the previous section, this approach
+is akin to ${P,}$ ${Q,}$ and ${R}$ calling each other and saying, "Just a
+heads up, there's a driver headed your way asking where ${S}$ is." An
+alternative analogy: The virtual circuit network approach is akin to
+conducting a marathon. Like the packets, each marathon runner has a
+particular identifier; some paper tag with a number. As the runner travels
+through the marathon's path, various personnel along the way signal to the
+runner to go a particular way. And like the nodes along the virtual circuit
+network's path, the personnel don't have to perform Sherlock Holmes
+deductions to determine if someone's a marathon runner — the runners are
+wearing tags.
+
+## Network Taxonomy
+
+To summarize the materials covered so far, telecommunication networks can
+be classified as follows:
+
+<Flow
+	data={[
+		["Networks", "Circuit-switched networks"],
+		["Networks", "Packet-switched networks"],
+		["Circuit-switched networks", "FDM"],
+		["Circuit-switched networks", "TDM"],
+		["Packet-switched networks", "Virtual Circuit Networks"],
+		["Packet-switched networks", "Datagram Networks"],
+		["Datagram Networks", "TCP"],
+		["Datagram Networks", "UDP"],
+	]}
+	scale={85}
+/>
+
+In the hierarchy above, we see two terms we haven't covered in detail — TCP
+and UDP. We will cover these terms later, but they're included above for
+comprehensiveness. In short, TCP and UDP are classifications of services.
+That is, they answer the question, "What kind of service does this network
+provide?" TCP is a connection-oriented service, while UDP is a
+connectionless service. The Internet, being the network of all networks,
+provides both these services.

@@ -26,7 +26,8 @@ export const Plot = ({
 	samples = 500,
 	width = 400,
 	height = 400,
-	containerWidth,
+	scale=100,
+	containerWidth=scale,
 	containerHeight,
 	noAxes = false,
 	renderXAxis = true,
@@ -37,13 +38,16 @@ export const Plot = ({
 	noTicks = false,
 	xLabel = { text: "x", w: 20 },
 	yLabel = { text: "y" },
-	fontFamily = "system-ui",
 	fontSize = 0.6,
 	tickFontSize = 0.5,
 	axesColor = "#606060",
 	plotLineColor = "lightgrey",
 	strokeWidth = 1,
-	margins = [50, 50, 50, 50],
+	marginTop = 20,
+	marginRight = 20,
+	marginBottom = 20,
+	marginLeft = 20,
+	margins = [marginTop, marginRight, marginBottom, marginLeft],
 }) => {
 	const _plotREF = useRef();
 	const _svg = svg(width, height, margins);
@@ -78,59 +82,19 @@ export const Plot = ({
 		.tickSizeOuter(0)
 		.ticks(yTickCount);
 
-	const renderPlot = (plot) => {
-		const userFunctions = getPropertyValues(functions, "f");
-
-		const funcGroupData = generateFunctionData(
-			functions,
-			userFunctions,
-			samples,
-			_domainUpperBound,
-			_domainLowerBound,
-			_rangeUpperBound,
-			_rangeLowerBound,
-		);
-
-		for (let i = 0; i < funcGroupData.length; i++) {
-			if (funcGroupData[i].integral) {
-				const integral = funcGroupData[i].integral;
-				if (integral.bounds) {
-					const bounds = integral.bounds;
-					plot
-						.append("g")
-						.attr("class", "integral-area")
-						.append("path")
-						.datum(funcGroupData[i].data)
-						.attr("fill", "red")
-						.attr("fill-opacity", 0.2)
-						.attr("d", renderArea(bounds, xScale, yScale));
-				}
-			}
-			plot
-				.append("path")
-				.datum(funcGroupData[i].data)
-				.attr("shape-rendering", "geometric-precision")
-				.attr("clip-path", "url(#chart-area)")
-				.attr("fill", "none")
-				.attr(
-					"stroke",
-					funcGroupData[i].color ? funcGroupData[i].color : plotLineColor,
-				)
-				.attr("stroke-width", strokeWidth)
-				.attr(
-					"stroke-dasharray",
-					funcGroupData[i].dash ? funcGroupData[i].dash : 0,
-				)
-				.attr("d", computePath(yScale, xScale));
-		}
-	};
-
 	const renderGeometries = (geometries, plot) => {
 		for (let i = 0; i < geometries.length; i++) {
 			let geometry = geometries[i];
 			switch (geometry.type) {
 				case "rectangle":
-					renderRectangle(plot, geometry, i, xScale, yScale, plotLineColor);
+					renderRectangle(
+						plot,
+						geometry,
+						i,
+						xScale,
+						yScale,
+						plotLineColor,
+					);
 					break;
 				case "point":
 					renderPoint(
@@ -192,6 +156,54 @@ export const Plot = ({
 		}
 	};
 
+	const renderPlot = (plot) => {
+		const userFunctions = getPropertyValues(functions, "f");
+
+		const funcGroupData = generateFunctionData(
+			functions,
+			userFunctions,
+			samples,
+			_domainUpperBound,
+			_domainLowerBound,
+			_rangeUpperBound,
+			_rangeLowerBound,
+		);
+
+		for (let i = 0; i < funcGroupData.length; i++) {
+			if (funcGroupData[i].integral) {
+				const integral = funcGroupData[i].integral;
+				if (integral.bounds) {
+					const bounds = integral.bounds;
+					plot
+						.append("g")
+						.attr("class", "integral-area")
+						.append("path")
+						.datum(funcGroupData[i].data)
+						.attr("fill", "red")
+						.attr("fill-opacity", 0.2)
+						.attr("d", renderArea(bounds, xScale, yScale));
+				}
+			}
+			plot
+				.append("g")
+				.attr("class", "functionPlot")
+				.append("path")
+				.datum(funcGroupData[i].data)
+				.attr("shape-rendering", "geometric-precision")
+				.attr("fill", "none")
+				.attr(
+					"stroke",
+					funcGroupData[i].color ? funcGroupData[i].color : plotLineColor,
+				)
+				.attr("stroke-width", strokeWidth)
+				.attr(
+					"stroke-dasharray",
+					funcGroupData[i].dash ? funcGroupData[i].dash : 0,
+				)
+				.attr("d", computePath(yScale, xScale));
+		}
+	};
+
 	useEffect(() => {
 		if (_plotREF.current) {
 			const canvas = d3.select(_plotREF.current).select("g.svgElement");
@@ -210,15 +222,14 @@ export const Plot = ({
 					xLabel,
 					yLabel,
 					fontSize,
-					fontFamily,
 					id,
 				);
 			}
+			if (functions) {
+				renderPlot(plot);
+			}
 			if (geo) {
 				renderGeometries(geo, plot);
-			}
-			if (functions) {
-				renderPlot(canvas, plot);
 			}
 		}
 	});

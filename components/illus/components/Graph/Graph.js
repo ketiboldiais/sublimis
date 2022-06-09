@@ -11,7 +11,8 @@ export const Graph = ({
 	fontFamily = "system-ui",
 	width = 500,
 	height = 500,
-	containerWidth,
+	scale=100,
+	containerWidth=scale,
 	containerHeight,
 	repulsion = 0.01,
 	edgeLength = 50,
@@ -50,7 +51,7 @@ export const Graph = ({
 
 	useEffect(() => {
 		const canvas = d3.select(_graphREF.current).select("g.svgElement");
-		const graph = canvas.append("g").attr("class", "graph");
+		const graph = canvas.append("g").attr("class", "Graph");
 		const edgeEnter = graph
 			.selectAll("g.edges")
 			.data(edges)
@@ -58,11 +59,10 @@ export const Graph = ({
 			.append("g")
 			.attr(
 				"class",
-				(d) => `graph-edge${d.focus ? ` graph-edge-${d.focus}` : ""}`,
+				(d) => `graphEdge${d.focus ? ` ${d.focus}` : ""}`,
 			);
 		const edgeLines = edgeEnter.append("line");
 		attrs(edgeLines, {
-			class: "graph-edge-line",
 			stroke: edgeColor,
 			strokeWidth: edgeWidth,
 		});
@@ -72,12 +72,11 @@ export const Graph = ({
 			.enter()
 			.append("g")
 			.attr("class", (d) =>
-				d.focus ? `graph-node graph-node-focus-${d.focus}` : `graph-node`,
+				d.focus ? `graph-node ${d.focus}` : `graph-node`,
 			);
 
 		const nodeCircles = nodeEnter
 			.append("circle")
-			.attr("class", "graph-node-circle")
 			.attr("r", (d) => (d.r ? d.r : nodeRadius))
 			.attr("stroke", (d) => (d.stroke ? d.stroke : nodeStrokeColor))
 			.attr("stroke-width", (d) =>
@@ -88,19 +87,19 @@ export const Graph = ({
 		const radial = nodeEnter
 			.filter((d) => d.radial)
 			.append("circle")
-			.attr("class", "graph-node-radial-circle")
+			.attr("class", "graphRadialNode")
 			.attr("r", (d) =>
 				typeof d.radial === "number" ? d.radial : radialRadius,
 			)
 			.attr("fill", (d) => (d.fill ? d.fill : nodeFillColor))
-			.attr("fill-opacity", 0.2)
+			.attr("stroke", (d) => (d.stroke ? d.stroke : nodeFillColor))
+			.attr("fill-opacity", 0.3)
 			.attr("stroke-width", 1)
-			.attr("stroke-opacity", 0.2);
+			.attr("stroke-opacity", 0.6);
 
 		const nodeText = nodeEnter.append("text").text((d) => d.id);
 
 		attrs(nodeText, {
-			class: "graph-node-text",
 			"font-family": fontFamily,
 			"text-anchor": "middle",
 			fill: nodeTextColor,

@@ -1,18 +1,482 @@
-import {BinaryTree} from "@illus/BinaryTree";
-
 # Review of Computer Science
 
-<BinaryTree
-	data={[
-		[1, [2, 3]],
-		[2, [4, 5]],
-		[3, [7, 8]],
-		[4, [11, 17]],
-		[5, [22, null]],
-		[11, [32, 28]],
-		[17, [19, null]],
-	]}
-/>
+<div className="illus BinaryTree">
+	<div
+		className="svgContainer"
+		style={{
+			display: "block",
+			position: "relative",
+			width: "80%",
+			paddingBottom: "40%",
+			backgroundColor: "inherit",
+			overflow: "hidden",
+		}}>
+		<svg
+			className="illus"
+			preserveAspectRatio="xMinYMin meet"
+			viewBox="0 0 300 150"
+			style={{
+				display: "inline-block",
+				position: "absolute",
+				top: 0,
+				left: 0,
+				backgroundColor: "inherit",
+			}}
+			{...props}>
+			<g className="svgElement" transform="translate(20, 20)">
+				<g className="binaryTree">
+					<g className="binaryTreeEdgeGroup">
+						<line
+							className="binaryTreeEdge"
+							display="initial"
+							x1={171.722972972973}
+							y1={0}
+							x2={120.33783783783784}
+							y2={25}
+							stroke="black"
+							strokeOpacity={1}
+							markerEnd="url(#arrow_end)"
+							strokeWidth={1}
+						/>
+						<line
+							className="binaryTreeEdge"
+							display="initial"
+							x1={171.722972972973}
+							y1={0}
+							x2={223.10810810810813}
+							y2={25}
+							stroke="black"
+							strokeOpacity={1}
+							markerEnd="url(#arrow_end)"
+							strokeWidth={1}
+						/>
+						<line
+							className="binaryTreeEdge"
+							display="initial"
+							x1={120.33783783783784}
+							y1={25}
+							x2={73.78378378378378}
+							y2={50}
+							stroke="black"
+							strokeOpacity={1}
+							markerEnd="url(#arrow_end)"
+							strokeWidth={1}
+						/>
+						<line
+							className="binaryTreeEdge"
+							display="initial"
+							x1={120.33783783783784}
+							y1={25}
+							x2={166.8918918918919}
+							y2={50}
+							stroke="black"
+							strokeOpacity={1}
+							markerEnd="url(#arrow_end)"
+							strokeWidth={1}
+						/>
+						<line
+							className="binaryTreeEdge"
+							display="initial"
+							x1={223.10810810810813}
+							y1={25}
+							x2={205.54054054054058}
+							y2={50}
+							stroke="black"
+							strokeOpacity={1}
+							markerEnd="url(#arrow_end)"
+							strokeWidth={1}
+						/>
+						<line
+							className="binaryTreeEdge"
+							display="initial"
+							x1={223.10810810810813}
+							y1={25}
+							x2={240.6756756756757}
+							y2={50}
+							stroke="black"
+							strokeOpacity={1}
+							markerEnd="url(#arrow_end)"
+							strokeWidth={1}
+						/>
+						<line
+							className="binaryTreeEdge"
+							display="initial"
+							x1={73.78378378378378}
+							y1={50}
+							x2={36.89189189189189}
+							y2={75}
+							stroke="black"
+							strokeOpacity={1}
+							markerEnd="url(#arrow_end)"
+							strokeWidth={1}
+						/>
+						<line
+							className="binaryTreeEdge"
+							display="initial"
+							x1={73.78378378378378}
+							y1={50}
+							x2={110.67567567567568}
+							y2={75}
+							stroke="black"
+							strokeOpacity={1}
+							markerEnd="url(#arrow_end)"
+							strokeWidth={1}
+						/>
+						<line
+							className="binaryTreeEdge"
+							display="initial"
+							x1={166.8918918918919}
+							y1={50}
+							x2={149.32432432432432}
+							y2={75}
+							stroke="black"
+							strokeOpacity={1}
+							markerEnd="url(#arrow_end)"
+							strokeWidth={1}
+						/>
+						<line
+							className="binaryTreeEdge"
+							display="none"
+							x1={166.8918918918919}
+							y1={50}
+							x2={184.45945945945948}
+							y2={75}
+							stroke="black"
+							strokeOpacity={1}
+							markerEnd="url(#arrow_end)"
+							strokeWidth={1}
+						/>
+						<line
+							className="binaryTreeEdge"
+							display="initial"
+							x1={36.89189189189189}
+							y1={75}
+							x2={19.32432432432432}
+							y2={100}
+							stroke="black"
+							strokeOpacity={1}
+							markerEnd="url(#arrow_end)"
+							strokeWidth={1}
+						/>
+						<line
+							className="binaryTreeEdge"
+							display="initial"
+							x1={36.89189189189189}
+							y1={75}
+							x2={54.45945945945945}
+							y2={100}
+							stroke="black"
+							strokeOpacity={1}
+							markerEnd="url(#arrow_end)"
+							strokeWidth={1}
+						/>
+						<line
+							className="binaryTreeEdge"
+							display="initial"
+							x1={110.67567567567568}
+							y1={75}
+							x2={93.10810810810811}
+							y2={100}
+							stroke="black"
+							strokeOpacity={1}
+							markerEnd="url(#arrow_end)"
+							strokeWidth={1}
+						/>
+						<line
+							className="binaryTreeEdge"
+							display="none"
+							x1={110.67567567567568}
+							y1={75}
+							x2={128.24324324324326}
+							y2={100}
+							stroke="black"
+							strokeOpacity={1}
+							markerEnd="url(#arrow_end)"
+							strokeWidth={1}
+						/>
+					</g>
+					<g className="binaryTreeNode">
+						<circle
+							className="binaryTreeBranchNode"
+							cx={171.722972972973}
+							cy={0}
+							r={7}
+						/>
+					</g>
+					<g className="binaryTreeNode">
+						<circle
+							className="binaryTreeBranchNode"
+							cx={120.33783783783784}
+							cy={25}
+							r={7}
+						/>
+					</g>
+					<g className="binaryTreeNode">
+						<circle
+							className="binaryTreeBranchNode"
+							cx={223.10810810810813}
+							cy={25}
+							r={7}
+						/>
+					</g>
+					<g className="binaryTreeNode">
+						<circle
+							className="binaryTreeBranchNode"
+							cx={73.78378378378378}
+							cy={50}
+							r={7}
+						/>
+					</g>
+					<g className="binaryTreeNode">
+						<circle
+							className="binaryTreeBranchNode"
+							cx={166.8918918918919}
+							cy={50}
+							r={7}
+						/>
+					</g>
+					<g className="binaryTreeNode">
+						<circle
+							className="binaryTreeLeaf"
+							cx={205.54054054054058}
+							cy={50}
+							r={7}
+						/>
+					</g>
+					<g className="binaryTreeNode">
+						<circle
+							className="binaryTreeLeaf"
+							cx={240.6756756756757}
+							cy={50}
+							r={7}
+						/>
+					</g>
+					<g className="binaryTreeNode">
+						<circle
+							className="binaryTreeBranchNode"
+							cx={36.89189189189189}
+							cy={75}
+							r={7}
+						/>
+					</g>
+					<g className="binaryTreeNode">
+						<circle
+							className="binaryTreeBranchNode"
+							cx={110.67567567567568}
+							cy={75}
+							r={7}
+						/>
+					</g>
+					<g className="binaryTreeNode">
+						<circle
+							className="binaryTreeLeaf"
+							cx={149.32432432432432}
+							cy={75}
+							r={7}
+						/>
+					</g>
+					<g className="binaryTreeNode" />
+					<g className="binaryTreeNode">
+						<circle
+							className="binaryTreeLeaf"
+							cx={19.32432432432432}
+							cy={100}
+							r={7}
+						/>
+					</g>
+					<g className="binaryTreeNode">
+						<circle
+							className="binaryTreeLeaf"
+							cx={54.45945945945945}
+							cy={100}
+							r={7}
+						/>
+					</g>
+					<g className="binaryTreeNode">
+						<circle
+							className="binaryTreeLeaf"
+							cx={93.10810810810811}
+							cy={100}
+							r={7}
+						/>
+					</g>
+					<g className="binaryTreeNode" />
+					<g className="binaryTreeTextGroup">
+						<g className="binaryTreeBranchText">
+							<text
+								fontFamily="system-ui"
+								x={171.722972972973}
+								y={0}
+								dy="0.3em"
+								opacity={1}
+								textAnchor="middle"
+								fill="black"
+								fontSize="0.55rem">
+								{"1"}
+							</text>
+						</g>
+						<g className="binaryTreeBranchText">
+							<text
+								fontFamily="system-ui"
+								x={120.33783783783784}
+								y={25}
+								dy="0.3em"
+								opacity={1}
+								textAnchor="middle"
+								fill="black"
+								fontSize="0.55rem">
+								{"2"}
+							</text>
+						</g>
+						<g className="binaryTreeBranchText">
+							<text
+								fontFamily="system-ui"
+								x={223.10810810810813}
+								y={25}
+								dy="0.3em"
+								opacity={1}
+								textAnchor="middle"
+								fill="black"
+								fontSize="0.55rem">
+								{"3"}
+							</text>
+						</g>
+						<g className="binaryTreeBranchText">
+							<text
+								fontFamily="system-ui"
+								x={73.78378378378378}
+								y={50}
+								dy="0.3em"
+								opacity={1}
+								textAnchor="middle"
+								fill="black"
+								fontSize="0.55rem">
+								{"4"}
+							</text>
+						</g>
+						<g className="binaryTreeBranchText">
+							<text
+								fontFamily="system-ui"
+								x={166.8918918918919}
+								y={50}
+								dy="0.3em"
+								opacity={1}
+								textAnchor="middle"
+								fill="black"
+								fontSize="0.55rem">
+								{"5"}
+							</text>
+						</g>
+						<g className="binaryTreeLeafText">
+							<text
+								fontFamily="system-ui"
+								x={205.54054054054058}
+								y={50}
+								dy="0.3em"
+								opacity={1}
+								textAnchor="middle"
+								fill="black"
+								fontSize="0.55rem">
+								{"7"}
+							</text>
+						</g>
+						<g className="binaryTreeLeafText">
+							<text
+								fontFamily="system-ui"
+								x={240.6756756756757}
+								y={50}
+								dy="0.3em"
+								opacity={1}
+								textAnchor="middle"
+								fill="black"
+								fontSize="0.55rem">
+								{"8"}
+							</text>
+						</g>
+						<g className="binaryTreeBranchText">
+							<text
+								fontFamily="system-ui"
+								x={36.89189189189189}
+								y={75}
+								dy="0.3em"
+								opacity={1}
+								textAnchor="middle"
+								fill="black"
+								fontSize="0.55rem">
+								{"11"}
+							</text>
+						</g>
+						<g className="binaryTreeBranchText">
+							<text
+								fontFamily="system-ui"
+								x={110.67567567567568}
+								y={75}
+								dy="0.3em"
+								opacity={1}
+								textAnchor="middle"
+								fill="black"
+								fontSize="0.55rem">
+								{"17"}
+							</text>
+						</g>
+						<g className="binaryTreeLeafText">
+							<text
+								fontFamily="system-ui"
+								x={149.32432432432432}
+								y={75}
+								dy="0.3em"
+								opacity={1}
+								textAnchor="middle"
+								fill="black"
+								fontSize="0.55rem">
+								{"22"}
+							</text>
+						</g>
+						<g className="binaryTreeLeafText">
+							<text
+								fontFamily="system-ui"
+								x={19.32432432432432}
+								y={100}
+								dy="0.3em"
+								opacity={1}
+								textAnchor="middle"
+								fill="black"
+								fontSize="0.55rem">
+								{"32"}
+							</text>
+						</g>
+						<g className="binaryTreeLeafText">
+							<text
+								fontFamily="system-ui"
+								x={54.45945945945945}
+								y={100}
+								dy="0.3em"
+								opacity={1}
+								textAnchor="middle"
+								fill="black"
+								fontSize="0.55rem">
+								{"28"}
+							</text>
+						</g>
+						<g className="binaryTreeLeafText">
+							<text
+								fontFamily="system-ui"
+								x={93.10810810810811}
+								y={100}
+								dy="0.3em"
+								opacity={1}
+								textAnchor="middle"
+								fill="black"
+								fontSize="0.55rem">
+								{"19"}
+							</text>
+						</g>
+					</g>
+				</g>
+			</g>
+		</svg>
+	</div>
+</div>
 
 The pages below contain notes from various computer science courses I've
 taken, as well as my own independent readings. This page is updated daily,

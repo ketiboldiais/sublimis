@@ -1,0 +1,627 @@
+import { Plot } from "@illus/Plot";
+import { Grid } from "@components/Grid/Grid";
+
+<Metadata
+	title={"Exponential Functions"}
+	description={"Notes on exponential functions"}
+	keywords={"Exponential functions"}
+/>
+
+# Exponential Functions
+
+1. [Exponential Increase](#exponential-increase)
+2. [Finding Equations of Exponential Increase Functions](#finding-equations-of-exponential-increase-functions)
+3. [Euler's Number](#eulers-number)
+4. [Continuous Growth Functions](#continuous-growth-functions)
+5. [Continuous Decay Functions](#continuous-decay-functions)
+6. [Graphs of Exponential Functions](#graphs-of-exponential-functions)
+7. [Transformations of Exponential Functions](#transformations-of-exponential-functions)
+   1. [Vertical Shifts](#vertical-shifts)
+   2. [Horizontal Shifts](#horizontal-shifts)
+8. [Stretching and Compressing Exponential Function Graphs](#stretching-and-compressing-exponential-function-graphs)
+9. [Reflections of Exponential Function Graphs](#reflections-of-exponential-function-graphs)
+
+Consider the following statement: &#8220;Farmer's beware: The coyote
+population is set to increase at a rate of 434 coyotes each year.&#8221;
+News outlets often erroneously describe this as &#8220;exponential
+increase.&#8221; _Exponential growth_, however, has a very specific
+meaning, and it relates to _exponential functions_. We define them now to
+rid ourselves of blatantly false and misleading information:
+
+1. The term _percentage change_ refers to a _change_ based on a _percent_
+   of the _initial value_.
+
+2. The term _exponential increase_ refers to an _increase_ based on a
+   _constant multiplicative rate of change_ over _equal increments of time_
+   &mdash; i.e., a _percent_ increase of the initial value over equal time
+   intervals.
+
+3. The term _exponential decrease_ refers to a _decrease_ based on a
+   _constant multiplicative rate of change_ over _equal increments of time_
+   &mdash; i.e., a _percent_ decrease of the initial value over equal time
+   intervals.
+
+Thus, whenever we use the phrase _exponential increase_, we are referring
+to a _rule of assignment_ &mdash; a function definition. When say,
+&#8220;$x$ grows exponentially,&#8221; mean that ${f(x_0)}$ increases by
+_the same percentage_ over equal incrementing intervals ${I}$ in
+${\text{dom}(f).}$ What many refer to as &#8220;exponential growth&#8221;
+is actually _linear growth_ &mdash; ${f(x_0)}$ increases by a _constant_
+over equal incrementing intervals ${I}$ in ${\text{dom}(f).}$
+
+> Definition. For any ${x \in \R,}$ an exponential function is a function
+> of the form ${f(x) = ab^x.}$ Where:
+>
+> - ${a \in \R^*}$ (${\R^* = \R \setminus \{ 0 \}}$)
+> - ${b \in \R^{+}}$
+
+The domain of ${f}$ is the set of all real numbers ${\R.}$ If ${a > 0,}$
+then ${\text{ran}(f) \in \R^{+}.}$ If ${a < 0,}$ then
+${\text{ran}(f) \in \R^{-}.}$ Further:
+${\text{y-intercept}(f) \coloneqq (0, a).}$ And
+${\text{[horizontal asymptote]}(f) \coloneqq (y=0).}$
+
+## Exponential Increase
+
+_Exponential increase functions_ are a subset of exponential functions.
+Accordingly, exponential growth functions inherit all of the properties and
+parameters of exponential functions, but narrow and override them in
+certain aspects:
+
+> Definition. For every ${x \in \R,}$ ${\{a, b \in \R\ \mid b \neq 1\},}$
+> the exponential increase function has the form: ${f(x) = ab^x.}$
+>
+> - ${x \in \R,}$
+> - ${a, b \in \R,}$ and
+> - ${b > 1.}$
+
+The variable ${a}$ is called the _initial value_ of ${f,}$ ${x}$ the
+_growth factor_ of ${f}$ (measured per unit of ${x}$), and ${b}$ the
+_constant ratio_ of ${f.}$
+
+In an exponential increase function, the function's output values grow by a
+rate proportional to the input value passed into the function. This
+behavior is inherited from the general case of exponential functions. In an
+exponential function, the function's outputs depend entirely on the base,
+and the base is a _constant_. That constant is then raised to a _variable_
+exponent. For example, suppose ${f(x) = 2^x.}$ Then, we have:
+
+| ${x}$      | ${f}$              | ${f(x)}$   |
+| ---------- | ------------------ | ---------- |
+| ${x = -3}$ | ${f(-3) = 2^{-3}}$ | ${1/8}$    |
+| ${x = -2}$ | ${f(-2) = 2^{-2}}$ | ${1/4}$    |
+| ${x = -1}$ | ${f(-1) = 2^{-1}}$ | ${1/2}$    |
+| ${x = 0}$  | ${f(0) = 2^0}$     | ${1}$      |
+| ${x = 1}$  | ${f(1) = 2^1}$     | ${2}$      |
+| ${x = 2}$  | ${f(2) = 2^2}$     | ${4}$      |
+| ${x = 3}$  | ${f(3) = 2^3}$     | ${8}$      |
+| ${x = 4}$  | ${f(4) = 2^4}$     | ${16}$     |
+| ${x = 5}$  | ${f(5) = 2^5}$     | ${32}$     |
+| ${\vdots}$ | ${\vdots}$         | ${\vdots}$ |
+
+As a graph:
+
+<Plot
+	functions={[{ f: (x) => 2 ** x, color: "var(--red)" }]}
+	geo={[
+		{
+			type: "label",
+			id: "f(x)=2^x",
+			fill: "var(--red)",
+			xy: [4, 2],
+			w: 70,
+		},
+		{ type: "point", xy: [0, 1] },
+		{ type: "label", id: "(0,1)", xy: [1, 1] },
+	]}
+	id={"exponentplot1"}
+/>
+
+Notice the key point at ${(0,1).}$
+
+## Finding Equations of Exponential Increase Functions
+
+Often, we are given a set of information that must be represented as an
+exponential model. Below is an algorithm for constructing exponential
+models from existing data.
+
+Given two data points, to construct an exponential model:
+
+1. If one of the data points has the form ${(0,a)}$ then ${a}$ is the base
+   case (the initial value).
+2. Using ${a,}$ substitute the second point into the equation
+   ${f(x) = a(b)^x,}$ and solve for ${b.}$
+3. If neither of the data points have the form ${(0,a),}$ substitute both
+   points into two equations with the form ${f(x) = a(b)^x,}$ and solve the
+   resulting system of two equations in two variables to find ${a}$ and
+   ${b.}$
+4. Using the ${a}$ and ${b}$ found in the steps above, write the
+   exponential function in the form ${f(x) = a(b)^x.}$
+
+For example, suppose we have two data points, ${(0,80)}$ and ${(6, 180)}$
+To construct the exponential model.
+
+We have ${(0,80),}$ so we solve for ${b:}$
+
+$$
+	f(x) = 80(b)^x
+$$
+
+Substituting with ${(6, 180):}$
+
+$$
+	\begin{aligned}
+		180 &= 80(b)^6 \\
+		180/80 &= b^6 \\
+		9/4 &= b^6 \\
+		(9/4)^{1/6} &= b \\
+		\sqrt[6]{9/4} &= b \\
+		b &= \dfrac{\sqrt[6]{9}}{\sqrt[6]{4}} \approx 1.1447 \\
+	\end{aligned}
+$$
+
+Using ${a}$ and ${b}$ to write ${f(x) = a(b)^x,}$ we have the following
+model:
+
+$$
+	f(x) = 80(1.1447)^x
+$$
+
+Another example, without the base case: Suppose we have the points
+${(-2, 6)}$ and ${(2,1).}$
+
+Substituting ${(-2,6)}$ returns ${6 = ab^{-2}.}$ Substituting ${(2,1)}$
+returns ${1 = ab^{2}.}$ Solving the system of equations, we first solve for
+${a}$ in terms of ${b:}$
+
+$$
+\begin{aligned}
+	6 &= ab^{-2} \\
+	\dfrac{6}{b^{-2}} &= a \\
+	6b^2 &= a
+\end{aligned}
+$$
+
+Solving for ${b}$ in terms of ${a:}$
+
+$$
+	\begin{aligned}
+		1 = ab^2 \\
+		1 = (6b^2)b^2 = 6b^4 \\
+		1/6 = b^4 \\
+		(1/6)^{1/4} = b \\
+		b \approx 0.6389
+	\end{aligned}
+$$
+
+Using the value of ${b}$ to solve for the value of ${a:}$
+
+$$
+	a = 6b^2 \approx 6(0.6389)^2 \approx 2.4492
+$$
+
+Using ${a}$ and ${b}$ to write the equation ${f(x) = ab^x,}$ we have the
+model:
+
+$$
+	f(x) = (2.4492)(0.6389)^x
+$$
+
+As we can see, models are not perfectly accurate. Inaccuracy is inevitable,
+however, because the models are likely analyzed and generated by computers.
+Computers themselves cannot generate an infinite amount of decimal places.
+But, inevitable inaccuracy does not imply we cannot reduce margins of
+error. One way to reduce error margins is to delay rounding as long as we
+can until the very end of the process. Never round intermediate
+calculations unless there are truly no other options.
+
+Exponential Decrease Functions. Like the exponential increase function,
+_exponential decrease functions_ are a subset of exponential functions.
+
+> Definition. The exponential increase function has the form:
+>
+> $$
+> 	m(x) = ab^x
+> $$
+>
+> where ${x \in \R,}$ ${a, b \in \R,}$ and ${b < 1.}$
+
+The variable ${a}$ is called the _initial value_ of ${m,}$ ${x}$ the
+_growth factor_ of ${f}$ (measured per unit of ${x}$), and ${b}$ the
+_constant ratio_ of ${m.}$ The same algorithms discussed above apply to
+exponential decrease functions.
+
+## Euler's Number
+
+The general form of the compound interest formula is given by the
+following:
+
+$$
+	A(t) = P\left(1 + \dfrac{r}{n}\right)^{nt}
+$$
+
+Where ${A(t)}$ is the account value; ${t}$ is the number of years ${P}$ is
+initial amount of the account (the principal) ${r}$ is the annual
+percentage rate, expressed as a float ${n}$ is the number of compounding
+periods in one year.
+
+The compound interest formula tells us that the account's initial amount
+increases as the compound frequency increases. Suppose ${P = 1}$ and
+${t = 1.}$ Then suppose that the amount is compounded from annually, to
+semiannually, to quarterly, to monthly, to daily, etc. From these
+assumptions, we have the following table:
+
+| Frequency    | ${A(t) = \left(1 + \dfrac{1}{n}\right)^{nt}}$                    | Value    |
+| ------------ | ---------------------------------------------------------------- | -------- |
+| annually     | ${A(t) = \left( 1 + \dfrac{1}{1} \right)^1}$                     | 2        |
+| semiannually | ${A(t) = \left( 1 + \dfrac{1}{2} \right)^2}$                     | 2.25     |
+| quarterly    | ${A(t) = \left( 1 + \dfrac{1}{4} \right)^4}$                     | 2.441406 |
+| monthly      | ${A(t) = \left( 1 + \dfrac{1}{12} \right)^{12}}$                 | 2.613035 |
+| daily        | ${A(t) = \left( 1 + \dfrac{1}{365} \right)^{365}}$               | 2.714567 |
+| hourly       | ${A(t) = \left( 1 + \dfrac{1}{8,760} \right)^{8,760}}$           | 2.718279 |
+| per minute   | ${A(t) = \left( 1 + \dfrac{1}{525,600} \right)^{525,600}}$       | 2.71829  |
+| per second   | ${A(t) = \left( 1 + \dfrac{1}{31,536,000} \right)^{31,536,000}}$ | 2.718282 |
+
+This is interesting. It appears that the value eventually converge at
+approximately 2.718. Indeed, it does (we will see a proof in later
+sections). We provide a formal definition now:
+
+> Definition. The irrational number of the form:
+> ${e = \lim\limits_{n \to \infty} \left(1 + \dfrac{1}{n}\right)^n}$ is
+> represented by **Euler's constant** ${e,}$ whose approximate value is
+> ${2.718282.}$
+
+The number ${e}$ holds a special place in both pure and applied
+mathematics, and we will see it frequently. ${e}$ is especially important
+for _continuous growth functions_ and _continuous decay functions_.
+
+## Continuous Growth Functions
+
+_Continuous growth functions_ are a subset of _exponential increase
+functions_. Continuous growth functions are pervasive in computer science,
+physics, chemistry, and biology. In finance, we see continuous growth
+functions in the form of continuous compounding.
+
+> Definition. The **continuous growth function** ${G}$ is a function of the
+> form ${G(t) = ve^{gt}}$ where ${t \in \R,}$ ${v, g \in \R^{+},}$ >
+> ${g > 0,}$ and ${e}$ is Euler's constant. ${v}$ is called the initial
+> value of ${G,}$ ${g}$ the _continuous growth rate_ (per unit of time
+> elapsed, ${t.}$)
+
+A common example of the continous growth function is ${f(x) = e^x,}$ where
+${e}$ is [Euler's number](#eulers-number) (roughly 2.718, visualized below
+as the dashed blue line):
+
+<Plot
+	functions={[
+		{ f: (x) => Math.E ** x, color: "var(--red)" },
+		{ f: Math.E, color: "var(--blue)", dash: 4 },
+	]}
+	id={"exponential_growth_1"}
+/>
+
+## Continuous Decay Functions
+
+_Continuous decay functions_ are a subset of _exponential decrease
+functions_. A common use case for continous decay functions is carbon
+dating, where a particular carbon-based object's age is measured according
+to the half-life of ${^{14}C,}$ a radioactive carbon isotope.
+
+> Definition. The **continuous decay function** is a function of the form:
+> ${D(t) = ve^{dt}}$ where ${t \in \R,}$ ${v, r \in \R^{+},}$ ${r < 0,}$
+> and ${e}$ is Euler's constant ${v}$ is called the initial value of
+> ${G,}$ > ${g}$ the _continuous decay rate_ (per unit of time elapsed,
+> ${t.}$)
+
+A simple continuous decay function is ${f(x) = (1/2)^x:}$
+
+<Plot
+	functions={[{ f: (x) => 0.5 ** x, color: "var(--red)" }]}
+	id={"exponential_decay_1"}
+/>
+
+Note that from the laws of exponents, ${f(x) = (1/2)^x}$ is equivalent to
+${f(x) = 2^{-x}.}$ Given a continuous growth or continuous decay function
+${f(t),}$ we can compute the output of ${f(t)}$ at some input value ${t}$
+with the following algorithm.
+
+Let ${f(t)}$ be a continuous growth or continous decay function. To compute
+the output of ${f(t)}$ at some input value ${t,}$
+
+1. Use the problem's information to determine ${v,}$ the initial value of
+   the ${f.}$
+2. Use the problem's information to determine the rate ${r}$ of ${f.}$
+3. If the problem refers to _continuous growth_, then ${r > 0}$ (i.e.,
+   ${r \in \R^{+};}$ ${r}$ is a positive real number).
+4. If the problem refers to _continuous decay_, then ${r < 0}$ (i.e.,
+   ${r \in \R^{-};}$ ${r}$ is a negative real number).
+5. Use the problem's information to determine the time ${t.}$
+6. Substitute the given information into the continous growth formula and
+   solve for ${f(t).}$
+
+## Graphs of Exponential Functions
+
+Exponential functions have generally the same graph. The most obvious
+difference is that exponential decrease functions decrease, and exponential
+increase functions increase:
+
+<Grid cols={2}>
+
+<Plot
+	functions={[{ f: (x) => 2 ** x, color: "var(--red)" }]}
+	geo={[
+		{ type: "label", id: "f(x) = 2^x", xy: [3, 3], w: 100, fontSize: 0.9 },
+	]}
+	id={"increase1"}
+/>
+
+<Plot
+	functions={[{ f: (x) => 2 ** -x, color: "var(--red)" }]}
+	geo={[
+		{
+			type: "label",
+			id: "f(x) = 2^{-x}",
+			xy: [3, 3],
+			w: 100,
+			fontSize: 0.9,
+		},
+	]}
+	id={"increase2"}
+/>
+
+</Grid>
+
+In both functions above the _constant ratio_, or the base, is 2. Where they
+differ is how the inputs and outputs relate.
+
+For the _exponential increase function_ we have the following observations:
+(1) The output value is always positive or 0. (2) As the input values
+increase, the output values also increase. (3) Large input values return
+large ouput values, and small input values return small output values. More
+formally:
+
+> Properties. Given an exponential increase function with the form
+> ${f(x) = b^x,}$ the following properties hold:
+>
+> 1. ${b > 1.}$
+> 2. ${f}$ is an injective (one-to-one) function.
+> 3. ${f}$ is an increasing function.
+> 4. ${\lim\limits_{x \to + \infty} f(x) = + \infty}$
+> 5. ${\lim\limits_{x \to - \infty} f(x) = 0}$
+> 6. ${f}$ has the horizontal asymptote ${y = 0.}$
+> 7. ${f}$ has no vertical asymptote.
+> 8. ${\text{dom}(f) = (- \infty , \infty ) = \{ x \}.}$
+> 9. ${\text{ran}(f) = (0, \infty) = \{ x \in \R_{\geq 0} \}.}$
+> 10. ${f}$ has no ${\text{x-intercept}.}$
+> 11. ${f}$ has the ${\text{y-intercept}}$ ${(0,1).}$
+
+For the _exponential decrease function_, we observe: (1) The output value
+is always positive or 0. (2) As the input values increase, the output
+values decrease. (3) Large input values return small output values, and
+small input values return large output values. More formally:
+
+> Properties. Given an exponential decrease function with the form
+> ${f(x) = b^x,}$ the following properties hold:
+>
+> 1. ${b < 1.}$
+> 2. ${f}$ is an injective (one-to-one) function.
+> 3. ${f}$ is a decreasing function.
+> 4. ${\lim\limits_{x \to + \infty} f(x) = 0}$
+> 5. ${\lim\limits_{x \to - \infty} f(x) = + \infty}$
+> 6. ${f}$ has the horizontal asymptote ${y = 0.}$
+> 7. ${f}$ has no vertical asymptote.
+> 8. ${\text{dom}(f) = (- \infty , \infty ) = \{ x \}.}$
+> 9. ${\text{ran}(f) = (0, \infty) = \{ x \in \R_{\geq 0} \}.}$
+> 10. ${f}$ has no ${\text{x-intercept}.}$
+> 11. ${f}$ has the ${\text{y-intercept}}$ ${(0,1).}$
+
+Exponential Function Base Case. An important point regarding exponential
+functions: With an exponential function of the form ${f(x) = b^x,}$ where
+${b}$ is a constant, the base case is ${b = 0.}$ Because a base case
+exists, we can write recursive programs employing exponentials.
+
+## Transformations of Exponential Functions
+
+We can transform exponential function graphs just as we would other
+functions. Suppose the exponential function ${f(x) = b^{x}.}$
+
+### Vertical Shifts
+
+A _vertical shift_ occurs if ${f(x) = b^x + C,}$ where ${C}$ is a constant.
+If ${C \in \R^{+},}$ then ${G(f)}$ shifts _up_ the ${y \text{-axis}}$ by
+${C}$ units. If ${C \in \R^{-},}$ then ${G(f)}$ shifts _down_ the
+${y \text{-axis}}$ by ${C}$ units.
+
+<Plot
+	functions={[
+		{ f: (x) => 2 ** x, color: "var(--red)" },
+		{ f: (x) => 2 ** x + 1, color: "var(--blue)" },
+		{ f: (x) => 2 ** x - 1, color: "var(--green)" },
+	]}
+	geo={[
+		{
+			type: "label",
+			id: "f(x) = 2^x + 1",
+			fill: "var(--blue)",
+			w: 100,
+			xy: [4, 5],
+		},
+		{
+			type: "label",
+			id: "f(x) = 2^x",
+			fill: "var(--red)",
+			w: 100,
+			xy: [4, 3],
+		},
+		{
+			type: "label",
+			id: "f(x) = 2^x - 1",
+			fill: "var(--green)",
+			w: 100,
+			xy: [4, 1],
+		},
+	]}
+	id={"exponential_v_shift"}
+/>
+
+Note that when we vertically shift the graph, ${f}$'s vertical asymptote
+changes. When ${f(x) = 2^x + 1,}$ the vertical asymptote is ${y = 1.}$ When
+${f(x) = 2^x - 1,}$ the vertical asymptote is ${y = -1.}$
+
+If ${f(x) = 2^x + C,}$ we shift ${f(x) = 2^x}$ _up_ the y-axis, we observe
+the following: (i) ${\text{dom}(f) = \{ x \in \R \};}$ i.e., the domain
+remains unchanged. (ii) When ${f}$ is shifted up by ${C,}$ the y-intercept
+shifts up by ${C}$ units to ${(0, C).}$ Furthermore, the horizontal
+asymptote shifts up by ${C}$ units to ${y = C.}$ (iii) The range bcecomes
+${\text{ran} = \{ f(x) \in \R \mid f(x) > C \}.}$
+
+If ${f(x) = 2^x - C,}$ we shift ${f(x) = 2^x}$ _down_ the y-axis then: (i)
+The y-intercept shifts down ${C}$ units to ${(0, -C).}$ (ii) The asymptote
+shifts down ${C}$ units to ${y = -C.}$ (iii) The range becomes
+${\text{ran} = \{ f(x) \in \R \mid f(x) > -C \},}$ while the domain remains
+unchanged, ${\{ x \in \R \}.}$
+
+### Horizontal Shifts
+
+A horizontal shift occurs when we add a constant ${C}$ to the parent
+function's power ${x,}$ in ${f(x) = b^x.}$ This will return a horizontal
+shift in the _opposite_ direction of the sign.
+
+<Plot
+	functions={[
+		{ f: (x) => 2 ** x, color: "var(--red)" },
+		{ f: (x) => 2 ** (x + 3), color: "var(--blue)" },
+		{ f: (x) => 2 ** (x - 3), color: "var(--green)" },
+	]}
+	geo={[
+		{
+			type: "label",
+			id: "f(x) = 2^{x + 3}",
+			fill: "var(--blue)",
+			w: 100,
+			xy: [-8, 8],
+		},
+		{
+			type: "label",
+			id: "f(x) = 2^x",
+			fill: "var(--red)",
+			w: 100,
+			xy: [-8, 6],
+		},
+		{
+			type: "label",
+			id: "f(x) = 2^{x - 3}",
+			fill: "var(--green)",
+			w: 100,
+			xy: [-8, 4],
+		},
+	]}
+	id={"exponential_h_shift"}
+/>
+
+Observations from shifting ${f(x) = 2^x}$ horizontally: (1) The domain,
+${(- \infty , \infty),}$ ${\R,}$ remains unchanged. (2) The horizontal
+asymptote, ${y = 0,}$ remains unchanged. (3) The y-intercept shifts such
+that: (i) When the function is shifted _left_ 1 unit &mdash;
+${f(x) = 2^{x+1}}$ &mdash; the y-intercept becomes ${(0,2).}$ This is
+because ${f(0) = 2^{0+1} = 2^1 = 2.}$ so the initial value of the function
+is 2. (ii) When the function is shifted _right_ 1 unit &mdash;
+${f(x) = 2^{x-1}}$ &mdash; the y-intercept becomes ${(0, 1/2).}$ Again,
+because ${f(0) = 2^{0-1} = 2^{-1} = 1/2.}$
+
+We can can encapsulate the transformations with an algorithm for drawing
+them.
+
+Given an exponential function with the form ${g(x) = b^{x + C} + d,}$ the
+transformation can be graphed through the following algorithm:
+
+1. Draw the graph of ${f(x) = b^x.}$ Call this graph ${G(f).}$
+2. Draw the horizontal asymptote ${y = d.}$
+3. Identify the shift as ${(-C, d).}$
+4. If ${C \in \R^{+},}$ shift ${G(f)}$ _left_ ${C}$ units.
+5. If ${C \in \R^{-},}$ shift ${G(f)}$ _right_ ${C}$ units.
+6. If ${d \in \R^{+},}$ shift ${G(f)}$ _up_ ${d}$ units.
+7. If ${d \in \R^{-},}$ shift ${G(f)}$ _down_ ${d}$ units.
+8. State the domain, ${\R,}$ and the range, ${d, \infty,}$ and the
+   horizontal asymptote, ${y = d.}$
+
+## Stretching and Compressing Exponential Function Graphs
+
+When we multiply the parent function ${f(x) = b^x}$ by a constant
+${\lvert a \rvert > 1,}$ we _vertically stretch_ (or _horizontally
+compress_) ${G(f)}$ by a factor of ${a.}$ When we multiply the parent
+function ${f(x) = b^x}$ by a constant ${\lvert a \rvert < 1,}$ we
+_vertically compress_ (or _horizontally stretch_) ${G(f)}$ by a factor of
+${a.}$ Consider the following:
+
+<Plot
+	functions={[
+		{ f: (x) => 2 ** x, color: "var(--red)" },
+		{ f: (x) => 2 ** (x * 0.5), color: "var(--blue)" },
+		{ f: (x) => 2 ** (x * 2), color: "var(--green)" },
+	]}
+	geo={[
+		{
+			type: "label",
+			id: "f(x) = 2^{x/2}",
+			fill: "var(--blue)",
+			w: 100,
+			xy: [-8, 8],
+		},
+		{
+			type: "label",
+			id: "f(x) = 2^x",
+			fill: "var(--red)",
+			w: 100,
+			xy: [-8, 6],
+		},
+		{
+			type: "label",
+			id: "f(x) = 2^{2x}",
+			fill: "var(--green)",
+			w: 100,
+			xy: [-8, 4],
+		},
+	]}
+	id={"exponential_stretch"}
+/>
+
+We can summarize these properties as such:
+
+> Properties. Let ${f(x) = a(b)^x.}$ For any factor ${a > 0,}$
+
+1. If ${\lvert a \rvert > 1,}$ then ${G(f)}$ is _stretched vertically_ by a
+   factor of ${a.}$
+2. If ${\lvert a \rvert < 1,}$ then ${G(f)}$ is _compressed vertically_ by
+   a factor ${a.}$
+3. ${G(f)}$ has a y-intercept of ${(0,a).}$ ${G(f)}$ has a horizontal
+   asymptote at ${y = 0.}$
+4. The domain and range of the shifted graph are unchanged from the parent
+   function:
+5. ${\text{dom}(f) = (- \infty , \infty.)}$
+6. ${\text{ran}(f) = (0, \infty).}$
+
+## Reflections of Exponential Function Graphs
+
+The last possible transformation is **reflection**. When we multiply the
+_outputs_ of the parent function ${f(x) = b^x}$ by ${-1,}$ we reflect
+${G(f)}$ along the x-axis. When we multiply the _inputs_ of the parent
+function ${f(x) = b^x}$ by ${-1,}$ we reflect ${G(f)}$ along the y-axis.
+
+Summarizing these properties:
+
+> Properties. Suppose ${f(x) = b^x.}$ Then the graph of ${g(x) = -b^x}$
+>
+> - reflects ${G(f)}$ about the x-axis.
+> - has the y-intercept of ${(0,1),}$
+> - ${\text{dom}(g) = (- \infty , \infty) = \R,}$
+> - ${\text{ran}(g) = (- \infty , 0),}$
+> - has a horizontal asymptote at ${y = 0.}$
+>
+> The graph of ${h(x) = b^{-x}}$
+>
+> - reflects ${G(f)}$ about the y-axis,
+> - has the y-intercept of ${(0,1),}$
+> - has a horizontal asymptote at ${y = 0,}$
+> - ${\text{ran}(h) = (0, \infty)}$
+> - ${\text{dom}(h) = (- \infty , \infty) = \R}$

@@ -12,27 +12,36 @@
 	position: fixed;
 	background-color: var(--nav-content-background-color);
 	border-radius: 6px;
+	overscroll-behavior: contain;
 	box-shadow: var(--box-shadow);
-	width: 100%;
-	height: 95%;
+	width: 0;
+	height: 0;
 	top: 4%;
 	left: 0;
 	overflow-y: scroll;
-	overscroll-behavior: contain;
-	z-index: 5;
+	z-index: 10;
 	opacity: 0;
 	visibility: hidden;
-	transition: 0.5s ease;
 	padding: 1em;
+	padding-bottom: 10rem;
+	transition: 0.3s ease-in;
 }
+.navContent ul {margin-left: 0.2rem}
 .navContent li {
-	margin: 1rem 0;
+	margin: 2rem 0.8rem;
+	line-height: 0;
+	/* border: solid thin red; */
 	list-style-type: none;
 }
 
 .showNav {
 	visibility: visible;
 	opacity: 1;
+	width: 100%;
+	height:90%;
+	transition: opacity 0.4s ease-in;
+	/* opacity: 1; */
+	/* transition: 0.5s ease-in; */
 }
 
 /* Nav Button */
@@ -55,4 +64,10 @@
 }
 .button:active {
 	box-shadow: var(--box-shadow-active);
+}
+
+@media (min-width: 700px) {
+	.navContent {
+		width: 70%;
+	}
 }

@@ -1,0 +1,28 @@
+
+.entry:hover {
+	cursor: pointer;
+}
+.entry {
+	font-size: 2rem;
+	width: fit-content;
+	height: fit-content;
+	color: var(--darkRed);
+	display: inline-block;
+	margin-right: 10px;
+	position: relative;
+	top:3px;
+	transition: all 0.5ms ease;
+}
+.activeEntry {
+    transform: translate(1px, 5px) rotate(90deg) ;
+}
+
+.inactive {
+	visibility: hidden;
+	display: none;
+}
+
+.active {
+	visibility: visible;
+	display: block;
+}

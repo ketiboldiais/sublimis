@@ -16,12 +16,12 @@ export const renderAxes = (
 	xLabel,
 	yLabel,
 	fontSize,
-	fontFamily,
 	id,
+	fontFamily = "inherit",
 ) => {
 	appendArrowDefinitions(plot, axesColor);
 
-	const axes = plot.append("g").attr("class", "illus-axis");
+	const axes = plot.append("g").attr("class", "plotAxes");
 
 	if (renderXAxis) {
 		const render_xAxis = axes

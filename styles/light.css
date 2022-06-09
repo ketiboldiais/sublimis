@@ -1,28 +1,32 @@
 .theme-light {
+	--lightRed: rgb(255, 180, 180);
 	--red: rgb(255, 112, 112);
 	--darkRed: rgb(229, 0, 0);
-	--lightGreen: rgb(148, 232, 148);
+	--lightGreen: rgb(227, 255, 227);
+	--green: forestgreen;
 	--paleGreen: rgb(197, 234, 197);
 	--darkGreen: rgb(0, 129, 0);
 	--lightBlue: rgb(112, 255, 234);
+	--blue: teal;
 	--paleBlue: rgb(149, 187, 205);
 	--darkBlue: rgb(0, 155, 207);
 	--black: rgb(41, 41, 41);
 	--white: white;
 	--lightGrey: rgb(147, 147, 147);
 	--darkBlue: rgb(38, 38, 117);
-	--lavender: rgb(229, 131, 229);
+	--lavender: rgb(216, 142, 216);
+	--purple: rgb(131, 8, 131);
 	--gold: gold;
-	--paleGold: rgb(255, 247, 211);
+	--paleGold: rgb(255, 251, 233);
 	--orange: rgb(255, 186, 68);
 
 	/* Core Colors */
-	--background-color: #fbfbfb;
+	--background-color: #ffffff;
 	--text-color: black;
-	--nav-content-background-color: #eaf4fb;
+	--nav-content-background-color: rgb(255, 253, 240);
 
 	/* Heading color */
-	--heading-color: rgb(71, 102, 136);
+	--heading-color: firebrick;
 
 	/* Border */
 	--border: solid thin grey;
@@ -30,16 +34,16 @@
 	/* Theme toggle box-shadow */
 	--container-box-shadow: 
 			-8px -4px 8px 0px #ffffff, 
-			8px 4px 12px 0px #d1d9e6, 
+			4px 2px 6px 0px #d8dade, 
 			4px 4px 4px 0px #d1d9e6 inset, 
 			-4px -4px 4px 0px #ffffff inset;
 	--indicator-box-shadow:
-			-8px -4px 8px 0px #ffffff, 
-			8px 4px 12px 0px #d1d9e6;
-	--indicator-background: #ecf0f3;
+			-2px 0px 4px 0px #a0a0a03f, 
+			8px 4px 10px 0px #d1d9e6;
+	--indicator-background: #f1f4f6;
 
 	/* Special Box Background */
-	--box-background-color: #eefdfe;
+	--box-background-color: var(--background-color);
 
 	/* Call number styles */
 	--call-border: solid thin rgb(74, 105, 172);
@@ -61,9 +65,24 @@
 		--binary-tree-text-color: white;
 
 	/* Tree */
-		--tree-edge-color: var(--text-color);
-		--tree-node-fill-color: var(--paleGold);
-		--tree-text-color: var(--text-color);
+		--tree-edge-color: firebrick;
+		--tree-node-fill-color: tomato;
+		--tree-text-color: var(--white);
+		--tree-annotation-color: var(--text-color);
+		--tree-height-color: var(--text-color);
+		--tree-depth-color: var(--text-color);
+		--tree-level-color: var(--text-color);
+		--tree-balance-factor-color: var(--text-color);
+		--tree-imbalance-factor-color: firebrick;
+		--tree-balance-factor-color: var(--green);
+		--tree-node-mark-fill: var(--blue);
+		--tree-node-mark-stroke: var(--darkBlue);
+		--tree-node-mark-text: var(--white);
+	
+	/* MTrees */
+		--mtree-edge-color: var(--text-color);
+		--mtree-node-fill-color: var(--background-color);
+		--mtree-text-color: var(--text-color);
 
 	/* Sequences */
 		--sequenceElementFill: var(--white);
@@ -122,4 +141,14 @@
 	/* Parse Tree */
 		--parseTreeEdgeColor: var(--darkRed);
 		--parseTreeTextColor: var(--text-color);
+	/* Dot Plot */
+		--dotPlotCircleFill: var(--background-color);
+		--dotPlotCircleStroke: var(--darkGreen);
+		--dotPlotAxisColor: var(--darkGreen);
+	/* Plot */
+		--point-fill-color: var(--darkRed);
+		--point-stroke-color: var(--darkRed);
+	/* Flow */
+		--flow-stroke-color: var(--text-color);
+		--flow-fill-color: var(--background-color);
 }

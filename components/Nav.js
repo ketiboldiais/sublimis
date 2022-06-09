@@ -6,7 +6,7 @@ import { Toggle } from "./Toggle/Toggle";
 
 export const NavBody = ({ className }) => {
 	const ref = useRef();
-	const [navbarOpen, setNavbarOpen] = useState(false);
+	const [navbarOpen, setNavbarOpen] = useState("");
 	const handleToggle = () => {
 		setNavbarOpen((prev) => !prev);
 	};

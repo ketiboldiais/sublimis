@@ -1,5 +1,7 @@
 import React from "react";
+import { useState, useRef } from "react";
 import Route from "../Route";
+import AccordionStyle from "../../styles/accordion.module.css";
 
 const Tree = ({ data = [], allLinks = false, clickHandler }) => {
 	return (
@@ -16,16 +18,38 @@ const Tree = ({ data = [], allLinks = false, clickHandler }) => {
 	);
 };
 
-const TreeNode = ({ node, allLinks, clickFunction}) => {
+const TreeNode = ({ node, allLinks, clickFunction }) => {
+	const [visibility, setVisibility] = useState(false);
+	const toggleVisibility = () => {
+		setVisibility((v) => !v);
+	};
 	return (
-		<li onClick={clickFunction} className={`navEntry`}>
+		<li>
 			{allLinks ? (
-				<Route to={node.path} text={node.name} />
+				<>
+					<div
+						onClick={toggleVisibility}
+						className={`${AccordionStyle.entry} ${
+							visibility ? AccordionStyle.activeEntry : ""
+						}`}>
+						{node.children ? "›" : ""}
+					</div>
+					<span onClick={clickFunction}>
+						<Route to={node.path} text={node.name} />
+					</span>
+				</>
 			) : (
-				<div>{node.name}</div>
+				<div onClick={clickFunction}>{node.name}</div>
 			)}
-			<ul>
-				<Tree data={node.children} allLinks={true} />
+			<ul
+				className={`${
+					visibility ? AccordionStyle.active : AccordionStyle.inactive
+				}`}>
+				<Tree
+					data={node.children}
+					allLinks={true}
+					clickHandler={clickFunction}
+				/>
 			</ul>
 		</li>
 	);

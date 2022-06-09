@@ -10,23 +10,29 @@ import { translate } from "../utils/translate/translate";
 
 export const Digraph = ({
 	data = [[], [], []],
-	width = 300,
-	height = 300,
-	fontFamily="system-ui",
-	containerWidth,
+	dimensions=[300, 300],
+	width = dimensions[0],
+	height = dimensions[1],
+	fontFamily = "system-ui",
+	scale=100,
+	containerWidth=scale,
 	containerHeight,
 	collisionRadius = 30,
 	forceStrength = 0.1,
 	forceDistance = 5,
-	edgeColor="#D8B384",
-	nodeFillColor="#F3F0D7",
-	nodeStrokeColor="#CC9B6D",
-	nodeTextFontSize="0.7rem",
-	nodeTextColor=nodeStrokeColor,
-	strokeWidth=1,
-	arrowFillColor=edgeColor,
+	edgeColor = "#D8B384",
+	nodeFillColor = "#ffeaaa",
+	nodeStrokeColor = "#CC9B6D",
+	nodeTextFontSize = "0.7rem",
+	nodeTextColor = nodeStrokeColor,
+	strokeWidth = 1,
+	arrowFillColor = edgeColor,
 	nodeRadius = 5,
-	margins = [30, 30, 30, 30],
+	marginTop=30,
+	marginRight=30,
+	marginBottom=30,
+	marginLeft=30,
+	margins = [marginTop, marginRight, marginBottom, marginLeft],
 }) => {
 	const digraphFigure = useRef();
 	const _svg = svg(width, height, margins);
@@ -49,10 +55,10 @@ export const Digraph = ({
 	useEffect(() => {
 		// set up group
 		const canvas = d3.select(digraphFigure.current).select("g.svgElement");
-		const digraph = canvas.append("g").attr("class", "digraph");
+		const digraph = canvas.append("g").attr("class", "Digraph");
 		insertArrowDefinitions(
 			digraph,
-			"digraph-arrow",
+			"digraphArrow",
 			15,
 			-1.5,
 			6,
@@ -62,7 +68,7 @@ export const Digraph = ({
 		);
 		const _edges = digraph
 			.append("g")
-			.attr("class", "digraph-edges")
+			.attr("class", "digraphEdges")
 			.selectAll("digraph-edges")
 			.data(edges)
 			.enter()
@@ -72,39 +78,24 @@ export const Digraph = ({
 			fill: "none",
 			stroke: edgeColor,
 			"stroke-width": strokeWidth,
-			"marker-end": "url(#digraph-arrow)",
+			"marker-end": "url(#digraphArrow)",
 		});
-		const _nodes = digraph.append("g").attr("class", "digraph-nodes");
+		const _nodes = digraph.append("g").attr("class", "digraphNodes");
 		const _node = _nodes
 			.selectAll("digraph-nodes")
 			.data(nodes)
 			.enter()
-			.append("g")
-			.attr("class", "digraph-node");
+			.append("g");
 		const nodeCircle = _node.append("circle");
 		attrs(nodeCircle, {
-			class: "digraph-node-circle",
 			fill: nodeFillColor,
 			stroke: nodeStrokeColor,
 			r: nodeRadius,
 		});
 
-		const nodeLabelOutline = _node.append("text").text((d) => d.id);
-
-		attrs(nodeLabelOutline, {
-			"font-family": fontFamily,
-			class: "digraph-node-text",
-			dy: '1em',
-			"stroke-width": '3px',
-			stroke: "white",
-			"font-size": nodeTextFontSize,
-			x: nodeRadius,
-		});
-
 		const nodeLabels = _node.append("text").text((d) => d.id);
 		attrs(nodeLabels, {
 			"font-family": fontFamily,
-			class: "digraph-node-text",
 			fill: nodeTextColor,
 			dy: "1em",
 			"font-size": nodeTextFontSize,

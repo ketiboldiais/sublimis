@@ -1,4 +1,3 @@
-html, body {height:100%;overflow:auto}
 
 /* Dark mode theme */
 	@import url("./dark.css");
@@ -37,16 +36,27 @@ html, body {height:100%;overflow:auto}
 
 /* Root Variables */
 	:root {
-		--serif: "Noto Serif", "serif_main", serif;
-		--sans_serif: "sans_serif_main";
-		--mono: "Fira Code";
+		--serif: "Noto Serif", "Noto Emoji", "serif_main", "Iowan Old Style", Palatino, "Calisto MT", "Bitstream Charter", Georgia, "Apple Garamond", "Baskerville", "Times New Roman", "Droid Serif", "Times", "Source Serif Pro", "serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+		--sans_serif: avenir, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+		--mono: "Fira Mono", Menlo, Consolas, Monaco, Liberation Mono, "Lucida Console", monospace;
 	}
 
 /* Global HTML */
-	html { background-color: var(--background-color); }
+	html {
+		background-color: var(--background-color);
+		scroll-behavior: smooth;
+	}
 
 /* KaTeX */
 	span.katex {font-size: 1em;}
+	span.mord.texttt {
+		font-family: var(--mono);
+		font-size: 0.53rem;
+	}
+	span.mord.text {
+		font-family: var(--serif);
+		font-size: 0.6rem;
+	}
 
 /* Scroll bars */
 ::-webkit-scrollbar {
@@ -69,4 +79,20 @@ html, body {height:100%;overflow:auto}
 .theme-dark .figureImage {
   filter: invert(100%);
 }
+
+@media (prefers-color-scheme: dark) {
+	.theme-dark {};
+	.theme-light {};
+} 
+
+@media (prefers-color-scheme: light) {
+	.theme-light {};
+	.theme-dark {};
+}
+
+html {font-size: 16px;}
+
+
+
+
 

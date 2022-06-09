@@ -17,8 +17,9 @@ export const BinaryTree = ({
 	data = [[]],
 	width = 300,
 	height = 150,
-	narrow = 0,
-	containerWidth,
+	scale=100,
+	tighten = 0,
+	containerWidth=scale,
 	containerHeight,
 	marginTop = 20,
 	marginLeft = 20,
@@ -27,16 +28,14 @@ export const BinaryTree = ({
 	fontFamily = "system-ui",
 	margins = [
 		marginTop,
-		marginRight + narrow,
+		marginRight + tighten,
 		marginBottom,
-		marginLeft + narrow,
+		marginLeft + tighten,
 	],
 	edgeLength = 100,
 	isDirected = false,
 	nodeRadius = 7,
 	nodeTextColor = "black",
-	nodeStrokeColor = "black",
-	nodeFillColor = "white",
 	markBalanceFactor = false,
 	markHeight = false,
 	markDepth = false,
@@ -64,7 +63,7 @@ export const BinaryTree = ({
 	const _edgeLength = setValue(edgeLength, calculateTreeSize(root));
 	const treeStructure = d3
 		.tree()
-		.size([_svg.width - narrow, _edgeLength])
+		.size([_svg.width, _edgeLength])
 		.separation((a, b) => (a.parent === b.parent ? 1 : 1.1));
 	treeStructure(root);
 

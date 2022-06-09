@@ -1,0 +1,106 @@
+import { Digraph } from "@illus/Digraph";
+import { Stack } from "@illus/Stack";
+
+<Metadata
+	title={"The Internet and ISPs"}
+	description={"Notes on the internet structure and ISPs"}
+	keywords={"computer networks, internet, ISPs"}
+/>
+
+# The Internet & ISPs
+
+The Internet can be thought of as a roughly hierarchical structure.
+Specifically, a hierarchical network of networks.
+
+<Digraph
+	data={[
+		{ link: ["Tier 1 ISP x", "Tier 1 ISP y"] },
+		{ link: ["Tier 1 ISP y", "Tier 1 ISP x"] },
+		{ link: ["Tier 1 ISP x", "Tier 1 ISP z"] },
+		{ link: ["Tier 1 ISP z", "Tier 1 ISP x"] },
+		{ link: ["Tier 1 ISP y", "Tier 1 ISP z"] },
+		{ link: ["Tier 1 ISP z", "Tier 1 ISP y"] },
+		{ link: ["NAP", "Tier 1 ISP x"] },
+		{ link: ["NAP", "Tier 1 ISP y"] },
+		{ link: ["NAP", "Tier 1 ISP z"] },
+		{ link: ["Tier 2 ISP x", "NAP"] },
+		{ link: ["Tier 2 ISP y", "NAP"] },
+		{ link: ["Tier 2 ISP z", "NAP"] },
+		{ link: ["Tier 2 ISP x NAP", "Tier 2 ISP x"] },
+		{ link: ["Tier 3 ISP", "Tier 2 ISP x NAP"] },
+		{ link: ["Tier 3 ISP x NAP", "Tier 3 ISP"] },
+		{ link: ["user1", "Tier 3 ISP x NAP"] },
+		{ link: ["user2", "Tier 3 ISP x NAP"] },
+		{ link: ["user3", "Tier 3 ISP x NAP"] },
+	]}
+	collisionRadius={50}
+	dimensions={[550, 550]}
+	scale={65}
+/>
+
+Each of the tier-1 ISPs above (companies like Sprint and AT&T) provide
+national and international networks. These providers work together as
+equals, providing some **network access point** (NAP). Tier-2 ISPs can then
+connect to this NAP. The tier-2 ISPs provide access points of their own,
+through which tier-3 ISPs can connect. And from the tier-3 ISPs, we, the
+consumers, get internet access.
+
+## The Internet Protocol Stack
+
+One of the most remarkable aspects of the Internet is how stable's its
+been. Despite the undoubtedly chaotic flow of innovation and change, the
+Internet has not disintegrated. Among human innovations — whether that's
+the steam engine, fiat currency, or the concept of government — this is
+atypical. In fact, some human inventions eschew too much change. Some
+people are engineers and worry about backwards compatibility, others are
+federal judges who worry about what rich, old, white men thought in the
+18th century.
+
+So what separates the Internet from other human innovations? One answer is
+_layering_ and _separation_. The argument is, although the Internet
+undergoes rapid, and often drastic, changes, its layered structure keeps
+those changes contained. In other words, developments "stay in their
+lanes." This ensures that a change in one part of the structure doesn't
+cause a breakdown of another part.
+
+The layers consist of clean divisions:
+
+<Stack
+	data={["application", "transport", "network", "link", "physical"]}
+	frameWidth={130}
+	height={135}
+	scale={40}
+/>
+
+Every technology the Internet comprises falls into one of these layers. The
+application layer consists of technologies that support network
+applications — FTP, SMTP, HTTP, HTTPS, DNS, and so on. PayPal and Amazon
+Pay rely on HTTPs to ensure our transactions are safe. Domain hosting
+services like GoDaddy and Google Domains rely on DNS services to sell users
+their preferred website addresses. These services — YouTube, Netflix,
+Spotify, etc. — work by following the application layer technology's
+_protocols_; a set of rules governing how the technology and the service
+interact.
+
+If all goes well at the application layer, the application layer
+technologies interact with the relevant _transport layer_ technology.
+Technologies in the transport layer provide host-to-host data transfer
+services. Like the application layer, these technologies also have
+protocols: What information the application must provide, how that
+information should be formatted, etc.
+
+If the transport layer technology is satisfied, it then interacts with the
+relevant _network layer_ technology. Technologies at this level provide the
+routing of datagrams from source to destination: IP, BGP, a whole sleuth of
+routing protocols — they all have the job of processing and executing
+instructions for moving information.
+
+If everything at the network layer goes well, the network technology
+interacts with the _link layer_. These are the various network connections,
+the "highways": PPP, ethernet, WiFi, Bluetooth, and so on. These
+technologies are the actual paths that data moves along.
+
+Finally, if things go smoothly at the link layer, the links interact with
+the _physical layer_: The actual electrical pulses, or bits, on a wire. At
+this level, we're closer to electrical engineering than computer science.
+Technologies here include OFDM, DSSS, CDMA, and so on.

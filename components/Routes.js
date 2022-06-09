@@ -1,11 +1,13 @@
 const math = "/math";
 const ca = "/classical_algebra/";
 const calc = "/calculus/";
+const stat = "/statistics/";
 const dm = "/discrete_mathematics/";
 const log = "/logic/";
 const cs = "/cs";
 const fs = "/foundations";
 const dsa = "/data_structures_and_algorithms";
+const gr = "/graphics/";
 const asy = "/asynchronous_programming";
 const ja = "/java/";
 const js = "/javascript/";
@@ -19,6 +21,7 @@ const git = "git/";
 const lang = "/languages/";
 const mob = "/mobile_systems/";
 const sa = "/static_arrays/";
+const da = "/dynamic_arrays/";
 const str = "/strings/";
 const mtr = "/matrices/";
 const ll = "/linked_lists/";
@@ -28,10 +31,11 @@ const stack = "/stacks/";
 const heap = "/heaps/";
 const queue = "/queues/";
 const tree = "/trees/";
+const mway = "mway_trees/"
 const clang = "c/";
 
 const Routes = [
-	{ name: "Front Matter", path: "/", children: [] },
+	{ name: "Front Matter", path: "/" },
 	{ name: "Review of Computer Science",
 		path: `${cs}/preface`,
 		children: [
@@ -48,6 +52,7 @@ const Routes = [
 				{ name: "Arrays", path: `${cs}${asy}${js}arrays` },
 				{ name: "Object Literals", path: `${cs}${asy}${js}object_literals` },
 				{ name: "Keyword 'this'", path: `${cs}${asy}${js}keyword_this` },
+				{ name: "Functional Programming Techniques", path: `${cs}${asy}${js}functional_programming` },
 			]},
 			{ name: "Data Structures & Algorithms with C++", path: `${cs}${dsa}/intro`, children: [
 					{ name: "Language: C++",
@@ -86,21 +91,23 @@ const Routes = [
 					{ name: "Prelude: Data Structures & Algorithms", path: `${cs}${dsa}/dsa_overview`, },
 					{ name: "Complexity Analysis", path: `${cs}${dsa}/dsa_complexity_analysis`, },
 					{ name: "Numeric Algorithms", path: `${cs}${dsa}/dsa_numeric_algorithms`, },
-					{ name: "Static Arrays", path: `${cs}${dsa}${sa}basic_operations`,
+					{ name: "Static Arrays", path: `${cs}${dsa}${sa}arrays`,
 						children: [
-							{ name: "Linear Search", path: `${cs}${dsa}${sa}linear_search`, },
-							{ name: "Binary Search", path: `${cs}${dsa}${sa}binary_search`, },
-							{ name: "Max Finder", path: `${cs}${dsa}${sa}max_finder` },
-							{ name: "Min Finder", path: `${cs}${dsa}${sa}min_finder` },
-							{ name: "Summation", path: `${cs}${dsa}${sa}summate` },
-							{ name: "Arithmetic Mean", path: `${cs}${dsa}${sa}arithmetic_mean`, },
-							{ name: "Reversal", path: `${cs}${dsa}${sa}reversal` },
-							{ name: "Shifting Elements", path: `${cs}${dsa}${sa}shift` },
-							{ name: "Rotating Elements", path: `${cs}${dsa}${sa}rotate`, },
-							{ name: "Sorted Insertion", path: `${cs}${dsa}${sa}sorted_insert`, },
-							{ name: "Is this Array Sorted?", path: `${cs}${dsa}${sa}sort_check`, },
+							{ name: "Linear Search", path: `${cs}${dsa}${sa}arrays#linear-search`, },
+							{ name: "Binary Search", path: `${cs}${dsa}${sa}arrays#binary-search`, },
+							{ name: "Max Finder", path: `${cs}${dsa}${sa}arrays#max-finder` },
+							{ name: "Min Finder", path: `${cs}${dsa}${sa}arrays#min-finder` },
+							{ name: "Summation", path: `${cs}${dsa}${sa}arrays#summate` },
+							{ name: "Arithmetic Mean", path: `${cs}${dsa}${sa}arrays#arithmetic-mean`, },
+							{ name: "Reversal", path: `${cs}${dsa}${sa}arrays#reversal` },
+							{ name: "Shifting Elements", path: `${cs}${dsa}${sa}arrays#shift` },
+							{ name: "Rotating Elements", path: `${cs}${dsa}${sa}arrays#rotate`, },
+							{ name: "Sorted Insertion", path: `${cs}${dsa}${sa}arrays#sorted-insert`, },
+							{ name: "Is this Array Sorted?", path: `${cs}${dsa}${sa}arrays#sort-check`, },
+							{ name: "Cost-benefit Analysis: Arrays", path: `${cs}${dsa}${sa}arrays#cost-benefit-analysis-arrays`, },
 						],
 					},
+					{ name: "Dynamic Arrays", path: `${cs}${dsa}${da}dynamic_arrays` },
 					{ name: "Strings", path: `${cs}${dsa}${str}strings` },
 					{ name: "Matrices", path: `${cs}${dsa}${mtr}matrices` },
 					{ name: "Linked Lists", path: `${cs}${dsa}${ll}linked_lists` },
@@ -134,13 +141,25 @@ const Routes = [
 									{ name: "BST Costs", path: `${cs}${dsa}${tree}bst_costs`, },
 								],
 							},
-							{ name: "AVL Trees", path: `${cs}${dsa}${tree}avl_trees` },
+							{ name: "AVL Trees", path: `${cs}${dsa}${tree}avl_trees`, children: [
+								{ name: "Rotations", path: `${cs}${dsa}${tree}avl_trees#rotations`},
+								{ name: "Right-rotation", path: `${cs}${dsa}${tree}avl_trees#right-rotation`},
+								{ name: "Left-rotation", path: `${cs}${dsa}${tree}avl_trees#left-rotation`},
+								{ name: "Right-left-rotation", path: `${cs}${dsa}${tree}avl_trees#right-left-rotation`},
+								{ name: "Left-left-rotation", path: `${cs}${dsa}${tree}avl_trees#left-left-rotation`},
+								{ name: "General Form of AVL Rotations", path: `${cs}${dsa}${tree}avl_trees#general-form-of-avl-rotations`},
+
+							]},
+							{ name: "Multiway Search Trees", path: `${cs}${dsa}${tree}${mway}preface` },
 						],
 					},
 					{ name: "Heaps", path: `${cs}${dsa}${heap}heaps` },
 					{ name: "Common Problems", path: `${cs}${dsa}${pro}preface` },
 				],
 			},
+			{ name: "Computer Graphics", path: `${cs}${gr}preface`, children: [
+				{ name: "Scenes", path: `${cs}${gr}scenes` },
+			] },
 			{ name: "Computer Systems", path: `${cs}${sys}intro`, children: [
 					{ name: "The C Language", path: `${cs}${sys}${clang}c_basics` },
 					{ name: "Digital Signals", path: `${cs}${sys}digital_signals` },
@@ -153,7 +172,10 @@ const Routes = [
 					{ name: "PC", path: `${cs}${sys}pc` },
 					{ name: "Machine Language", path: `${cs}${sys}machine_language` },
 					{ name: "Memory Hierarchy", path: `${cs}${sys}memory_hierarchy` },
-					{ name: "Computer Networks", path: `${cs}${sys}networks` },
+					{ name: "Computer Networks", path: `${cs}${sys}networks`, children: [
+						{ name: "The Network Core", path: `${cs}${sys}network_core` },
+						{ name: "The Internet & ISPs", path: `${cs}${sys}isp` },
+					]},
 				],
 			},
 			{ name: "Mobile Systems", path: `${cs}${mob}preface`, children: [
@@ -226,6 +248,10 @@ const Routes = [
 				{ name: "Functions", path: `${math}${calc}functions` },
 				{ name: "Functions & Graphs", path: `${math}${calc}function_graphs` },
 				{ name: "The Absolute Value Function", path: `${math}${calc}absolute_value_function` },
+				{ name: "Exponential Functions", path: `${math}${calc}exponential_functions` },
+			]},
+			{ name: "Statistics", path: `${math}${stat}preface`, children: [
+				{ name: "Foundational Definitions", path: `${math}${stat}foundational_definitions` },
 			]},
 		],
 	},

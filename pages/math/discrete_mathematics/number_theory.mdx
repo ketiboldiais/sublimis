@@ -1,4 +1,5 @@
-import {Sequence} from "@illus/Sequence";
+import { Sequence } from "@illus/Sequence";
+import { FlowChart } from "@components/FlowChart";
 
 <Metadata
 	title={"Number Theory"}
@@ -19,7 +20,9 @@ import {Sequence} from "@illus/Sequence";
 7. [Greatest Common Divisor](#greatest-common-divisor)
 8. [Euclid's Algorithm](#euclids-algorithm)
 9. [Application: Encryption](#application-encryption)
-10. [Encryption Scheme: Turing Code 1](#encryption-scheme-turing-code-1)
+   1. [Encryption Scheme: Turing Code I](#encryption-scheme-turing-code-i)
+   2. [Encryption Scheme: Turing Code II](#encryption-scheme-turing-code-ii)
+      1. [Modular Arithmetic Revisited](#modular-arithmetic-revisited)
 
 _Number theory_ is the study of the integers. Despite being one of the
 oldest fields in mathematics, there is still a great deal to explore. Many
@@ -444,7 +447,7 @@ that the amount of gallons poured from ${a}$ into ${b}$ such that ${b}$ is
 completely filled is ${b - y.}$ Accordingly:
 
 $$
-	(x, y) \to (x - (b - y), b) = (x + y - b, b) \implies x + y \leq b
+	\small (x, y) \to (x - (b - y), b) = (x + y - b, b) \implies x + y \leq b
 $$
 
 The caveat in this possibility is ${x + y \leq b.}$ This is the
@@ -455,16 +458,18 @@ By symmetry, we can list the reverse &mdash; pouring the gallons in ${b}$
 into ${a:}$
 
 $$
-	(x, y) \to (x + y, 0) \implies x + y \leq 0 \\
-	(x, y) \to (a, y - (a - x)) = (a, x + y - a) \implies x + y \leq a
+	\small (x, y) \to (x + y, 0) \implies x + y \leq 0 \\
+	\small (x, y) \to (a, y - (a - x)) = (a, x + y - a) \implies x + y \leq a
 $$
 
 Thus, we now have all the possibilities of pouring:
 
-1. ${(x, y) \to (0, x+y) \implies x+y \geq b}$
-2. ${(x, y) \to (x - (b - y), b) = (x + y - b, b) \implies x + y \leq b}$
-3. ${(x, y) \to (x + y, 0) \implies x + y \leq 0}$
-4. ${(x, y) \to (a, y - (a - x)) = (a, x + y - a) \implies x + y \leq a}$
+1. ${(x, y) \to (0, x+y),}$ implying ${x+y \geq b}$
+2. ${(x, y) \to (x - (b - y), b) = (x + y - b, b),}$ implying
+   ${x + y \leq b}$
+3. ${(x, y) \to (x + y, 0),}$ implying ${x + y \leq 0}$
+4. ${(x, y) \to (a, y - (a - x)) = (a, x + y - a),}$ implying
+   ${x + y \leq a}$
 
 Let's ensure the propositions we drew above fully describe the original
 game.
@@ -545,10 +550,12 @@ that ${P(n)}$ is true, we know that ${m \space\vert\space x}$ and
 ${m \space\vert\space y}$ after ${n}$ transitions. Now, we that after a
 transition, we have the following possibilities:
 
-1. ${(x, y) \to (0, x+y) \implies x+y \geq b}$
-2. ${(x, y) \to (x - (b - y), b) = (x + y - b, b) \implies x + y \leq b}$
-3. ${(x, y) \to (x + y, 0) \implies x + y \leq 0}$
-4. ${(x, y) \to (a, y - (a - x)) = (a, x + y - a) \implies x + y \leq a}$
+1. ${(x, y) \to (0, x+y),}$ which implies that ${x+y \geq b.}$
+2. ${\small (x, y) \to (x - (b - y), b) = (x + y - b, b),}$ which implies
+   ${x + y \leq b}$
+3. ${\small (x, y) \to (x + y, 0),}$ which implies ${x + y \leq 0}$
+4. ${\small (x, y) \to (a, y - (a - x)) = (a, x + y - a),}$ which implies
+   ${x + y \leq a}$
 
 More generally, after a transition, each of the jugs are either empty (0),
 both jugs are empty (${x}$ and ${y}$), completely filled (${a}$ or ${b}$),
@@ -566,13 +573,14 @@ divides any of the possibilities stated above. This completes the proof.
 
 The **gcd** (greatest common divisor) of numbers ${a}$ and ${b}$ is the
 largest number that divides both ${a}$ and ${b.}$ For example,
-${gcd(10, 5) = 2.}$ Similarly, ${gcd(18, 12) = 6.}$ With 18 and 12, 3 is a
-_common divisor_, but it is not the _greatest_ common divisor.
+${\text{gcd}(10, 5) = 2.}$ Similarly, ${\text{gcd}(18, 12) = 6.}$ With 18
+and 12, 3 is a _common divisor_, but it is not the _greatest_ common
+divisor.
 
-What is ${gcd(5, 2)?}$ The only divisors of 5 are 1 and 5, and the only
-divisors of 2 are 1 and 2. Accordingly, ${gcd(5, 2) = 1.}$ When the
-greatest common divisor of two numbers is 1, we say that the numbers are
-**relatively prime**.
+What is ${\text{gcd}(5, 2)?}$ The only divisors of 5 are 1 and 5, and the
+only divisors of 2 are 1 and 2. Accordingly, ${\text{gcd}(5, 2) = 1.}$ When
+the greatest common divisor of two numbers is 1, we say that the numbers
+are **relatively prime**.
 
 Recall the theorem we proved above: If ${m \space\vert\space a}$ and
 ${m \space\vert\space b,}$ then ${m \space\vert\space \text{ any result}.}$
@@ -588,8 +596,15 @@ ${a}$ and ${b,}$ and we can reach that state through ${n}$ transitions.
 When we prove the corollary above, we will want to keep ${s}$ and ${t}$
 positive (largely because negative integers can be unwieldy). To keep the
 numbers positive, we just have to play around with some natural numbers.
-For example, the linear combination ${L = 4}$ can be constructed with
-${L = (-2)(3) + (5)(3) + (2)(5) - (3)(5) = (3)(3) - (1)(5) = 4.}$
+For example, the linear combination ${L = 4}$ can be constructed with:
+
+$$
+\begin{aligned}
+	L &= (-2)(3) + (5)(3) + (2)(5) - (3)(5)  \\
+		&= (3)(3) - (1)(5) \\
+		&= 4
+\end{aligned}
+$$
 
 Let's formalize this trick. Currently, ${L = sa + tb.}$ We can rewrite this
 as ${L = (s + mb)a + (t - ma)b.}$ We can then choose an ${m}$ such that
@@ -648,9 +663,27 @@ result is generalized through **Euclid's algorithm.**
 
 ## Euclid's Algorithm
 
-Euclid's Algorithm is fairly quick way to find the greatest common
+Euclid's Algorithm is a fairly quick way to find the greatest common
 denominator (GCD) of two integers. We can state the algorithm in pseudocode
-(assume $a$ and $b$ are positive integers).
+(assume $a$ and $b$ are positive integers). Here's an iterative
+implementation:
+
+<FlowChart data={`
+	start[label="Let a and b\nbe positive integers."];
+	test[label="Is b > a?"];
+	no[label="no"];
+	yes[label="yes"];
+	a[label="r := rem(a,b)"];
+	b[label="a := b"];
+	c[label="b := r"];
+	d[label="return a"];
+
+    start->test;
+    test->yes;
+    yes->a->b->c->test;
+    test->no->d;
+
+`}/>
 
 A good way to build some intuition for how this algorithm works is to do
 some tracing. Let's call it for $a = 255$ and $b = 483:$
@@ -678,45 +711,49 @@ Euclid's algorithm works. Because the remainder is always smaller than the
 divisor, in our algorithm, ${b}$ gets smaller and smaller (since ${b}$ is
 assigned the remainder).
 
-We will denote ${r,}$ the remainder, with ${rem(b, a).}$ With this theorem,
-we can prove the following lemma:
+We will denote ${r,}$ the remainder, with ${\text{rem}(b, a).}$ With this
+theorem, we can prove the following lemma:
 
 > _Lemma_. The greatest common denominator of ${a}$ and ${b}$ is the
 > greatest common denominator of the remainder of ${b}$ and ${a}$ and
 > ${a.}$ I.e.,
 >
 > $$
-> 	  gcd(a, b) = gcd(rem(b, a), a)
+> 	  \text{gcd}(a, b) = \text{gcd}(\text{rem}(b, a), a)
 > $$
 
 For example, consider the integers 105 and 224. Following the lemma:
 
 $$
 	\begin{aligned}
-		gcd(105, 224) &= gcd(rem(224, 105), 105) \\ &= gcd(14, 105) \\ &= gcd(rem(105, 14), 14) \\ &= gcd(7, 14) \\ &= gcd(rem(14, 7), 7) \\ &= gcd(0, 7) \\ &= 7
+		\text{gcd}(105, 224) &= \text{gcd}(\text{rem}(224, 105), 105) \\ &= \text{gcd}(14, 105) \\ &= \text{gcd}(\text{rem}(105, 14), 14) \\ &= \text{gcd}(7, 14) \\ &= \text{gcd}(\text{rem}(14, 7), 7) \\ &= \text{gcd}(0, 7) \\ &= 7
 	\end{aligned}
 $$
 
 Applying the lemma repeatedly, as we did above, is called Euclid's
 algorithm. To prove the lemma, we want to show that if
 ${m \space\vert\space a}$ and ${m \space\vert\space b,}$ then
-${m \space\vert\space rem(b,a)}$ and ${m \space\vert\space a.}$
+${m \space\vert\space \text{rem}(b,a)}$ and ${m \space\vert\space a.}$
 
 Suppose ${m \space\vert\space a}$ and ${m \space\vert\space b.}$ Then it
 must be true that ${m \space\vert\space b - qa}$ and
-${m \space\vert\space a.}$ Now we know that ${b - qa = rem(b, a),}$ so it
-must be the case that ${m \space\vert\space rem(b, a).}$ This proves that
-${gcd(a, b) \space\vert\space gcd(rem(b,a), a).}$ In turn, this implies
-that ${gcd(a, b) \leq gcd(rem(b,a), a).}$
+${m \space\vert\space a.}$ Now we know that ${b - qa = \text{rem}(b, a),}$
+so it must be the case that ${m \space\vert\space \text{rem}(b, a).}$ This
+proves that
+${\text{gcd}(a, b) \space\vert\space \text{gcd}(\text{rem}(b,a), a).}$ In
+turn, this implies that
+${\text{gcd}(a, b) \leq \text{gcd}(\text{rem}(b,a), a).}$
 
-Let's now consider the cases. First case: If ${rem(b, a) \neq 0,}$ then
-${[m \space\vert\space rem(b - a) = b - qa \land m \space\vert\space a] \implies [m \space\vert\space a \land m \space\vert\space b.]}$
+Let's now consider the cases. First case: If ${\text{rem}(b, a) \neq 0,}$
+then
+${[m \space\vert\space \text{rem}(b - a) = b - qa \land m \space\vert\space a] \implies [m \space\vert\space a \land m \space\vert\space b.]}$
 This is because if ${m \space\vert\space a}$ and ${m \space\vert\space b,}$
 then ${m}$ divides any linear combination of ${a}$ and ${b.}$
 
-Second case: If ${rem(b, a) = 0,}$ then ${b - qa = 0.}$ We can rewrite
-${b - qa = 0}$ as ${b = qa.}$ Thus, if ${rem(b, a) = 0,}$ then ${b = qa.}$
-Hence, if ${m \space\vert\space a,}$ then ${m \space\vert\space b.}$
+Second case: If ${\text{rem}(b, a) = 0,}$ then ${b - qa = 0.}$ We can
+rewrite ${b - qa = 0}$ as ${b = qa.}$ Thus, if ${\text{rem}(b, a) = 0,}$
+then ${b = qa.}$ Hence, if ${m \space\vert\space a,}$ then
+${m \space\vert\space b.}$
 
 Now, with every algorithm, we must prove that the algorithm is correct. To
 do so, the first point we must establish is that the algorithm halts in a
@@ -724,12 +761,13 @@ finite amount of time. In this case, it does. The algorithm's inputs get
 smaller and smaller, eventually reaching a point where it must halt.
 
 The second point: Resetting the variable values inside the definition of
-${gcd()}$ does not change the value of ${gcd(a, b).}$ The proof for this
-claim is a little more involved. We're effectively stating:
+${\text{gcd}()}$ does not change the value of ${\text{gcd}(a, b).}$ The
+proof for this claim is a little more involved. We're effectively stating:
 
-> For any ${a, b \in \Z^{+},}$ ${gcd(a,b) = gcd(b, rem(a, b)).}$
+> For any ${a, b \in \Z^{+},}$ >
+> ${\text{gcd}(a,b) = \text{gcd}(b, \text{rem}(a, b)).}$
 
-To begin, recall that ${rem(a, b) \implies a = bq + r,}$ where
+To begin, recall that ${\text{rem}(a, b) \implies a = bq + r,}$ where
 ${a, b, q, r \in \Z^{+}.}$ Thus, what we want to show is that the largest
 integer that divides ${a}$ and ${b}$ is also the largest integer that
 divides ${b}$ and ${a = bq + r.}$ Let's state this more explicitly. The
@@ -761,16 +799,16 @@ ${t}$ is some integer. Therefore, ${k \space\vert\space r.}$
 
 Having proved the second point, we know the algorithm is correct because of
 the third point: The return value at the definition's end is correct (i.e.,
-${gcd(a, 0) = a}$).
+${\text{gcd}(a, 0) = a}$).
 
 > **Proof**: Every integer ${p}$ divides 0 (i.e., ${0 = (p)(n).}$) When we
-> write ${gcd(a, 0),}$ we are asking for the largest integer that divides
-> ${a}$ and 0. Because every integer ${p}$ divides 0, the largest integer
-> is ${a.}$ Thus, ${gcd(a, 0) = a.}$[^gcd_note]
+> write ${\text{gcd}(a, 0),}$ we are asking for the largest integer that
+> divides ${a}$ and 0. Because every integer ${p}$ divides 0, the largest
+> integer is ${a.}$ Thus, ${\text{gcd}(a, 0) = a.}$[^gcd_note]
 
 [^gcd_note]:
-    Note that ${gcd(0,0)}$ is undefined. There are many divisors for 0 and
-    0, but there is no maximum.
+    Note that ${\text{gcd}(0,0)}$ is undefined. There are many divisors for
+    0 and 0, but there is no maximum.
 
 ## Application: Encryption
 
@@ -802,7 +840,7 @@ a nonsensical sequence of symbols.
 With this high-level overview, let's consider what those "scrambling"
 algorithms are (more formally called _encryption schemes_).
 
-## Encryption Scheme: Turing Code 1
+### Encryption Scheme: Turing Code I
 
 The first encryption scheme we consider is one that might have been made by
 the computer scientist Alan Turing. Turing was the first to propose using
@@ -815,7 +853,7 @@ alphabet sequence. For example, the letter `v` is the twenty-second letter
 of the alphabet, `i` is the ninth, `c` is the third, and so on. Mapping all
 the letters to their indices:
 
-<Sequence data={["v", "i", "c", "t", "o", "r", "y"]} />
+<Sequence data={["v", "i", "c", "t", "o", "r", "y"]} scale={60} />
 
 It turns out that if we pack all of the numbers together:
 
@@ -829,5 +867,102 @@ $$
 	22090320151825\textcolor{indianred}{13}
 $$
 
-we get a prime number. Using this example, we can construct a simple
-encryption scheme. The procedure:
+we get a prime number. Call this prime number message ${m.}$ Using this
+example, we can construct a simple encryption scheme. The procedure:
+
+1. Beforehand, select and exchange a secret prime number ${k.}$
+2. Compute ${m' = mk.}$ ${m'}$ is now the encryption.
+3. Send the encrypted ${m'}$ to the intended recipient.
+
+This encrypts the message. Now the recipient must decrypt:
+
+1. Divide the encrypted ${m'}$ by the secret prime ${k.}$
+2. The decrypted message is ${m = \dfrac{m'}{k}.}$
+
+As simple as it may be, this seems like a fairly robust encryption scheme.
+If ${k}$ is a large prime number, the encrypted ${m'}$ is the product of
+two large prime numbers. To this day, there's no efficient method of
+factoring ${m'.}$ Are there problems to this approach?
+
+Well, suppose we sent two encrypted messages, ${m_1'}$ and ${m_2',}$ both
+encrypted with the secret prime ${k.}$ If both messages are intercepted,
+the malicious party now has two pieces of information:
+
+$$
+\begin{aligned}
+	m_1' &= m_1 k \\[1em]
+	m_2' &= m_2 k
+\end{aligned}
+$$
+
+With these two pieces of information, the antagonist can compute:
+
+$$
+	\text{gcd}(m_1', m_2')
+$$
+
+Given that ${m_1,}$ ${m_2,}$ and ${k}$ are prime, the GCD of ${m_1'}$ and
+${m_2'}$ is ${k.}$ Because of this issue, this simply approach is not
+secure. Let's consider another scheme.
+
+### Encryption Scheme: Turing Code II
+
+The procedure for this second scheme is as follows:
+
+1. Beforehand, select and exchange a secret prime ${k}$ and a public prime
+   ${p.}$ The publice prime ${p}$ is a prime visible to all.
+2. Represent the message as some number ${m}$ in the set
+   ${\{ 0,1,2,\ldots,p-1 \}.}$
+3. Compute the encryption as follows:
+   1. Compute ${mk.}$
+   2. Compute the remainder ${\text{rem}(mk, p)}$ (that is, the remainder
+      of ${mk}$ after subtracting as many multiples of ${p}$ as possible).
+
+So, now we have the encryption, how do we decrypt? We can't exactly divide
+by ${k.}$ But, we can use modular arithmetic.
+
+#### Modular Arithmetic Revisited
+
+Recall the definition of _relative primeness_:
+
+> _Definition_. ${a}$ and ${b}$ are relatively prime iff
+> ${\text{gcd}(a, b) = 1.}$
+
+Recall further that the GCD of two numbers ${a}$ and ${b}$ is the smallest
+possible linear combination of ${a}$ and ${b.}$ This means that the number
+1 yields a linear combination of ${a}$ and ${b.}$ It follows that:
+
+> _Lemma_. ${\text{gcd}(a,b) = 1}$ iff there exists two integers, ${s}$ and
+> ${t,}$ such that ${sa + tb = 1.}$
+
+Connecting this lemma with the previous definition by logical bicondition,
+we have:
+
+> _Lemma_. ${a}$ and ${b}$ are relatively prime iff there exists two
+> integers, ${s}$ and ${t,}$ such that ${sa + tb = 1.}$
+
+Let's focus on that equation:
+
+$$
+	sa + tb = 1
+$$
+
+isolating the ${sa}$ term:
+
+$$
+	sa = 1 - tb
+$$
+
+Just staring at this rearrangement, we can sort of see the term ${sa}$ as
+somewhat equal to ${1,}$ at least up to some multiple of ${b.}$ If we
+looked at it this way:
+
+$$
+\begin{aligned}
+	sa = 1 \\[1em]
+	a = \dfrac{1}{s}
+\end{aligned}
+$$
+
+That is, ${a}$ is sort of an inverse of ${s.}$ Again, up to a multiple of
+${b.}$

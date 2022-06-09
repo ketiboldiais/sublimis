@@ -5,7 +5,7 @@ export const renderHeightMarks = (
 	textColor,
 	fontSize,
 ) => {
-	const heightNums = selection.append("g");
+	const heightNums = selection.append("g").attr("class", "treeHeightMark");
 	heightNums
 		.selectAll("text")
 		.data(root.descendants())
