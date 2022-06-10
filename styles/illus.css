@@ -255,6 +255,10 @@ stroke: var(--point-stroke-color);
 .plot .ex circle {
 fill: var(--background-color);
 }
+.plotAxes text {fill: var(--plot-axes-color)}
+.plotAxes path {stroke: var(--plot-axes-color)}
+.plotAxes line {stroke: var(--plot-axes-color)}
+.Plot marker {fill: var(--plot-axes-color)}
 
 /* Flowchart styles */
 .flowchart {

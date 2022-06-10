@@ -8,3 +8,4 @@ export * from "./renderLabel";
 export * from "./renderLine";
 export * from "./renderPoint";
 export * from "./renderLineSegment";
+export * from "./renderBracket";

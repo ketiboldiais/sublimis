@@ -20,7 +20,9 @@ export const renderLabel = (
 		class: datum.class ? `plot_label ${datum.class}` : "plot_label",
 		transform: translate(xPosition, yPosition),
 	};
+	const _width = datum.w ? datum.w : 70;
+	const _height = datum.h ? datum.h : 10;
 	const label = selection.append("g");
 	attrs(label, labelProperties);
-	MathText(label, datum.id, labelFontSize, datum.w, datum.h, _id, fill);
+	MathText(label, datum.id, labelFontSize, _width, _height, _id, fill);
 };

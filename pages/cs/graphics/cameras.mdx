@@ -1,0 +1,396 @@
+import { Cube } from "./Demos/Cube";
+
+<Metadata
+	title={"Cameras"}
+	description={"Notes on cameras in computer graphics"}
+	keywords={"cameras, computer graphics"}
+/>
+
+# Cameras
+
+In this section, we discuss cameras in further detail.
+
+## Perspective Camera
+
+The perspective camera renders a scene with perspective. For example, here
+is a camera initialization:
+
+```javascript
+const sizes = {
+	width: 800,
+	height: 600,
+};
+const camera = new THREE.PerspectiveCamera(
+	100,
+	sizes.width / sizes.height,
+	1,
+	3,
+);
+camera.position.x = 2;
+camera.position.y = 2;
+camera.position.z = 2;
+```
+
+<Cube />
+
+The syntax:
+
+```
+new THREE.PerspectiveCamera(fov, asp, near, far);
+```
+
+Let's look at each of these parameters in turn.
+
+### Field of View
+
+The larger the FOV argument, the more likely we are to distort the objects.
+Beyond ${{75}^\circ,}$ objects begin looking very small. Often, it's best
+to stay within the range of ${{45}^\circ}$ through ${{75}^\circ.}$
+
+### Aspect Ratio
+
+The aspect ratio argument is a ratio of width:height. We can think of this
+as setting the width and the height of the render.
+
+### Near & Far Parameters
+
+The near and far parameters correspond to how close and how far the camera
+can see. If an object is (1) closer than near, or (2) further than far,
+then the object will not be seen.
+
+A common mistake with this parameter is setting `near = 0.0001` and
+`far = 99999`. Although this largely keeps objects within view, it almost
+always introduces a bug called **z-fighting**. When two objects are too
+close to one another along the ${z}$-axis, the GPU has difficulty
+determining which of the two objects is &#8220;seen.&#8221; This leads to
+the objects coming into conflict.
+
+## Orthographic Camera
+
+Unlike the perspective camera, the orthographic camera has no perspective.
+Thus, objects seen through an orthographic camera have the same size,
+regardless of their distance to the camera.
+
+The syntax for initializing an orthographic camera:
+
+```rust
+new THREE.OrthographicCamera(left, right, top, bottom, near, far);
+```
+
+The arguments:
+
+- The `left` parameter indicates how far left the camera sees.
+- The `right` parameter indicates how far right the camera sees.
+- The `top` parameter indicates how far up the camera sees.
+- The `bottom` parameter indicates how far down the camera sees.
+- The `near` parameter provides how &#8220;close&#8221; an object is to the
+  camera. Any object closer than this value will not be seen.
+- The `far` parameter sets how &#8220;far&#8221; the object is to the
+  camera. Any object farther than this value will not be seen.
+
+With the orthographic camera, we want to think of the camera's field of
+view as a cube. What it sees directly in front of it is a square, and the
+object lies on that square. Compare that with the perspective camera, which
+has a field of view akin to a cylinder. Because of this, the orthographic
+camera must know the how far left, right, top, and bottom we render.
+Anything beyond those points is not seen. Furthermore, just like the
+perspective camera, we can include arguments for the parameters ${near}$
+and ${far.}$
+
+When using an orthographic camera, it's often the case that changes to near
+and far can distort the shape. To prevent this from occurring, we want to
+use the aspect ratio &mdash; the ratio of width:height. We then multiply
+this ratio to the ${left}$ and ${right}$ arguments:
+
+```javascript
+const sizes = {
+	width: 400,
+	height: 400,
+};
+const aspectRatio = sizes.width / sizes.height;
+const camera = new THREE.OrthographicCamera(
+	-1 * aspectRatio,
+	1 * aspectRatio,
+	1,
+	-1,
+	0.1,
+	100,
+);
+```
+
+## Controlling the Camera
+
+Because ThreeJS deals with both 3D objects and their movements, cameras
+must be mobile. Think of a movie set. The camera operators move the cameras
+here and there as needed. There isn't just one camera, or multiple cameras,
+remaining in place.
+
+One way to move the camera is through the cursor. For example, if the
+cursor moves to the left, we want the camera to move left, if the cursor
+moves right, the camera moves right, and so on.
+
+To move the camera, we must know the coordinates of the cursor. If we run
+the code below, we'll see that we get back the ${x}$-coordinates of the
+cursor's position in real time:
+
+```javascript
+window.addEventListener("mousemove", (event) => {
+	console.log(event.clientX);
+});
+```
+
+And if we use the following function:
+
+```javascript
+window.addEventListener("mousemove", (event) => {
+	console.log(event.clientY);
+});
+```
+
+We get the ${y}$-coordinates of the cursor's position. The values we see in
+the console are pixel values. This is not very useful. If the window gets
+large enough, the values run into the thousands, and if the window gets
+small enough (e.g., on a mobile device), we stay in the hundred range. A
+much more useful metric would be one that keeps these values proportional.
+For example, one metric would be using the values ${0}$ through ${1.}$ No
+matter what the window size is, we stay within this range.
+
+To begin, we'll store the values we need in an object:
+
+```javascript
+const cursor = {
+	x: 0,
+	y: 0,
+};
+window.addEventListener("mousemove", (event) => {
+	cursor.x = event.clientX;
+	cursor.y = event.clientY;
+});
+```
+
+To keep these values within the range of ${0}$ to ${1,}$ we simply divide
+the values by the size of our viewport:
+
+```javascript
+const sizes = {
+	width: 400,
+	height: 400,
+};
+const cursor = {
+	x: 0,
+	y: 0,
+};
+window.addEventListener("mousemove", (event) => {
+	cursor.x = event.clientX / sizes.width;
+	cursor.y = event.clientY / sizes.height;
+});
+```
+
+Note that the `width` and `height` values above are not necessarily the
+viewport's dimensions. They might be the dimensions for a `canvas` element.
+In later sections, we will consider ways to obtain the actual viewport's
+dimensions.
+
+With the approach above, we're getting only positive values. What if we
+wanted to have positive and negative values, similar to a Cartesian
+coordinate system? The solution is to just subtract ${0.5:}$
+
+```javascript
+const sizes = {
+	width: 400,
+	height: 400,
+};
+const cursor = {
+	x: 0,
+	y: 0,
+};
+window.addEventListener("mousemove", (event) => {
+	cursor.x = event.clientX / sizes.width - 0.5;
+	cursor.y = event.clientY / sizes.height - 0.5;
+});
+```
+
+Why ${0.5?}$ Because the values range from ${0}$ to ${1.}$ By subtracting
+${0.5,}$ the range now becomes ${[-0.5, 0.5].}$ The difference between this
+implementation and the Cartesian coordinate system is the moving the mouse
+towards the top yields negative ${y}$-values, and moving the mouse towards
+the bottom yields positive ${y}$-values. The ${x}$-axis works as expected
+&mdash; moving towards the left, we get negative ${x}$-values, moving
+towards the right, we get positive ${x}$-values.
+
+Having these values, we can update the camera through the `tick()`
+function:
+
+```javascript
+const tick = () => {
+	camera.position.x = cursor.x * 2;
+	camera.position.y = cursor.y * 2;
+
+	renderer.render(scene, camera);
+
+	window.requestAnimationFrame(tick);
+};
+tick();
+```
+
+Running all of the relevant code, we might notice that the camera acts odd.
+If we move the cursor left, the camera moves right. If we move the cursor
+right, the camera moves left. And if we move up and down, the object
+appears to follow the camera. This is because of that earlier fact we
+noted: In ThreeJS, the ${y}$-axis is negative towards the top, and positive
+towards the bottom. This means we must invert the ${y-}$coordinate value:
+
+```javascript
+const sizes = {
+	width: 400,
+	height: 400,
+};
+const cursor = {
+	x: 0,
+	y: 0,
+};
+window.addEventListener("mousemove", (event) => {
+	cursor.x = event.clientX / sizes.width - 0.5;
+	cursor.y = -(event.clientY / sizes.height - 0.5);
+});
+```
+
+If we want to make sure the camera is always looking at the center of the
+cube (while still panning around):
+
+```javascript
+const tick = () => {
+	camera.position.x = cursor.x * 2;
+	camera.position.y = cursor.y * 2;
+	camera.lookAt(new THREE.Vector3());
+
+	renderer.render(scene, camera);
+
+	window.requestAnimationFrame(tick);
+};
+tick();
+```
+
+Alternatively, we can simply pass the object's position as an argument to
+`lookAt()`:
+
+```javascript
+const tick = () => {
+	camera.position.x = cursor.x * 2;
+	camera.position.y = cursor.y * 2;
+	camera.lookAt(mesh.position);
+
+	renderer.render(scene, camera);
+
+	window.requestAnimationFrame(tick);
+};
+tick();
+```
+
+We still, however, have a limitation: We can't see behind the object. To
+remedy this, we want to have the camera rotate around the object. And to
+rotate the camera around the object, we're going to use trigonometry.
+
+As we know, the trigonometric functions are cyclical. For both
+${y = \sin
+x}$ and ${y = \cos x,}$ the domain is ${\R,}$ and we can see that
+it is cyclical by way of a table:
+
+| ${x}$                | ${y}$ |
+| -------------------- | ----- |
+| 0                    | 0     |
+| ${\dfrac{\pi}{2}}$   | 1     |
+| ${\pi}$              | 0     |
+| ${\dfrac{3\pi}{2}}$  | -1    |
+| ${2 \pi}$            | 0     |
+| ${\dfrac{5 \pi}{2}}$ | 1     |
+| ${3 \pi}$            | 0     |
+| ${\dfrac{7 \pi}{2}}$ | -1    |
+| ${4 \pi}$            | 0     |
+
+And for ${y = \cos x}$ we have:
+
+| ${x}$                | ${y}$ |
+| -------------------- | ----- |
+| 0                    | 1     |
+| ${\dfrac{\pi}{2}}$   | 0     |
+| ${\pi}$              | -1    |
+| ${\dfrac{3\pi}{2}}$  | 0     |
+| ${2 \pi}$            | 1     |
+| ${\dfrac{5 \pi}{2}}$ | 0     |
+| ${3 \pi}$            | -1    |
+| ${\dfrac{7 \pi}{2}}$ | 0     |
+| ${4 \pi}$            | 1     |
+
+Because of these oscillations, if we use ${\cos x}$ to represent the
+${x}$-coordinate and ${\sin x}$ to represent the ${y}$-coordinate, we
+essentially have coordinates all along a circle. Knowing these facts, the
+question then, is, which axes do we move along? Because we aren't moving up
+and down (we're just trying to see behind the object), the axes we will
+travel are the ${x}$- and ${z}$-axis.
+
+```javascript
+const tick = () => {
+	camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 3;
+	camera.position.y = cursor.y * 5;
+	camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 3;
+	camera.lookAt(new THREE.Vector3());
+
+	renderer.render(scene, camera);
+
+	window.requestAnimationFrame(tick);
+};
+tick();
+```
+
+## Built-in Controls
+
+The control we mentioned above is an example of a custom control. ThreeJS
+also provides **built-in controls**. These built-in controls are:
+
+- `DeviceOrientationControls`
+- `FirstPersonControls`
+- `FlyControls`
+- `OrbitControls`
+- `PointerLockControls`
+- `TrackBallControls`
+
+We examine each of these controls in turn.
+
+### Device Orientation Controls
+
+`DeviceOrientationControls` retrieve the device orientation as set on the
+device, operating system, or browser. With this information, we can rotate
+the camera based on orientation.
+
+### Fly Controls
+
+We can think of `FlyControls` as allowing us to move the camera as if we
+were operating a fighter jet &mdash; we can rotate on all 3 axes (e.g.,
+performing a barrel roll), as well as moving forward and back.
+
+### First Person Controls
+
+`FirstPersonControls` are similar to fly controls, but with restriction:
+The <i>up</i> axis is fixed. Where fly controls allow us to do
+&#8220;aerial tricks,&#8221; first person controls are more like a
+Boeing-747 &mdash; it can look down, but there is an upper bound on how
+much it can look up.
+
+### Pointer Lock Controls
+
+`PointerLockControls` are akin to the controls we see in a game like
+Minecraft. We can look up, down, left, right, from a fixed position. Think
+of this as operating the camera on the the Mars rover. We can see in all
+directions, but only from a &#8220;locked&#8221; position.
+
+### Orbit Controls
+
+`OrbitControls` allow us to move in all directions, <em>except</em> below
+the floor (a vertical angle limit). This is very much like operating a
+drone or satellite. The camera &#8220;orbits&#8221; the object.
+
+### Trackball Contrls
+
+`TrackballControls` are similar to orbit controls, but do not have the
+vertical angle limit we see with orbit controls.

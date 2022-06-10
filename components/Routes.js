@@ -159,6 +159,9 @@ const Routes = [
 			},
 			{ name: "Computer Graphics", path: `${cs}${gr}preface`, children: [
 				{ name: "Scenes", path: `${cs}${gr}scenes` },
+				{ name: "Object Transformation", path: `${cs}${gr}object_transformation` },
+				{ name: "Animations", path: `${cs}${gr}animations` },
+				{ name: "Cameras", path: `${cs}${gr}cameras` },
 			] },
 			{ name: "Computer Systems", path: `${cs}${sys}intro`, children: [
 					{ name: "The C Language", path: `${cs}${sys}${clang}c_basics` },
@@ -249,6 +252,7 @@ const Routes = [
 				{ name: "Functions & Graphs", path: `${math}${calc}function_graphs` },
 				{ name: "The Absolute Value Function", path: `${math}${calc}absolute_value_function` },
 				{ name: "Exponential Functions", path: `${math}${calc}exponential_functions` },
+				{ name: "Logarithmic Functions", path: `${math}${calc}logarithmic_functions` },
 			]},
 			{ name: "Statistics", path: `${math}${stat}preface`, children: [
 				{ name: "Foundational Definitions", path: `${math}${stat}foundational_definitions` },

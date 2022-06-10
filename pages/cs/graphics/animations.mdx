@@ -1,0 +1,254 @@
+<Metadata
+	title={"Animations"}
+	description={"Notes on animations in computer graphics"}
+	keywords={"computer animation"}
+/>
+
+# Animations
+
+Animating in ThreeJS &mdash; and JavaScript more generally &mdash; is
+analogous to stop motion animations. The idea is that we move points
+slightly, take a picture, move points again, take a picture, move points
+again, take a picture, and so on. The act of &#8220;take a picture&#8221;
+is rendering. Take many, many pictures and present them one at time very
+quickly &mdash; we create the illusion of movement.
+
+## Frame Rates
+
+The speed at which the pictures are shown (or, in flipbookese, how fast we
+flip through book), is called a **frame rate**, and it's usually measured
+in the unit FPS (Frames Per Second). With higher frame rates,
+&#8220;motion&#8221; appears smooth or fluid (think high-end video games
+like _Diablo III_). With lower frame rates, motion appears choppy (think
+some silly GIF).
+
+Higher frame rates, however, do not imply better viewing experience. In
+fact, the topic of an &#8220;ideal framerate&#8221; is subject to fiery
+debate. Many of the movies and TV shows we see run at ${24 \text{ FPS}.}$
+For cinematography, productions using frame rates beyond ${24 \text{ FPS}}$
+tend to suffer from a phenomenon called the _soap opera effect_ (take a
+look at clip from a product like _Days of our Lives_ &mdash; it has a
+distinctive &#8220;look.&#8221;) Video games, at a minimum, generally run
+on ${60 \text{ FPS}.}$
+
+Furthermore, a viewing experience is also impacted by **frame time**
+&mdash; how long a frame stays in view. We can have a frame rate of
+${60 \text{ FPS},}$ but if frame times are inconsistent (e.g., one frame
+lasts for ${2 \text{ mS}}$ and another ${5 \text{ mS},}$) we see phenomenon
+called **stuttering** &mdash; small &#8220;pauses&#8221; or
+&#8220;stills&#8221; in the motion.
+
+The issue with frame rates and animations is that computers have different
+frame rates. Many computers run on ${60 \text{ FPS,}}$ but more powerful
+computers can run on ${120 \text{ FPS}.}$ Because of these variations, if
+we animated a spinning propeller, the propeller might appear to spin much,
+much faster on machines with higher frame rates. This is not what we want.
+Our animations must look the same, regardless of the machine's frame rate.
+
+Before we solve this problem, let's talk about how to animate to begin
+with. The JavaScript API provides a method that allows us to take the
+pictures we need:
+
+- window.requestAnimationFrame(𝑓)
+
+where 𝑓 is a _callback function_.
+
+The procedure for animating is to pass object transformations into the
+`requestAnimationFrame()` method, perform the renderings therein, then call
+the `requestAnimationFrame()` in the next call. This is a little tricky to
+think about, but we can clarify by thinking of the method's purpose: The
+purpose of `requestAnimationFrame()` is to call a function provided in the
+_next_ frame. To perform animations, we must always keep this fact in the
+back of our minds. The method `requestAnimationFrame()`, despite its name,
+is _not_ a function that performs animations; it's a function that calls
+some function in the next frame just once.
+
+For example, suppose we've instantiated all of our meshes and cameras, and
+added them to the scene. To animate our mesh, we first need the callback
+function:
+
+```javascript
+const tick = () => {
+	window.requestAnimationFrame(tick);
+};
+tick();
+```
+
+By writing the function above, we are telling JavaScript to call the `tick`
+function on the next frame, then on that frame, call the `tick` function on
+the next frame, and on the next frame, and so on.
+
+Because the `tick()` function is constantly being called at different
+times, we can pass our transformations and renderings into the `tick()`
+function. Using some ThreeJS methods that update the transformations and
+renderings, we effectively modify object properties many, many times:
+
+```javascript
+const tick = () => {
+	// update object properties
+	mesh.position.x += 0.01;
+
+	// render
+	renderer.render(scene, camera);
+
+	// call the tick function for the next frame
+	window.requestAnimationFrame(tick);
+};
+tick();
+```
+
+The code above will display the mesh moving along the ${x}$-axis. If we
+instead wrote:
+
+```javascript
+const tick = () => {
+	// update object properties
+	mesh.rotation.y += 0.01;
+
+	// render
+	renderer.render(scene, camera);
+
+	// call the tick function for the next frame
+	window.requestAnimationFrame(tick);
+};
+tick();
+```
+
+We would see our mesh rotating about the ${y}$-axis. At this point, we now
+run into our previous problem. On a machine with a higher frame rate, the
+mesh would move or rotate much faster than a machine with a lower frame
+rate. This is because the number of calls to the `tick()` equals the number
+of frames per second. More frames per second &mdash; more calls to `tick()`
+&mdash; more updates to the properties.
+
+There are many ways to solve this problem. A common solution is to _adapt
+to the framerate_. The idea behind this solution is to use a **timestamp**
+of the current time, or date. Because the timestamp will be the same for
+all users, regardless of frame rate, we can use the timestamp as a common
+starting point for all viewers. With the timestamp, we compare the current
+timestamp against the previous timestamp. Because both timestamps are
+constant, the difference between the two timestamps is constant. We'll call
+this difference `deltaTime`. Because `deltaTime` is constant, we can then
+use it to establish uniformity across frame rates.
+
+To initialize a timestamp, we use the native method `Date.now():`
+
+```javascript
+let previousTime = Date.now();
+const tick = () => {
+	// current time for frame
+	const currentTime = Date.now();
+
+	// elapsed time
+	const deltaTime = currentTime - previousTime;
+
+	// update the previous time for the next tick to use
+	previousTime = currentTime;
+
+	// update object properties
+	mesh.rotation.y += 0.01;
+
+	// render
+	renderer.render(scene, camera);
+
+	// call the tick function for the next frame
+	window.requestAnimationFrame(tick);
+};
+tick();
+```
+
+Because the `deltaTime` value is constant, multiplying that value with the
+values for property updates creates uniformity across frame rates:
+
+```javascript
+let previousTime = Date.now();
+const tick = () => {
+	// current time for frame
+	const currentTime = Date.now();
+
+	// elapsed time
+	const deltaTime = currentTime - previousTime;
+
+	// update the previous time for the next tick to use
+	previousTime = currentTime;
+
+	// update object properties
+	mesh.rotation.y += 0.01 * deltaTime;
+
+	// render
+	renderer.render(scene, camera);
+
+	// call the tick function for the next frame
+	window.requestAnimationFrame(tick);
+};
+tick();
+```
+
+Another fix is to use ThreeJS's built-in solution, `Clock()`. The `Clock`
+object provides a method called `getElapsedTime()`, which essentially
+computes the `deltaTime` we saw earlier:
+
+```javascript
+const clock = new THREE.Clock();
+const tick = () => {
+	// elapsed time
+	const deltaTime = clock.getElapsedTime();
+
+	// update object properties
+	mesh.rotation.y = deltaTime;
+
+	// render
+	renderer.render(scene, camera);
+
+	// call the tick function for the next frame
+	window.requestAnimationFrame(tick);
+};
+tick();
+```
+
+Importantly, the `getElapsedTime()` method returns the elapsed time in
+seconds. Because this is a number value that changes, we can assign this
+number directly to `mesh.rotation.y`. If we want to perform 1 revolution
+per second:
+
+```javascript
+const clock = new THREE.Clock();
+const tick = () => {
+	// elapsed time
+	const deltaTime = clock.getElapsedTime();
+
+	// update object properties
+	mesh.rotation.y = deltaTime * Math.PI * 2;
+
+	// render
+	renderer.render(scene, camera);
+
+	// call the tick function for the next frame
+	window.requestAnimationFrame(tick);
+};
+tick();
+```
+
+If we want animations that cycle through various movements, we rely on
+trigonometry. We know that the functions ${y = \sin x,}$ ${y = \cos x,}$
+${y = \tan x,}$ and their inverses are all cyclical functions. Accordingly,
+we can use this fact to perform repetitive animations, like a mesh
+oscillating up and down:
+
+```javascript
+const clock = new THREE.Clock();
+const tick = () => {
+	// elapsed time
+	const deltaTime = clock.getElapsedTime();
+
+	// update object properties
+	mesh.rotation.y = Math.sin(elapsedTime);
+
+	// render
+	renderer.render(scene, camera);
+
+	// call the tick function for the next frame
+	window.requestAnimationFrame(tick);
+};
+tick();
+```

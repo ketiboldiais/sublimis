@@ -43,7 +43,7 @@ export const Stack = ({
 	const _svg = svg(width, height, margins);
 	const _data = formatData(data);
 	const frameCount = _data.length;
-	const scale = d3
+	const _scale = d3
 		.scaleBand()
 		.domain(_data)
 		.range([0, frameCount * 25]);
@@ -57,7 +57,7 @@ export const Stack = ({
 			.enter()
 			.append("g")
 			.attr("class", className.stack.canvas)
-			.attr("transform", (d) => translate(_svg.width / 2, scale(d)));
+			.attr("transform", (d) => translate(_svg.width / 2, _scale(d)));
 		const frame = frameGroup
 			.append("g")
 			.attr("class", (d) => setClassName(d.focus, className.stack.frame));

@@ -34,9 +34,11 @@
 		font-style: normal;
 	}
 
+	/* "Noto Emoji",  "serif_main",  */
+
 /* Root Variables */
 	:root {
-		--serif: "Noto Serif", "Noto Emoji", "serif_main", "Iowan Old Style", Palatino, "Calisto MT", "Bitstream Charter", Georgia, "Apple Garamond", "Baskerville", "Times New Roman", "Droid Serif", "Times", "Source Serif Pro", "serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+		--serif: "Iowan Old Style", Palatino, "Calisto MT", "Bitstream Charter", Georgia, "Apple Garamond", "Baskerville", "Times New Roman", "Droid Serif", "Times", "Source Serif Pro", "serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 		--sans_serif: avenir, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 		--mono: "Fira Mono", Menlo, Consolas, Monaco, Liberation Mono, "Lucida Console", monospace;
 	}
@@ -49,11 +51,11 @@
 
 /* KaTeX */
 	span.katex {font-size: 1em;}
-	span.mord.texttt {
+	.Plot span.mord.texttt {
 		font-family: var(--mono);
 		font-size: 0.53rem;
 	}
-	span.mord.text {
+	.Plot span.mord.text {
 		font-family: var(--serif);
 		font-size: 0.6rem;
 	}
@@ -96,3 +98,18 @@ html {font-size: 16px;}
 
 
 
+.my-masonry-grid {
+  display: -webkit-box; /* Not needed if autoprefixing */
+  display: -ms-flexbox; /* Not needed if autoprefixing */
+  display: flex;
+  width: auto;
+}
+.my-masonry-grid_column {
+  padding-left: 5px; /* gutter size */
+  background-clip: padding-box;
+}
+
+/* Style your items */
+.my-masonry-grid_column > div {
+  margin-bottom: 10px;
+}

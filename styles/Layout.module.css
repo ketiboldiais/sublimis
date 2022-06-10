@@ -36,23 +36,23 @@
 	.page h1 {font-size: 2rem;}
 	.page h2 {
 		font-size: 1.8rem;
-		margin: 2rem 0 -0.5rem 0;
 	}
 	.page h3 {
 		font-size: 1.6rem;
-		margin: 2rem 0 -0.5rem 0;
 	}
 	.page h4 {
 		font-size: 1.4rem;
-		margin: 2rem 0 -0.5rem 0;
 	}
 	.page h5 {
 		font-size: 1.2rem;
-		margin: 2rem 0 -0.5rem 0;
 	}
 	.page h6 {
 		font-size: 1.1rem;
-		margin: 2rem 0 -0.5rem 0;
+	}
+
+	.page h2,.page h3,.page h4,
+	.page h5,.page h6 {
+		margin: 4rem 0 -0.5rem 0;
 	}
 
 /* Heading 1 */
@@ -64,7 +64,7 @@
 	.master h5, .master h6 {
 		font-weight: bold;
 		font-family: inherit;
-		/* font-family: var(--sans_serif); */
+		font-family: var(--sans_serif);
 		color: var(--heading-color);
 	}
 	.master h1 { margin-bottom: 8rem; }
@@ -88,7 +88,7 @@
 
 	/* List Indents */
 		.page ol {padding: 0 2rem;}
-		.page ul {margin: 0.5rem 1.2rem;}
+		.page ul {margin: 0.5rem 2rem;}
 
 	/* List items */
 		.page li {
@@ -104,15 +104,15 @@
 	.page h1 + ol::before {
 		content: "Outline";
 		font-size: 1.5rem;
+		font-weight: 500;
 		color: var(--heading-color);
+		font-family: var(--sans_serif);
 		display: block;
 		margin-left: -1rem;
 	}
 	.page h1 + ol {
 		list-style: decimal;
-		padding: 10px 2rem;
-		margin-top: 5%;
-		margin-bottom: 5%;
+		padding: 1rem 0 1rem 1.8rem;
 		font-size: 0.85rem;
 		border-radius: 10px;
 	}
@@ -232,7 +232,7 @@
 	.page h1 + ol {
 		float: right;
 		width: 40%;
-		margin: 0 1%;
+		margin: 0 0 1% 3%;
 		background-color: var(--box-background-color);
 	}
 }

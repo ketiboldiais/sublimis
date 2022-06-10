@@ -1,5 +1,3 @@
-import { Cube } from "@illus/Cube";
-import { Canvas } from "@illus/Canvas";
 import { Fork } from "@components/Fork";
 
 export const Install = () => {
@@ -39,8 +37,6 @@ export const Cameras = () => {
 };
 
 # Scenes
-
-<Cube/>
 
 To install ThreeJS, see the <Install/>. It's recommended to use ThreeJS via
 Webpack. With the ThreeJS library available, we have access to a variable
@@ -264,11 +260,7 @@ const renderer = new THREE.WebGLRenderer({
 ```
 
 If we refresh the HTML page, we'd see a black rectangle, with no cube in
-sight:
-
-
-
-To see our cube, we must first give the renderer a size:
+sight. To see our cube, we must first give the renderer a size:
 
 ```javascript
 const scene = new THREE.Scene();
@@ -365,8 +357,7 @@ renderer.setSize(sizes.width, sizes.height);
 renderer.render(scene, camera);
 ```
 
-We should now see a red square. It is actually a cube, we just need to move
-the camera to the right:
+Putting it all together:
 
 ```javascript
 const scene = new THREE.Scene();
@@ -383,7 +374,6 @@ const camera = new THREE.PerspectiveCamera(
 	sizes.width / sizes.height
 )
 camera.position.z = 3; // move the camera back
-camera.position.x = 2; // move the camera right
 scene.add(camera);
 const canvas = document.querySelector('.webgl');
 const renderer = new THREE.WebGLRenderer({

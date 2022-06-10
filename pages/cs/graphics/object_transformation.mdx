@@ -1,0 +1,361 @@
+import { Tile } from "@components/Tile";
+
+# Object Transformation
+
+To **transform** an object is to modify some property of the object.
+Transformation is the first step towards _animating_ the object. In
+ThreeJS, the four properties most relevant to transformation are:
+
+<Tile>
+	<div>- `position` - `scale`</div>
+	<div>- `rotation` - `quaternion`</div>
+</Tile>
+
+All of these properties originate in a class called `Object3D.` From the
+`Object3D` class we have classes like `PerspectiveCamera` and `Mesh`.
+
+## The Position Property
+
+As stated earlier, the `position` property originates in the class
+`Object3D`. Thus, any object whose ancestor class is `Object3D` has a
+`position` property. The `position` property itself is a combination of
+three properties:
+
+1. `Obj.x` Sets the 𝑥-axis coordinate.
+2. `Obj.y` Sets the 𝑦-axis coordinate.
+3. `Obj.z` Sets the 𝑧-axis coordinate.
+
+To illustrate, we'll use our cube from the previous section:
+
+```javascript
+const scene = new THREE.Scene();
+const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const mesh = new THREE.Mesh(geometry, material);
+scene.add(mesh);
+const sizes = {
+	width: 800;
+	height: 800;
+}
+const camera = new THREE.PerspectiveCamera(
+	75,
+	sizes.width / sizes.height
+)
+camera.position.z = 3; // move the camera back
+scene.add(camera);
+const canvas = document.querySelector('.webgl');
+const renderer = new THREE.WebGLRenderer({
+	canvas: canvas;
+});
+renderer.setSize(sizes.width, sizes.height);
+renderer.render(scene, camera);
+```
+
+As we saw, this results in:
+
+Now let's write:
+
+```javascript
+mesh.position.y = 1; // move the mesh up by 1
+
+mesh.position.x = 1; // move the mesh right by 1
+
+mesh.position.z = 1; // move the mesh forward by 1
+```
+
+the render:
+
+We can also update all three positions in a single line:
+
+```javascript
+mesh.position.set(1, 1, 1);
+```
+
+When using the single-line approach, the syntax is:
+
+- `Obj.position.set(𝑥, 𝑦, 𝑧)`
+
+Note that this works because we're using a perspective camera. Interpreting
+the axes entirely depends on the camera; the camera establishes _our_
+position when we view the object. If we think about this carefully, this
+makes perfect sense. The word &#8220;right&#8221; and &#8220;left&#8221;
+are entirely subjective. It's why questions like &#8220;My left or your
+left?&#8221; exist.
+
+The same goes for &#8220;up&#8221; and &#8220;down.&#8221; If van Helsing
+stands on the floor while Dracula suspends from the ceiling, Helsing's
+&#8220;down&#8221; is Dracula's &#8220;up,&#8221; and Dracula's
+&#8220;up&#8221; is Helsing's &#8220;down.&#8221; The words
+&#8220;forward&#8221; and &#8220;backward&#8221; are not immune either. If
+Don Quixote stands in front of a car and the car reverses towards Panza,
+the car is moving &#8220;backward&#8221; from Don Quixote and
+&#8220;forward&#8221; towards Panza.
+
+Equally arbitrary is the number we used above, `1.` The distance of ${1}$
+unit is entirely determined by our interpretation. We can think of it was 1
+nanometer, 1 meter, 1 mile, 1 lightyear, and so on. As stated in the
+earlier section, distances in ThreeJS are measured in terms of proportions.
+Thus, once we've settled on an interpretation, we must keep that
+interpretation in mind when we use numbers for other objects.
+
+The `position` property also inherits from a class called Vector3. The
+`Vector3` class contains numerous methods we will use extensively. One such
+method is `.length()`:
+
+```javascript
+mesh.position.x = 0.7;
+mesh.position.y = -0.6;
+mesh.position.z = 1;
+console.log(mesh.position.length());
+```
+
+```bash
+1.3601470508735443
+```
+
+The output above is effectively how far our mesh is from the scene's
+center. We can also obtain the distance between the object and the camera
+(note that there must be a camera before we ask for the distance to the
+camera):
+
+```javascript
+mesh.position.x = 0.7;
+mesh.position.y = -0.6;
+mesh.position.z = 1;
+
+// after the camera initialization
+
+console.log(mesh.position.distanceTo(camera.position));
+```
+
+```bash
+2.202271554554524
+```
+
+Another particularly useful method is `normalize()`. This method will take
+the length of a particular vector, and reduce it to a length of `1`. For
+example, suppose we manipulated the mesh's position as follows:
+
+```javascript
+mesh.position.x = 0.7;
+mesh.position.y = -0.6;
+mesh.position.z = 1;
+
+mesh.position.normalize();
+```
+
+when we write:
+
+```javascript
+mesh.position.normalize();
+```
+
+## Axes Helper
+
+Because axes can get confusing when working with many different cameras,
+ThreeJS provides a tool called `AxesHelper`. This is just a visualization
+of the axes we're working with. To create it, we write the code below. Note
+that because the axes helper is an object, it must be added to the scene:
+
+```javascript
+const axesHelper = new THREE.AxesHelper();
+scene.add(axesHelper);
+```
+
+With the axes helper, the axes are color-coded, each with a length of 1
+unit:
+
+1. The red line corresponds to the 𝑥-axis.
+2. The green line corresponds to the 𝑦-axis.
+3. The blue line corresponds to the 𝑧-axis.
+
+With the perspective camera set to default, we likely do not see the 𝑧-axis
+line. This is because the perspective camera, by default, points straight
+ahead. To see the 𝑧-axis we must change the camera position:
+
+```javascript
+const axesHelper = new THREE.AxesHelper();
+scene.add(axesHelper);
+
+// camera initialized
+
+camera.position.x = 1;
+camera.position.y = 1;
+camera.position.z = 3;
+scene.add(camera);
+```
+
+the result:
+
+## Scale
+
+Like the position property, the `scale` property is also a `Vector3`. The
+`scale` property will change the scale (i.e., the unit proportions) of the
+particular object. For example, the default value of each axis is ${1.}$ We
+can change this default value by modifying the `scale` property:
+
+```javascript
+mesh.scale.x = 2; // change the x-axis scale to 2
+mesh.scale.y = 3; // change the y-axis scale to 3
+mesh.scale.z = 0.5; // change the z-axis scale to 0.5
+```
+
+## Rotating Objects
+
+To rotate objects, we have two properties available for modification:
+
+1. `rotation`
+2. `quaternion`
+
+Modifying either of the properties above will achieve a rotation.
+Importantly, updating one will update the other. Let's first consider the
+`rotation` property.
+
+With `rotation`, there three properties:
+
+- `rotation.x`, which sets the 𝑥-axis angle in radians, the default being
+  ${0.}$
+- `rotation.y`, which sets the 𝑦-axis angle in radians, the default being
+  ${0.}$
+- `rotation.z`, which sets the 𝑧-axis angle in radians, the default being
+  ${0.}$
+
+Each of these properties inherits from a class called `Euler`. The idea
+behind `rotation` is that the object rotates about a stick piercing through
+the center of the object. Thus, when we use the `rotation` property, we
+must think about which axis we're rotating the object on (i.e., from which
+direction the stick pierces through the object).
+
+Stating the rotations follows the usual dot notation:
+
+```javascript
+mesh.rotation.x = 0.5; // rotate about the x-axis
+mesh.rotation.y = 0.5; // rotate about the y-axis
+mesh.rotation.z = 0.5; // rotate about the z-axis
+```
+
+we get:
+
+Because the rotations are measured in radians, a rotation value of ${\pi}$
+results in rotation equivalent to ${{180}^\circ,}$ and a value of ${2 \pi}$
+results in a full revolution, ${{360}^\circ.}$
+
+```javascript
+// rotate about the y-axis half a circle
+mesh.rotation.y = Math.pi;
+
+// rotate about the z-axis a full circle
+mesh.rotation.z = 2 * MATH.pi;
+```
+
+The code above yields:
+
+## Gimbal Lock
+
+We must take care when working with rotations. Whenever we rotate an axis,
+we might unintentionally rotate the other axis. This is because the
+`rotation` property always follows the order `x`, `y`, and `z`. Consider
+the illustration above. If we rotate the object about the 𝑧-axis by
+${\pi / 2,}$ the 𝑦- and 𝑧-axes point in different directions:
+
+Moreover, because these axes are arbitrary (it depends on the camera's
+position), we can mistakenly rotate, say, the 𝑥-axis when we actually
+intended to rotate the 𝑦-axis If we rotate an axis far enough, we can get
+into a situation called a **gimbal lock** &mdash; a phenomenon where it
+appears as if one of the axes is stuck, or doesn't work anymore.
+
+One way to avoid this problem is to change the default order with the
+`.reorder()` method:
+
+```javascript
+// change the rotation order to y-, x-, z-axis
+mesh.rotation.reorder("yxz");
+// rotations
+```
+
+The last comment above is included to indicate that the reordering must
+occur before we rotate.
+
+As we can likely tell, it seems tedious to have to write these reorderings
+over and over again before rotations. Because of this nuisance, ThreeJS
+provides another property for rotation, `quaternion`. We will cover
+quaternions in a later section, but the idea behind the quaternion is that
+we can use some algebra to ensure rotations are consistent. Because the
+mathematics is fairly involved, we will devote an entire section for
+quaternions in a later discussion.
+
+## Look at a Particular Point
+
+When working with transformations, it's often helpful to keep the camera
+pointed at a particular point. This way, no matter how we transform the
+object, the camera points at a constant location, allowing us some
+uniformity in evaluating transformations. To do so, we use `lookAt()`, a
+method available to all `Object3D` instances (e.g., cameras):
+
+```javascript
+// initialize camera
+camera.lookAt(new THREE.Vector(0, -1, 0));
+```
+
+By writing the code above, the camera will always point at the coordinate
+${(0, -1, 0).}$ This coordinate, however, may or may not be on the mesh. If
+we wanted to keep the camera pointed at the mesh, we can use the mesh's
+position property:
+
+```javascript
+// initialize camera and mesh
+camera.lookAt(mesh.position);
+```
+
+With the above code, the camera now always points to the center of the
+mesh.
+
+## Grouping
+
+From our discussion thus far, it should be obvious that transforming
+objects can lead to many lines of code. Because of this fact, it's best
+practice to _group_ objects whenever possible. For example, 3D rendering of
+a house might consist of many component 3D renderings &mdash; the rendering
+for a door, a table, the walls, a roof, and so on. If the house is just one
+rendering in a bigger rendering of, say, a landscape, we do not want to
+have to move each of the component renderings one-by-one. Instead, we
+should gather all of these component renderings into a group, then
+manipulate the properties for that group. If we want to move the house to
+another position in the landscape, we manipulate the position property for
+the house, rather than the position property for the walls, roof, table,
+lamp, and so on.
+
+To make a group, we use the `group()` method:
+
+```javascript
+// create two cubes
+const cube1 = new THREE.mesh(
+	new THREE.BoxGeometry(1, 1, 1),
+	new THREE.MeshBasicMaterial({ color: 0xff0000 }),
+);
+const cube2 = new THREE.mesh(
+	new THREE.BoxGeometry(1, 1, 1),
+	new THREE.MeshBasicMaterial({ color: 0x00ff00 }),
+);
+
+// create the group
+const group1 = new Three.Group();
+
+// add the cubes to the group
+group1.add(cube1, cube2);
+
+// add the group to the scene
+scene.add(group1);
+```
+
+Notice that we used slightly different syntax to instantiate the meshes. We
+can directly pass the properties into the constructor. Importantly, we must
+remember to always add our groups to the scene. Otherwise, we won't see
+anything displayed.
+
+With the two cubes in a group, we can transform them all together by
+transforming the group:
+
+```javascript
+group.position.y = 1; // move the group by 1 on the y-axis
+```

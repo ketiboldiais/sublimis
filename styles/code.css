@@ -40,10 +40,14 @@ code.language-java .token.keyword { color: var(--red); }
 code.language-java .token.comment { color: var(--lightgrey); }
 code.language-java .token.class-name { color: var(--lavender); }
 
-pre.language-javascript {background-color: var(--darkBlue);}
-code.language-javascript .token.keyword { color: var(--red); }
-code.language-javascript .token.comment { color: var(--lightgrey); }
-code.language-javascript .token.class-name { color: var(--lavender); }
+pre.language-javascript {background-color: #042940;}
+code.language-javascript {color: #9FC131;}
+code.language-javascript .token.keyword { color: #fff563; }
+code.language-javascript .token.operator { color: lime; }
+code.language-javascript .token.comment { color: #009183; }
+code.language-javascript .token.number { color: #D6D58E; }
+code.language-javascript .token.property-access { color: #9bf3ec; }
+code.language-javascript .token.class-name { color: rgb(13, 255, 251); }
 
 pre.language-jsx {background-color: rgb(1, 47, 75);}
 code.language-jsx .token.keyword { color: var(--red); }

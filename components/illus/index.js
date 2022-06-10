@@ -28,6 +28,4 @@ export * from "./components/DotPlot/DotPlot";
 export * from "./components/MTree/MTree";
 export * from "./components/TableMatrix/TableMatrix";
 export * from "./components/Flow/Flow";
-export * from "./components/CG/Cube";
-export * from "./components/CG/Canvas";
-export * from "./components/CG/BoxGeometry";
+export * from "./components/ZPlot/ZPlot";

@@ -136,6 +136,7 @@
 	/* Plot  */
 		--point-fill-color: var(--blue);
 		--point-stroke-color: var(--blue);
+		--plot-axes-color: rgb(106, 106, 106);
 	/* Flow */
 		--flow-stroke-color: var(--lightBlue);
 		--flow-fill-color: var(--background-color);		

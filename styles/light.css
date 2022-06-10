@@ -26,7 +26,7 @@
 	--nav-content-background-color: rgb(255, 253, 240);
 
 	/* Heading color */
-	--heading-color: firebrick;
+	--heading-color: var(--text-color);
 
 	/* Border */
 	--border: solid thin grey;
@@ -43,7 +43,7 @@
 	--indicator-background: #f1f4f6;
 
 	/* Special Box Background */
-	--box-background-color: var(--background-color);
+	--box-background-color: rgb(219, 236, 236);
 
 	/* Call number styles */
 	--call-border: solid thin rgb(74, 105, 172);
@@ -148,6 +148,7 @@
 	/* Plot */
 		--point-fill-color: var(--darkRed);
 		--point-stroke-color: var(--darkRed);
+		--plot-axes-color: rgb(175, 191, 199);
 	/* Flow */
 		--flow-stroke-color: var(--text-color);
 		--flow-fill-color: var(--background-color);
